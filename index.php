@@ -161,22 +161,22 @@ if(!empty($banner)){
 ?>
 
 <div style="width: 100%;  display: flex; justify-content:center; margin: 0 auto; padding:14px 16px; align-items: center;">
-    <div style="width: 1000px; background-color: black; overflow: hidden; position: relative; padding: 24px 16px;">
-        <div style="display: flex; justify-content: space-between; max-width: 1200px; background-color: black; margin: 0 auto; padding: 24px 16px; align-items: center;">
+    <div style="width: 1000px; background-color: <?php echo $banner['bg_color']; ?>; overflow: hidden; position: relative; padding: 24px 16px;">
+        <div style="display: flex; justify-content: space-between; max-width: 1200px; background-color: <?php echo $banner['bg_color']; ?>; margin: 0 auto; padding: 24px 16px; align-items: center;">
 
             <div style="display: flex; align-items: center; gap: 16px; width: 70%; ">
-                <!-- Displaying banner image dynamically -->
+   
                 <div style="border: 2px solid transparent; background: url('<?php echo $banner['image']; ?>') no-repeat; background-size: contain; width: 200px; height: 120px;"></div>
 
                 <div style="margin-left: 16px; width: 100%;">
-                    <!-- Displaying title and description dynamically -->
-                    <h2 style="font-size: 14px; font-weight: 600; color: white;"><?php echo $banner['title']; ?></h2>
-                    <p style="font-size: 20px; font-weight: 700; color: white;"><?php echo $banner['description']; ?></p>
+                
+                    <h2 style="font-size: 14px; font-weight: 600; color: <?php echo $banner['text_color']; ?>;"><?php echo $banner['title']; ?></h2>
+                    <p style="font-size: 20px; font-weight: 700; color: <?php echo $banner['bg_color']; ?>;"><?php echo $banner['description']; ?></p>
                 </div>
             </div>
 
             <div style="display: flex; align-items: center; width: 30%;">
-                <!-- Displaying button dynamically -->
+              
                 <?php if ($banner['btn_text'] && $banner['btn_url']) : ?>
                     <a href="<?php echo $banner['btn_url']; ?>" target="_blank" style="background-color: <?php echo $banner['btn_color']; ?>; padding: 12px 24px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: background-color 0.3s ease;">
                         <span style="font-size: 14px; font-weight: 500;"><?php echo $banner['btn_text']; ?></span>
@@ -451,6 +451,34 @@ if(!empty($banner)){
                 ?>
                             </div>
                         </div>
+                        <?php
+                            $banner = $fun->getRandomBannerByPlacement('home_sidebar');
+                            if (!empty($banner)) {
+                            ?>
+
+                            <div style="width: 100% !important; background-color: <?php echo $banner['bg_color']; ?>; color: <?php echo $banner['text_color']; ?>; min-height: 30vh; position: relative;width: 15vw; display: flex; flex-direction: column; padding: 2rem;">
+                                <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                                    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;"><?php echo $banner['title']; ?></h1>
+                                    <h2 style="font-size: 3rem; font-weight: 300; margin-bottom: 2rem; color: <?php echo $banner['text_color']; ?>"><?php echo $banner['description']; ?></h2>
+                                    
+                            
+                                    <div style="width: 300px; height: 300px; position: relative; margin: 2rem 0;">
+                                        <img src="<?php echo $banner['image']; ?>" alt="">
+                                    </div>
+                                </div>
+
+                    
+                                <?php if ($banner['btn_text'] && $banner['btn_url']) : ?>
+                                    <a href="<?php echo $banner['btn_url']; ?>" style="background-color: <?php echo $banner['btn_color']; ?>; padding: 1rem 2rem; color: black; text-decoration: none; display: flex; align-items: center; justify-content: space-between; width: fit-content; margin-top: auto; transition: background-color 0.3s ease;">
+                                        <?php echo $banner['btn_text']; ?>
+                                        <span style="margin-left: 1rem;">→</span>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+
+                            <?php
+                            }
+                            ?>
                     </div>
 
 
@@ -462,7 +490,7 @@ if(!empty($banner)){
 
                         <div class="row">
                             <?php
-              $productFind = $productFun->getProductsWithDetails(1, 12, []);
+              $productFind = $productFun->getProductsWithDetails(1, 15, []);
 
               if (!empty($productFind)) {
                 foreach ($productFind['products'] as $product) {

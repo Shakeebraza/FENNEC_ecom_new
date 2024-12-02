@@ -2180,3 +2180,15 @@ display: none;
   height: 100%;
   display: block;
 }
+
+@media (max-width: 768px) {
+  .banner-img-text {
+display: block !important;
+}
+  .banner-btnn {
+display: block !important;
+}
+.banner-main-div{
+  flex-direction: column;
+}
+}

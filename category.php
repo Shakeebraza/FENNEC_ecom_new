@@ -268,6 +268,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 
 </style>
+
+<?php
+$banner = $fun->getRandomBannerByPlacement('category_header');
+if(!empty($banner)){
+?>
+<div style="width: 100%;  display: flex; justify-content:center; margin: 0 auto; padding:14px 16px; align-items: center;">
+    <div style="width: 1000px; background-color: <?php echo $banner['bg_color']; ?>; overflow: hidden; position: relative; padding: 24px 16px;">
+        <div style="display: flex; justify-content: space-between; max-width: 1200px; background-color: <?php echo $banner['bg_color']; ?>; margin: 0 auto; padding: 24px 16px; align-items: center;">
+
+            <div style="display: flex; align-items: center; gap: 16px; width: 70%; ">
+   
+                <div style="border: 2px solid transparent; background: url('<?php echo $banner['image']; ?>') no-repeat; background-size: contain; width: 200px; height: 120px;"></div>
+
+                <div style="margin-left: 16px; width: 100%;">
+                
+                    <h2 style="font-size: 14px; font-weight: 600; color: <?php echo $banner['text_color']; ?>;"><?php echo $banner['title']; ?></h2>
+                    <p style="font-size: 20px; font-weight: 700; color: <?php echo $banner['text_color']; ?>;"><?php echo $banner['description']; ?></p>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; width: 30%;">
+              
+                <?php if ($banner['btn_text'] && $banner['btn_url']) : ?>
+                    <a href="<?php echo $banner['btn_url']; ?>" target="_blank" style="background-color: <?php echo $banner['btn_color']; ?>; padding: 12px 24px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: background-color 0.3s ease;">
+                        <span style="font-size: 14px; font-weight: 500;"><?php echo $banner['btn_text']; ?></span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+}
+?>
 <div class="container mt-4 mb-5">
     <div class="row">
         <div class="col-12 d-flex justify-content-between mb-4">
@@ -669,7 +706,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     </div>
   </div>
 
-</div>
+        </div>
+    <!-- add banner -->
+    <?php
+        $banner = $fun->getRandomBannerByPlacement('category_sidebar');
+        if (!empty($banner)) {
+        ?>
+
+        <div style="background-color: <?php echo $banner['bg_color']; ?>; color: <?php echo $banner['text_color']; ?>; min-height: 50vh; position: relative;width: 15vw; display: flex; flex-direction: column; padding: 2rem;">
+            <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                <h1 style="font-size: 2rem; margin-bottom: 0.5rem;"><?php echo $banner['title']; ?></h1>
+                <h2 style="font-size: 3rem; font-weight: 300; margin-bottom: 2rem; color: <?php echo $banner['text_color']; ?>"><?php echo $banner['description']; ?></h2>
+                
+         
+                <div style="width: 300px; height: 300px; position: relative; margin: 2rem 0;">
+                    <img src="<?php echo $banner['image']; ?>" alt="">
+                </div>
+            </div>
+
+ 
+            <?php if ($banner['btn_text'] && $banner['btn_url']) : ?>
+                <a href="<?php echo $banner['btn_url']; ?>" style="background-color: <?php echo $banner['btn_color']; ?>; padding: 1rem 2rem; color: black; text-decoration: none; display: flex; align-items: center; justify-content: space-between; width: fit-content; margin-top: auto; transition: background-color 0.3s ease;">
+                    <?php echo $banner['btn_text']; ?>
+                    <span style="margin-left: 1rem;">→</span>
+                </a>
+            <?php endif; ?>
+        </div>
+
+        <?php
+        }
+        ?>
+
+
         </div>
 
     </div>

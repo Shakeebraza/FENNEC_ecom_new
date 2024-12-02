@@ -11,6 +11,7 @@ if (!isset($_GET['bannerid'])) {
 }
 
 $pageid = $security->decrypt($_GET['bannerid']);
+
 $page = $dbFunctions->getDataById('banners', $pageid);
 if (!$page) {
     echo "<script>
@@ -66,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
         $updateResult = $dbFunctions->updateData('banners', $updateData, $pageid);
+     
 
         if ($updateResult['success']) {
             echo "<script>alert('Banner updated successfully.');";
