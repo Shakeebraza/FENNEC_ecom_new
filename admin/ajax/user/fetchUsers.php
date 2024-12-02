@@ -56,7 +56,10 @@ foreach ($filteredQuery as $row) {
     $roleClass = $row['role'] == 1 ? 'admin' : 'user';
     $Checkbox = $row['role'] == 1 ? '' : '<input type="checkbox">';
     $roleText = $row['role'] == 1 ? 'Admin' : 'User';
-    $editButton = $row['role'] != 1 ? '<button class="btn btn-warning btn-sm" data-id="'. $security->encrypt($row['id']). '" >Edit</button>' : '<span class="role ' . $roleClass . '">' . $roleText . '</span>';
+    $editButton = $row['role'] != 1 
+    ? '<a class="btn btn-warning btn-sm" href="'. $urlval .'admin/user/edit.php?id='. base64_encode($row['id']) .'" >Edit</a>' 
+    : '<span class="role ' . $roleClass . '">' . $roleText . '</span>';
+
     $deleteButton = $row['role'] != 1 ? '<button class="btn btn-danger btn-sm" data-id="'. $security->encrypt($row['id']). '">Delete</button>' : '';
 
     $data[] = [
