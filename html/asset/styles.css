@@ -1,0 +1,143 @@
+body {
+    font-family: Arial, sans-serif;
+}
+.navbar {
+    background-color: #00494f;
+}
+.navbar-brand img {
+    height: 30px;
+}
+.nav-link {
+    color: #fff !important;
+}
+.search-input {
+    width: 400px;
+}
+.location-select {
+    width: 200px;
+}
+.category-tabs {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+.card {
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.modal {
+    display: block;
+    background-color: rgba(0,0,0,0.5);
+}
+.car-banner {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.car-banner img {
+    max-height: 200px;
+    object-fit: contain;
+}
+.sell-steps {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+.sell-step {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #6c757d;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0.5rem;
+}
+.product-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+}
+.product-image {
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+.heart-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: white;
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+}
+.price {
+    color: #28a745;
+    font-weight: bold;
+}
+.location, .date {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+.locations-section {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-top: 20px;
+}
+.locations-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+.locations-section h3 {
+    font-size: 1.2rem;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.locations-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.locations-list a {
+    color: #0077b6;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.locations-list a:hover {
+    text-decoration: underline;
+}
+.icon-sty {
+    display: flex !important;
+    justify-content: space-between;
+    
+}
+.icon-sty > a {
+background-color: #000000;
+padding: 10PX 10PX;
+border-radius: 50%;
+}
+.motors-fen{
+    display: flex;
+    flex-direction: column;
+}
+footer a {
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #e7e6e6d0; 
+}
+footer{
+    background-color: #3c3241;;
+}

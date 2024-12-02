@@ -1,0 +1,7 @@
+.idea/
+/upload/
+/images/
+global.php
+dbcon/Database.php
+Ads.txt
+/languages/
