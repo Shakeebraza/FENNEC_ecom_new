@@ -170,7 +170,7 @@ $area = $productData['area'];
 
     <h1 class="mb-2"><?php echo htmlspecialchars($productData['product']['product_name'] ?? 'Product Title'); ?></h1>
     <p class="text-muted mb-2"><?php echo htmlspecialchars($productData['location'] ?? 'Location'); ?></p>
-    <h2 class="mb-4">£<?php echo htmlspecialchars($productData['product']['price'] ?? '0.00'); ?></h2>
+    <h2 class="mb-4"><?php echo  $fun->getFieldData('site_currency')?><?php echo htmlspecialchars($productData['product']['price'] ?? '0.00'); ?></h2>
 
     <div class="row">
         <div class="col-md-8">

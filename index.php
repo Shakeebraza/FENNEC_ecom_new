@@ -475,7 +475,7 @@ p {
 
                                     <div class="p-3">
                                         <h5><?php echo htmlspecialchars($product['name']); ?></h5>
-                                        <p class="price">$<?php echo htmlspecialchars($product['price']); ?></p>
+                                        <p class="price"><?php echo  $fun->getFieldData('site_currency')?> <?php echo htmlspecialchars($product['price']); ?></p>
                                         <p class="location">
                                             <i class="fas fa-map-marker-alt"></i>
                                             <?php echo htmlspecialchars($product['country']); ?> |

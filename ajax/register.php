@@ -6,12 +6,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    // Define minimum and maximum lengths for username and password
+ 
     $minUsernameLength = $fun->getFieldData('username_length'); 
-    $maxUsernameLength = 50; // Example: you can adjust this as needed
+    $maxUsernameLength = 50; 
 
     $minPasswordLength = $fun->getFieldData('password_length'); 
-    $maxPasswordLength = 128; // Example: you can adjust this as needed
+    $maxPasswordLength = 128; 
 
     // Validate username
     if (empty($username)) {
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Validate password
+
     if (empty($password)) {
         echo json_encode(['status' => 'error', 'errors' => 'Password is required.']);
         exit();
@@ -62,11 +62,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // If all validations pass, hash the password and generate verification token
+ 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     $verificationToken = bin2hex(random_bytes(16)); 
 
-    // Prepare data for insertion
+
     $data = [
         'username' => $username,
         'email' => $email,
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'verification_token' => $verificationToken
     ];
 
-    // Insert user into the database
+  
     $response = $dbFunctions->setData('users', $data);
 
     if (!$response['success']) {
@@ -83,12 +83,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Generate the verification link
+
     $verificationLink = $urlval . "verify_email.php?token=$verificationToken&email=$email";
     $temp = $emialTemp->getVerificationTemplate($verificationLink);
     $mailResponse = smtp_mailer($email, 'Email Verification', $temp);
 
-    // Send the email and respond accordingly
+
     if ($mailResponse == 'Sent') {
         echo json_encode(['status' => 'success', 'message' => 'Registration successful! Verification email sent.']);
     } else {

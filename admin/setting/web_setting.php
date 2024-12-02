@@ -2,10 +2,10 @@
 require_once("../../global.php");
 include_once('../header.php');
 
-// Fetch existing settings (assuming single entry with ID = 1)
+
 $settings = $pdo->query("SELECT * FROM websettings WHERE id = 1")->fetch(PDO::FETCH_ASSOC);
 
-$message = ''; // Initialize an empty message
+$message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usernameLength = $_POST['usernameLength'];
@@ -16,13 +16,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $videosAllowed = $_POST['videosAllowed'];
     $paidImagesPrice = $_POST['paidImagesPrice'];
     $paidVideosPrice = $_POST['paidVideosPrice'];
-    $adminEmail = $_POST['adminEmail'];
-    $recordsPerPage = $_POST['recordsPerPage'];
+    $duration = $_POST['duration'];
+    $extensionDuration = $_POST['extensionDuration'];
 
-    // Update the existing record
+  
+    $currencySymbols = [
+        'USD' => '$',
+        'AUD' => 'A$',
+        'CAD' => 'C$',
+        'JPY' => '¥',
+    ];
+
+
+    $selectedCurrency = $_POST['siteCurrency'];
+    $siteCurrency = $currencySymbols[$selectedCurrency] ?? '$'; 
+
     $sql = "UPDATE websettings 
             SET username_length = ?, password_length = ?, images_allowed = ?, free_images = ?, image_size = ?, 
-                videos_allowed = ?, paid_images_price = ?, paid_videos_price = ?, admin_email = ?, records_per_page = ? 
+                videos_allowed = ?, paid_images_price = ?, paid_videos_price = ?, 
+                site_currency = ?, duration = ?, extension_duration = ? 
             WHERE id = 1";
 
     $stmt = $pdo->prepare($sql);
@@ -35,8 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $videosAllowed, 
         $paidImagesPrice, 
         $paidVideosPrice, 
-        $adminEmail, 
-        $recordsPerPage
+        $siteCurrency, 
+        $duration, 
+        $extensionDuration
     ]);
 
     if ($stmt->rowCount() > 0) {
@@ -45,8 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = "<div class='alert alert-warning'>No changes were made to the settings.</div>";
     }
 }
-
-
 ?>
 
 <div class="page-container">
@@ -55,7 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="container-fluid">
                 <h1 class="mb-4">Website Settings</h1>
 
-                <!-- Display message above the form -->
                 <?= $message ?>
 
                 <form method="POST" action="">
@@ -108,19 +118,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             value="<?= htmlspecialchars($settings['paid_videos_price'] ?? '') ?>">
                     </div>
                     <div class="mb-3">
-                        <label for="adminEmail" class="form-label">Admin Email</label>
-                        <input type="email" class="form-control" id="adminEmail" name="adminEmail"
-                            placeholder="Enter admin email"
-                            value="<?= htmlspecialchars($settings['admin_email'] ?? '') ?>">
+                        <label for="siteCurrency" class="form-label">Site Currency</label>
+                        <select class="form-control" id="siteCurrency" name="siteCurrency">
+                            <option value="USD" <?= ($settings['site_currency'] ?? '') === 'USD' ? 'selected' : '' ?>>USD</option>
+                            <option value="AUD" <?= ($settings['site_currency'] ?? '') === 'AUD' ? 'selected' : '' ?>>AUD</option>
+                            <option value="CAD" <?= ($settings['site_currency'] ?? '') === 'CAD' ? 'selected' : '' ?>>CAD</option>
+                            <option value="JPY" <?= ($settings['site_currency'] ?? '') === 'JPY' ? 'selected' : '' ?>>JPY</option>
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label for="recordsPerPage" class="form-label">Records Per Page</label>
-                        <input type="number" class="form-control" id="recordsPerPage" name="recordsPerPage"
-                            placeholder="Maximum records per page"
-                            value="<?= htmlspecialchars($settings['records_per_page'] ?? '') ?>">
+                        <label for="duration" class="form-label">Duration</label>
+                        <input type="text" class="form-control" id="duration" name="duration"
+                            placeholder="Enter duration (e.g., 30 days)"
+                            value="<?= htmlspecialchars($settings['duration'] ?? '') ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="extensionDuration" class="form-label">Extension Duration</label>
+                        <input type="text" class="form-control" id="extensionDuration" name="extensionDuration"
+                            placeholder="Enter extension duration (e.g., 15 days)"
+                            value="<?= htmlspecialchars($settings['extension_duration'] ?? '') ?>">
                     </div>
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </form>
+
             </div>
         </div>
     </div>

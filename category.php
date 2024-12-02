@@ -465,7 +465,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                                                     <p class="card-text">' . $description . '</p>
                                                     <p class="text-muted">' . $proval['country'] . ' | ' . $proval['city'] . '</p>
                                                     <div class="d-flex justify-content-between">
-                                                        <span class="product-price" style="color: red;">$' . $proval['price'] . '</span>
+                                                        <span class="product-price" style="color: red;">'.$fun->getFieldData('site_currency').'' . $proval['price'] . '</span>
                                                         <span class="product-time small" style="font-size: 12px;">' . $proval['date'] . '</span>
                                                     </div>
                                                 </div>
