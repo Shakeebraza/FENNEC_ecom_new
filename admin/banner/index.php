@@ -10,7 +10,7 @@ include_once('../header.php');
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <h3 class="title-5 m-b-35">Banners Table</h3>
+                    <h3 class="title-5 m-b-35">Manage Banners</h3>
                     <form id="userSearchForm">
                         <div class="form-row searchfromwhite">
                             <div class="form-group col-md-3">

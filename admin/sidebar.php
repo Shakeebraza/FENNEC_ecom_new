@@ -46,7 +46,7 @@
                         <ul class="list-unstyled navbar__sub-list js-sub-list">
                             <li>
                                 <a <?=isActive('/fennec/admin/banner/index.php');  ?>
-                                    href="<?php echo $urlval?>admin/user/index.php">All Banner</a>
+                                    href="<?php echo $urlval?>admin/user/index.php">Manage Banners</a>
                             </li>
                             <li>
                                 <a <?=isActive('/fennec/admin/banner/addbanner.php');  ?>
@@ -156,7 +156,7 @@
                         <i class="fas fa-sliders"></i>Banners</a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
-                            <a href="<?php echo $urlval?>admin/banner/index.php">All Banner</a>
+                            <a href="<?php echo $urlval?>admin/banner/index.php">Manage Banners</a>
                         </li>
                         <li>
                             <a href="<?php echo $urlval?>admin/banner/addbanner.php">Add Banner</a>
