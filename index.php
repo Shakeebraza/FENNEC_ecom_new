@@ -155,6 +155,39 @@ p {
     border-radius: 8px;
 }
 </style>
+<?php
+$banner = $fun->getRandomBannerByPlacement('home_header');
+?>
+
+<div style="width: 100%;  display: flex; justify-content:center; margin: 0 auto; padding:14px 16px; align-items: center;">
+    <div style="width: 1000px; background-color: black; overflow: hidden; position: relative; padding: 24px 16px;">
+        <div style="display: flex; justify-content: space-between; max-width: 1200px; background-color: black; margin: 0 auto; padding: 24px 16px; align-items: center;">
+
+            <div style="display: flex; align-items: center; gap: 16px; width: 70%; ">
+                <!-- Displaying banner image dynamically -->
+                <div style="border: 2px solid transparent; background: url('<?php echo $banner['image']; ?>') no-repeat; background-size: contain; width: 200px; height: 120px;"></div>
+
+                <div style="margin-left: 16px; width: 100%;">
+                    <!-- Displaying title and description dynamically -->
+                    <h2 style="font-size: 14px; font-weight: 600; color: white;"><?php echo $banner['title']; ?></h2>
+                    <p style="font-size: 20px; font-weight: 700; color: white;"><?php echo $banner['description']; ?></p>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; width: 30%;">
+                <!-- Displaying button dynamically -->
+                <?php if ($banner['btn_text'] && $banner['btn_url']) : ?>
+                    <a href="<?php echo $banner['btn_url']; ?>" target="_blank" style="background-color: <?php echo $banner['btn_color']; ?>; padding: 12px 24px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: background-color 0.3s ease;">
+                        <span style="font-size: 14px; font-weight: 500;"><?php echo $banner['btn_text']; ?></span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- index content -->
 <div class="custom-slider-container">
 

@@ -30,7 +30,7 @@ if (empty($bannerData)) {
 
 $data = [];
 foreach ($bannerData as $index => $banner) {
-    if($banner['status'] == 1){
+    if($banner['is_active'] == 1){
         $stats='process';
         $statsTest='Active';
     }else{
@@ -42,8 +42,9 @@ foreach ($bannerData as $index => $banner) {
         'checkbox' => '<label class="au-checkbox"><input type="checkbox"><span class="au-checkmark"></span></label>',
         'name' => htmlspecialchars($banner['title']),
         'date' => htmlspecialchars($banner['updated_at']),
-        'image' => '<img style="width:44%; border-radius: 50%;border: 1px solid black;" src="' .$urlval.htmlspecialchars($banner['image_url']).'"/>',
+        'image' => '<img style="width:44%; border-radius: 50%;border: 1px solid black;" src="' .$urlval.htmlspecialchars($banner['image']).'"/>',
         'status' => '<span class="status--'.$stats.'">'.$statsTest.'</span>',
+        'show' => htmlspecialchars($banner['placement']),
         'actions' => '
     <div class="table-data-feature">
         <a href="'.$urlval.'admin/banner/edit.php?bannerid='.$security->encrypt($banner['id']).'" class="item" data-toggle="tooltip" data-placement="top" title="Edit banner">

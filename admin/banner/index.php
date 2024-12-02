@@ -36,6 +36,7 @@ include_once('../header.php');
                                     <th>Name</th>
                                     <th>date</th>
                                     <th>Image</th>
+                                    <th>Show as</th>
                                     <th>status</th>
                                     <th>Action</th>
                                 </tr>
@@ -76,6 +77,7 @@ $(document).ready(function() {
             {"data": "name"},
             {"data": "date"},
             {"data": "image"},
+            {"data": "show"},
             {"data": "status"},
             {"data": "actions"}
         ],

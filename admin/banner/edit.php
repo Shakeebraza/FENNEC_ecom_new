@@ -11,7 +11,7 @@ if (!isset($_GET['bannerid'])) {
 }
 
 $pageid = $security->decrypt($_GET['bannerid']);
-$page = $dbFunctions->getDataById('banners', $pageid); 
+$page = $dbFunctions->getDataById('banners', $pageid);
 if (!$page) {
     echo "<script>
             alert('Banner not found.');
@@ -21,11 +21,19 @@ if (!$page) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $heading = $_POST['productName'] ?? '';
+    $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
-    $image_url = $security->decrypt($page['image_url']); 
+    $btn_text = $_POST['btn_text'] ?? '';
+    $btn_url = $_POST['btn_url'] ?? '';
+    $text_color = $_POST['text_color'] ?? '#FFFFFF';
+    $btn_color = $_POST['btn_color'] ?? '#fbbf24';
+    $bg_color = $_POST['bg_color'] ?? '#000000';
+    $placement = $_POST['placement'] ?? '';
+    $is_active = isset($_POST['is_active']) ? 1 : 0;
 
+    $image_url = $security->decrypt($page['image']);
 
+    // Handle image upload
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $fileTmpPath = $_FILES['image']['tmp_name'];
         $fileName = $_FILES['image']['name'];
@@ -33,28 +41,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fileExtension = strtolower(end($fileNameCmps));
 
         $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
-        $uploadFileDir = '../../upload/'; 
+        $uploadFileDir = '../../upload/';
         $dest_path = $uploadFileDir . $newFileName;
 
         if (move_uploaded_file($fileTmpPath, $dest_path)) {
-            $image_url = 'upload/'.$newFileName; 
+            $image_url = 'upload/' . $newFileName;
         } else {
             echo "<script>alert('Error moving the uploaded file.');</script>";
         }
     }
 
-    if (!empty($heading) && !empty($description)) {
-        $addNewData = [
-            'title' => $heading,
+    if (!empty($title) && !empty($description) && !empty($placement)) {
+        $updateData = [
+            'title' => $title,
             'description' => $description,
-            'image_url' => $image_url,
-            'status' => 1,
+            'btn_text' => $btn_text,
+            'btn_url' => $btn_url,
+            'text_color' => $text_color,
+            'btn_color' => $btn_color,
+            'bg_color' => $bg_color,
+            'placement' => $placement,
+            'is_active' => $is_active,
+            'image' => $image_url,
         ];
 
-        $updateResult = $dbFunctions->updateData('banners', $addNewData,$pageid); 
+        $updateResult = $dbFunctions->updateData('banners', $updateData, $pageid);
 
         if ($updateResult['success']) {
-            echo "<script>alert('Banner updated successfully.');</script>";
+            echo "<script>alert('Banner updated successfully.');";
         } else {
             echo "<script>alert('Error updating banner: {$updateResult['message']}');</script>";
         }
@@ -65,63 +79,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <style>
-    .error {
-        color: red;
-    }
-
-    .form-container {
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        width: 100%;
-        padding: 10px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-    }
-
-    .btn {
-        background-color: #28a745;
-        color: white;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .btn:hover {
-        background-color: #218838;
-    }
-
-    .image-preview {
-        display: flex;
-        flex-wrap: wrap;
-        margin-top: 10px; 
-    }
-
-    .image-preview img {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        margin-right: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
+        .error { color: red; }
+    .form-container { background-color: #f9f9f9; padding: 20px; border-radius: 8px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; }
+    .btn { background-color: #28a745; color: white; padding: 10px 15px; border: none; cursor: pointer; }
+    .btn:hover { background-color: #218838; }
 </style>
 
 <div class="page-container">
@@ -131,36 +95,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="row">
                     <div class="container form-container">
                         <h1>Edit Banner</h1>
-
-                        <?php if (isset($error)): ?>
-                            <div class="error"><?= $security->decrypt($error) ?></div>
-                        <?php endif; ?>
-
                         <form method="POST" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label for="productName">Title <span style="color: red;">*</span></label>
-                                <input type="text" id="productName" name="productName" value="<?= htmlspecialchars($security->decrypt($page['title']) ) ?>" required>
+                                <label for="title">Title <span style="color: red;">*</span></label>
+                                <input type="text" id="title" name="title" value="<?= $security->decrypt(htmlspecialchars($page['title'])) ?>" required>
                             </div>
-
                             <div class="form-group">
                                 <label for="description">Description <span style="color: red;">*</span></label>
-                                <textarea id="description" name="description" rows="4" required><?= htmlspecialchars($security->decrypt($page['description'])) ?></textarea>
+                                <textarea id="description" name="description" rows="4" required><?= $security->decrypt(htmlspecialchars($page['description']) )?></textarea>
                             </div>
-                            
                             <div class="form-group">
                                 <label for="image">Banner Image</label>
                                 <input type="file" id="image" name="image" accept="image/*">
-                            </div>
-
-                            <div class="image-preview" id="imagePreview">
-                                <?php if (!empty($page['image_url'])): ?>
-                                    <img src="<?= $urlval . $security->decrypt($page['image_url']) ?>" alt="Current Image">
+                                <?php if (!empty($page['image'])): ?>
+                                    <div class="image-preview">
+                                        <img src="<?= $urlval . $page['image'] ?>" alt="Current Image" width="100">
+                                    </div>
                                 <?php endif; ?>
                             </div>
-
+                            <div class="form-group">
+                                <label for="btn_text">Button Text</label>
+                                <input type="text" id="btn_text" name="btn_text" value="<?= $security->decrypt(htmlspecialchars($page['btn_text']) )?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="btn_url">Button URL</label>
+                                <input type="url" id="btn_url" name="btn_url" value="<?= $security->decrypt(htmlspecialchars($page['btn_url'])) ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="text_color">Text Color</label>
+                                <input type="color" id="text_color" name="text_color" value="<?= $security->decrypt(htmlspecialchars($page['text_color'])) ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="btn_color">Button Color</label>
+                                <input type="color" id="btn_color" name="btn_color" value="<?= $security->decrypt(htmlspecialchars($page['btn_color'])) ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="bg_color">Background Color</label>
+                                <input type="color" id="bg_color" name="bg_color" value="<?= $security->decrypt(htmlspecialchars($page['bg_color'])) ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="placement">Placement <span style="color: red;">*</span></label>
+                                <select id="placement" name="placement" required>
+                                    <option value="home_header" <?= $security->decrypt($page['placement']) === 'home_header' ? 'selected' : '' ?>>Home Header</option>
+                                    <option value="home_sidebar" <?= $security->decrypt($page['placement']) === 'home_sidebar' ? 'selected' : '' ?>>Home Sidebar</option>
+                                    <option value="category_header" <?= $security->decrypt($page['placement']) === 'category_header' ? 'selected' : '' ?>>Category Header</option>
+                                    <option value="category_sidebar" <?= $security->decrypt($page['placement']) === 'category_sidebar' ? 'selected' : '' ?>>Category Sidebar</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="is_active">Active</label>
+                                <input type="checkbox" id="is_active" name="is_active" <?= $security->decrypt($page['is_active']) ? 'checked' : '' ?>>
+                            </div>
                             <button type="submit" class="btn">Update Banner</button>
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -168,24 +155,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 
-<?php
-include_once('../footer.php');
-?>
-
-<script>
-    document.getElementById('image').addEventListener('change', function(event) {
-        var files = event.target.files;
-        var preview = document.getElementById('imagePreview');
-        preview.innerHTML = '';  
-        for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var img = document.createElement('img');
-                img.src = e.target.result;
-                preview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-</script>
+<?php include_once('../footer.php'); ?>
