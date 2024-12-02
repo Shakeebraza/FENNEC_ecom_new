@@ -1,6 +1,5 @@
 <?php
 require_once('../global.php');
-// header('Content-Type: application/json');
 
 $errors = [];
 
@@ -45,7 +44,7 @@ if (!empty($errors)) {
 try {
     $productImagePath = null;
 
-    // Process gallery and save the first image as the product image
+   
     if (isset($_FILES['gallery'])) {
         foreach ($_FILES['gallery']['tmp_name'] as $key => $tmpName) {
             if ($_FILES['gallery']['error'][$key] === UPLOAD_ERR_OK) {
@@ -53,7 +52,7 @@ try {
                 $galleryImagePathSave = 'upload/productgallery/' . basename($_FILES['gallery']['name'][$key]);
                 if (move_uploaded_file($tmpName, $galleryImagePath)) {
                     if ($key === 0) {
-                        // Save the first gallery image as the product image
+                        
                         $productImagePath = $galleryImagePathSave;
                     }
                 }
@@ -61,7 +60,7 @@ try {
         }
     }
 
-    // If no gallery image was uploaded, fallback to uploaded product image
+
     if (empty($productImagePath)) {
         $imagePath = '../upload/product/' . basename($_FILES['image']['name']);
         $imagePathSave = 'upload/product/' . basename($_FILES['image']['name']);
@@ -71,7 +70,7 @@ try {
         $productImagePath = $imagePathSave;
     }
 
-    // Prepare product data
+
     $productData = [
         'name' => $_POST['productName'],
         'slug' => $_POST['slug'],
@@ -89,7 +88,7 @@ try {
         'user_id' => base64_decode($_SESSION['userid']),
     ];
 
-    // Insert product and fetch its ID
+
     $result = $dbFunctions->setData('products', $productData);
 
     if (!$result['success']) {
@@ -97,10 +96,10 @@ try {
         exit;
     }
 
-    // Fetch the last inserted product ID
+
     $productId = $pdo->lastInsertId();
 
-    // Save gallery images in the database
+
     if (isset($_FILES['gallery'])) {
         $galleryStmt = $pdo->prepare("
             INSERT INTO product_images (product_id, image_path, created_at) 

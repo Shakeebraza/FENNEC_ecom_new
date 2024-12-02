@@ -242,6 +242,32 @@ textarea:focus {
                         <?php endif; ?>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <h5>Image Packages</h5>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="freeImages" value="free" disabled checked>
+                        <label class="form-check-label" for="freeImages">
+                            Free Images Allowed: <?= $fun->getFieldData('free_images'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="extraImages" id="extraImages" value="6">
+                        <label class="form-check-label" for="extraImages">
+                            Add <?= $fun->getFieldData('images_allowed'); ?> More Images for <?= $fun->getFieldData('paid_images_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <h5>Video Packages</h5>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="extraVideos" id="extraVideos" value="1">
+                        <label class="form-check-label" for="extraVideos">
+                            Add <?= $fun->getFieldData('videos_allowed'); ?> Video for <?= $fun->getFieldData('paid_videos_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
+                        </label>
+                    </div>
+                </div>
+
                 <div class="btn-main-div" style="display: flex;justify-content: space-between;">
                     <button type="submit" class="btn btn-primary post-btn">Post Ad</button>
                     <button type="button" class="btn btn-secondary" onclick="goBackToSubcategory()">Back</button>
@@ -310,7 +336,7 @@ textarea:focus {
         document.getElementById('step2').classList.add('hidden');
         document.getElementById('step3').classList.remove('hidden');
         document.getElementById('finalSubcategory').value = subcategoryName;
-        document.getElementById('finalSubcategoryId').value = subcategoryId; // Store the subcategory ID
+        document.getElementById('finalSubcategoryId').value = subcategoryId; 
     }
 
     function goBackToCategory() {
