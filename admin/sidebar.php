@@ -107,13 +107,13 @@
                         <a class="nav-link" href="<?php echo $urlval?>admin/location/index.php"><i
                                 class="fa-solid fa-location-dot"></i>Location</a>
                     </li>
-                    <li class="nav-item <?=isActive('/fennec/admin/box/setting.php');  ?>">
-                        <a class="nav-link" href="<?php echo $urlval?>admin/box/setting.php"><i class="fas fa-cog"></i>
+                    <li class="nav-item <?=isActive('/fennec/admin/setting.php');  ?>">
+                        <a class="nav-link" href="<?php echo $urlval?>admin/setting.php"><i class="fas fa-cog"></i>
                             Site Setting</a>
                     </li>
                     <li class="nav-item <?=isActive('/fennec/admin/setting/web_setting.php');  ?>">
                         <a class="nav-link" href="<?php echo $urlval?>admin/setting/web_setting.php"><i
-                                class="fas fa-cog"></i> website Setting</a>
+                                class="fas fa-cog"></i> Website Setting</a>
                     </li>
                 </ul>
             </div>
@@ -221,13 +221,13 @@
                     <a href="<?php echo $urlval?>admin/location/index.php">
                         <i class="fa-solid fa-location-dot"></i>Location</a>
                 </li>
-                <li class="<?=isActive('/fennec/admin/box/setting.php');  ?>">
-                    <a href="<?php echo $urlval?>admin/box/setting.php">
+                <li class="<?=isActive('/fennec/admin/setting.php');  ?>">
+                    <a href="<?php echo $urlval?>admin/setting.php">
                         <i class="fas fa-cog"></i>Site Setting</a>
                 </li>
                 <li class="<?=isActive('/fennec/admin/setting/web_setting.php');  ?>">
                     <a href="<?php echo $urlval?>admin/setting/web_setting.php">
-                        <i class="fas fa-cog"></i>website Setting</a>
+                        <i class="fas fa-cog"></i>Website Setting</a>
                 </li>
             </ul>
         </nav>

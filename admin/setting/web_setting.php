@@ -59,92 +59,152 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+<style>
+    .card {
+    border-radius: 10px;
+    overflow: hidden;
+}
 
+.card-header {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #0056b3;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #003f8a;
+}
+
+</style>
 <div class="page-container">
     <div class="main-content">
         <div class="section__content section__content--p30">
             <div class="container-fluid">
-                <h1 class="mb-4">Website Settings</h1>
+                <div class="card shadow-lg border-0">
+                    <div class="card-header" style="background: linear-gradient(45deg, #28a745, #218838); color: white;">
+                        <h1 class="mb-0 text-center">Website Settings</h1>
+                    </div>
+                    <div class="card-body p-4" style="background-color: #f9f9f9;">
+                        <?= $message ?>
 
-                <?= $message ?>
+                        <form method="POST" action="">
+                            <!-- Website Settings Section -->
+                            <div class="mb-5">
+                                <h3 style="color: #28a745; border-bottom: 2px solid silver; padding-bottom: 8px;">Website Settings</h3>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="usernameLength" class="form-label">Username Length</label>
+                                        <input type="number" class="form-control border-secondary" id="usernameLength" name="usernameLength"
+                                            placeholder="Minimum characters required"
+                                            value="<?= htmlspecialchars($settings['username_length'] ?? '') ?>">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="passwordLength" class="form-label">Password Length</label>
+                                        <input type="number" class="form-control border-secondary" id="passwordLength" name="passwordLength"
+                                            placeholder="Minimum characters required"
+                                            value="<?= htmlspecialchars($settings['password_length'] ?? '') ?>">
+                                    </div>
+                                </div>
+                            </div>
 
-                <form method="POST" action="">
-                    <div class="mb-3">
-                        <label for="usernameLength" class="form-label">Username Length</label>
-                        <input type="number" class="form-control" id="usernameLength" name="usernameLength"
-                            placeholder="Minimum characters required"
-                            value="<?= htmlspecialchars($settings['username_length'] ?? '') ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="passwordLength" class="form-label">Password Length</label>
-                        <input type="number" class="form-control" id="passwordLength" name="passwordLength"
-                            placeholder="Minimum characters required"
-                            value="<?= htmlspecialchars($settings['password_length'] ?? '') ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="imagesAllowed" class="form-label">Images Allowed</label>
-                        <input type="number" class="form-control" id="imagesAllowed" name="imagesAllowed"
-                            placeholder="Maximum images allowed"
-                            value="<?= htmlspecialchars($settings['images_allowed'] ?? '') ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="freeImages" class="form-label">Free Images</label>
-                        <input type="number" class="form-control" id="freeImages" name="freeImages"
-                            placeholder="Free images allowed"
-                            value="<?= htmlspecialchars($settings['free_images'] ?? '') ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="imageSize" class="form-label">Image Size (Bytes)</label>
-                        <input type="number" class="form-control" id="imageSize" name="imageSize"
-                            placeholder="Maximum size in bytes"
-                            value="<?= htmlspecialchars($settings['image_size'] ?? '') ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="videosAllowed" class="form-label">Videos Allowed</label>
-                        <input type="number" class="form-control" id="videosAllowed" name="videosAllowed"
-                            placeholder="Maximum videos allowed"
-                            value="<?= htmlspecialchars($settings['videos_allowed'] ?? '') ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="paidImagesPrice" class="form-label">Price for Paid Images ($)</label>
-                        <input type="number" step="0.01" class="form-control" id="paidImagesPrice"
-                            name="paidImagesPrice" placeholder="Price for each additional image"
-                            value="<?= htmlspecialchars($settings['paid_images_price'] ?? '') ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="paidVideosPrice" class="form-label">Price for Paid Videos ($)</label>
-                        <input type="number" step="0.01" class="form-control" id="paidVideosPrice"
-                            name="paidVideosPrice" placeholder="Price for each additional video"
-                            value="<?= htmlspecialchars($settings['paid_videos_price'] ?? '') ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="siteCurrency" class="form-label">Site Currency</label>
-                        <select class="form-control" id="siteCurrency" name="siteCurrency">
-                            <option value="USD" <?= ($settings['site_currency'] ?? '') === 'USD' ? 'selected' : '' ?>>USD</option>
-                            <option value="AUD" <?= ($settings['site_currency'] ?? '') === 'AUD' ? 'selected' : '' ?>>AUD</option>
-                            <option value="CAD" <?= ($settings['site_currency'] ?? '') === 'CAD' ? 'selected' : '' ?>>CAD</option>
-                            <option value="JPY" <?= ($settings['site_currency'] ?? '') === 'JPY' ? 'selected' : '' ?>>JPY</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="duration" class="form-label">Duration</label>
-                        <input type="text" class="form-control" id="duration" name="duration"
-                            placeholder="Enter duration (e.g., 30 days)"
-                            value="<?= htmlspecialchars($settings['duration'] ?? '') ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="extensionDuration" class="form-label">Extension Duration</label>
-                        <input type="text" class="form-control" id="extensionDuration" name="extensionDuration"
-                            placeholder="Enter extension duration (e.g., 15 days)"
-                            value="<?= htmlspecialchars($settings['extension_duration'] ?? '') ?>">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </form>
+                            <!-- Image Settings Section -->
+                            <div class="mb-5">
+                                <h3 style="color: #28a745; border-bottom: 2px solid silver; padding-bottom: 8px;">Image Settings</h3>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="imagesAllowed" class="form-label">Images Allowed</label>
+                                        <input type="number" class="form-control border-secondary" id="imagesAllowed" name="imagesAllowed"
+                                            placeholder="Maximum images allowed"
+                                            value="<?= htmlspecialchars($settings['images_allowed'] ?? '') ?>">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="freeImages" class="form-label">Free Images</label>
+                                        <input type="number" class="form-control border-secondary" id="freeImages" name="freeImages"
+                                            placeholder="Free images allowed"
+                                            value="<?= htmlspecialchars($settings['free_images'] ?? '') ?>">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="imageSize" class="form-label">Image Size (Bytes)</label>
+                                        <input type="number" class="form-control border-secondary" id="imageSize" name="imageSize"
+                                            placeholder="Maximum size in bytes"
+                                            value="<?= htmlspecialchars($settings['image_size'] ?? '') ?>">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="paidImagesPrice" class="form-label">Price for Paid Images ($)</label>
+                                        <input type="number" step="0.01" class="form-control border-secondary" id="paidImagesPrice"
+                                            name="paidImagesPrice" placeholder="Price for each additional image"
+                                            value="<?= htmlspecialchars($settings['paid_images_price'] ?? '') ?>">
+                                    </div>
+                                </div>
+                            </div>
 
+                            <!-- Video Settings Section -->
+                            <div class="mb-5">
+                                <h3 style="color: #28a745; border-bottom: 2px solid silver; padding-bottom: 8px;">Video Settings</h3>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="videosAllowed" class="form-label">Videos Allowed</label>
+                                        <input type="number" class="form-control border-secondary" id="videosAllowed" name="videosAllowed"
+                                            placeholder="Maximum videos allowed"
+                                            value="<?= htmlspecialchars($settings['videos_allowed'] ?? '') ?>">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="paidVideosPrice" class="form-label">Price for Paid Videos ($)</label>
+                                        <input type="number" step="0.01" class="form-control border-secondary" id="paidVideosPrice"
+                                            name="paidVideosPrice" placeholder="Price for each additional video"
+                                            value="<?= htmlspecialchars($settings['paid_videos_price'] ?? '') ?>">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Currency and Duration Section -->
+                            <div class="mb-4">
+                                <h3 style="color: #28a745; border-bottom: 2px solid silver; padding-bottom: 8px;">Currency and Duration</h3>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="siteCurrency" class="form-label">Site Currency</label>
+                                        <select class="form-control border-secondary" id="siteCurrency" name="siteCurrency">
+                                            <option value="USD" <?= ($settings['site_currency'] ?? '') === 'USD' ? 'selected' : '' ?>>USD</option>
+                                            <option value="AUD" <?= ($settings['site_currency'] ?? '') === 'AUD' ? 'selected' : '' ?>>AUD</option>
+                                            <option value="CAD" <?= ($settings['site_currency'] ?? '') === 'CAD' ? 'selected' : '' ?>>CAD</option>
+                                            <option value="JPY" <?= ($settings['site_currency'] ?? '') === 'JPY' ? 'selected' : '' ?>>JPY</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="duration" class="form-label">Duration</label>
+                                        <input type="text" class="form-control border-secondary" id="duration" name="duration"
+                                            placeholder="Enter duration (e.g., 30 days)"
+                                            value="<?= htmlspecialchars($settings['duration'] ?? '') ?>">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="extensionDuration" class="form-label">Extension Duration</label>
+                                        <input type="text" class="form-control border-secondary" id="extensionDuration" name="extensionDuration"
+                                            placeholder="Enter extension duration (e.g., 15 days)"
+                                            value="<?= htmlspecialchars($settings['extension_duration'] ?? '') ?>">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn" style="background-color: #28a745; color: white; border: 1px solid silver; padding: 10px 20px;">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <?php
 include_once('../footer.php');
