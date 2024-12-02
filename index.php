@@ -157,6 +157,7 @@ p {
 </style>
 <?php
 $banner = $fun->getRandomBannerByPlacement('home_header');
+if(!empty($banner)){
 ?>
 
 <div style="width: 100%;  display: flex; justify-content:center; margin: 0 auto; padding:14px 16px; align-items: center;">
@@ -188,7 +189,9 @@ $banner = $fun->getRandomBannerByPlacement('home_header');
         </div>
     </div>
 </div>
-<!-- index content -->
+<?php
+}
+?>
 <div class="custom-slider-container">
 
     <div class="custom-slide custom-fade">
