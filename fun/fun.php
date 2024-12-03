@@ -950,6 +950,31 @@ function getRandomBannerByPlacement($placement) {
     $banner = $stmt->fetch(PDO::FETCH_ASSOC);
     return $banner;
 }
+function getSiteStatistics() {
+    // Define the queries
+    $queries = [
+        'Users' => "SELECT COUNT(*) as count FROM users",
+        'Main Categories' => "SELECT COUNT(*) as count FROM categories",
+        'Sub Categories' => "SELECT COUNT(*) as count FROM subcategories",
+        'Ads' => "SELECT COUNT(*) as count FROM products",
+        'Approved Ads' => "SELECT COUNT(*) as count FROM products WHERE status = 'active'",
+        'Unapproved Ads' => "SELECT COUNT(*) as count FROM products WHERE status = 'inactive'",
+        'New/Updated Awaiting Approval' => "SELECT COUNT(*) as count FROM products WHERE status = 'pending'",
+        'Posted Today Ads' => "SELECT COUNT(*) as count FROM products WHERE date = CURDATE()",
+        'Posted Yesterday Ads' => "SELECT COUNT(*) as count FROM products WHERE date = CURDATE() - INTERVAL 1 DAY",
+        'Posted in Last 7 Days Ads' => "SELECT COUNT(*) as count FROM products WHERE date >= CURDATE() - INTERVAL 7 DAY",
+        'Posted in Last 30 Days Ads' => "SELECT COUNT(*) as count FROM products WHERE date >= CURDATE() - INTERVAL 30 DAY",
+    ];
 
+    $statistics = [];
+    foreach ($queries as $key => $query) {
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $statistics[$key] = $result['count'] ?? 0;
+    }
+
+    return $statistics;
+}
 
 }
