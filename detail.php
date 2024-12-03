@@ -146,6 +146,24 @@ $area = $productData['area'];
         width: 100%;
     }
 }
+
+.form-check-label a {
+            color: #0d6efd;
+        }
+
+        .form-check-label a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-report {
+            background: #65ff00;
+            border: none;
+            color: #000;
+        }
+
+        .btn-report:hover {
+            background: #5ce600;
+        }
 </style>
 
 <div class="container mt-4">
@@ -302,7 +320,75 @@ $area = $productData['area'];
                     <button class="btn buttonss w-100" onclick="generatePDF()">
                         <i class="fas fa-print"></i> Print
                     </button>
-                </div>
+                    <!-- Action Buttons -->
+                    
+                    <button class="btn btn-outline-secondary btn buttonss w-100 mt-2" id="toggleReportBtn">
+                        <i class="bi bi-flag"></i> Report
+                    </button>
+                    <div class="container mt-5">
+                        
+
+                        
+                            <form id="reportForm" style="display: none;">
+                                    <input type="hidden" name="productid" value="<?= $productData['product']['product_id']?>">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="reportReason" id="illegal">
+                                    <label class="form-check-label" for="illegal">
+                                        This is illegal/fraudulent
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="reportReason" id="spam">
+                                    <label class="form-check-label" for="spam">
+                                        This ad is spam
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="reportReason" id="duplicate">
+                                    <label class="form-check-label" for="duplicate">
+                                        This ad is a duplicate
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="reportReason" id="wrongCategory">
+                                    <label class="form-check-label" for="wrongCategory">
+                                        This ad is in the wrong category
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="reportReason" id="rules">
+                                    <label class="form-check-label" for="rules">
+                                        The ad goes against <a href="#" class="posting-rules">posting rules</a>
+                                    </label>
+                                </div>
+
+                                <!-- Text Area -->
+                                <textarea class="form-control mb-3" rows="3" placeholder="Please provide more information"></textarea>
+
+                                <!-- Footer Buttons -->
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-outline-secondary w-50" id="cancelReportBtn">Cancel</button>
+                                    <?php
+                                    if(isset($_SESSION['userid'])){
+                                        echo '
+                                        
+                                        <button type="submit" class="btn btn-report w-50">Send report</button>
+                                        ';
+                                    }else{
+                                        echo '
+                                        <a href="' . $urlval . 'LoginRegister.php" class="btn btn-report w-50">Login</a>
+                                        
+                                        ';
+                                    }
+                                    ?>
+                                </div>
+                            </form>
+                        </div>
+                            </div>
             </div>
 
             <div class="card mb-4">
@@ -453,6 +539,14 @@ include_once 'footer.php';
 ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+    document.getElementById('toggleReportBtn').addEventListener('click', function () {
+        const reportForm = document.getElementById('reportForm');
+        reportForm.style.display = reportForm.style.display === 'none' ? 'block' : 'none';
+    });
+
+    document.getElementById('cancelReportBtn').addEventListener('click', function () {
+        document.getElementById('reportForm').style.display = 'none';
+    });
     document.addEventListener('DOMContentLoaded', function() {
         const mainSwiper = new Swiper('.swiper-container2', {
             loop: true,
@@ -716,6 +810,10 @@ function initMap() {
 
 
 google.maps.event.addDomListener(window, 'load', initMap);
+
+
+
+
 
 </script>
 </body>
