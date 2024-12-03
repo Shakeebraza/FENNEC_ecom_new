@@ -184,25 +184,25 @@ $verificationData = json_encode([$verifiedCount, $notVerifiedCount]);
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
-    <!-- TOP CAMPAIGN-->
-    <div class="top-campaign">
-        <h3 class="title-3 m-b-30">Site Statistics</h3>
-        <div class="table-responsive">
-            <table class="table table-top-campaign">
-                <tbody>
-                    <?php
-                    $statistics = $fun->getSiteStatistics($conn); // Pass your PDO connection
-                    foreach ($statistics as $key => $value) {
-                        echo "<tr><td>{$key}</td><td>{$value}</td></tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <!--  END TOP CAMPAIGN-->
-</div>
+                <div class="col-lg-12">
+
+                <div class="top-campaign">
+                    <h3 class="title-3 m-b-30">Site Statistics</h3>
+                    <div class="table-responsive">
+                        <table class="table table-top-campaign">
+                            <tbody>
+                                <?php
+                                $statistics = $fun->getSiteStatistics(); 
+                                foreach ($statistics as $key => $value) {
+                                    echo "<tr><td>{$key}</td><td>{$value}</td></tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
 
             </div>
         </div>

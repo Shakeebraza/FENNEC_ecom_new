@@ -420,6 +420,157 @@ Class Productfun{
         return $response;
         
     }
+    function getProductsWithDetailsAdminFixed($page, $limit, $filters = []) {
+        $offset = ($page - 1) * $limit;
+    
+        $sql = "
+            SELECT 
+                p.id AS product_id,
+                p.name AS product_name,
+                p.slug AS product_slug,
+                p.description AS product_description,
+                p.image AS product_image,
+                p.is_enable AS is_enable,
+                p.price AS product_price,
+                p.date AS product_date,
+                p.user_id AS product_user_id,
+                p.product_type AS product_type,
+                p.discount_price AS product_discount_price,
+                c.category_name AS category_name,
+                s.subcategory_name AS subcategory_name,
+                ci.name AS city_name,
+                co.name AS country_name
+            FROM products p
+            LEFT JOIN categories c ON p.category_id = c.id
+            LEFT JOIN subcategories s ON p.subcategory_id = s.id
+            LEFT JOIN cities ci ON p.city_id = ci.id
+            LEFT JOIN countries co ON p.country_id = co.id
+            WHERE 1 = 1
+        ";
+    
+        $params = [];
+    
+        // Adding filters dynamically with correct column names
+        if (!empty($filters['pid'])) {
+            $sql .= " AND p.id LIKE :pid";
+            $params[':pid'] = '%' . $filters['pid'] . '%';
+        }
+        if (!empty($filters['name'])) { // Correct column name
+            $sql .= " AND p.name LIKE :name";
+            $params[':name'] = '%' . $filters['name'] . '%';
+        }
+        if (!empty($filters['slug'])) {
+            $sql .= " AND p.slug LIKE :slug";
+            $params[':slug'] = '%' . $filters['slug'] . '%';
+        }
+        if (!empty($filters['min_price'])) {
+            $sql .= " AND p.price >= :min_price";
+            $params[':min_price'] = $filters['min_price'];
+        }
+        if (!empty($filters['max_price'])) {
+            $sql .= " AND p.price <= :max_price";
+            $params[':max_price'] = $filters['max_price'];
+        }
+        if (!empty($filters['category'])) {
+            $sql .= " AND p.category_id = :category";
+            $params[':category'] = $filters['category'];
+        }
+        if (!empty($filters['subcategory'])) {
+            $sql .= " AND p.subcategory_id = :subcategory";
+            $params[':subcategory'] = $filters['subcategory'];
+        }
+        if (!empty($filters['product_type'])) {
+            $sql .= " AND p.product_type = :product_type";
+            $params[':product_type'] = $filters['product_type'];
+        }
+        if (!empty($filters['country'])) {
+            $sql .= " AND p.country_id = :country";
+            $params[':country'] = $filters['country'];
+        }
+        if (!empty($filters['city'])) {
+            $sql .= " AND p.city_id = :city";
+            $params[':city'] = $filters['city'];
+        }
+    
+        // Append LIMIT and OFFSET
+        $sql .= " LIMIT :limit OFFSET :offset";
+        $params[':limit'] = intval($limit);
+        $params[':offset'] = intval($offset);
+    
+        // Execute the query
+        $stmt = $this->pdo->prepare($sql);
+        foreach ($params as $key => $value) {
+            if (in_array($key, [':limit', ':offset'])) {
+                $stmt->bindValue($key, $value, PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue($key, $value);
+            }
+        }
+        $stmt->execute();
+    
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Total count query
+        $countSql = "
+            SELECT COUNT(*) AS total
+            FROM products p
+            LEFT JOIN categories c ON p.category_id = c.id
+            LEFT JOIN subcategories s ON p.subcategory_id = s.id
+            LEFT JOIN cities ci ON p.city_id = ci.id
+            LEFT JOIN countries co ON p.country_id = co.id
+            WHERE 1 = 1
+        ";
+    
+        foreach ($filters as $key => $value) {
+            if (!empty($value) && in_array($key, ['pid', 'name', 'slug', 'min_price', 'max_price', 'category', 'subcategory', 'product_type', 'country', 'city'])) {
+                $countSql .= " AND p." . $key . " = :" . $key;
+            }
+        }
+    
+        $countStmt = $this->pdo->prepare($countSql);
+        foreach ($params as $key => $value) {
+            if (!in_array($key, [':limit', ':offset'])) {
+                $countStmt->bindValue($key, $value);
+            }
+        }
+        $countStmt->execute();
+        $total = $countStmt->fetchColumn();
+    
+        // Prepare response
+        $response = [
+            'products' => [],
+            'total' => $total
+        ];
+    
+        foreach ($products as $pro) {
+            $image = $this->urlval . $pro['product_image'];
+            $response['products'][] = [
+                'id' => $pro['product_id'],
+                'base64id' => base64_encode(base64_encode($pro['product_id'])),
+                'name' => $pro['product_name'],
+                'slug' => $pro['product_slug'],
+                'description' => $pro['product_description'],
+                'image' => $image,
+                'price' => $pro['product_price'],
+                'discount_price' => $pro['product_discount_price'],
+                'product_type' => $pro['product_type'],
+                'category' => $pro['category_name'],
+                'subcategory' => $pro['subcategory_name'],
+                'city' => $pro['city_name'],
+                'country' => $pro['country_name'],
+                'date' => $pro['product_date'],
+                'product_user_id' => $pro['product_user_id'],
+                'is_enable' => $pro['is_enable'],
+            ];
+        }
+    
+        return $response;
+    }
+    
+    
+    
+    
+    
     public function searchData($table, $query) {
         $sql = "SELECT p.*, c.category_name, c.slug, c.category_image 
                 FROM $table AS p
@@ -497,12 +648,14 @@ Class Productfun{
                 p.name AS product_name,
                 p.description AS product_description,
                 p.price,
+                p.slug,
                 p.conditions,
                 p.product_type,
                 p.created_at as prodate,
                 p.image as proimage,
                 p.user_id,
                 p.category_id,
+                p.subcategory_id,
                 p.discount_price,
                 p.country_id,
                 p.city_id,
@@ -568,6 +721,95 @@ Class Productfun{
         return null;
     }
     
+    public function getProductDetailsBySlugnew($slug, $userId = null) {
+                $sql = "
+                SELECT 
+                    p.id AS product_id,
+                    p.name AS product_name,
+                    p.description AS product_description,
+                    p.price,
+                    p.slug,
+                    p.conditions,
+                    p.product_type,
+                    p.created_at as prodate,
+                    p.image as proimage,
+                    p.user_id,
+                    p.category_id,
+                    p.subcategory_id,
+                    p.discount_price,
+                    p.country_id,
+                    p.city_id,
+                    p.aera_id,
+                    p.brand,
+                    c.category_name,
+                    c.slug AS catslug,
+                    s.subcategory_name,
+                    cou.name AS con_name,
+                    city.name AS city_name,
+                    area.name AS area_name,  -- Area name
+                    city.longitude AS city_longitude,  -- Longitude of the city
+                    city.latitude AS city_latitude,    -- Latitude of the city
+                    pi.id AS image_id,  -- Image ID
+                    pi.image_path AS image_path,
+                    CASE WHEN f.user_id IS NOT NULL THEN 1 ELSE 0 END AS is_favorited
+                FROM 
+                    products p
+                LEFT JOIN 
+                    categories c ON p.category_id = c.id
+                LEFT JOIN 
+                    subcategories s ON p.subcategory_id = s.id
+                LEFT JOIN 
+                    product_images pi ON p.id = pi.product_id
+                LEFT JOIN 
+                    favorites f ON p.id = f.product_id " . ($userId ? "AND f.user_id = :user_id" : "") . "
+                LEFT JOIN 
+                    countries cou ON cou.id = p.country_id
+                LEFT JOIN 
+                    cities city ON city.id = p.city_id
+                LEFT JOIN 
+                    areas area ON area.id = p.aera_id  
+                WHERE 
+                    p.slug = :slug
+            ";
+            
+            $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':slug', $slug);
+
+        if ($userId) {
+            $stmt->bindParam(':user_id', $userId);
+        }
+
+        $stmt->execute();
+        $productDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($productDetails) {
+            $firstProduct = $productDetails[0];
+            
+            // Collect image data (id and path) for the gallery
+            $images = [];
+            foreach ($productDetails as $productImage) {
+                $images[] = [
+                    'image_id' => $productImage['image_id'],
+                    'image_path' => $productImage['image_path']
+                ];
+            }
+
+            return [
+                'product' => $firstProduct,
+                'gallery_images' => $images,
+                'is_favorited' => $firstProduct['is_favorited'],
+                'location' => $firstProduct['con_name'] . ' | ' . $firstProduct['city_name'] . ' | ' . $firstProduct['area_name'],
+                'country' => $firstProduct['con_name'],
+                'city' => $firstProduct['city_name'],
+                'area' => $firstProduct['area_name'],
+                'city_longitude' => $firstProduct['city_longitude'],  // Longitude
+                'city_latitude' => $firstProduct['city_latitude'],    // Latitude
+            ];
+        }
+
+        return null;
+    }
+            
     
     
     public function toggleFavorite($productId, $userId) {

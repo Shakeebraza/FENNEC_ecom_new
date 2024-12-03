@@ -17,14 +17,14 @@ include_once('style.php');
 
                 </div>
                 <div class="col-md-12">
-                    <h3 class="title-5 m-b-35">Products</h3>
+                    <h3 class="title-5 m-b-35">Manage Ads</h3>
 
 
                     <form method="GET" action="" class="mb-4 custom-form">
                         <div class="row g-3">
                             <div class="col-md-3">
                                 <input type="text" name="product_name" class="form-control"
-                                    placeholder="Search by Product Name" value="">
+                                    placeholder="Search by Ads Name" value="">
                             </div>
 
                             <div class="col-md-2">
@@ -144,7 +144,7 @@ $(document).ready(function() {
 });
 
 function fetchProducts(page) {
-    var product_name = $('input[name="product_name"]').val();
+    var name = $('input[name="product_name"]').val();
     var min_price = $('input[name="min_price"]').val();
     var max_price = $('input[name="max_price"]').val();
     var category = $('select[name="category"]').val();
@@ -155,11 +155,11 @@ function fetchProducts(page) {
 
     $.ajax({
         url: '<?php echo $urlval ?>admin/ajax/product/fetchpro.php',
-        type: 'GET',
+        type: 'POST',
         data: {
             page: page,
             limit: 6,
-            product_name: product_name,
+            name: name,
             min_price: min_price,
             max_price: max_price,
             category: category,
@@ -214,8 +214,8 @@ function fetchProducts(page) {
                                                 onfocus="this.style.borderColor=\'#007bff\'; this.style.boxShadow=\'0px 4px 6px rgba(0, 123, 255, 0.3)\';"
                                                 onblur="this.style.borderColor=\'#ddd\'; this.style.boxShadow=\'none\';"
                                             >
-                                                <option value="1"' ${product.is_enable == 1 ? 'selected' :''}>Activate</option>
-                                                <option value="0"' ${product.is_enable == 0 ? 'selected' :''}>Block</option>
+                                                <option value="1"' ${product.is_enable == 1 ? 'selected' :''}>Approved</option>
+                                                <option value="0"' ${product.is_enable == 0 ? 'selected' :''}>Unapproved</option>
                                             </select>
                                             <span style="
                                                 position: absolute;
@@ -230,8 +230,8 @@ function fetchProducts(page) {
                                             </span>
                                         </div>
 
-                                        <a href="#" class="btn btn-sm btn-warning view-product" data-id="${product.id}">
-                                            <i class="fa fa-eye"></i> View
+                                        <a href="<?= $urlval?>admin/product/edit.php?slug=${product.slug}" class="btn btn-sm btn-warning" >
+                                            <i class="fa fa-eye"></i> Edit
                                         </a>
                                         
                                         <a href="#" class="btn btn-sm btn-danger delete-product" data-id="${product.id}">
