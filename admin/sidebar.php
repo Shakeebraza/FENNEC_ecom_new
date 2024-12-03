@@ -72,7 +72,7 @@
                     </li>
                     <li
                         class="nav-item has-sub <?=isActive('/fennec/admin/subcategories/index.php');  ?> <?=isActive('/fennec/admin/categories/index.php');  ?>">
-                        <a class="nav-link js-arrow" href="#"><i class="fa fa-folder"></i>Product</a>
+                        <a class="nav-link js-arrow" href="#"><i class="fa fa-folder"></i>Ads</a>
                         <ul class="list-unstyled navbar__sub-list js-sub-list">
                             <li>
                                 <a href="<?php echo $urlval?>admin/categories/index.php">All Categories</a>
@@ -81,7 +81,7 @@
                                 <a href="<?php echo $urlval?>admin/subcategories/index.php">Add sub-Categories</a>
                             </li>
                             <li>
-                                <a href="<?php echo $urlval?>admin/product/index.php">All product</a>
+                                <a href="<?php echo $urlval?>admin/product/index.php">All Ads</a>
                             </li>
                         </ul>
                     </li>
@@ -186,7 +186,7 @@
                 <li
                     class="has-sub <?=isActive('/fennec/admin/categories/index.php');  ?> <?=isActive('/fennec/admin/subcategories/index.php');  ?><?=isActive('/fennec/admin/product/index.php');  ?>">
                     <a class="js-arrow " href="#">
-                        <i class="fa fa-folder"></i>Product</a>
+                        <i class="fa fa-folder"></i>Ads</a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
                             <a href="<?php echo $urlval?>admin/categories/index.php">All Categories</a>
@@ -195,7 +195,7 @@
                             <a href="<?php echo $urlval?>admin/subcategories/index.php">All Sub-Categories</a>
                         </li>
                         <li>
-                            <a href="<?php echo $urlval?>admin/product/index.php">All Product</a>
+                            <a href="<?php echo $urlval?>admin/product/index.php">All Ads</a>
                         </li>
                     </ul>
                 </li>
