@@ -45,6 +45,7 @@ foreach ($bannerData as $index => $banner) {
         'image' => '<img style="width:44%; border-radius: 50%;border: 1px solid black;" src="' .$urlval.htmlspecialchars($banner['image']).'"/>',
         'status' => '<span class="status--'.$stats.'">'.$statsTest.'</span>',
         'show' => htmlspecialchars($banner['placement']),
+        'get_code' => '<button class="btn btn-primary get-code" data-id="' . base64_encode($banner['id']) . '" data-toggle="tooltip" data-placement="top" title="Get banner code">Get code</button>',
         'actions' => '
     <div class="table-data-feature">
         <a href="'.$urlval.'admin/banner/edit.php?bannerid='.$security->encrypt($banner['id']).'" class="item" data-toggle="tooltip" data-placement="top" title="Edit banner">
