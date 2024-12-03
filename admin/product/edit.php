@@ -65,6 +65,7 @@ $countries = $dbFunctions->getData('countries');
                         <!-- Form -->
                         <form method="POST" enctype="multipart/form-data" class="container" id="productForm">
                             <!-- Ads Details -->
+                             <input type="hidden" name="productId" value="<?=$product["product"]['product_id']?>">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="productName" class="form-label">Ads Name <span style="color: red;">*</span></label>
@@ -76,21 +77,7 @@ $countries = $dbFunctions->getData('countries');
                                 </div>
                             </div>
 
-                            <!-- Gallery Images -->
-                            <div class="mb-3">
-                                <label for="galleryImages" class="form-label">Gallery Images</label>
-                                <input type="file" class="form-control" id="galleryImages" name="galleryImages[]" multiple>
-                                <div class="gallery-images">
-                                    <?php if (!empty($product['product']['gallery_images'])): ?>
-                                        <?php foreach (json_decode($product['product']['gallery_images']) as $image): ?>
-                                            <div class="gallery-item">
-                                                <img src="<?= $urlval . 'uploads/products/' . htmlspecialchars($image) ?>" alt="Gallery Image" style="max-width: 100px; margin-top: 10px;">
-                                                <button type="button" class="btn btn-danger btn-sm delete-gallery-image" data-image="<?= htmlspecialchars($image) ?>">Delete</button>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
+                     
 
                             <!-- Description -->
                             <div class="mb-3">
@@ -160,7 +147,17 @@ $countries = $dbFunctions->getData('countries');
                                     <label for="price" class="form-label">Price <span style="color: red;">*</span></label>
                                     <input type="number" class="form-control" id="price" name="price" value="<?= htmlspecialchars($product['product']['price']) ?>" step="0.01" required>
                                 </div>
+                            
+                                <div class="col-md-6">
+                                    <label for="membershipType" class="form-label">Select Membership Type</label>
+                                    <select id="membershipType" name="membershipType" class="form-control" required>
+                                        <option value="standard" <?= $product['product']['product_type'] === 'standard' ? 'selected' : '' ?>>Standard</option>
+                                        <option value="gold" <?= $product['product']['product_type'] === 'gold' ? 'selected' : '' ?>>Gold</option>
+                                        <option value="premium" <?= $product['product']['product_type'] === 'premium' ? 'selected' : '' ?>>Premium</option>
+                                    </select>
+                                </div>
                             </div>
+
 
                             <!-- Submit Button -->
                             <button type="submit" class="btn btn-primary btnsubmit">Update Ads</button>
@@ -300,147 +297,96 @@ include_once('../footer.php');
         });
 
         $(document).ready(function() {
-            $('#productForm').on('submit', function(e) {
-                e.preventDefault();
-                $('.text-danger').text('');
-                let isValid = true;
-                const productName = $('#productName').val().trim();
-                const slug = $('#slug').val().trim();
-                const image = $('#image')[0].files[0];
-                const description = $('#description').val().trim();
-                const category = $('#category').val();
-                const subcategory = $('#subcategory').val();
-                const brand = $('#brand').val().trim();
-                const condition = $('#condition').val();
-                const country = $('#country').val();
-                const city = $('#city').val();
-                const price = $('#price').val().trim();
-                const discountPrice = $('#discountPrice').val().trim();
-                if (productName === '') {
-                    $('#productNameError').text('Product name is required.');
-                    isValid = false;
-                }
-                if (slug === '') {
-                    $('#slugError').text('Slug is required.');
-                    isValid = false;
-                }
-                if (!image) {
-                    $('#imageError').text('Image is required.');
-                    isValid = false;
-                }
-                if (description === '') {
-                    $('#descriptionError').text('Description is required.');
-                    isValid = false;
-                }
-                if (!category) {
-                    $('#categoryError').text('Category is required.');
-                    isValid = false;
-                }
-                if (!subcategory) {
-                    $('#subcategoryError').text('Subcategory is required.');
-                    isValid = false;
-                }
-                if (brand === '') {
-                    $('#brandError').text('Brand is required.');
-                    isValid = false;
-                }
-                if (!condition) {
-                    $('#conditionError').text('Condition is required.');
-                    isValid = false;
-                }
-                if (!country) {
-                    $('#countryError').text('Country is required.');
-                    isValid = false;
-                }
-                if (!city) {
-                    $('#cityError').text('City is required.');
-                    isValid = false;
-                }
-                if (price === '') {
-                    $('#priceError').text('Price is required.');
-                    isValid = false;
-                }
-                if (discountPrice === '') {
-                    $('#discountPriceError').text('Discount price is required.');
-                    isValid = false;
-                }
-                if (!isValid) {
-                    return;
-                }
-                var formData = new FormData(this);
 
-                $.ajax({
-                    url: '<?= $urlval ?>admin/ajax/product/addproduct.php',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        if (response.success) {
-                            showSuccessAlert();
-                        } else {
-                            if (response.errors) {
-                                if (response.errors.productName) {
-                                    $('#productNameError').text(response.errors.productName);
-                                }
-                                if (response.errors.slug) {
-                                    $('#slugError').text(response.errors.slug);
-                                }
-                                if (response.errors.image) {
-                                    $('#imageError').text(response.errors.image);
-                                }
-                                if (response.errors.description) {
-                                    $('#descriptionError').text(response.errors.description);
-                                }
-                                if (response.errors.category) {
-                                    $('#categoryError').text(response.errors.category);
-                                }
-                                if (response.errors.subcategory) {
-                                    $('#subcategoryError').text(response.errors.subcategory);
-                                }
-                                if (response.errors.brand) {
-                                    $('#brandError').text(response.errors.brand);
-                                }
-                                if (response.errors.condition) {
-                                    $('#conditionError').text(response.errors.condition);
-                                }
-                                if (response.errors.country) {
-                                    $('#countryError').text(response.errors.country);
-                                }
-                                if (response.errors.city) {
-                                    $('#cityError').text(response.errors.city);
-                                }
-                                if (response.errors.price) {
-                                    $('#priceError').text(response.errors.price);
-                                }
-                                if (response.errors.discountPrice) {
-                                    $('#discountPriceError').text(response.errors.discountPrice);
-                                }
-                            }
+    $('#productForm').on('submit', function(e) {
+        e.preventDefault(); 
+
+
+        $('.text-danger').text('');
+
+    
+        var formData = new FormData(this);
+
+        
+        $.ajax({
+            url: '<?= $urlval ?>admin/ajax/product/updateproduct.php',
+            type: 'POST',
+            data: formData,
+            processData: false, 
+            contentType: false, 
+            success: function(response) {
+                if (response.success) {
+                    
+                    showSuccessAlert();
+                } else {
+                    
+                    if (response.errors) {
+                        if (response.errors.productName) {
+                            $('#productNameError').text(response.errors.productName);
                         }
-                    },
-                    error: function() {
-                        showErrorAlert();
+                        if (response.errors.slug) {
+                            $('#slugError').text(response.errors.slug);
+                        }
+                        if (response.errors.image) {
+                            $('#imageError').text(response.errors.image);
+                        }
+                        if (response.errors.description) {
+                            $('#descriptionError').text(response.errors.description);
+                        }
+                        if (response.errors.category) {
+                            $('#categoryError').text(response.errors.category);
+                        }
+                        if (response.errors.subcategory) {
+                            $('#subcategoryError').text(response.errors.subcategory);
+                        }
+                        if (response.errors.brand) {
+                            $('#brandError').text(response.errors.brand);
+                        }
+                        if (response.errors.condition) {
+                            $('#conditionError').text(response.errors.condition);
+                        }
+                        if (response.errors.country) {
+                            $('#countryError').text(response.errors.country);
+                        }
+                        if (response.errors.city) {
+                            $('#cityError').text(response.errors.city);
+                        }
+                        if (response.errors.price) {
+                            $('#priceError').text(response.errors.price);
+                        }
+                        if (response.errors.discountPrice) {
+                            $('#discountPriceError').text(response.errors.discountPrice);
+                        }
                     }
-                });
-            });
-
-            function showSuccessAlert() {
-                const successAlert = document.getElementById('successAlert');
-                successAlert.style.display = 'block';
-                setTimeout(() => {
-                    successAlert.style.display = 'none';
-                }, 3000);
-            }
-
-            function showErrorAlert() {
-                const errorAlert = document.getElementById('errorAlert');
-                errorAlert.style.display = 'block';
-                setTimeout(() => {
-                    errorAlert.style.display = 'none';
-                }, 3000);
+                }
+            },
+            error: function() {
+             
+                showErrorAlert();
             }
         });
+    });
+
+
+    function showSuccessAlert() {
+        const successAlert = document.getElementById('successAlert');
+        successAlert.style.display = 'block';
+        setTimeout(() => {
+            successAlert.style.display = 'none';
+        }, 3000); 
+    }
+
+
+    function showErrorAlert() {
+        const errorAlert = document.getElementById('errorAlert');
+        errorAlert.style.display = 'block';
+        setTimeout(() => {
+            errorAlert.style.display = 'none';
+        }, 3000); 
+    }
+
+
+});
 
     });
 
