@@ -164,6 +164,74 @@ $area = $productData['area'];
         .btn-report:hover {
             background: #5ce600;
         }
+
+        .share__wrapper {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .share__title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .share__list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .share__item {
+            display: inline-block;
+        }
+
+        .share__link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .share__link:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .share__link--facebook {
+            background-color: #3b5998;
+        }
+
+        .share__link--twitter {
+            background-color: #1da1f2;
+        }
+
+        .share__link--linkedin {
+            background-color: #0077b5;
+        }
+
+        .share__link--mail {
+            background-color: #d44638;
+        }
+
+        .share__link--whatsapp {
+            background-color: #25d366;
+        }
+
+        .share__link i {
+            pointer-events: none;
+        }
 </style>
 
 <div class="container mt-4">
@@ -391,16 +459,45 @@ $area = $productData['area'];
                             </div>
             </div>
 
-            <div class="card mb-4">
-                <!-- <div class="card-body">
-                    <h5 class="card-title">Deliver this with AnyVan</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="fas fa-check text-success"></i> Unbeatable instant prices</li>
-                        <li><i class="fas fa-check text-success"></i> Choose your date & time</li>
-                    </ul>
-                    <button class="btn ">Get instant price</button>
-                </div> -->
-            </div>
+            <div class="container mt-5">
+    <div class="card mb-4">
+        <div class="share__wrapper">
+            <p class="share__title">Share this content:</p>
+            <ul class="share__list">
+                <li class="share__item">
+                    <button class="share__link share__link--facebook">
+                        <i class="fab fa-facebook-f"></i>
+                        <span class="sr-only">Share on Facebook</span>
+                    </button>
+                </li>
+                <li class="share__item">
+                    <button class="share__link share__link--twitter">
+                        <i class="fab fa-twitter"></i>
+                        <span class="sr-only">Share on Twitter</span>
+                    </button>
+                </li>
+                <li class="share__item">
+                    <button class="share__link share__link--linkedin">
+                        <i class="fab fa-linkedin-in"></i>
+                        <span class="sr-only">Share on LinkedIn</span>
+                    </button>
+                </li>
+                <li class="share__item">
+                    <button class="share__link share__link--mail">
+                        <i class="far fa-envelope"></i>
+                        <span class="sr-only">Share via Mail</span>
+                    </button>
+                </li>
+                <li class="share__item">
+                    <button class="share__link share__link--whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                        <span class="sr-only">Share on WhatsApp</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
             <div id="map"></div>
 
             <div class="card card-body">
@@ -779,7 +876,49 @@ include_once 'footer.php';
 }
 
 
+window.onload = setShareLinks;
 
+function setShareLinks() {
+  var pageUrl = encodeURIComponent(document.URL);
+  var pageTitle = encodeURIComponent(document.title);
+
+  document.addEventListener('click', function (event) {  
+    let url = null;
+    
+    if (event.target.classList.contains('share__link--facebook')) {
+      url = "https://www.facebook.com/sharer.php?u=" + pageUrl;
+      socialWindow(url, 570, 570);
+    }
+
+    if (event.target.classList.contains('share__link--twitter')) {
+      url = "https://twitter.com/intent/tweet?url=" + pageUrl + "&text=" + pageTitle;
+      socialWindow(url, 570, 300);
+    }
+
+    if (event.target.classList.contains('share__link--linkedin')) {
+      url = "https://www.linkedin.com/shareArticle?mini=true&url=" + pageUrl;
+      socialWindow(url, 570, 570);
+    }
+
+    if (event.target.classList.contains('share__link--whatsapp')) {
+      url = "whatsapp://send?text=" + pageTitle + "%20" + pageUrl;
+      socialWindow(url, 570, 450);
+    }
+
+    if (event.target.classList.contains('share__link--mail')) {
+      url = "mailto:?subject=%22" + pageTitle + "%22&body=Read%20the%20article%20%22" + pageTitle + "%22%20on%20" + pageUrl;
+      socialWindow(url, 570, 450);
+    }
+
+  }, false);
+}
+
+function socialWindow(url, width, height) {
+  var left = (screen.width - width) / 2;
+  var top = (screen.height - height) / 2;
+  var params = "menubar=no,toolbar=no,status=no,width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
+  window.open(url,"",params);
+}
 function initMap() {
 
     const latitude = <?php echo json_encode($latitude); ?>;
