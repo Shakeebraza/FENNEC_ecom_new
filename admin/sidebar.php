@@ -95,7 +95,7 @@
                     </li>
                     <li class="nav-item <?=isActive('/fennec/admin/packages/payment.php');  ?>">
                         <a class="nav-link" href="<?php echo $urlval?>admin/packages/payment.php"><i
-                                class="fas fa-credit-card"></i> payment</a>
+                                class="fas fa-credit-card"></i> Payment</a>
                     </li>
                     <li
                         class="nav-item <?=isActive('/fennec/admin/lan/index.php');  ?> <?=isActive('/fennec/admin/lan/add.php');  ?> <?=isActive('/fennec/admin/lan/edit.php');  ?>">
@@ -213,7 +213,7 @@
                 </li>
                 <li class="<?=isActive('/fennec/admin/packages/payment.php');  ?>">
                     <a href="<?php echo $urlval?>admin/packages/payment.php">
-                        <i class="fas fa-credit-card"></i>payment</a>
+                        <i class="fas fa-credit-card"></i>Payment</a>
                 </li>
                 <li
                     class="<?=isActive('/fennec/admin/lan/index.php');  ?> <?=isActive('/fennec/admin/lan/add.php');  ?> <?=isActive('/fennec/admin/lan/edit.php');  ?>">
