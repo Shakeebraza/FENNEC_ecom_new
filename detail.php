@@ -60,7 +60,7 @@ $area = $productData['area'];
 
     .image-container:hover .image-overlay {
         opacity: 1;
-       
+
     }
 
     .product-name {
@@ -68,7 +68,7 @@ $area = $productData['area'];
         font-size: 1.5rem;
         font-weight: bold;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        
+
     }
 
     .swiper-pagination.secoundpage.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
@@ -88,150 +88,151 @@ $area = $productData['area'];
             top: 275%;
         }
     }
+
     .gallery-container {
-    padding: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-/* Gallery Title */
-.gallery-title {
-    font-size: 2em;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    border-bottom: 2px solid #ff5733;
-    display: inline-block;
-    padding-bottom: 5px;
-}
-
-/* Gallery Grid */
-.gallery-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-
-/* Gallery Item */
-.gallery-item {
-    position: relative;
-    width: 300px;
-    height: 200px;
-    overflow: hidden;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.gallery-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Video */
-.gallery-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .gallery-item {
-        width: 100%;
+        padding: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
     }
-}
 
-.form-check-label a {
-            color: #0d6efd;
-        }
+    /* Gallery Title */
+    .gallery-title {
+        font-size: 2em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        border-bottom: 2px solid #ff5733;
+        display: inline-block;
+        padding-bottom: 5px;
+    }
 
-        .form-check-label a:hover {
-            text-decoration: underline;
-        }
+    /* Gallery Grid */
+    .gallery-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
 
-        .btn-report {
-            background: #65ff00;
-            border: none;
-            color: #000;
-        }
+    /* Gallery Item */
+    .gallery-item {
+        position: relative;
+        width: 300px;
+        height: 200px;
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        .btn-report:hover {
-            background: #5ce600;
-        }
+    .gallery-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
 
-        .share__wrapper {
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            text-align: center;
-        }
+    /* Video */
+    .gallery-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+    }
 
-        .share__title {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            font-weight: bold;
-            color: #333;
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .gallery-item {
+            width: 100%;
         }
+    }
 
-        .share__list {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
+    .form-check-label a {
+        color: #0d6efd;
+    }
 
-        .share__item {
-            display: inline-block;
-        }
+    .form-check-label a:hover {
+        text-decoration: underline;
+    }
 
-        .share__link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+    .btn-report {
+        background: #65ff00;
+        border: none;
+        color: #000;
+    }
 
-        .share__link:hover {
-            transform: scale(1.1);
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        }
+    .btn-report:hover {
+        background: #5ce600;
+    }
 
-        .share__link--facebook {
-            background-color: #3b5998;
-        }
+    .share__wrapper {
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        text-align: center;
+    }
 
-        .share__link--twitter {
-            background-color: #1da1f2;
-        }
+    .share__title {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        font-weight: bold;
+        color: #333;
+    }
 
-        .share__link--linkedin {
-            background-color: #0077b5;
-        }
+    .share__list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
 
-        .share__link--mail {
-            background-color: #d44638;
-        }
+    .share__item {
+        display: inline-block;
+    }
 
-        .share__link--whatsapp {
-            background-color: #25d366;
-        }
+    .share__link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        .share__link i {
-            pointer-events: none;
-        }
+    .share__link:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .share__link--facebook {
+        background-color: #3b5998;
+    }
+
+    .share__link--twitter {
+        background-color: #1da1f2;
+    }
+
+    .share__link--linkedin {
+        background-color: #0077b5;
+    }
+
+    .share__link--mail {
+        background-color: #d44638;
+    }
+
+    .share__link--whatsapp {
+        background-color: #25d366;
+    }
+
+    .share__link i {
+        pointer-events: none;
+    }
 </style>
 
 <div class="container mt-4">
@@ -256,7 +257,7 @@ $area = $productData['area'];
 
     <h1 class="mb-2"><?php echo htmlspecialchars($productData['product']['product_name'] ?? 'Product Title'); ?></h1>
     <p class="text-muted mb-2"><?php echo htmlspecialchars($productData['location'] ?? 'Location'); ?></p>
-    <h2 class="mb-4"><?php echo  $fun->getFieldData('site_currency')?><?php echo htmlspecialchars($productData['product']['price'] ?? '0.00'); ?></h2>
+    <h2 class="mb-4"><?php echo  $fun->getFieldData('site_currency') ?><?php echo htmlspecialchars($productData['product']['price'] ?? '0.00'); ?></h2>
 
     <div class="row">
         <div class="col-md-8">
@@ -283,43 +284,43 @@ $area = $productData['area'];
                         ?>
                     </div>
                     <div class="swiper-pagination" style="bottom: 415px;"></div>
-                        </div>
-                        <div class="card-body" style="padding: 1.5em; background: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
-                            <h5 class="card-title" style="font-size: 2em; font-weight: bold; color: #333; letter-spacing: 1px; margin-bottom: 0.8em; text-transform: uppercase;"><?= htmlspecialchars($productData['product']['product_name'] ?? 'Product Name'); ?></h5>
-                            <p class="card-text" style="font-size: 1.1em; color: #777; line-height: 1.6; text-align: justify;">
-                                <?= htmlspecialchars($productData['product']['product_description'] ?? 'No description available.'); ?>
-                            </p>
-                        </div>
+                </div>
+                <div class="card-body" style="padding: 1.5em; background: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+                    <h5 class="card-title" style="font-size: 2em; font-weight: bold; color: #333; letter-spacing: 1px; margin-bottom: 0.8em; text-transform: uppercase;"><?= htmlspecialchars($productData['product']['product_name'] ?? 'Product Name'); ?></h5>
+                    <p class="card-text" style="font-size: 1.1em; color: #777; line-height: 1.6; text-align: justify;">
+                        <?= htmlspecialchars($productData['product']['product_description'] ?? 'No description available.'); ?>
+                    </p>
+                </div>
 
-                        <div class="product-details" style="padding: 2em 1.5em; background-color: #f7f7f7; border-radius: 12px; margin-top: 1.5em; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                            <div style="margin-bottom: 1.2em;">
-                                <p style="font-size: 1.2em; color: #333; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.5em;">Brand:
-                                    <span style="font-size: 1.1em; color: #555; font-weight: 400;">
-                                        <?= isset($productData['product']['brand']) ? ucwords(strtolower($productData['product']['brand'])) : 'N/A'; ?>
-                                    </span>
-                                </p>
-                            </div>
-                            <div style="margin-bottom: 1.2em;">
-                                <p style="font-size: 1.2em; color: #333; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.5em;">Condition:
-                                    <span style="font-size: 1.1em; color: #555; font-weight: 400;">
-                                        <?= isset($productData['product']['conditions']) ? ucwords(strtolower($productData['product']['conditions'])) : 'N/A'; ?>
-                                    </span>
-                                </p>
-                            </div>
-                            <div style="margin-bottom: 1.2em;">
-                                <p style="font-size: 1.2em; color: #333; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.5em;">Product Type:
-                                    <span style="font-size: 1.1em; color: #555; font-weight: 400;">
-                                        <?= isset($productData['product']['product_type']) ? ucwords(strtolower($productData['product']['product_type'])) : 'N/A'; ?>
-                                    </span>
-                                </p>
-                            </div>
-                            <div>
-                                <p style="font-size: 1.2em; color: #333; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.5em;">Created At:
-                                    <span style="font-size: 1.1em; color: #555; font-weight: 400;">
-                                        <?= isset($productData['product']['prodate']) ? date('F j, Y', strtotime($productData['product']['prodate'])) : 'N/A'; ?>
-                                    </span>
-                                </p>
-                            </div>
+                <div class="product-details" style="padding: 2em 1.5em; background-color: #f7f7f7; border-radius: 12px; margin-top: 1.5em; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                    <div style="margin-bottom: 1.2em;">
+                        <p style="font-size: 1.2em; color: #333; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.5em;">Brand:
+                            <span style="font-size: 1.1em; color: #555; font-weight: 400;">
+                                <?= isset($productData['product']['brand']) ? ucwords(strtolower($productData['product']['brand'])) : 'N/A'; ?>
+                            </span>
+                        </p>
+                    </div>
+                    <div style="margin-bottom: 1.2em;">
+                        <p style="font-size: 1.2em; color: #333; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.5em;">Condition:
+                            <span style="font-size: 1.1em; color: #555; font-weight: 400;">
+                                <?= isset($productData['product']['conditions']) ? ucwords(strtolower($productData['product']['conditions'])) : 'N/A'; ?>
+                            </span>
+                        </p>
+                    </div>
+                    <div style="margin-bottom: 1.2em;">
+                        <p style="font-size: 1.2em; color: #333; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.5em;">Product Type:
+                            <span style="font-size: 1.1em; color: #555; font-weight: 400;">
+                                <?= isset($productData['product']['product_type']) ? ucwords(strtolower($productData['product']['product_type'])) : 'N/A'; ?>
+                            </span>
+                        </p>
+                    </div>
+                    <div>
+                        <p style="font-size: 1.2em; color: #333; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.5em;">Created At:
+                            <span style="font-size: 1.1em; color: #555; font-weight: 400;">
+                                <?= isset($productData['product']['prodate']) ? date('F j, Y', strtotime($productData['product']['prodate'])) : 'N/A'; ?>
+                            </span>
+                        </p>
+                    </div>
                 </div>
 
 
@@ -330,17 +331,17 @@ $area = $productData['area'];
         <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-body">
-                    <h5 class="card-title"><?= $lan['seller_information']?></h5>
+                    <h5 class="card-title"><?= $lan['seller_information'] ?></h5>
                     <p class="card-text">
                         <i class="fas fa-user"></i> <?php
                                                     $usid = $productData['product']['user_id'];
                                                     $datauserid = $dbFunctions->getDatanotenc('users', "id='$usid'");
                                                     echo $datauserid[0]['username'] ?? "Not found..";
                                                     ?><br>
-                        <small class="text-muted"><?= $lan['posting_month']?></small>
+                        <small class="text-muted"><?= $lan['posting_month'] ?></small>
                     </p>
                     <p class="card-text">
-                        <i class="fas fa-check-circle text-success"></i> <?= $lan['email_address_verified']?>
+                        <i class="fas fa-check-circle text-success"></i> <?= $lan['email_address_verified'] ?>
                     </p>
                     <?php
                     if (isset($_SESSION['userid'])) {
@@ -356,7 +357,7 @@ $area = $productData['area'];
                     <?php
                         }
                     } else {
-                        echo '<a href="' . $urlval . 'LoginRegister.php" class="btn btn-success w-100 mb-2">'.$lan['chat'].'</a>';
+                        echo '<a href="' . $urlval . 'LoginRegister.php" class="btn btn-success w-100 mb-2">' . $lan['chat'] . '</a>';
                     }
                     ?>
                     <?php
@@ -370,14 +371,14 @@ $area = $productData['area'];
                         if (isset($_SESSION['userid'])) {
                             echo '
                         <button class="btn buttonss w-100 mb-2" data-productid="' . $productData['product']['product_id'] . '" id="favorite-button">
-                            <i class="far fa-heart"></i> '.$lan['Favourite'].'
+                            <i class="far fa-heart"></i> ' . $lan['Favourite'] . '
                         </button>
                             
                             ';
                         } else {
                             echo '
                                 <a class="btn buttonss w-100 mb-2" href="' . $urlval . 'LoginRegister.php">
-                                    <i class="far fa-heart"></i> '.$lan['Favourite'].'
+                                    <i class="far fa-heart"></i> ' . $lan['Favourite'] . '
                                 </a>
                             
                             ';
@@ -389,115 +390,109 @@ $area = $productData['area'];
                         <i class="fas fa-print"></i> Print
                     </button>
                     <!-- Action Buttons -->
-                    
+
                     <button class="btn btn-outline-secondary btn buttonss w-100 mt-2" id="toggleReportBtn">
                         <i class="bi bi-flag"></i> Report
                     </button>
                     <div class="container mt-5">
-                        
 
-                        
-                            <form id="reportForm" style="display: none;">
-                                    <input type="hidden" name="productid" value="<?= $productData['product']['product_id']?>">
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="reportReason" id="illegal">
-                                    <label class="form-check-label" for="illegal">
-                                        This is illegal/fraudulent
-                                    </label>
-                                </div>
 
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="reportReason" id="spam">
-                                    <label class="form-check-label" for="spam">
-                                        This ad is spam
-                                    </label>
-                                </div>
 
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="reportReason" id="duplicate">
-                                    <label class="form-check-label" for="duplicate">
-                                        This ad is a duplicate
-                                    </label>
-                                </div>
+                    <form id="reportForm" style="display: none;">
+                    <input type="hidden" name="productid" value="<?= $productData['product']['product_id'] ?>">
+                    
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="reportReason" id="illegal" value="illegal">
+                        <label class="form-check-label" for="illegal">
+                            This is illegal/fraudulent
+                        </label>
+                    </div>
 
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="reportReason" id="wrongCategory">
-                                    <label class="form-check-label" for="wrongCategory">
-                                        This ad is in the wrong category
-                                    </label>
-                                </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="reportReason" id="spam" value="spam">
+                        <label class="form-check-label" for="spam">
+                            This ad is spam
+                        </label>
+                    </div>
 
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="radio" name="reportReason" id="rules">
-                                    <label class="form-check-label" for="rules">
-                                        The ad goes against <a href="#" class="posting-rules">posting rules</a>
-                                    </label>
-                                </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="reportReason" id="duplicate" value="duplicate">
+                        <label class="form-check-label" for="duplicate">
+                            This ad is a duplicate
+                        </label>
+                    </div>
 
-                                <!-- Text Area -->
-                                <textarea class="form-control mb-3" rows="3" placeholder="Please provide more information"></textarea>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="reportReason" id="wrongCategory" value="wrong_category">
+                        <label class="form-check-label" for="wrongCategory">
+                            This ad is in the wrong category
+                        </label>
+                    </div>
 
-                                <!-- Footer Buttons -->
-                                <div class="d-flex gap-2">
-                                    <button type="button" class="btn btn-outline-secondary w-50" id="cancelReportBtn">Cancel</button>
-                                    <?php
-                                    if(isset($_SESSION['userid'])){
-                                        echo '
-                                        
-                                        <button type="submit" class="btn btn-report w-50">Send report</button>
-                                        ';
-                                    }else{
-                                        echo '
-                                        <a href="' . $urlval . 'LoginRegister.php" class="btn btn-report w-50">Login</a>
-                                        
-                                        ';
-                                    }
-                                    ?>
-                                </div>
-                            </form>
-                        </div>
-                            </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="reportReason" id="rules" value="against_rules">
+                        <label class="form-check-label" for="rules">
+                            The ad goes against <a href="#" class="posting-rules">posting rules</a>
+                        </label>
+                    </div>
+
+                    <!-- Text Area -->
+                    <textarea class="form-control mb-3" rows="3" name="additionalInfo" placeholder="Please provide more information"></textarea>
+
+                    <!-- Footer Buttons -->
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-secondary w-50" id="cancelReportBtn">Cancel</button>
+                        <?php if (isset($_SESSION['userid'])): ?>
+                            <button type="submit" class="btn btn-report w-50">Send report</button>
+                        <?php else: ?>
+                            <a href="<?= $urlval ?>LoginRegister.php" class="btn btn-report w-50">Login</a>
+                        <?php endif; ?>
+                    </div>
+                </form>
+
+                    </div>
+                </div>
             </div>
 
             <div class="container mt-5">
-    <div class="card mb-4">
-        <div class="share__wrapper">
-            <p class="share__title">Share this content:</p>
-            <ul class="share__list">
-                <li class="share__item">
-                    <button class="share__link share__link--facebook">
-                        <i class="fab fa-facebook-f"></i>
-                        <span class="sr-only">Share on Facebook</span>
-                    </button>
-                </li>
-                <li class="share__item">
-                    <button class="share__link share__link--twitter">
-                        <i class="fab fa-twitter"></i>
-                        <span class="sr-only">Share on Twitter</span>
-                    </button>
-                </li>
-                <li class="share__item">
-                    <button class="share__link share__link--linkedin">
-                        <i class="fab fa-linkedin-in"></i>
-                        <span class="sr-only">Share on LinkedIn</span>
-                    </button>
-                </li>
-                <li class="share__item">
-                    <button class="share__link share__link--mail">
-                        <i class="far fa-envelope"></i>
-                        <span class="sr-only">Share via Mail</span>
-                    </button>
-                </li>
-                <li class="share__item">
-                    <button class="share__link share__link--whatsapp">
-                        <i class="fab fa-whatsapp"></i>
-                        <span class="sr-only">Share on WhatsApp</span>
-                    </button>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
+                <div class="card mb-4">
+                    <div class="share__wrapper">
+                        <p class="share__title">Share this content:</p>
+                        <ul class="share__list">
+                            <li class="share__item">
+                                <button class="share__link share__link--facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                    <span class="sr-only">Share on Facebook</span>
+                                </button>
+                            </li>
+                            <li class="share__item">
+                                <button class="share__link share__link--twitter">
+                                    <i class="fab fa-twitter"></i>
+                                    <span class="sr-only">Share on Twitter</span>
+                                </button>
+                            </li>
+                            <li class="share__item">
+                                <button class="share__link share__link--linkedin">
+                                    <i class="fab fa-linkedin-in"></i>
+                                    <span class="sr-only">Share on LinkedIn</span>
+                                </button>
+                            </li>
+                            <li class="share__item">
+                                <button class="share__link share__link--mail">
+                                    <i class="far fa-envelope"></i>
+                                    <span class="sr-only">Share via Mail</span>
+                                </button>
+                            </li>
+                            <li class="share__item">
+                                <button class="share__link share__link--whatsapp">
+                                    <i class="fab fa-whatsapp"></i>
+                                    <span class="sr-only">Share on WhatsApp</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <div id="map"></div>
 
             <div class="card card-body">
@@ -573,36 +568,36 @@ $area = $productData['area'];
             </div>
         </div>
     </div> -->
-    <?php if($productData['product']['product_type'] != 'standard'):?>
-    <div id="video-gallery" class="gallery-container">
-        <h2 class="gallery-title"><?= $lan['video_gallery'] ?></h2>
-        <div class="gallery-grid">
-            <?php
-            $proid = $productData['product']['product_id'];
-            $getVideoGalleryData = $dbFunctions->getDatanotenc('product_videos', "product_id ='$proid'");
+    <?php if ($productData['product']['product_type'] != 'standard'): ?>
+        <div id="video-gallery" class="gallery-container">
+            <h2 class="gallery-title"><?= $lan['video_gallery'] ?></h2>
+            <div class="gallery-grid">
+                <?php
+                $proid = $productData['product']['product_id'];
+                $getVideoGalleryData = $dbFunctions->getDatanotenc('product_videos', "product_id ='$proid'");
 
-            if (!empty($getVideoGalleryData)) {
-                $videoPaths = explode(',', $getVideoGalleryData[0]['video_paths']); // Split the video paths
+                if (!empty($getVideoGalleryData)) {
+                    $videoPaths = explode(',', $getVideoGalleryData[0]['video_paths']); // Split the video paths
 
-                foreach ($videoPaths as $videoPath) {
-                    ?>
-                    <div class="gallery-item">
-                        <video class="gallery-video" controls>
-                            <source src="<?= $urlval.htmlspecialchars($videoPath) ?>" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
-                    <?php
+                    foreach ($videoPaths as $videoPath) {
+                ?>
+                        <div class="gallery-item">
+                            <video class="gallery-video" controls>
+                                <source src="<?= $urlval . htmlspecialchars($videoPath) ?>" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                <?php
+                    }
+                } else {
+                    echo "<p>No videos available for this product.</p>";
                 }
-            } else {
-                echo "<p>No videos available for this product.</p>";
-            }
-            ?>
+                ?>
+            </div>
         </div>
-    </div>
-    <?php endif;?>
+    <?php endif; ?>
 
-    <h3 class="mt-4 mb-3"><b><?= $lan['you_may_also_like']?></b></h3>
+    <h3 class="mt-4 mb-3"><b><?= $lan['you_may_also_like'] ?></b></h3>
     <div class="swiper-container my-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);">
         <div class="swiper-wrapper">
             <?php
@@ -611,7 +606,7 @@ $area = $productData['area'];
                 echo '
                 <div class="swiper-slide d-flex flex-column align-items-center">
                     <div class="slide-content text-center p-3">
-                    <a href="'.$urlval.'detail.php?slug='.$relatedProduct['slug'].'">
+                    <a href="' . $urlval . 'detail.php?slug=' . $relatedProduct['slug'] . '">
                         <img 
                             src="' . htmlspecialchars($urlval . $relatedProduct['image']) . '" 
                             alt="' . htmlspecialchars($relatedProduct['title']) . '" 
@@ -636,12 +631,12 @@ include_once 'footer.php';
 ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-    document.getElementById('toggleReportBtn').addEventListener('click', function () {
+    document.getElementById('toggleReportBtn').addEventListener('click', function() {
         const reportForm = document.getElementById('reportForm');
         reportForm.style.display = reportForm.style.display === 'none' ? 'block' : 'none';
     });
 
-    document.getElementById('cancelReportBtn').addEventListener('click', function () {
+    document.getElementById('cancelReportBtn').addEventListener('click', function() {
         document.getElementById('reportForm').style.display = 'none';
     });
     document.addEventListener('DOMContentLoaded', function() {
@@ -742,218 +737,260 @@ include_once 'footer.php';
     });
 
     async function generatePDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+        const {
+            jsPDF
+        } = window.jspdf;
+        const doc = new jsPDF();
 
-    const username = "<?php echo $datauserid[0]['username'] ?? 'Not found..'; ?>";
-    const emailVerified = "<?= $lan['email_address_verified']; ?>";
-    const productTitle = "<?= htmlspecialchars($productData['product']['product_name'], ENT_QUOTES, 'UTF-8'); ?>";
-    const productPrice = "<?= htmlspecialchars($productData['product']['price'], ENT_QUOTES, 'UTF-8'); ?>";
-    const productDescription = "<?= htmlspecialchars($productData['product']['product_description'], ENT_QUOTES, 'UTF-8'); ?>";
-    const profileImage = "<?= htmlspecialchars($productData['product']['proimage'], ENT_QUOTES, 'UTF-8'); ?>";
-    const logo = "<?= $logo ?>";
-
-
-    const productUrl = window.location.href;
-
-
-    const galleryImages = <?= json_encode($productData['gallery_images']) ?>;
+        const username = "<?php echo $datauserid[0]['username'] ?? 'Not found..'; ?>";
+        const emailVerified = "<?= $lan['email_address_verified']; ?>";
+        const productTitle = "<?= htmlspecialchars($productData['product']['product_name'], ENT_QUOTES, 'UTF-8'); ?>";
+        const productPrice = "<?= htmlspecialchars($productData['product']['price'], ENT_QUOTES, 'UTF-8'); ?>";
+        const productDescription = "<?= htmlspecialchars($productData['product']['product_description'], ENT_QUOTES, 'UTF-8'); ?>";
+        const profileImage = "<?= htmlspecialchars($productData['product']['proimage'], ENT_QUOTES, 'UTF-8'); ?>";
+        const logo = "<?= $logo ?>";
 
 
-    async function loadImageToBase64(url) {
-        try {
-            const res = await fetch(url);
-            const blob = await res.blob();
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
-                reader.readAsDataURL(blob);
-            });
-        } catch (error) {
-            console.error("Error loading image:", url, error);
-            return null;
+        const productUrl = window.location.href;
+
+
+        const galleryImages = <?= json_encode($productData['gallery_images']) ?>;
+
+
+        async function loadImageToBase64(url) {
+            try {
+                const res = await fetch(url);
+                const blob = await res.blob();
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(blob);
+                });
+            } catch (error) {
+                console.error("Error loading image:", url, error);
+                return null;
+            }
         }
-    }
 
 
-    const logoBase64 = await loadImageToBase64(logo);
-    const profileImageBase64 = await loadImageToBase64(profileImage);
+        const logoBase64 = await loadImageToBase64(logo);
+        const profileImageBase64 = await loadImageToBase64(profileImage);
 
 
-    if (logoBase64) {
-        doc.addImage(logoBase64, 'JPEG', 10, 10, 40, 20);
-    }
+        if (logoBase64) {
+            doc.addImage(logoBase64, 'JPEG', 10, 10, 40, 20);
+        }
 
 
-    doc.setFontSize(18);
-    doc.setTextColor(0, 102, 204);
-    doc.text("Product Details", 70, 30);
+        doc.setFontSize(18);
+        doc.setTextColor(0, 102, 204);
+        doc.text("Product Details", 70, 30);
 
 
-    doc.setLineWidth(0.5);
-    doc.line(10, 35, 200, 35);
+        doc.setLineWidth(0.5);
+        doc.line(10, 35, 200, 35);
 
 
-    doc.setFontSize(12);
-    doc.setTextColor(0, 0, 0);
-    let yOffset = 50;
-    doc.text(`Seller: ${username}`, 20, yOffset);
-    yOffset += 10;
-    doc.text(`Email Verified: ${emailVerified}`, 20, yOffset);
-    yOffset += 10;
-    doc.text(`Product Title: ${productTitle}`, 20, yOffset);
-    yOffset += 10;
-    doc.text(`Price: ${productPrice}`, 20, yOffset);
-    yOffset += 10;
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        let yOffset = 50;
+        doc.text(`Seller: ${username}`, 20, yOffset);
+        yOffset += 10;
+        doc.text(`Email Verified: ${emailVerified}`, 20, yOffset);
+        yOffset += 10;
+        doc.text(`Product Title: ${productTitle}`, 20, yOffset);
+        yOffset += 10;
+        doc.text(`Price: ${productPrice}`, 20, yOffset);
+        yOffset += 10;
 
 
-    doc.setFontSize(12);
-    doc.setTextColor(34, 34, 34);
-    doc.text("Product URL:", 20, yOffset);
-    yOffset += 10;
-    doc.setFontSize(11);
-    doc.text(productUrl, 20, yOffset, { maxWidth: 170 });
-    yOffset += 20;
+        doc.setFontSize(12);
+        doc.setTextColor(34, 34, 34);
+        doc.text("Product URL:", 20, yOffset);
+        yOffset += 10;
+        doc.setFontSize(11);
+        doc.text(productUrl, 20, yOffset, {
+            maxWidth: 170
+        });
+        yOffset += 20;
 
 
-    doc.setFontSize(12);
-    doc.text("Description:", 20, yOffset);
-    yOffset += 10;
-    doc.setFontSize(11);
-    doc.text(productDescription, 20, yOffset, { maxWidth: 170 });
-    yOffset += 20;
+        doc.setFontSize(12);
+        doc.text("Description:", 20, yOffset);
+        yOffset += 10;
+        doc.setFontSize(11);
+        doc.text(productDescription, 20, yOffset, {
+            maxWidth: 170
+        });
+        yOffset += 20;
 
 
-    if (profileImageBase64) {
-        doc.addImage(profileImageBase64, 'JPEG', 150, 50, 40, 40);
-    }
+        if (profileImageBase64) {
+            doc.addImage(profileImageBase64, 'JPEG', 150, 50, 40, 40);
+        }
 
 
-    if (Array.isArray(galleryImages) && galleryImages.length > 0) {
-        let xOffset = 20;
-        yOffset += 30; 
-        const imagesPerRow = 3;
-        const imageWidth = 50;
-        const imageHeight = 40;
-        let imagesInRow = 0;
+        if (Array.isArray(galleryImages) && galleryImages.length > 0) {
+            let xOffset = 20;
+            yOffset += 30;
+            const imagesPerRow = 3;
+            const imageWidth = 50;
+            const imageHeight = 40;
+            let imagesInRow = 0;
 
-        for (const imageUrl of galleryImages) {
-            const trimmedUrl = imageUrl.trim();
-            if (trimmedUrl) {
-                const imageBase64 = await loadImageToBase64(trimmedUrl);
-                if (imageBase64) {
-                    doc.addImage(imageBase64, 'JPEG', xOffset, yOffset, imageWidth, imageHeight);
-                    xOffset += imageWidth + 10; 
-                    imagesInRow++;
+            for (const imageUrl of galleryImages) {
+                const trimmedUrl = imageUrl.trim();
+                if (trimmedUrl) {
+                    const imageBase64 = await loadImageToBase64(trimmedUrl);
+                    if (imageBase64) {
+                        doc.addImage(imageBase64, 'JPEG', xOffset, yOffset, imageWidth, imageHeight);
+                        xOffset += imageWidth + 10;
+                        imagesInRow++;
 
-                    if (imagesInRow >= imagesPerRow) {
-                        xOffset = 20;
-                        yOffset += imageHeight + 10;
-                        imagesInRow = 0;
-                    }
+                        if (imagesInRow >= imagesPerRow) {
+                            xOffset = 20;
+                            yOffset += imageHeight + 10;
+                            imagesInRow = 0;
+                        }
 
 
-                    if (yOffset > 250) {
-                        doc.addPage();
-                        yOffset = 20;
+                        if (yOffset > 250) {
+                            doc.addPage();
+                            yOffset = 20;
+                        }
                     }
                 }
             }
         }
+
+
+        doc.setLineWidth(0.2);
+        doc.line(10, 280, 200, 280);
+        doc.setFontSize(10);
+        doc.setTextColor(150);
+        doc.text("Generated on " + new Date().toLocaleString(), 70, 290);
+
+
+        const pdfBlob = doc.output("blob");
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl, '_blank');
     }
 
-
-    doc.setLineWidth(0.2);
-    doc.line(10, 280, 200, 280);
-    doc.setFontSize(10);
-    doc.setTextColor(150);
-    doc.text("Generated on " + new Date().toLocaleString(), 70, 290);
+    document.addEventListener('DOMContentLoaded', function() {
+        const reportForm = document.getElementById('reportForm');
+        const cancelReportBtn = document.getElementById('cancelReportBtn');
 
 
-    const pdfBlob = doc.output("blob");
-    const pdfUrl = URL.createObjectURL(pdfBlob);
-    window.open(pdfUrl, '_blank');
-}
+        cancelReportBtn.addEventListener('click', () => {
+            reportForm.style.display = 'none';
+        });
 
 
-window.onload = setShareLinks;
+        reportForm.addEventListener('submit', function(e) {
+            e.preventDefault();
 
-function setShareLinks() {
-  var pageUrl = encodeURIComponent(document.URL);
-  var pageTitle = encodeURIComponent(document.title);
+            const formData = new FormData(reportForm);
 
-  document.addEventListener('click', function (event) {  
-    let url = null;
-    
-    if (event.target.classList.contains('share__link--facebook')) {
-      url = "https://www.facebook.com/sharer.php?u=" + pageUrl;
-      socialWindow(url, 570, 570);
-    }
-
-    if (event.target.classList.contains('share__link--twitter')) {
-      url = "https://twitter.com/intent/tweet?url=" + pageUrl + "&text=" + pageTitle;
-      socialWindow(url, 570, 300);
-    }
-
-    if (event.target.classList.contains('share__link--linkedin')) {
-      url = "https://www.linkedin.com/shareArticle?mini=true&url=" + pageUrl;
-      socialWindow(url, 570, 570);
-    }
-
-    if (event.target.classList.contains('share__link--whatsapp')) {
-      url = "whatsapp://send?text=" + pageTitle + "%20" + pageUrl;
-      socialWindow(url, 570, 450);
-    }
-
-    if (event.target.classList.contains('share__link--mail')) {
-      url = "mailto:?subject=%22" + pageTitle + "%22&body=Read%20the%20article%20%22" + pageTitle + "%22%20on%20" + pageUrl;
-      socialWindow(url, 570, 450);
-    }
-
-  }, false);
-}
-
-function socialWindow(url, width, height) {
-  var left = (screen.width - width) / 2;
-  var top = (screen.height - height) / 2;
-  var params = "menubar=no,toolbar=no,status=no,width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
-  window.open(url,"",params);
-}
-function initMap() {
-
-    const latitude = <?php echo json_encode($latitude); ?>;
-    const longitude = <?php echo json_encode($longitude); ?>;
-    const country = <?php echo json_encode($country); ?>;
-    const city = <?php echo json_encode($city); ?>;
-    const area = <?php echo json_encode($area); ?>;
-
-    const map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
-        zoom: 12
+            fetch('<?= $urlval ?>ajax/processReport.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Your report has been submitted successfully.');
+                        reportForm.style.display = 'none';
+                    } else {
+                        alert('Failed to submit the report. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
+        });
     });
 
-    const marker = new google.maps.Marker({
-        position: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
-        map: map,
-        title: `${area}, ${city}, ${country}`
-    });
+    window.onload = setShareLinks;
 
-    const infowindow = new google.maps.InfoWindow({
-        content: `<h3>${area}</h3><p>${city}, ${country}</p>`
-    });
+    function setShareLinks() {
+        var pageUrl = encodeURIComponent(document.URL);
+        var pageTitle = encodeURIComponent(document.title);
 
-    marker.addListener('click', function() {
-        infowindow.open(map, marker);
-    });
-}
+        document.addEventListener('click', function(event) {
+            let url = null;
+
+            if (event.target.classList.contains('share__link--facebook')) {
+                url = "https://www.facebook.com/sharer.php?u=" + pageUrl;
+                socialWindow(url, 570, 570);
+            }
+
+            if (event.target.classList.contains('share__link--twitter')) {
+                url = "https://twitter.com/intent/tweet?url=" + pageUrl + "&text=" + pageTitle;
+                socialWindow(url, 570, 300);
+            }
+
+            if (event.target.classList.contains('share__link--linkedin')) {
+                url = "https://www.linkedin.com/shareArticle?mini=true&url=" + pageUrl;
+                socialWindow(url, 570, 570);
+            }
+
+            if (event.target.classList.contains('share__link--whatsapp')) {
+                url = "whatsapp://send?text=" + pageTitle + "%20" + pageUrl;
+                socialWindow(url, 570, 450);
+            }
+
+            if (event.target.classList.contains('share__link--mail')) {
+                url = "mailto:?subject=%22" + pageTitle + "%22&body=Read%20the%20article%20%22" + pageTitle + "%22%20on%20" + pageUrl;
+                socialWindow(url, 570, 450);
+            }
+
+        }, false);
+    }
+
+    function socialWindow(url, width, height) {
+        var left = (screen.width - width) / 2;
+        var top = (screen.height - height) / 2;
+        var params = "menubar=no,toolbar=no,status=no,width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
+        window.open(url, "", params);
+    }
+
+    function initMap() {
+
+        const latitude = <?php echo json_encode($latitude); ?>;
+        const longitude = <?php echo json_encode($longitude); ?>;
+        const country = <?php echo json_encode($country); ?>;
+        const city = <?php echo json_encode($city); ?>;
+        const area = <?php echo json_encode($area); ?>;
+
+        const map = new google.maps.Map(document.getElementById('map'), {
+            center: {
+                lat: parseFloat(latitude),
+                lng: parseFloat(longitude)
+            },
+            zoom: 12
+        });
+
+        const marker = new google.maps.Marker({
+            position: {
+                lat: parseFloat(latitude),
+                lng: parseFloat(longitude)
+            },
+            map: map,
+            title: `${area}, ${city}, ${country}`
+        });
+
+        const infowindow = new google.maps.InfoWindow({
+            content: `<h3>${area}</h3><p>${city}, ${country}</p>`
+        });
+
+        marker.addListener('click', function() {
+            infowindow.open(map, marker);
+        });
+    }
 
 
-google.maps.event.addDomListener(window, 'load', initMap);
-
-
-
-
-
+    google.maps.event.addDomListener(window, 'load', initMap);
 </script>
 </body>
 
