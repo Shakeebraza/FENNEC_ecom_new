@@ -107,6 +107,10 @@
                         <a class="nav-link" href="<?php echo $urlval?>admin/location/index.php"><i
                                 class="fa-solid fa-location-dot"></i>Location</a>
                     </li>
+                    <li
+                        class="nav-item <?=isActive('/fennec/admin/report/index.php');  ?>">
+                        <a class="nav-link" href="<?php echo $urlval?>admin/report/index.php"><i class="fa-solid fa-bug"></i>Report</a>
+                    </li>
                     <li class="nav-item <?=isActive('/fennec/admin/setting.php');  ?>">
                         <a class="nav-link" href="<?php echo $urlval?>admin/setting.php"><i class="fas fa-cog"></i>
                             Site Setting</a>
@@ -220,6 +224,11 @@
                     class="<?=isActive('/fennec/admin/location/index.php');  ?> <?=isActive('/fennec/admin/location/add.php');  ?> <?=isActive('/fennec/admin/location/edit.php');  ?> ">
                     <a href="<?php echo $urlval?>admin/location/index.php">
                         <i class="fa-solid fa-location-dot"></i>Location</a>
+                </li>
+                <li
+                    class="<?=isActive('/fennec/admin/report/index.php');  ?>  ">
+                    <a href="<?php echo $urlval?>admin/report/index.php">
+                    <i class="fa-solid fa-bug"></i></i>Report</a>
                 </li>
                 <li class="<?=isActive('/fennec/admin/setting.php');  ?>">
                     <a href="<?php echo $urlval?>admin/setting.php">
