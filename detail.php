@@ -269,12 +269,12 @@ $area = $productData['area'];
 
     <div class="row">
     <div class="col-md-8">
-        <div style="display: flex; height: 100px; justify-content: space-around; padding: 1em 0; background-color: #f7f7f7;">
-            <button id="showGallery" class="btn toggle-btn active" style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f; border: 1px solid #00494f; border-radius: 8px;">
-                <span style="font-size: 1.2em; margin-bottom: 0.5em;">Gallery</span>
+        <div style="display: flex; height: 120px; justify-content: space-around; padding: 1em 0; background-color: #f7f7f7; border: 1px solid #00494f; gap:20px;margin-bottom: 20px;border-radius: 10px;">
+            <button id="showGallery" class="btn toggle-btn active" style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f;">
+                <span style="font-size: 1.2em; margin-bottom: 0.5em;">Images</span>
                 <i class="fa fa-image" style="font-size: 1.5em;"></i>
             </button>
-            <button id="showMap" class="btn toggle-btn" style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f; border: 1px solid #00494f; border-radius: 8px;">
+            <button id="showMap" class="btn toggle-btn" style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f;">
                 <span style="font-size: 1.2em; margin-bottom: 0.5em;">Map</span>
                 <i class="fa fa-map-marker-alt" style="font-size: 1.5em;"></i>
             </button>
