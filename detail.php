@@ -27,6 +27,14 @@ $city = $productData['city'];
 $area = $productData['area'];
 ?>
 <style>
+        .btn.toggle-btn {
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .btn.toggle-btn.active {
+        background-color: #00494f;
+        color: white;
+    }
     /* Slider Item Styling */
     .slider-item {
         position: relative;
@@ -260,73 +268,62 @@ $area = $productData['area'];
     <h2 class="mb-4"><?php echo  $fun->getFieldData('site_currency') ?><?php echo htmlspecialchars($productData['product']['price'] ?? '0.00'); ?></h2>
 
     <div class="row">
-        <div class="col-md-8">
-            <div class="card one mb-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                <div class="swiper-container2" style="margin-bottom: 20px; border-radius: 12px; overflow: hidden;">
-                    <div class="swiper-wrapper">
-                        <?php
-                        if (isset($productData['gallery_images'][0])) {
-                            foreach ($productData['gallery_images'] as $row) {
-                                echo '
-                                    <div class="swiper-slide">
-                                        <img src="' . $urlval . $row . '" class="card-img-top" alt="Not found Image" style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
-                                    </div>
-                                ';
-                            }
-                        } else {
-                            echo '
-                                <div class="">
-                                    <img src="' . $urlval . $productData['product']['proimage'] . '" class="card-img-top" alt="Not found Image" style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
-                                </div>
-                            ';
-                        }
+    <div class="col-md-8">
+        <div style="display: flex; height: 100px; justify-content: space-around; padding: 1em 0; background-color: #f7f7f7;">
+            <button id="showGallery" class="btn toggle-btn active" style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f; border: 1px solid #00494f; border-radius: 8px;">
+                <span style="font-size: 1.2em; margin-bottom: 0.5em;">Gallery</span>
+                <i class="fa fa-image" style="font-size: 1.5em;"></i>
+            </button>
+            <button id="showMap" class="btn toggle-btn" style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f; border: 1px solid #00494f; border-radius: 8px;">
+                <span style="font-size: 1.2em; margin-bottom: 0.5em;">Map</span>
+                <i class="fa fa-map-marker-alt" style="font-size: 1.5em;"></i>
+            </button>
+         </div>
+    <div class="card one mb-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <?php $cleanedLocation = preg_replace('/\|+\s*/', ',', $productData['location']);  
+        $cleanedLocation = trim($cleanedLocation, ', ');  $encodedLocation = urlencode($cleanedLocation);?>
 
-                        ?>
-                    </div>
-                    <div class="swiper-pagination" style="bottom: 415px;"></div>
-                </div>
-                <div class="card-body" style="padding: 1.5em; background: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
-                    <h5 class="card-title" style="font-size: 2em; font-weight: bold; color: #333; letter-spacing: 1px; margin-bottom: 0.8em; text-transform: uppercase;"><?= htmlspecialchars($productData['product']['product_name'] ?? 'Product Name'); ?></h5>
-                    <p class="card-text" style="font-size: 1.1em; color: #777; line-height: 1.6; text-align: justify;">
-                        <?= htmlspecialchars($productData['product']['product_description'] ?? 'No description available.'); ?>
-                    </p>
-                </div>
-
-                <div class="product-details" style="padding: 2em 1.5em; background-color: #f7f7f7; border-radius: 12px; margin-top: 1.5em; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                    <div style="margin-bottom: 1.2em;">
-                        <p style="font-size: 1.2em; color: #333; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.5em;">Brand:
-                            <span style="font-size: 1.1em; color: #555; font-weight: 400;">
-                                <?= isset($productData['product']['brand']) ? ucwords(strtolower($productData['product']['brand'])) : 'N/A'; ?>
-                            </span>
-                        </p>
-                    </div>
-                    <div style="margin-bottom: 1.2em;">
-                        <p style="font-size: 1.2em; color: #333; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.5em;">Condition:
-                            <span style="font-size: 1.1em; color: #555; font-weight: 400;">
-                                <?= isset($productData['product']['conditions']) ? ucwords(strtolower($productData['product']['conditions'])) : 'N/A'; ?>
-                            </span>
-                        </p>
-                    </div>
-                    <div style="margin-bottom: 1.2em;">
-                        <p style="font-size: 1.2em; color: #333; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.5em;">Product Type:
-                            <span style="font-size: 1.1em; color: #555; font-weight: 400;">
-                                <?= isset($productData['product']['product_type']) ? ucwords(strtolower($productData['product']['product_type'])) : 'N/A'; ?>
-                            </span>
-                        </p>
-                    </div>
-                    <div>
-                        <p style="font-size: 1.2em; color: #333; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.5em;">Created At:
-                            <span style="font-size: 1.1em; color: #555; font-weight: 400;">
-                                <?= isset($productData['product']['prodate']) ? date('F j, Y', strtotime($productData['product']['prodate'])) : 'N/A'; ?>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-
-
-
+        <!-- Swiper Gallery -->
+        <div id="galleryContainer" class="swiper-container2" style="margin-bottom: 20px; border-radius: 12px; overflow: hidden;">
+            <div class="swiper-wrapper">
+                <?php
+                if (isset($productData['gallery_images'][0])) {
+                    foreach ($productData['gallery_images'] as $row) {
+                        echo '
+                            <div class="swiper-slide">
+                                <img src="' . $urlval . $row . '" class="card-img-top" alt="Not found Image" style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
+                            </div>
+                        ';
+                    }
+                } else {
+                    echo '
+                        <div class="swiper-slide">
+                            <img src="' . $urlval . $productData['product']['proimage'] . '" class="card-img-top" alt="Not found Image" style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
+                        </div>
+                    ';
+                }
+                ?>
             </div>
+            <div class="swiper-pagination" style="bottom: 15px;"></div>
         </div>
+
+ 
+        <div id="mapContainer" style="display: none; margin-bottom: 20px; border-radius: 12px; overflow: hidden;">
+        <iframe width="100%" height="450" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?key=<?php echo $fun->getSiteSettingValue('google_map_key') ?>&q=<?php echo urlencode($encodedLocation) ?>&maptype=roadmap"></iframe>
+
+        </div>
+
+        <div class="card-body" style="padding: 1.5em; background: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            <h5 class="card-title" style="font-size: 2em; font-weight: bold; color: #333; letter-spacing: 1px; margin-bottom: 0.8em; text-transform: uppercase;">
+                <?= htmlspecialchars($productData['product']['product_name'] ?? 'Product Name'); ?>
+            </h5>
+            <p class="card-text" style="font-size: 1.1em; color: #777; line-height: 1.6; text-align: justify;">
+                <?= htmlspecialchars($productData['product']['product_description'] ?? 'No description available.'); ?>
+            </p>
+        </div>
+    </div>
+</div>
+
 
         <div class="col-md-4">
             <div class="card mb-4">
@@ -493,7 +490,7 @@ $area = $productData['area'];
                     </div>
                 </div>
             </div>
-            <div id="map"></div>
+            
 
             <div class="card card-body">
 
@@ -875,7 +872,40 @@ include_once 'footer.php';
         const pdfUrl = URL.createObjectURL(pdfBlob);
         window.open(pdfUrl, '_blank');
     }
+   
+   
+    document.addEventListener('DOMContentLoaded', function () {
+        const showGalleryBtn = document.getElementById('showGallery');
+        const showMapBtn = document.getElementById('showMap');
+        const galleryContainer = document.getElementById('galleryContainer');
+        const mapContainer = document.getElementById('mapContainer');
 
+        function toggleView(buttonToActivate, buttonToDeactivate, containerToShow, containerToHide) {
+            buttonToActivate.classList.add('active');
+            buttonToActivate.style.backgroundColor = '#00494f';
+            buttonToActivate.style.color = 'white';
+
+            buttonToDeactivate.classList.remove('active');
+            buttonToDeactivate.style.backgroundColor = 'white';
+            buttonToDeactivate.style.color = '#00494f';
+
+            containerToShow.style.display = 'block';
+            containerToHide.style.display = 'none';
+        }
+
+        showGalleryBtn.addEventListener('click', () => {
+            toggleView(showGalleryBtn, showMapBtn, galleryContainer, mapContainer);
+        });
+
+        showMapBtn.addEventListener('click', () => {
+            toggleView(showMapBtn, showGalleryBtn, mapContainer, galleryContainer);
+        });
+    });
+
+    document.getElementById('showMap').addEventListener('click', function() {
+        document.getElementById('galleryContainer').style.display = 'none';
+        document.getElementById('mapContainer').style.display = 'block';
+    });
     document.addEventListener('DOMContentLoaded', function() {
         const reportForm = document.getElementById('reportForm');
         const cancelReportBtn = document.getElementById('cancelReportBtn');
@@ -955,42 +985,7 @@ include_once 'footer.php';
         window.open(url, "", params);
     }
 
-    function initMap() {
-
-        const latitude = <?php echo json_encode($latitude); ?>;
-        const longitude = <?php echo json_encode($longitude); ?>;
-        const country = <?php echo json_encode($country); ?>;
-        const city = <?php echo json_encode($city); ?>;
-        const area = <?php echo json_encode($area); ?>;
-
-        const map = new google.maps.Map(document.getElementById('map'), {
-            center: {
-                lat: parseFloat(latitude),
-                lng: parseFloat(longitude)
-            },
-            zoom: 12
-        });
-
-        const marker = new google.maps.Marker({
-            position: {
-                lat: parseFloat(latitude),
-                lng: parseFloat(longitude)
-            },
-            map: map,
-            title: `${area}, ${city}, ${country}`
-        });
-
-        const infowindow = new google.maps.InfoWindow({
-            content: `<h3>${area}</h3><p>${city}, ${country}</p>`
-        });
-
-        marker.addListener('click', function() {
-            infowindow.open(map, marker);
-        });
-    }
-
-
-    google.maps.event.addDomListener(window, 'load', initMap);
+ 
 </script>
 </body>
 
