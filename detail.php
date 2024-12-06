@@ -484,12 +484,12 @@ $area = $productData['area'];
                                     <span class="sr-only">Share via Mail</span>
                                 </button>
                             </li>
-                            <li class="share__item">
+                            <!-- <li class="share__item">
                                 <button class="share__link share__link--whatsapp">
                                     <i class="fab fa-whatsapp"></i>
                                     <span class="sr-only">Share on WhatsApp</span>
                                 </button>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
