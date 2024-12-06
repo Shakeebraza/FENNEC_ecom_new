@@ -280,8 +280,7 @@ $area = $productData['area'];
             </button>
          </div>
     <div class="card one mb-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-    <?php $cleanedLocation = preg_replace('/\|+\s*/', ',', $productData['location']);  
-        $cleanedLocation = trim($cleanedLocation, ', ');  $encodedLocation = urlencode($cleanedLocation);?>
+    
 
         <!-- Swiper Gallery -->
         <div id="galleryContainer" class="swiper-container2" style="margin-bottom: 20px; border-radius: 12px; overflow: hidden;">
@@ -309,7 +308,12 @@ $area = $productData['area'];
 
  
         <div id="mapContainer" style="display: none; margin-bottom: 20px; border-radius: 12px; overflow: hidden;">
-        <iframe width="100%" height="450" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?key=<?php echo $fun->getSiteSettingValue('google_map_key') ?>&q=<?php echo urlencode($encodedLocation) ?>&maptype=roadmap"></iframe>
+        <?php 
+        $cleanedLocation = preg_replace('/\|+\s*/', ',', $productData['location']);  
+        $cleanedLocation = trim($cleanedLocation, ', ');  
+        $encodedLocation = urlencode($cleanedLocation); 
+        ?>
+        <iframe width="100%" height="450" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?key=<?php echo $fun->getSiteSettingValue('google_map_key') ?>&q=<?php echo $encodedLocation ?>&maptype=roadmap"></iframe>
 
         </div>
 
