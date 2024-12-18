@@ -11,21 +11,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $subcategories = $_GET['subcategory'] ?? null;
     $pId = $_GET['pid'] ?? null;
     $slug = $_GET['slug'] ?? null;
+    $sort = $_GET['sort'] ?? null;
 
     $filterConditions = [];
 
     if (!is_null($location)) {
         $filterConditions['city'] = $location;
     }
-
+    
     if ($min_price > 0) {
         $filterConditions['min_price'] = (float)$min_price;
     }
-
+    
     if ($max_price < PHP_INT_MAX && $max_price > 0) {
         $filterConditions['max_price'] = (float)$max_price; 
     }
-
+    
     if (!empty($slug)) {
         $query = "SELECT id FROM categories WHERE slug = :slug LIMIT 1";
         $stmt = $pdo->prepare($query);
@@ -38,16 +39,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $row_data = $stmt->fetch(PDO::FETCH_ASSOC);
             $filterConditions['category'] = $row_data['id'];
         }        
-                    
+        
     }else{
         $row_data= $dbFunctions->getDatanotenc('cities', "id ='$location'");
-
+        
     }
     if(!empty($subcategories)){
         $filterConditions['subcategory'] = $subcategories; 
     }
     if(!empty($pId)){
         $filterConditions['pid'] = $security->decrypt($pId); 
+    }
+    // $filterConditions['pid'] = $security->decrypt($pId); 
+    if(!empty($sort)){
+        $filterConditions['sort'] = $sort;
+
     }
 }
 
@@ -397,135 +403,100 @@ if(!empty($banner)){
     <div class="row">
     <div class="col-md-3 left-side">
         <div class="bg-light p-4 rounded">
-            <form id="filterForm" method="GET" action="">
-            
-                <div class="mb-4">
-                    <h5><?= $lan['location']?></h5>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                        <select id="country-city-select" name="location" class="form-control">
-                            <option value="">Select Country | City</option>
-                            <?php
-                            $countryCityPairs = $productFun->getCountryCityPairs();
-                            foreach ($countryCityPairs as $pair) {
-                                echo '<option value="' . $pair['city_id'] . '" 
-                                            data-country-id="' . $pair['country_id'] . '" 
-                                            data-city-id="' . $pair['city_id'] . '">
-                                            ' . $pair['country_name'] . ' | ' . $pair['city_name'] . '
-                                    </option>';
-                            }
-                            ?>
-                        </select>
-                    </div>
+        <form id="filterForm" method="GET" action="">
 
-                    <button type="submit" class="btn btn-sell-car ms-3 w-50 custom-button"><?=$lan['search']?></button>
-                </div>
+    <div class="mb-4">
+        <h5><?= $lan['location'] ?></h5>
+        <div class="input-group mb-3">
+            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+            <select id="country-city-select" name="location" class="form-control">
+                <option value="">Select Country | City</option>
                 <?php
-                    if(isset($slug)){
-                        ?>
-                <div class="">
-                    <h5><?= $lan['sub_category']?></h5>
-                    <div class="ms-3">
-                       
-                    <?php
-                    
+                $selectedLocation = isset($_GET['location']) ? $_GET['location'] : ''; 
+                $countryCityPairs = $productFun->getCountryCityPairs();
+                foreach ($countryCityPairs as $pair) {
+                    $selected = $selectedLocation == $pair['city_id'] ? 'selected' : '';
+                    echo '<option value="' . $pair['city_id'] . '" ' . $selected . '>
+                            ' . $pair['country_name'] . ' | ' . $pair['city_name'] . '
+                        </option>';
+                }
+                ?>
+            </select>
+        </div>
+    </div>
 
-                    
-                    @$findCate = $productFun->getAllcatandSubcat($row_data['id']);
-                     
-                    if ($findCate['status'] == 'success') {
-                        foreach ($findCate['data'] as $index => $category) {
-                            echo '
-                                <div class="custom-category" onclick="toggleSubcategory(' . $index . ')">
-                                    <p class="category-title">' . htmlspecialchars($category['category_name']) . '</p>
-                                    <div id="subcategory-' . $index . '" class="subcategory-dropdown" style="display: none;">
-                            ';
+ 
+    <div class="mb-4">
+        <h5><?= $lan['sub_category'] ?></h5>
+        <div class="ms-3">
+            <?php
+            $selectedSubcategory = isset($_GET['subcategory']) ? $_GET['subcategory'] : '';
+            $findatacatandsubcat = $productFun->getCategoriesWithChildren();
 
-                            if (!empty($category['subcategories'])) {
-                                foreach ($category['subcategories'] as $subcategory) {
-                                    echo '<div class="subcategory-item">
-                                            <label>
-                                                <input type="radio" name="subcategory" value="' . htmlspecialchars($subcategory['id']) . '">
-                                                ' . htmlspecialchars($subcategory['subcategory_name']) . '
-                                            </label>
-                                        </div>';
-                                }
-                            } else {
-                                echo '<p class="subcategory-item">No subcategories</p>';
-                            }
-
-                            echo '  </div>
-                                </div>';
-                        }
-                    }
-                }else{
+            if ($findatacatandsubcat['status'] == 'success') {
+                $categories = $findatacatandsubcat['data'];
+                foreach ($categories as $index => $category) {
                     echo '
-                        <div class="">
-                            <h5>' . $lan['sub_category'] . '</h5>
-                            <div class="ms-3">
-                        ';
+                    <div class="custom-category" onclick="toggleSubcategory(' . $index . ')">
+                        <p class="category-title">' . htmlspecialchars($category['category_name']) . '</p>
+                        <div id="subcategory-' . $index . '" class="subcategory-dropdown" style="display: none;">';
 
-                        $findatacatandsubcat = $productFun->getCategoriesWithChildren();
-
-                        if ($findatacatandsubcat['status'] == 'success') {
-                            $categories = $findatacatandsubcat['data'];
-                            foreach ($categories as $index => $category) {
-                                echo '
-                                <div class="custom-category" onclick="toggleSubcategory(' . $index . ')">
-                                    <p class="category-title">' . htmlspecialchars($category['category_name']) . '</p>
-                                    <div id="subcategory-' . $index . '" class="subcategory-dropdown" style="display: none;">
-                                ';
-                        
-                                if (!empty($category['children'])) {
-                                    foreach ($category['children'] as $subcategory) {
-                                        echo '<div class="subcategory-item">
-                                                <label>
-                                                    <input type="radio" name="subcategory" value="' . htmlspecialchars($subcategory['id']) . '" 
-                                                           onclick="updateSlug(\'' . htmlspecialchars($subcategory['slug']) . '\')">
-                                                    ' . htmlspecialchars($subcategory['subcategory_name']) . '
-                                                </label>
-                                            </div>';
-                                    }
-                                } else {
-                                    echo '<p class="subcategory-item">No subcategories</p>';
-                                }
-                        
-                                echo '
-                                    </div>
-                                </div>';
-                            }
-                        } else {
-                            echo '<p>No categories found.</p>';
-                        }
-                        echo '<input type="hidden" name="slug" id="selectedSlug">';
+                    foreach ($category['children'] as $subcategory) {
+                        $checked = $selectedSubcategory == $subcategory['id'] ? 'checked' : '';
+                        echo '<div class="subcategory-item">
+                                <label>
+                                    <input type="radio" name="subcategory" value="' . htmlspecialchars($subcategory['id']) . '" ' . $checked . '>
+                                    ' . htmlspecialchars($subcategory['subcategory_name']) . '
+                                </label>
+                            </div>';
                     }
-                    ?>
 
-                    </div>
-                    
-                    <hr>
-                    <div class="mt-5">
-                        <div class="card" style="max-width: 300px;">
-                            <div class="card-body">
-                                <h5 class="card-title mb-3">Price Range</h5>
-                                <div class="mb-3">
-                                    <label for="minPrice" class="form-label">Minimum Price:</label>
-                                    <input type="number" name="min_price" class="form-control" id="minPrice" placeholder="Enter minimum price" min="0" step="1">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="maxPrice" class="form-label">Maximum Price:</label>
-                                    <input type="number" name="max_price" class="form-control" id="maxPrice" placeholder="Enter maximum price" min="0" step="1">
-                                </div>
-                                <button type="submit" class="btn btn-sell-car w-100"><?=$lan['search']?></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+                    echo '</div></div>';
+                }
+            } else {
+                echo '<p>No categories found.</p>';
+            }
+            ?>
+        </div>
+    </div>
+
+
+    <div class="card mb-4" style="max-width: 300px;">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Price Range</h5>
+            <div class="mb-3">
+                <label for="minPrice" class="form-label">Minimum Price:</label>
+                <input type="number" name="min_price" class="form-control" id="minPrice" 
+                       placeholder="Enter minimum price" min="0" step="1" 
+                       value="<?= isset($_GET['min_price']) ? htmlspecialchars($_GET['min_price']) : '' ?>">
+            </div>
+            <div class="mb-3">
+                <label for="maxPrice" class="form-label">Maximum Price:</label>
+                <input type="number" name="max_price" class="form-control" id="maxPrice" 
+                       placeholder="Enter maximum price" min="0" step="1" 
+                       value="<?= isset($_GET['max_price']) ? htmlspecialchars($_GET['max_price']) : '' ?>">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="mb-4" style="max-width: 300px;">
+        <h6 class="mb-2">Sort By</h6>
+        <div class="btn-group w-100">
+            <button type="button" class="btn btn-outline-primary" onclick="setSort('oldest')">Oldest</button>
+            <button type="button" class="btn btn-outline-primary" onclick="setSort('newest')">Newest</button>
+        </div>
+     
+        <input type="hidden" name="sort" id="sortInput" value="<?= isset($_GET['sort']) ? htmlspecialchars($_GET['sort']) : '' ?>">
+    </div>
+
+
+    <button type="submit" class="btn btn-sell-car w-100"><?= $lan['search'] ?></button>
+</form>
         </div>
 
         <div class="col-md-12 mb-4 mt-4">
-  <!-- Premium Products Slider -->
+
   <div class="sidebar-box" style="box-shadow: 4px 3px 6px #A4A4A485; padding: 20px; background-color: white; border: 2px solid #198754;">
     <h5 class="text-center" style="color: #198754;"><?= $lan['premium_products']?></h5>
     <div class="slider" style="background-color: #fef5e6; padding: 10px;">
@@ -560,7 +531,7 @@ if(!empty($banner)){
   </div>
 
         </div>
-    <!-- add banner -->
+
     <?php
         $banner = $fun->getRandomBannerByPlacement('category_sidebar');
         if (!empty($banner)) {
@@ -629,7 +600,7 @@ if(!empty($banner)){
                     <?php
                     
 
-                        $productFind = $productFun->getProductsWithDetails(1, 500000, $filterConditions);
+                        $productFind = $productFun->getProductsWithDetailsn(1, 500000, $filterConditions);
                         $products = $productFind['products'];
                         // var_dump($productFind);
                         if(!empty($products)){
@@ -808,7 +779,7 @@ document.getElementById('openFilterModalBtn').onclick = function() {
 
 document.querySelectorAll('.icon_heart').forEach(favoriteButton => {
     favoriteButton.addEventListener('click', function(event) {
-        event.preventDefault(); // Prevent default anchor behavior
+        event.preventDefault(); 
         const productId = this.getAttribute('data-productid');
 
         fetch('<?= $urlval ?>ajax/favorite.php', {
@@ -835,19 +806,31 @@ document.querySelectorAll('.icon_heart').forEach(favoriteButton => {
 });
 $(document).ready(function(){
     $('.slider').slick({
-      infinite: true,        // Enable infinite scrolling
-      slidesToShow: 1,       // Show one image at a time
-      slidesToScroll: 1,     // Scroll one image at a time
-      arrows: true,          // Enable previous and next arrows
-      dots: true,            // Show dots navigation
-      autoplay: true,        // Enable autoplay
-      autoplaySpeed: 2000,   // Set the speed of autoplay
+      infinite: true,       
+      slidesToShow: 1,     
+      slidesToScroll: 1,    
+      arrows: true,          
+      dots: true,           
+      autoplay: true,     
+      autoplaySpeed: 2000,   
     });
   });
   function updateSlug(slug) {
-    // Update the hidden field with the selected slug
+
     document.getElementById('selectedSlug').value = slug;
 }
+
+
+function toggleSubcategory(index) {
+        const dropdown = document.getElementById('subcategory-' + index);
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    }
+
+
+    function setSort(order) {
+        document.getElementById('sortInput').value = order;
+        document.getElementById('filterForm').submit();
+    }
 </script>
 </body>
 
