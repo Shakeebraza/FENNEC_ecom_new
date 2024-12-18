@@ -5,134 +5,17 @@ Class Productfun{
     private $security;
     private $dbfun;
     private $urlval;
+    private $date;
 
-    public function __construct($database, $security, $dbfun, $urlval){
+    public function __construct($database, $security, $dbfun, $urlval,$date){
         $this->pdo = $database->getConnection();  
         $this->security = $security;             
         $this->dbfun = $dbfun;                  
         $this->urlval = $urlval;
+        $this->date = $date;
     }
-    function getProductsWithDetailsOld($page, $limit, $filters = []) {
- // $sql = "
-        //     SELECT 
-        //         p.id AS product_id,
-        //         p.name AS product_name,
-        //         p.slug AS product_slug,
-        //         p.description AS product_description,
-        //         p.image AS product_image,
-        //         p.price AS product_price,
-        //         p.date AS productdate,
-        //         p.user_id AS prouserid,
-        //         p.product_type AS product_type,
-        //         p.discount_price AS product_discount_price,
-        //         c.category_name AS category_name,
-        //         s.subcategory_name AS subcategory_name,
-        //         ci.name AS city_name,
-        //         co.name AS country_name
-        //     FROM 
-        //         products p
-        //     LEFT JOIN 
-        //         categories c ON p.category_id = c.id
-        //     LEFT JOIN 
-        //         subcategories s ON p.subcategory_id = s.id
-        //     LEFT JOIN 
-        //         cities ci ON p.city_id = ci.id
-        //     LEFT JOIN 
-        //         countries co ON p.country_id = co.id
-        //     WHERE 
-        //         p.is_enable = 1
-        // ";
-    
-        // $params = [];
-        // if (!empty($filters['pid'])) {
-        //     $sql .= " AND p.id LIKE :id";
-        //     $params[':id'] = '%' . $filters['pid'] . '%';
-        // }
-        // if (!empty($filters['product_name'])) {
-        //     $sql .= " AND p.name LIKE :product_name";
-        //     $params[':product_name'] = '%' . $filters['product_name'] . '%';
-        // }
-        // if (!empty($filters['slug'])) {
-        //     $sql .= " AND p.slug LIKE :slug";
-        //     $params[':slug'] = '%' . $filters['slug'] . '%';
-        // }
-        // if (!empty($filters['min_price'])) {
-        //     $sql .= " AND p.price >= :min_price";
-        //     $params[':min_price'] = $filters['min_price'];
-        // }
-        // if (!empty($filters['max_price'])) {
-        //     $sql .= " AND p.price <= :max_price";
-        //     $params[':max_price'] = $filters['max_price'];
-        // }
-        // if (!empty($filters['category'])) {
-        //     $sql .= " AND p.category_id = :category";
-        //     $params[':category'] = $filters['category'];
-        // }
-        // if (!empty($filters['subcategory'])) {
-        //     $sql .= " AND p.subcategory_id = :subcategory";
-        //     $params[':subcategory'] = $filters['subcategory'];
-        // }
-        // if (!empty($filters['product_type'])) {
-        //     $sql .= " AND p.product_type = :product_type";
-        //     $params[':product_type'] = $filters['product_type'];
-        // }
-        // if (!empty($filters['country'])) {
-        //     $sql .= " AND p.country_id = :country";
-        //     $params[':country'] = $filters['country'];
-        // }
-        // if (!empty($filters['city'])) {
-        //     $sql .= " AND p.city_id = :city";
-        //     $params[':city'] = $filters['city'];
-        // }
-    
-        // $sql .= " ORDER BY p.created_at DESC LIMIT :limit OFFSET :offset";
-    
-        // $stmt = $this->pdo->prepare($sql);
-    
-        // foreach ($params as $key => $value) {
-        //     $stmt->bindValue($key, $value);
-        // }
-        // $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-        // $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-        // $stmt->execute();
-    
-        // $getproduct = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-        // $totalSql = "SELECT COUNT(*) AS total FROM products WHERE is_enable = 1";
-        // $totalStmt = $this->pdo->prepare($totalSql);
-        // $totalStmt->execute();
-        // $total = $totalStmt->fetchColumn();
-    
-        // $response = [
-        //     'products' => [],
-        //     'total' => $total
-        // ];
 
-        // if ($getproduct) {
-        //     foreach ($getproduct as $pro) {
-        //         $image = $this->urlval . $pro['product_image'];
-        //         $response['products'][] = [
-        //             'id' => $pro['product_id'],
-        //             'name' => $pro['product_name'],
-        //             'slug' => $pro['product_slug'],
-        //             'description' => $pro['product_description'],
-        //             'image' => $image,
-        //             'price' => $pro['product_price'],
-        //             'discount_price' => $pro['product_discount_price'],
-        //             'product_type' => $pro['product_type'],
-        //             'category' => $pro['category_name'],
-        //             'subcategory' => $pro['subcategory_name'],
-        //             'city' => $pro['city_name'],
-        //             'country' => $pro['country_name'],
-        //             'date' => $pro['productdate'],
-        //             'prouserid' => $pro['prouserid'],
-        //         ];
-        //     }
-        // }
-    
-        // return $response;
-    }
-    function getProductsWithDetails($page, $limit, $filters = [],$sortBy='custom') {
+    function getProductsWithDetailsOld($page, $limit, $filters = [],$sortBy='custom') {
         $offset = ($page - 1) * $limit;
         
         $sql = "
@@ -278,6 +161,215 @@ Class Productfun{
         return $response;
         
     }
+    function getProductsWithDetails($page, $limit, $filters = [], $sortBy = 'custom') {
+        $offset = ($page - 1) * $limit;
+    
+        // Base SQL for main query
+        $sql = "
+            SELECT 
+                p.id AS product_id,
+                p.name AS product_name,
+                p.slug AS product_slug,
+                p.description AS product_description,
+                p.image AS product_image,
+                p.price AS product_price,
+                p.date AS productdate,
+                p.user_id AS prouserid,
+                p.product_type AS product_type,
+                p.discount_price AS product_discount_price,
+                c.category_name AS category_name,
+                s.subcategory_name AS subcategory_name,
+                ci.name AS city_name,
+                co.name AS country_name
+            FROM 
+                products p
+            LEFT JOIN 
+                categories c ON p.category_id = c.id
+            LEFT JOIN 
+                subcategories s ON p.subcategory_id = s.id
+            LEFT JOIN 
+                cities ci ON p.city_id = ci.id
+            LEFT JOIN 
+                countries co ON p.country_id = co.id
+            WHERE 
+                p.is_enable = 1
+        ";
+    
+        // Base SQL for total count query
+        $totalSql = "
+            SELECT COUNT(*) AS total 
+            FROM products p
+            WHERE p.is_enable = 1
+        ";
+    
+        $params = [];
+    
+        // Function to append filters to SQL queries
+        $appendFilters = function(&$sql, &$totalSql, $filters, &$params) {
+            if (!empty($filters['pid'])) {
+                $sql .= " AND p.id LIKE :id";
+                $totalSql .= " AND p.id LIKE :id";
+                $params[':id'] = '%' . $filters['pid'] . '%';
+            }
+            if (!empty($filters['product_name'])) {
+                $sql .= " AND p.name LIKE :product_name";
+                $totalSql .= " AND p.name LIKE :product_name";
+                $params[':product_name'] = '%' . $filters['product_name'] . '%';
+            }
+            if (!empty($filters['slug'])) {
+                $sql .= " AND p.slug LIKE :slug";
+                $totalSql .= " AND p.slug LIKE :slug";
+                $params[':slug'] = '%' . $filters['slug'] . '%';
+            }
+            if (!empty($filters['min_price'])) {
+                $sql .= " AND p.price >= :min_price";
+                $totalSql .= " AND p.price >= :min_price";
+                $params[':min_price'] = $filters['min_price'];
+            }
+            if (!empty($filters['max_price'])) {
+                $sql .= " AND p.price <= :max_price";
+                $totalSql .= " AND p.price <= :max_price";
+                $params[':max_price'] = $filters['max_price'];
+            }
+            if (!empty($filters['category'])) {
+                $sql .= " AND p.category_id = :category";
+                $totalSql .= " AND p.category_id = :category";
+                $params[':category'] = $filters['category'];
+            }
+            if (!empty($filters['subcategory'])) {
+                $sql .= " AND p.subcategory_id = :subcategory";
+                $totalSql .= " AND p.subcategory_id = :subcategory";
+                $params[':subcategory'] = $filters['subcategory'];
+            }
+            if (!empty($filters['product_type'])) {
+                $sql .= " AND p.product_type = :product_type";
+                $totalSql .= " AND p.product_type = :product_type";
+                $params[':product_type'] = $filters['product_type'];
+            }
+            if (!empty($filters['country'])) {
+                $sql .= " AND p.country_id = :country";
+                $totalSql .= " AND p.country_id = :country";
+                $params[':country'] = $filters['country'];
+            }
+            if (!empty($filters['aera_id'])) {
+                $sql .= " AND p.aera_id = :aera_id";
+                $totalSql .= " AND p.aera_id = :aera_id";
+                $params[':aera_id'] = $filters['aera_id'];
+            }
+            if (!empty($filters['city'])) {
+                $sql .= " AND p.city_id = :city";
+                $totalSql .= " AND p.city_id = :city";
+                $params[':city'] = $filters['city'];
+            }
+        };
+    
+        // Append filters to both queries
+        $appendFilters($sql, $totalSql, $filters, $params);
+    
+        // **New Condition Based on 'extension' Field** for both queries
+        $extensionCondition = " AND (
+                                    (p.extension = 1 AND p.created_at >= DATE_SUB(NOW(), INTERVAL 60 DAY)) 
+                                    OR 
+                                    (p.extension != 1 AND p.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY))
+                                 )";
+        $sql .= $extensionCondition;
+        $totalSql .= $extensionCondition;
+    
+        // Sorting Logic for main query
+        if ($sortBy === 'shuffle') {
+            $sql .= " ORDER BY RAND()";
+        } else {
+            $sql .= "
+                ORDER BY 
+                    CASE 
+                        WHEN p.product_type = 'premium' THEN 1
+                        WHEN p.product_type = 'gold' THEN 2
+                        WHEN p.product_type = 'standard' THEN 3
+                        ELSE 4
+                    END,
+                    p.created_at DESC
+            ";
+        }
+    
+        // Append LIMIT and OFFSET for main query
+        $sql .= " LIMIT :limit OFFSET :offset";
+    
+        try {
+            // Prepare and execute main query
+            $stmt = $this->pdo->prepare($sql);
+    
+            // Bind filter parameters
+            foreach ($params as $key => $value) {
+                // Determine the parameter type based on the key
+                if (in_array($key, [':min_price', ':max_price'])) {
+                    $stmt->bindValue($key, $value, PDO::PARAM_STR); // or PDO::PARAM_INT based on your data type
+                } else {
+                    $stmt->bindValue($key, $value, PDO::PARAM_STR);
+                }
+            }
+    
+            // Bind LIMIT and OFFSET
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+    
+            $stmt->execute();
+    
+            $getproduct = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            // Prepare and execute total count query
+            $totalStmt = $this->pdo->prepare($totalSql);
+    
+            // Bind filter parameters to total count query
+            foreach ($params as $key => $value) {
+                if (in_array($key, [':min_price', ':max_price'])) {
+                    $totalStmt->bindValue($key, $value, PDO::PARAM_STR); // or PDO::PARAM_INT based on your data type
+                } else {
+                    $totalStmt->bindValue($key, $value, PDO::PARAM_STR);
+                }
+            }
+    
+            $totalStmt->execute();
+            $total = $totalStmt->fetchColumn();
+    
+            $response = [
+                'products' => [],
+                'total' => $total
+            ];
+    
+            if ($getproduct) {
+                foreach ($getproduct as $pro) {
+                    $image = $this->urlval . $pro['product_image'];
+                    $response['products'][] = [
+                        'id' => $pro['product_id'],
+                        'name' => $pro['product_name'],
+                        'slug' => $pro['product_slug'],
+                        'description' => $pro['product_description'],
+                        'image' => $image,
+                        'price' => $pro['product_price'],
+                        'discount_price' => $pro['product_discount_price'],
+                        'product_type' => $pro['product_type'],
+                        'category' => $pro['category_name'],
+                        'subcategory' => $pro['subcategory_name'],
+                        'city' => $pro['city_name'],
+                        'country' => $pro['country_name'],
+                        'date' => $pro['productdate'],
+                        'prouserid' => $pro['prouserid'],
+                    ];
+                }
+            }
+    
+            return $response;
+    
+        } catch (PDOException $e) {
+            // Handle the exception as per your application's requirements
+            // For debugging purposes, you can log the error message
+            error_log("Database Error: " . $e->getMessage());
+            // Optionally, rethrow the exception or return a user-friendly message
+            throw $e;
+        }
+    }
+    
+    
     function getProductsWithDetailsAdmin($page, $limit, $filters = [],$sortBy='custom') {
         $offset = ($page - 1) * $limit;
         
@@ -866,6 +958,11 @@ Class Productfun{
             FROM favorites f
             INNER JOIN products p ON f.product_id = p.id
             WHERE f.user_id = :user_id
+            AND (
+                (p.extension = 1 AND p.created_at >= DATE_SUB(NOW(), INTERVAL 60 DAY)) 
+                OR 
+                (p.extension != 1 AND p.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY))
+            )
             ORDER BY f.created_at DESC
         ";
     
@@ -885,7 +982,7 @@ Class Productfun{
     function getProductsForUser($userId, $lan) {
         if ($userId) {
             $query = "
-                SELECT id, name, slug, description, image, price, created_at, product_type
+                SELECT id, name, slug, description, extension,image, price, created_at, product_type
                 FROM products
                 WHERE user_id = :user_id AND is_enable = 1 AND status = 'active'
                 ORDER BY FIELD(product_type, 'premium', 'gold', 'standard'), created_at DESC
@@ -909,10 +1006,15 @@ Class Productfun{
     }
     
     function displayProducts($products, $lan) {
+        $currentDate = new DateTime(); 
         foreach ($products as $product) {
             $description = $product['description'];
             $words = explode(" ", $description);
             $description = count($words) > 5 ? implode(" ", array_slice($words, 0, 5)) . '...' : $description;
+    
+            $createdDate = new DateTime($product['created_at']);
+            $dateDiff = $currentDate->diff($createdDate);
+            $isOlderThan30Days = $dateDiff->days > 30;
     
             echo '
                 <div class="col-md-4 mb-4">
@@ -930,21 +1032,30 @@ Class Productfun{
                                 <small class="text-muted">' . $lan['listed'] . ' ' . $this->dbfun->time_ago($product['created_at']) . '</small>
                             </p>
                             <div class="d-flex justify-content-between">
-                                <a class="btn btn-button btn-sm" href="'.$this->urlval.'productedit.php?productid='.$this->security->encrypt($product['id']).'">'.$lan['edit'].'</a>
+                                <a class="btn btn-button btn-sm" href="'.$this->urlval.'productedit.php?productid='.$this->security->encrypt($product['id']).'" style="display: inline-block; margin-right: 5px;">'.$lan['edit'].'</a>
                                 
                                 <div class="btn-delete-upload">';
-                                if($product['product_type'] == 'standard'){
-                                    echo'
-                                    <a class="btn btn-button btn-sm btn-boost" href="'.$this->urlval.'productboost.php?productid='.base64_encode($product['id']).'">'.$lan['boost'].'</a>
-                                    
-                                    ';
-                                }else{
-                                    echo'
-                                    
-                                    <a class="btn btn-button btn-sm btn-boost" href="'.$this->urlval.'uploadgalvideo.php?productid='.base64_encode($product['id']).'">'.$lan['upload_gallery_video'].'</a>
-                                    ';
+                                
+                            
+                                if ($product['extension'] != 1) {
+                                    if ($isOlderThan30Days) {
+                                        echo '<form action="' . $this->urlval . 'productextend.php" method="POST" style="display:inline;">
+                                            <input type="hidden" name="productid" value="' . base64_encode($product['id']) . '" />
+                                            <input type="hidden" name="plan_name" value="' . htmlspecialchars($product['name']) . '" />
+                                            <button type="submit" class="btn btn-button btn-sm btn-extend" style="display: inline-block; margin-right: 5px;">Extend</button>
+                                        </form>';
+
+                                    }
                                 }
-                                echo'<button class="btn btn-button btn-sm btn-delete" data-product-id="' . $this->security->encrypt($product['id']) . '">' . $lan['delete'] . '</button>
+    
+                              
+                                if ($product['product_type'] == 'standard') {
+                                    echo '<a class="btn btn-button btn-sm btn-boost" href="'.$this->urlval.'productboost.php?productid='.base64_encode($product['id']).'" style="display: inline-block; margin-right: 5px;">'.$lan['boost'].'</a>';
+                                } else {
+                                    echo '<a class="btn btn-button btn-sm btn-boost" href="'.$this->urlval.'uploadgalvideo.php?productid='.base64_encode($product['id']).'" style="display: inline-block; margin-right: 5px;">'.$lan['upload_gallery_video'].'</a>';
+                                }
+    
+                                echo '<button class="btn btn-button btn-sm btn-delete" data-product-id="' . $this->security->encrypt($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['delete'] . '</button>
                                 </div>
                             </div>
                         </div>
@@ -953,6 +1064,8 @@ Class Productfun{
             ';
         }
     }
+    
+    
     
     public function GetUserId($id){
         if(isset($id)){
