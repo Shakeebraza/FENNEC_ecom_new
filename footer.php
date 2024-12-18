@@ -50,7 +50,7 @@
           <span style="font-size: 2rem; font-weight: bold; color: white; height: 90px;"><?= $title ?></span>
         </a>
         <div class="line">
-          <p><?= $phara ?></p>
+          <p style="color:white;" ><?= $phara ?></p>
         </div>
         <div class="d-flex space-x-3 icon-sty d-flex-new">
           <a href="<?php echo $fun->getSiteSettingValue('facebook_link') ?>" class="text-light hover:text-white"><i class="fab fa-facebook-f"></i></a>
@@ -91,7 +91,7 @@
     <hr>
 
     <div class="mt-4 pb-3 text-center">
-      <p><?= $lan['copyright']?></p>
+      <p style="color:white;" ><?= $lan['copyright']?></p>
     </div>
   </div>
 </footer>

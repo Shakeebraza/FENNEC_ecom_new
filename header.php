@@ -126,6 +126,25 @@ $lan = $fun->loadLanguage($lang);
         .premium-item {
             width: 100%;
         }
+        .nav-men-sub-res-ct-inn ul {
+  padding: 10PX  !important;
+    width: 98VW !important;
+  }
+  .nav-men-sub-res-ct-inn ul li{
+
+text-wrap: nowrap  !important;
+text-decoration: none;
+
+}   
+span.input-group-text.bg-white.border-0.rounded-0 {
+    height: 40px !important;
+  }
+    }
+    div#mySidebar{
+        color:white !important;
+    }
+    div#mySidebar a{
+        color:white !important;
     }
     </style>
 </head>

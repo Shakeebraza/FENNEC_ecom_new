@@ -146,6 +146,23 @@ include_once 'header.php';
         .carousel-indicators {
             display: none;
         }
+        .fls-rs-bl{
+    display: block !important;
+}
+.bnn-mn-ct{
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    overflow: hidden;
+    position: relative;
+}
+.bnner-vt-txt{
+    margin-left: 0px !important;
+}
+.bnneer-btn-rs{
+    width: 100% !important;
+}
+
     }
 
     .carousel-item img {
@@ -160,22 +177,22 @@ $banner = $fun->getRandomBannerByPlacement('home_header');
 if (!empty($banner)) {
 ?>
 
-    <div style="width: 100%;  display: flex; justify-content:center; margin: 0 auto; padding:14px 16px; align-items: center;">
-        <div style="width: 1000px; background-color: <?php echo $banner['bg_color']; ?>; overflow: hidden; position: relative; padding: 24px 16px;">
-            <div style="display: flex; justify-content: space-between; max-width: 1200px; background-color: <?php echo $banner['bg_color']; ?>; margin: 0 auto; padding: 24px 16px; align-items: center;">
+    <div class="fls-rs-bl" style="width: 100%;  display: flex; justify-content:center; margin: 0 auto; padding:14px 16px; align-items: center;">
+        <div class="bnn-mn-ct" style="width: 1000px; background-color: <?php echo $banner['bg_color']; ?>; overflow: hidden; position: relative; padding: 24px 16px;">
+            <div class="fls-rs-bl" style="display: flex; justify-content: space-between; max-width: 1200px; background-color: <?php echo $banner['bg_color']; ?>; margin: 0 auto; padding: 24px 16px; align-items: center;">
 
-                <div style="display: flex; align-items: center; gap: 16px; width: 70%; ">
+                <div class="fls-rs-bl" style="display: flex; align-items: center; gap: 16px; width: 70%; ">
 
                     <div style="border: 2px solid transparent; background: url('<?php echo $banner['image']; ?>') no-repeat; background-size: contain; width: 200px; height: 120px;"></div>
 
-                    <div style="margin-left: 16px; width: 100%;">
+                    <div class="bnner-vt-txt" style="margin-left: 16px; width: 100%;">
 
                         <h2 style="font-size: 14px; font-weight: 600; color: <?php echo $banner['text_color']; ?>;"><?php echo $banner['title']; ?></h2>
                         <p style="font-size: 20px; font-weight: 700; color: <?php echo $banner['text_color']; ?>;"><?php echo $banner['description']; ?></p>
                     </div>
                 </div>
 
-                <div style="display: flex; align-items: center; width: 30%;">
+                <div class="bnneer-btn-rs" style="display: flex; align-items: center; width: 30%;">
 
                     <?php if ($banner['btn_text'] && $banner['btn_url']) : ?>
                         <a href="<?php echo $banner['btn_url']; ?>" target="_blank" style="background-color: <?php echo $banner['btn_color']; ?>; padding: 12px 24px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: background-color 0.3s ease;">

@@ -162,12 +162,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                                                 </div>';
                                             if(isset($_SESSION['userid'])){
                                            echo' 
-                                                <button class="_91e21052 e07f63ca af478541 btn quick-add-btn" type="submit" style="padding: 5px 10px; font-size: 0.8em;">
-                                                    <svg viewBox="0 0 24 24" class="b4840212 _545e587d" style="width: 14px; height: 14px; vertical-align: middle;">
-                                                        <path fill-rule="evenodd" d="M7 18h6a7 7 0 0 0 0-14h-2a7 7 0 0 0-7 7v8.5l2.6-1.3.4-.1zm4-16h2a9 9 0 0 1 0 18H7.2l-3.8 2L2 21V11c0-5 4-9 9-9zm-4 9a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm5-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm3 1a1 1 0 1 1 2 0 1 1 0 0 1-2 0z" clip-rule="evenodd"></path>
-                                                    </svg>
-                                                    <span class="_30de236c af478541 b7af14b4" style="font-size: 0.8em;">Chat</span>
-                                                </button>
+                                                // <button class="_91e21052 e07f63ca af478541 btn quick-add-btn" type="submit" style="padding: 5px 10px; font-size: 0.8em;">
+                                                //     <svg viewBox="0 0 24 24" class="b4840212 _545e587d" style="width: 14px; height: 14px; vertical-align: middle;">
+                                                //         <path fill-rule="evenodd" d="M7 18h6a7 7 0 0 0 0-14h-2a7 7 0 0 0-7 7v8.5l2.6-1.3.4-.1zm4-16h2a9 9 0 0 1 0 18H7.2l-3.8 2L2 21V11c0-5 4-9 9-9zm-4 9a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm5-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm3 1a1 1 0 1 1 2 0 1 1 0 0 1-2 0z" clip-rule="evenodd"></path>
+                                                //     </svg>
+                                                //     <span class="_30de236c af478541 b7af14b4" style="font-size: 0.8em;">Chat</span>
+                                                // </button>
                                                 ';
                                             }
                                                 echo'
@@ -179,7 +179,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                         }else{
                             echo '
                             <div class="noproductfound"style="display: flex;justify-content: center;align-content: center;margin: auto;color: #00494f;gap: 31px;text-align: center;font-weight: bold;">
-                            <p>No find a single product</p>
+                              <p>';
+    include 'relative_product.php'; 
+    echo '</p>
                         </div>
                             ';
                         }

@@ -1,19 +1,3 @@
-<?php
-require_once 'global.php';
-include_once 'header.php';
-$setSession = $fun->isSessionSet();
-
-if ($setSession == false) {
-    $redirectUrl = $urlval . 'index.php'; 
-    echo '
-    <script>
-        window.location.href = "' . $redirectUrl . '";
-    </script>'; 
-    exit();
-}
-$userid = intval(base64_decode($_SESSION['userid'])) ?? 0; 
-$userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
-?>
 <style>
 
 html,
@@ -691,7 +675,7 @@ li.repaly .time {
     font-size: 13px;
 }
 
-#upload {
+/* #upload {
     display: inline-block;
     position: absolute;
     z-index: 1;
@@ -701,8 +685,12 @@ li.repaly .time {
     left: 0;
     opacity: 0;
     cursor: pointer;
+} */
+.modal-content {
+    margin: 0px !important;
+    padding: 0px !important;
+    width:100% !important;
 }
-
 .send-btns .attach .form-control {
     display: inline-block;
     width: 120px;
@@ -973,200 +961,3 @@ div#chat-list {
         </div>
     </div>
 </section>
-
-
-<div id="imageModal" style="display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 1000; display: flex; justify-content: center; align-items: center; overflow: hidden;">
-    <div style="position: relative; max-width: 80%; max-height: 80%; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); border-radius: 10px; overflow: hidden;">
-        <span onclick="closeImagePopup()" style="position: absolute; top: 10px; right: 10px; color: white; font-size: 28px; cursor: pointer; z-index: 1001; font-family: Arial, sans-serif; padding: 5px;">&times;</span>
-        <img id="modalImage" src="" alt="Full Image" style="width: 100%; height: auto; border-radius: 10px; display: block;">
-    </div>
-</div>
-
-
-
-
-
-<?php
-    include_once 'footer.php';
-    ?>
-<script>
-$(document).ready(function() {
-    loadChatList();
-
-
-    $(document).on('click', '.chat-list-item', function() {
-        var conversationId = $(this).data('conversation-id');
-        loadMessages(conversationId);
-    });
-
-
-    $('#send-message-form').submit(function(event) {
-        event.preventDefault();
-        var message = $('#message-input').val();
-        var conversationId = $('#chat-box').data('conversation-id');
-
-        if (message !== '') {
-            sendMessage(conversationId, message);
-        }
-    });
-});
-
-
-function loadChatList() {
-    $.ajax({
-        url: '<?= $urlval?>ajax/fetch_conversations.php',
-        method: 'GET',
-        success: function(response) {
-            $('#chat-list').html(response);
-        }
-    });
-}
-
-
-function loadMessages(conversationId, productName, productImage) {
-    $.ajax({
-        url: '<?= $urlval?>ajax/fetch_messages.php',
-        method: 'POST',
-        data: {
-            conversation_id: conversationId
-        },
-        success: function(response) {
-            $('#message-body').html(response);
-            if ($(window).width() <= 768) {
-                $(".chatbox").addClass('showbox');
-                $(".hide-by").show();
-                $(".back-button").show();
-              
-            } else {
-
-                $(".hide-by").hide();
-                
-            }
-                            $('.send-box').show();
-
-            $('#chat-box').data('conversation-id', conversationId);
-            
-            $('#message-body').scrollTop($('#message-body')[0].scrollHeight);
-            var headerHTML = `
-                <div class="col-8 d-flex align-items-center">
-                    <img src="${productImage}" alt="${productName}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; margin-right: 10px; border: 2px solid #00494f;">
-                    <span style="color: white; font-size: 16px; font-weight: bold;">${productName}</span>
-                </div>
-            `;
-
-            $('.msg-head-innder').html(headerHTML); 
-        }
-    });
-}
-
-
-
-document.getElementById('file-upload').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const imagePreview = document.getElementById('image-preview');
-            imagePreview.innerHTML = `<img src="${e.target.result}" style="max-width: 100px; max-height: 100px; border-radius: 10px;">`;
-            document.getElementById('image-file').value = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-});
-
-document.getElementById('send-message-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const message = document.getElementById('message-input').value;
-    const imageFile = document.getElementById('file-upload').files[0];
-    const conversationId = $('#chat-box').data('conversation-id');
-    const formData = new FormData();
-    formData.append('message', message);
-    formData.append('conversation_id', conversationId);
-
-    if (imageFile) {
-        formData.append('attachments[]', imageFile);
-    }
-
-    $.ajax({
-        url: '<?= $urlval ?>ajax/send_message.php',
-        method: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            $('#message-input').val('');
-            $('#file-upload').val('');
-            $('#image-preview').html('');
-            loadMessages(conversationId);
-        }
-    });
-});
-
-
-
-
-$(".chat-icon").click(function() {
-    $(".chatbox").removeClass('showbox');
-});
-
-function hidepopup() {
-    $('#popup-overlay').hide();
-    $('#product-info-popup').hide();
-
-    $('body').css('overflow', 'auto');
-}
-$(window).on('scroll', function() {
-    var scrollThreshold = 600;
-
-    if ($(window).scrollTop() > scrollThreshold) {
-        hidepopup();
-    }
-});
-
-$(document).on('click', '.back-button', function() {
-    $(".chatbox").removeClass('showbox');
-    $(".back-button").hide();
-});
-
-
-$(document).ready(function () {
-    const emojis = ['😊', '😂', '😍', '😢', '😎', '👍', '🎉', '❤️', '🔥', '💯', '😜', '🥳', '😏', '🙌', '💃', '🕺', '🤩', '😎', '🤗', '😇'];
-
-    const emojiList = $('#emoji-list');
-
-    emojis.forEach(emoji => {
-        const span = $('<span>').text(emoji).css({
-            fontSize: '25px',
-            cursor: 'pointer',
-            margin: '5px',
-        }).click(function () {
-            $('#message-input').val($('#message-input').val() + emoji);
-            emojiList.hide();  
-        });
-        emojiList.append(span);
-    });
-
-    $('.emoji-picker i').click(function () {
-        emojiList.toggle();
-    });
-
-
-
-
-});
-
-function openImagePopup(src) {
-        document.getElementById('modalImage').src = src;
-        document.getElementById('imageModal').style.display = 'flex';
-    }
-
-    function closeImagePopup() {
-        document.getElementById('imageModal').style.display = 'none';
-    }
-
-
-</script>
-</body>
-
-</html>
