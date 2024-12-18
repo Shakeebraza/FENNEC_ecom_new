@@ -109,12 +109,12 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
 </style>
 <div class="container mt-4 pb-5">
     <ul class="nav nav-tabs justify-content-between" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button"
+        <!-- <li class="nav-item" role="presentation"> -->
+            <!-- <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button"
                 role="tab">
-                <i class="fas fa-upload me-2"></i><?= $lan['upload_new_product'] ?>
-            </button>
-        </li>
+                <i class="fas fa-upload me-2"></i><?php //echo $lan['upload_new_product'] ?>
+            </button> -->
+        <!-- </li> -->
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="view-products-tab" data-bs-toggle="tab" data-bs-target="#view-products"
                 type="button" role="tab">
@@ -148,145 +148,7 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
     </ul>
     <div class="tab-content mt-4" id="myTabContent">
         <div class="tab-content mt-4" id="myTabContent">
-            <div class="tab-pane fade show active" id="upload" role="tabpanel">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title pb-3"><?= $lan['upload_new_product'] ?></h3>
-                        <p class="card-subtitle text-muted">
-                            <?= $lan['fill_detail_list'] ?>
-                        </p>
-                    </div>
-                    <div class="card-body">
-                        <form id="productForm" enctype="multipart/form-data">
-                            <h5><?= $lan['basic_info'] ?></h5>
-
-                            <!-- Product Title -->
-                            <div class="mb-3">
-                                <label for="title" class="form-label"><?= $lan['product_title'] ?></label>
-                                <input type="text" class="form-control" id="title" name="productName"
-                                    placeholder="<?= $lan['enter'] . ' ' . $lan['product_title'] ?>" required />
-                            </div>
-
-                            <!-- Category -->
-                            <div class="mb-3">
-                                <label for="category" class="form-label"><?= $lan['category'] ?></label>
-                                <select class="form-select" id="category" name="category" required>
-                                    <?php
-                  $findCate = $categoryManager->getAllCategoriesHeaderMenu();
-                  if ($findCate['status'] == 'success') {
-                    foreach ($findCate['data'] as $category) {
-                      echo '<option value="' . $category['id'] . '">' . $category['category_name'] . '</option>';
-                    }
-                  }
-                  ?>
-                                </select>
-                            </div>
-
-                            <!-- Sub Category -->
-                            <div class="mb-3">
-                                <label for="subcategory" class="form-label"><?= $lan['subcategory'] ?></label>
-                                <select class="form-select" id="subcategory" name="subcategory" required></select>
-                            </div>
-
-                            <!-- Condition -->
-                            <div class="mb-3">
-                                <label class="form-label"><?= $lan['condition'] ?></label>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="condition" id="conditionNew"
-                                        value="new" checked required />
-                                    <label class="form-check-label"
-                                        for="conditionNew"><?= $lan['new_condition'] ?></label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="condition" id="conditionUsed"
-                                        value="used" required />
-                                    <label class="form-check-label"
-                                        for="conditionUsed"><?= $lan['used_condition'] ?></label>
-                                </div>
-                            </div>
-
-                            <!-- Price -->
-                            <div class="mb-3">
-                                <label for="price" class="form-label"><?= $lan['price'] ?></label>
-                                <input type="number" class="form-control" name="price" id="price"
-                                    placeholder="<?= $lan['enter'] . ' ' . $lan['price'] ?>" required />
-                            </div>
-
-
-
-                            <!-- Description -->
-                            <div class="mb-3">
-                                <label for="description" class="form-label"><?= $lan['description'] ?></label>
-                                <textarea class="form-control" id="description" rows="3" name="description"
-                                    placeholder="<?= $lan['describe_your_product'] ?>" required></textarea>
-                            </div>
-
-                            <!-- Brand -->
-                            <div class="mb-3">
-                                <label for="brand" class="form-label"><?= $lan['brand'] ?></label>
-                                <input type="text" class="form-control" id="brand" name="brand"
-                                    placeholder="<?= $lan['enter'] . ' ' . $lan['brand'] ?>" required />
-                            </div>
-
-                            <!-- Country -->
-                            <div class="mb-3">
-                                <label for="country" class="form-label"><?= $lan['country'] ?></label>
-                                <select id="country" name="country" class="form-select" required>
-                                    <option value="" disabled selected><?= $lan['Select_country'] ?></option>
-                                    <?php
-                  $countries = $dbFunctions->getData('countries');
-                  foreach ($countries as $cont) {
-                    echo '<option value="' . $security->decrypt($cont['id']) . '">' . $security->decrypt($cont['name']) . '</option>';
-                  }
-                  ?>
-                                </select>
-                            </div>
-
-                            <!-- City -->
-                            <div class="mb-3">
-                                <label for="city" class="form-label"><?= $lan['city'] ?> <span
-                                        style="color: red;">*</span></label>
-                                <select id="city" name="city" class="form-select" required>
-                                    <option value="" disabled selected><?= $lan['Select_city'] ?></option>
-                                </select>
-                                <div class="text-danger" id="cityError"></div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="aera" class="form-label">Aera <span style="color: red;">*</span></label>
-                                <select id="aera" name="aera" class="form-select">
-                                    <option value="" disabled selected><?= $lan['Select_city'] ?></option>
-                                </select>
-                                <div class="text-danger" id="aera_Error"></div>
-                            </div>
-
-                            <h5><?= $lan['media'] ?></h5>
-
-                            <!-- Product Images -->
-                            <!-- <div class="mb-3">
-                <label for="images" class="form-label"> $lan['product_images']</label>
-                <input class="form-control" type="file" id="images" name="image" multiple required />
-                <div id="imagePreview" class="upload-preview"></div>
-              </div> -->
-
-                            <!-- Gallery Images -->
-                            <div class="form-group mb-3"
-                                style="padding: 20px; border: 2px solid #28a745; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); background-color: #f9f9f9;">
-                                <label for="gallery" class="custom-file-upload"><?= $lan['upload_gallery'] ?></label>
-                                <input type="file" id="gallery" name="gallery[]" accept="image/*" multiple required>
-                                <div id="imagePreview" class="image-preview"></div>
-                                <div class="text-danger" id="galleryError"></div>
-                            </div>
-
-                            <!-- Submit Button -->
-                            <button type="submit"
-                                class="btn btn-success float-end"><?= $lan['publish_listing'] ?></button>
-                            <div id="formMessage" class="mt-3"></div>
-                        </form>
-
-                    </div>
-                </div>
-
-            </div>
+         
         </div>
         <div class="tab-pane fade" id="view-products" role="tabpanel">
             <h3 class="mb-4"><?= $lan['view_my_products']?></h3>
@@ -298,37 +160,43 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
         </div>
 
         <div class="tab-pane fade" id="favourite" role="tabpanel">
-            <h3 class="mb-4"><?= $lan['hi']?> <?php echo $_SESSION['username'] ?>, <?= $lan['you_have']?> <?php $isFavorit = $productFun->getUserFavorites(base64_decode($_SESSION['userid']));
-                                                                        echo $isFavorit['count'];
-                                                                        ?> <?= $lan['saved_ads']?></h3>
-            <div class="row">
-                <?php
+    <h3 class="mb-4" style="font-size: 1.5rem; color: #333;">
+        <?= $lan['hi']?> <?php echo $_SESSION['username'] ?>, <?= $lan['you_have']?> 
+        <?php 
+            $isFavorit = $productFun->getUserFavorites(base64_decode($_SESSION['userid']));
+            echo $isFavorit['count']; 
+        ?> <?= $lan['saved_ads']?>
+    </h3>
+    <div class="row">
+        <?php
         foreach ($isFavorit['favorites'] as $favorite) {
-          $description = $favorite['description'];
-          $words = explode(" ", $description);
-          $description = count($words) > 5 ? implode(" ", array_slice($words, 0, 5)) . '...' : $description;
-          echo '
-              <div class="col-md-6 col-lg-4 mb-4">
-                  <div class="favourite-item position-relative">
-                      <img src="' . htmlspecialchars($favorite['image']) . '" alt="' . htmlspecialchars($favorite['name']) . '" class="img-fluid" />
-                      <a data-productid="' . $favorite['id'] . '" id="favorite-button">
-                      <i class="fas fa-heart heart-icon"></i>
-                      </a>
-                      <a href="'.$urlval.'detail.php?slug='.$favorite['slug'].'">
-                      <div class="p-3">
-                          <h5 class="mb-1">' . htmlspecialchars($favorite['name']) . '</h5>
-                          <p class="mb-2">' . htmlspecialchars($description) . '</p>
-                          <p class="mb-0">
-                              <strong>£' . number_format($favorite['price'], 2) . '</strong>
-                          </p>
-                      </div>
-                      </a>
-                  </div>
-              </div>';
+            $description = $favorite['description'];
+            $words = explode(" ", $description);
+            $description = count($words) > 5 ? implode(" ", array_slice($words, 0, 5)) . '...' : $description;
+            echo '
+            <div class="col-md-6 col-lg-4 mb-4" style="padding: 0 15px;">
+                <div class="favourite-item position-relative" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <img src="' . htmlspecialchars($favorite['image']) . '" alt="' . htmlspecialchars($favorite['name']) . '" class="" style="width: 100% !important; height: 200px !important; object-fit: cover;" />
+                    <a data-productid="' . $favorite['id'] . '" id="favorite-button" style="position: absolute; top: 10px; right: 10px; color: #f00;">
+                        <i class="fas fa-heart heart-icon" style="font-size: 1.5rem;"></i>
+                    </a>
+                    <a href="'.$urlval.'detail.php?slug='.$favorite['slug'].'" style="text-decoration: none; color: inherit;">
+                        <div class="p-3" style="background-color: #fff;">
+                            <h5 class="mb-1" style="font-size: 1.25rem; font-weight: bold;">' . htmlspecialchars($favorite['name']) . '</h5>
+                            <p class="mb-2" style="font-size: 1rem; color: #555;">' . htmlspecialchars($description) . '</p>
+                            <p class="mb-0" style="font-size: 1.25rem; font-weight: bold; color: #00494f;">
+                                £' . number_format($favorite['price'], 2) . '
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>';
         }
         ?>
-            </div>
-        </div>
+    </div>
+</div>
+
+
         <div class="tab-pane fade" id="details" role="tabpanel">
             <div class="row">
                 <div class="col-md-8 mx-auto">

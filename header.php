@@ -219,7 +219,7 @@ span.input-group-text.bg-white.border-0.rounded-0 {
           echo '
           <div class="d-flex">
               <!-- Messages Button with Badge -->
-              <a class="btn btn-outline-light me-2 position-relative" href="' . $urlval . 'msg.php">
+              <a class="btn btn-outline-light me-2 position-relative" href="' . $urlval . 'messages.php#messages543">
                   <i class="fas fa-envelope"></i> ' . $lan['messages'] . '
                  <span id="unread-count" 
       class="position-absolute badge rounded-pill bg-danger" 
@@ -234,7 +234,7 @@ span.input-group-text.bg-white.border-0.rounded-0 {
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                       <li><a class="dropdown-item" href="' . $urlval . 'messages.php#upload">' . $lan['manage_ads'] . '</a></li>
-                      <li><a class="dropdown-item" href="' . $urlval . 'msg.php">' . $lan['messages'] . '</a></li>
+                      <li><a class="dropdown-item" href="' . $urlval . 'messages.php#messages543">' . $lan['messages'] . '</a></li>
                       <li><a class="dropdown-item" href="' . $urlval . 'messages.php#favourite">' . $lan['favourites'] . '</a></li>
                       <li><a class="dropdown-item" href="' . $urlval . 'messages.php#details">' . $lan['my_details'] . '</a></li>
                       <li><a class="dropdown-item" href="' . $urlval . 'messages.php#view-products">' . $lan['view_job_ads'] . '</a></li>
