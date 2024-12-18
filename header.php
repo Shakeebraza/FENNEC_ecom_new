@@ -171,8 +171,15 @@ span.input-group-text.bg-white.border-0.rounded-0 {
                     <span class="input-group-text bg-white border-0 rounded-0">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </span>
-                    <input id="searchInput" class="form-control p-2 rounded-0 search-input" type="search"
-                        placeholder="<?= $lan['Search_fennec']?>" aria-label="Search" />
+                    <?php
+                      $selectedLocation = isset($_GET['location']) ? $_GET['location'] : '';
+                      $search = isset($_GET['search']) ? $_GET['search'] : '';
+                      ?>
+                      <input id="searchInput" class="form-control p-2 rounded-0 search-input" 
+                            type="search"
+                            placeholder="<?= $lan['Search_fennec'] ?>" 
+                            aria-label="Search" 
+                            value="<?= !empty($search) ? htmlspecialchars($search) : '' ?>" />
                 </div>
                 <div class="input-group w-25 mb-2 mb-lg-0 custom-form-location">
                     <span class="input-group-text rounded-0 bg-light border-0">
@@ -181,14 +188,14 @@ span.input-group-text.bg-white.border-0.rounded-0 {
                     <select class="form-select rounded-0 location-select custom-select" id="locationSelect">
                         <option value="" selected><?= $lan['Select_country']?></option>
                         <?php
-                  $countryCityPairs = $productFun->getCountryCityPairs();
-                  foreach ($countryCityPairs as $pair) {
-                      echo '<option value="' . $pair['city_id'] . '" 
-                                  data-country-id="' . $pair['country_id'] . '" 
-                                  data-city-id="' . $pair['city_id'] . '">
-                                  ' . $pair['country_name'] . ' | ' . $pair['city_name'] . '
-                          </option>';
-                  }
+                          $countryCityPairs = $productFun->getCountryCityPairs();
+                          foreach ($countryCityPairs as $pair) {
+                              echo '<option value="' . $pair['city_id'] . '" 
+                                          data-country-id="' . $pair['country_id'] . '" 
+                                          data-city-id="' . $pair['city_id'] . '">
+                                          ' . $pair['country_name'] . ' | ' . $pair['city_name'] . '
+                                  </option>';
+                          }
                   ?>
                     </select>
                 </div>

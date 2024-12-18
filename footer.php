@@ -183,9 +183,7 @@ function closeNav() {
 }
 
 document.getElementById('locationSelect').addEventListener('change', function() {
-    var cityId = this.value; // Get the selected city ID
-
-    // If a city is selected, redirect to the category page with the city ID in the query string
+    var cityId = this.value; 
     if (cityId) {
         window.location.href = 'category.php?location=' + cityId;
     } else {
