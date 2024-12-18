@@ -599,6 +599,14 @@ Class Productfun{
         $stmt = $this->pdo->query($query);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    function getCountries() {
+        $query = "
+            SELECT id AS country_id, name AS country_name 
+            FROM countries
+            ORDER BY name";
+        $stmt = $this->pdo->query($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     function getAllcatandSubcat($categoryId = null) {
         try {

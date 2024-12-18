@@ -395,154 +395,7 @@ if(!empty($banner)){
 
 
     <div class="row">
-        
-        <div class="col-md-9">
-            <div class="d-flex justify-content-between align-items-center mobileres">
-                <div class="d-flex align-items-center mb-4">
-                    <span class="me-2"><?= $lan['view_as']?></span>
-                    <div
-                        class="view-option icon-list"
-                        data-cols="1"
-                        title="List view">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </div>
-                    <div
-                        class="view-option icon-grid-2"
-                        data-cols="2"
-                        title="Two column grid">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </div>
-                    <div
-                        class="view-option icon-grid-3 active"
-                        data-cols="3"
-                        title="Three column grid">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container ">
-                <div
-                    id="product-grid"
-                    class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                    <?php
-                    
-
-                        $productFind = $productFun->getProductsWithDetails(1, 500000, $filterConditions);
-                        $products = $productFind['products'];
-                        // var_dump($productFind);
-                        if(!empty($products)){
-                        foreach ($products as $proval) {
-                            $description = $proval['description'];
-                            $namePro = $proval['name'];
-
-                            $Wordsh = explode(" ", $namePro);
-                            $name = count($Wordsh) > 3 ? implode(" ", array_slice($Wordsh, 0, 3)) . '...' : $namePro;
-
-                            $words = explode(" ", $description);
-                            $description = count($words) > 3 ? implode(" ", array_slice($words, 0, 3)) . '...' : $description;
-                            $setSession = $fun->isSessionSet();
-                            $fav = ""; 
-                            
-                            if ($setSession == true) {
-                                $uid = base64_decode($_SESSION['userid']);
-                                $pid = $proval['id'];
-                                $isFav = $dbFunctions->getDatanotenc('favorites', "user_id = '$uid' AND product_id = '$pid'");
-                                
-                                if ($isFav) {
-                                    $fav = "style='color: red'"; 
-                                }
-                            }
-
-                            echo '
-                                
-                                    <div class="col">
-                                        <div class="product-card">
-                                            <img
-                                                src="' . $proval['image'] . '"
-                                                class="card-img-top"
-                                                alt="' . $name . '"
-                                            />';
-                                      
-                                          if($proval['product_type'] == "standard"){
-                                            echo '<div class="watermark">'. $title.'</div>';
-  
-                                          }
-                                     
-                                            echo'<div class="heart-icon">';
-                                    if(isset($_SESSION['userid'])){
-                                        echo'
-                                             <a
-                                            class="heart-icon icon_heart"
-                                            data-productid="'. $proval['id'] .'?>"
-                                            id="favorite-button-'.$proval['id'] .'">
-                                            <i class="fas fa-heart" '.$fav .'></i>
-                                        </a>
-                                        ';
-                                    }else{
-                                        echo'
-                                        <a class="heart-icon" href="'.$urlval.'LoginRegister.php">
-                                            <i class="fas fa-heart"></i>
-                                        </a>
-                                        
-                                        ';
-                                    }
-                                                               
-                                            
-                                        echo'</div>
-                                            <div class="card-body">
-                                            <a href="' . $urlval . 'detail.php?slug=' . $proval['slug'] . '">
-                                                <div class="p-3">
-                                                    <h5 class="card-title">' . $name . '</h5>
-                                                    <p class="card-text">' . $description . '</p>
-                                                    <p class="text-muted">' . $proval['country'] . ' | ' . $proval['city'] . '</p>
-                                                    <div class="d-flex justify-content-between">
-                                                        <span class="product-price" style="color: red;">'.$fun->getFieldData('site_currency').'' . $proval['price'] . '</span>
-                                                        <span class="product-time small" style="font-size: 12px;">' . $proval['date'] . '</span>
-                                                    </div>
-                                                </div>
-                                                </a>';
-                                            if(isset($_SESSION['userid'])){
-                                              
-                                                if(base64_decode($_SESSION['userid']) != $proval['prouserid']){
-
-                                                    echo ' 
-                                                    <button class="btn quick-add-btn" type="button" style="background: #1987546e; border: none; padding: 5px;" 
-                                                    onclick="startChat(\'' . $security->encrypt($proval['id']) . '\')">
-                                                    <i class="fas fa-comment-dots" style="font-size: 1.2em; color: #00494f;"></i> '.$lan['chat'].' 
-                                                    </button>';
-                                                }else{
-                                                    echo '
-                                                    <p style="text-align: center;color: #00494f;">'.$lan['your_product'].'<p>
-                                                    ';
-                                                }
-                                                }
-                                                echo'
-                                            </div>
-                                        </div>
-                                    </div>
-                                ';
-                        }
-                        }else{
-                            echo '
-                            <div class="noproductfound"style="display: flex;justify-content: center;align-content: center;margin: auto;color: #00494f;gap: 31px;text-align: center;font-weight: bold;">
-                            <p>No find a single product</p>
-                        </div>
-                            ';
-                        }
-                        ?>
-
-
-
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 left-side">
+    <div class="col-md-3 left-side">
         <div class="bg-light p-4 rounded">
             <form id="filterForm" method="GET" action="">
             
@@ -739,6 +592,170 @@ if(!empty($banner)){
 
 
         </div>
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mobileres">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="me-2"><?= $lan['view_as']?></span>
+                    <div
+                        class="view-option icon-list"
+                        data-cols="1"
+                        title="List view">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </div>
+                    <div
+                        class="view-option icon-grid-2"
+                        data-cols="2"
+                        title="Two column grid">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </div>
+                    <div
+                        class="view-option icon-grid-3 active"
+                        data-cols="3"
+                        title="Three column grid">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container ">
+                <div
+                    id="product-grid"
+                    class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <?php
+                    
+
+                        $productFind = $productFun->getProductsWithDetails(1, 500000, $filterConditions);
+                        $products = $productFind['products'];
+                        // var_dump($productFind);
+                        if(!empty($products)){
+                        foreach ($products as $proval) {
+                            $description = $proval['description'];
+                            $namePro = $proval['name'];
+
+                            $Wordsh = explode(" ", $namePro);
+                            $name = count($Wordsh) > 3 ? implode(" ", array_slice($Wordsh, 0, 3)) . '...' : $namePro;
+
+                            $words = explode(" ", $description);
+                            $description = count($words) > 3 ? implode(" ", array_slice($words, 0, 3)) . '...' : $description;
+                            $setSession = $fun->isSessionSet();
+                            $fav = ""; 
+                            
+                            if ($setSession == true) {
+                                $uid = base64_decode($_SESSION['userid']);
+                                $pid = $proval['id'];
+                                $isFav = $dbFunctions->getDatanotenc('favorites', "user_id = '$uid' AND product_id = '$pid'");
+                                
+                                if ($isFav) {
+                                    $fav = "style='color: red'"; 
+                                }
+                            }
+
+                            echo '
+                                
+                                    <div class="col">
+                                        <div class="product-card">
+                                            <img
+                                                src="' . $proval['image'] . '"
+                                                class="card-img-top"
+                                                alt="' . $name . '"
+                                            />';
+                                      
+                                          if($proval['product_type'] == "standard"){
+                                            echo '<div class="watermark">'. $title.'</div>';
+  
+                                          }
+                                     
+                                            echo'<div class="heart-icon">';
+                                    if(isset($_SESSION['userid'])){
+                                        echo'
+                                             <a
+                                            class="heart-icon icon_heart"
+                                            data-productid="'. $proval['id'] .'?>"
+                                            id="favorite-button-'.$proval['id'] .'">
+                                            <i class="fas fa-heart" '.$fav .'></i>
+                                        </a>
+                                        ';
+                                    }else{
+                                        echo'
+                                        <a class="heart-icon" href="'.$urlval.'LoginRegister.php">
+                                            <i class="fas fa-heart"></i>
+                                        </a>
+                                        
+                                        ';
+                                    }
+                                                               
+                                            
+                                        echo'</div>
+                                            <div class="card-body">
+                                            <a href="' . $urlval . 'detail.php?slug=' . $proval['slug'] . '">
+                                                <div class="p-3">
+                                                    <h5 class="card-title">' . $name . '</h5>
+                                                    <p class="card-text">' . $description . '</p>
+                                                    <p class="text-muted">' . $proval['country'] . ' | ' . $proval['city'] . '</p>
+                                                    <div class="d-flex justify-content-between">
+                                                        <span class="product-price" style="color: red;">'.$fun->getFieldData('site_currency').'' . $proval['price'] . '</span>
+                                                        <span class="product-time small" style="font-size: 12px;">' . $proval['date'] . '</span>
+                                                    </div>
+                                                </div>
+                                                </a>';
+                                            if(isset($_SESSION['userid'])){
+                                              
+                                                if(base64_decode($_SESSION['userid']) != $proval['prouserid']){
+
+                                                    echo ' 
+                                                    <button class="btn quick-add-btn" type="button" style="background: #1987546e; border: none; padding: 5px;" 
+                                                    onclick="startChat(\'' . $security->encrypt($proval['id']) . '\')">
+                                                    <i class="fas fa-comment-dots" style="font-size: 1.2em; color: #00494f;"></i> '.$lan['chat'].' 
+                                                    </button>';
+                                                }else{
+                                                    echo '
+                                                    <p style="text-align: center;color: #00494f;">'.$lan['your_product'].'<p>
+                                                    ';
+                                                }
+                                                }
+                                                echo'
+                                            </div>
+                                        </div>
+                                    </div>
+                                ';
+                        }
+                        }else{
+                            echo '
+                           <div style="text-align: center; margin: 50px auto;">
+                            <div class="noproductfound"style="display: flex;justify-content: center;align-content: center;margin: auto;color: #00494f;gap: 31px;text-align: center;font-weight: bold;">
+                                                        <p>No find a single product</p>
+                                                    </div>
+                                <p style="font-size: 1.2rem; color: #555; margin-top: 10px;">
+                                    Check the spelling<br>
+                                    Try adding or removing words<br>
+                                    Try browsing the categories<br>
+                                </p>
+
+                                <p style="font-size: 1.1rem; color: #555; margin-top: 20px;">
+                                    Save this search to receive email alerts and notifications when new items are available.
+                                </p>
+
+                                <a href="<?= $urlval?>index.php" style="text-decoration: none; display: inline-block; margin-top: 20px;">
+                                    <button style="padding: 10px 20px; font-size: 1rem; background-color: #00494f; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
+                                        Back to Home
+                                    </button>
+                                </a>
+                            </div>
+                            ';
+                        }
+                        ?>
+
+
+
+                </div>
+            </div>
+        </div>
+    
 
     </div>
 </div>

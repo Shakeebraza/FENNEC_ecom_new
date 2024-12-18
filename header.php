@@ -188,13 +188,11 @@ span.input-group-text.bg-white.border-0.rounded-0 {
                     <select class="form-select rounded-0 location-select custom-select" id="locationSelect">
                         <option value="" selected><?= $lan['Select_country']?></option>
                         <?php
-                          $countryCityPairs = $productFun->getCountryCityPairs();
-                          foreach ($countryCityPairs as $pair) {
-                              echo '<option value="' . $pair['city_id'] . '" 
-                                          data-country-id="' . $pair['country_id'] . '" 
-                                          data-city-id="' . $pair['city_id'] . '">
-                                          ' . $pair['country_name'] . ' | ' . $pair['city_name'] . '
-                                  </option>';
+                          $countryPairs = $productFun->getCountries();
+                          foreach ($countryPairs as $country) {
+                              $isSelected = ($selectedLocation == $country['country_id']) ? 'selected' : '';
+                              echo '<option value="' . $country['country_id'] . '" ' . $isSelected . '>'
+                                  . htmlspecialchars($country['country_name']) . '</option>';
                           }
                   ?>
                     </select>
