@@ -268,26 +268,7 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
 
 
                         </div>
-                        <div id="passwordModal" class="modal" style="display: none;">
-                            <div class="modal-content">
-                                <span class="close" onclick="closePasswordModal()">&times;</span>
-                                <h4>Update Password</h4>
-                                <form id="passwordForm" onsubmit="updatePassword(event)">
-                                    <div class="mb-3">
-                                        <label for="newPassword" class="form-label"><?= $lan['new_password']?></label>
-                                        <input type="password" class="form-control" id="newPassword" required />
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="confirmPassword"
-                                            class="form-label"><?= $lan['confirm_password']?></label>
-                                        <input type="password" class="form-control" id="confirmPassword" required />
-                                    </div>
-                                    <input type="hidden" name="token" id="csrf_token_password_chnage"
-                                        value="<?php echo $CsrfProtection->generateToken() ?>">
-                                    <button type="submit" class="btn btn-success"><?= $lan['save_password']?></button>
-                                </form>
-                            </div>
-                        </div>
+                    
                     </div>
                 </div>
             </div>
@@ -298,21 +279,43 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
             <?php
 include_once 'messages-inner.php';
 ?>
-        
-    
-    <div id="transactionHistoryModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2><?= $lan['transaction_history'] ?></h2>
-            <div id="transactionHistory"></div>
-            <!-- View More Button -->
-            <a href="<?= $urlval?>transaction_history.php" class="btn btn-primary"
-                style="display: block; margin-top: 20px; text-align: center;">
-                <?= $lan['view_more'] ?>
-            </a>
-        </div>
+   </div>     
+
+<!-- Transaction History Modal -->
+<div id="transactionHistoryModal" class="modal" style="z-index:999;display: none; background-color: rgba(0, 0, 0, 0.5); padding: 50px;">
+    <div class="modal-content" style="position: fixed;top: 35%;left: 33%;background-color: white; padding: 30px; border-radius: 8px; max-width: 600px; margin: auto;">
+        <span class="close-btn" onclick="closeModal()" style="font-size: 28px; color: #00494F; cursor: pointer; position: absolute; top: 15px; right: 20px;">&times;</span>
+        <h2 style="color: #00494F; text-align: center; font-size: 24px; margin-bottom: 20px;"><?= $lan['transaction_history'] ?></h2>
+        <div id="transactionHistory"></div>
+        <!-- View More Button -->
+        <a href="<?= $urlval?>transaction_history.php" class="btn" style="display: block; margin-top: 20px; text-align: center; background-color: #00494F; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-size: 16px;">
+            <?= $lan['view_more'] ?>
+        </a>
     </div>
 </div>
+
+<!-- Password Update Modal -->
+<div id="passwordModal" class="modal" style="z-index:999; display: none; background-color: rgba(0, 0, 0, 0.5); padding: 50px;">
+    <div class="modal-content" style="position: fixed;top: 35%;left: 33%;background-color: white; padding: 30px; border-radius: 8px; max-width: 600px; margin: auto;">
+        <span class="close" onclick="closePasswordModal()" style="font-size: 28px; color: white; cursor: pointer; position: absolute; top: 15px; right: 20px;">&times;</span>
+        <h4 style="color: white; text-align: center; font-size: 24px; margin-bottom: 20px;">Update Password</h4>
+        <form id="passwordForm" onsubmit="updatePassword(event)">
+            <div class="mb-3">
+                <label for="newPassword" class="form-label" style="color: #00494F; font-size: 16px;"><?= $lan['new_password']?></label>
+                <input type="password" class="form-control" id="newPassword" required style="border-color: #00494F; padding: 10px 15px; font-size: 16px;"/>
+            </div>
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label" style="color: #00494F; font-size: 16px;"><?= $lan['confirm_password']?></label>
+                <input type="password" class="form-control" id="confirmPassword" required style="border-color: #00494F; padding: 10px 15px; font-size: 16px;"/>
+            </div>
+            <input type="hidden" name="token" id="csrf_token_password_chnage" value="<?php echo $CsrfProtection->generateToken() ?>">
+            <button type="submit" class="btn" style="background-color: #00494F; color: white; padding: 12px 24px; border-radius: 5px; border: none; cursor: pointer; font-size: 16px;">
+                <?= $lan['save_password']?>
+            </button>
+        </form>
+    </div>
+</div>
+
 
 <?php
 include_once 'footer.php';
