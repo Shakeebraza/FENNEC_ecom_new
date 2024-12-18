@@ -233,11 +233,11 @@ span.input-group-text.bg-white.border-0.rounded-0 {
                       <p>' . $lan['menu'] . '</p>
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                      <li><a class="dropdown-item" href="' . $urlval . 'messages.php#upload">' . $lan['manage_ads'] . '</a></li>
+                      
+                  <li><a class="dropdown-item" href="' . $urlval . 'messages.php#view-products">' . $lan['view_job_ads'] . '</a></li>
                       <li><a class="dropdown-item" href="' . $urlval . 'messages.php#messages543">' . $lan['messages'] . '</a></li>
                       <li><a class="dropdown-item" href="' . $urlval . 'messages.php#favourite">' . $lan['favourites'] . '</a></li>
                       <li><a class="dropdown-item" href="' . $urlval . 'messages.php#details">' . $lan['my_details'] . '</a></li>
-                      <li><a class="dropdown-item" href="' . $urlval . 'messages.php#view-products">' . $lan['view_job_ads'] . '</a></li>
                       <li><a class="dropdown-item" href="' . $urlval . 'transaction_history.php">' . $lan['transaction_history'] . '</a></li>
                       <li><a class="dropdown-item" href="' . $urlval . 'logout.php">' . $lan['logout'] . '</a></li>
                   </ul>

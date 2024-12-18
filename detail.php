@@ -387,9 +387,9 @@ $area = $productData['area'];
                     ?>
 
                     <?php endif; ?>
-                    <button class="btn buttonss w-100" onclick="generatePDF()">
+                    <!-- <button class="btn buttonss w-100" onclick="generatePDF()">
                         <i class="fas fa-print"></i> Print
-                    </button>
+                    </button> -->
                     <!-- Action Buttons -->
 
                     <button class="btn btn-outline-secondary btn buttonss w-100 mt-2" id="toggleReportBtn">
