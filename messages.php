@@ -337,11 +337,26 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
                             <h3 class="card-title mb-4"><?= $lan['my_details']?></h3>
                             <form id="userDetailsForm" onsubmit="submitForm(event)">
                                 <div id="responseMessage" class="alert" style="display:none;"></div>
-                                <div class="mb-3">
-                                    <label for="fullName" class="form-label"><?= $lan['full_name']?></label>
-                                    <input type="text" class="form-control" id="fullName"
-                                        value="<?php echo $_SESSION['username'] ?>" readonly />
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="first-name" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="first-name" placeholder="Enter first name" 
+                                            value="<?php echo $userData[0]['first_name'] ?? '' ?>"
+                                            <?php echo !empty($userData[0]['first_name']) ? 'readonly' : ''; ?>>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="last-name" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="last-name" placeholder="Enter last name" 
+                                            value="<?php echo $userData[0]['last_name'] ?? '' ?>"
+                                            <?php echo !empty($userData[0]['last_name']) ? 'readonly' : ''; ?>>
+                                    </div>
                                 </div>
+                                                            <!-- <div class="mb-3">
+                                    <label for="fullName" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="fullName"
+                                        value="<?php //echo $_SESSION['username'] ?>" readonly />
+                                </div> -->
                                 <div class="mb-3">
                                     <label for="email" class="form-label"><?= $lan['email_address']?></label>
                                     <input type="email" class="form-control" id="email"
@@ -351,13 +366,13 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
                                 <h4 class="mt-4 mb-3"><?= $lan['contact_detail']?></h4>
                                 <div class="row mb-3">
                                     <div class="col">
-                                        <label for="country" class="form-label">Country<?= $lan['country']?></label>
-                                        <input type="text" class="form-control" id="country"
+                                        <label for="country" class="form-label"><?= $lan['country']?></label>
+                                        <input type="text" class="form-control" id="countryyy"
                                             value="<?php echo $userData[0]['country'] ?? '' ?>" />
                                     </div>
                                     <div class="col">
                                         <label for="city" class="form-label"><?= $lan['city']?></label>
-                                        <input type="text" class="form-control" id="city"
+                                        <input type="text" class="form-control" id="cityy"
                                             value="<?php echo $userData[0]['city'] ?? '' ?>" />
                                     </div>
                                 </div>
@@ -409,16 +424,14 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="messages543" role="tabpanel">
-            <div class="row">
-            <div class="col-md-8 mx-auto">
+        </div>
+     
+
             <?php
 include_once 'messages-inner.php';
 ?>
-            </div>
-            </div>
-        </div>
-    </div>
+        
+    
     <div id="transactionHistoryModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -501,11 +514,13 @@ function submitForm(event) {
     event.preventDefault();
 
     const formData = new FormData();
-    formData.append('country', document.getElementById('country').value);
-    formData.append('city', document.getElementById('city').value);
-    formData.append('contactNumber', document.getElementById('contactNumber').value);
-    formData.append('address', document.getElementById('address').value);
-    formData.append('token', document.getElementById('csrf_token_update_info').value);
+        formData.append('country', document.getElementById('countryyy').value);
+        formData.append('first-name', document.getElementById('first-name').value);
+        formData.append('last-name', document.getElementById('last-name').value);
+        formData.append('city', document.getElementById('cityy').value);
+        formData.append('contactNumber', document.getElementById('contactNumber').value);
+        formData.append('address', document.getElementById('address').value);
+        formData.append('token', document.getElementById('csrf_token_update_info').value);
 
     const responseMessageDiv = document.getElementById('responseMessage');
     responseMessageDiv.style.display = 'none';
@@ -930,6 +945,7 @@ function openImagePopup(src) {
     function closeImagePopup() {
         document.getElementById('imageModal').style.display = 'none';
     }
+
 
 
 </script>

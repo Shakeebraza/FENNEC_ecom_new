@@ -2192,3 +2192,32 @@ display: block !important;
   flex-direction: column;
 }
 }
+
+
+input[readonly] {
+  background-color: #f0f0f0;  
+  cursor: not-allowed;      
+  color: #666;                
+  border: 1px solid #ccc;
+}
+
+
+input[readonly]:hover {
+  background-color: #e6e6e6; 
+}
+
+
+input[readonly]:hover::after {
+  content: '\00d7';  
+  font-size: 20px;
+  color: red;
+  position: absolute;
+  top: 10px;  
+  right: 10px;
+  pointer-events: none;  
+}
+
+input[readonly] {
+  position: relative;
+}
+

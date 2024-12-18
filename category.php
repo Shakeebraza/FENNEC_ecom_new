@@ -510,11 +510,11 @@ if(!empty($banner)){
                                 <h5 class="card-title mb-3">Price Range</h5>
                                 <div class="mb-3">
                                     <label for="minPrice" class="form-label">Minimum Price:</label>
-                                    <input type="number" name="min_price" class="form-control" id="minPrice" placeholder="Enter minimum price" min="0" step="1000">
+                                    <input type="number" name="min_price" class="form-control" id="minPrice" placeholder="Enter minimum price" min="0" step="1">
                                 </div>
                                 <div class="mb-3">
                                     <label for="maxPrice" class="form-label">Maximum Price:</label>
-                                    <input type="number" name="max_price" class="form-control" id="maxPrice" placeholder="Enter maximum price" min="0" step="1000">
+                                    <input type="number" name="max_price" class="form-control" id="maxPrice" placeholder="Enter maximum price" min="0" step="1">
                                 </div>
                                 <button type="submit" class="btn btn-sell-car w-100"><?=$lan['search']?></button>
                             </div>
@@ -705,18 +705,18 @@ if(!empty($banner)){
                                                 </a>';
                                             if(isset($_SESSION['userid'])){
                                               
-                                                if(base64_decode($_SESSION['userid']) != $proval['prouserid']){
+                                                // if(base64_decode($_SESSION['userid']) != $proval['prouserid']){
 
-                                                    echo ' 
-                                                    <button class="btn quick-add-btn" type="button" style="background: #1987546e; border: none; padding: 5px;" 
-                                                    onclick="startChat(\'' . $security->encrypt($proval['id']) . '\')">
-                                                    <i class="fas fa-comment-dots" style="font-size: 1.2em; color: #00494f;"></i> '.$lan['chat'].' 
-                                                    </button>';
-                                                }else{
-                                                    echo '
-                                                    <p style="text-align: center;color: #00494f;">'.$lan['your_product'].'<p>
-                                                    ';
-                                                }
+                                                //     echo ' 
+                                                //     <button class="btn quick-add-btn" type="button" style="background: #1987546e; border: none; padding: 5px;" 
+                                                //     onclick="startChat(\'' . $security->encrypt($proval['id']) . '\')">
+                                                //     <i class="fas fa-comment-dots" style="font-size: 1.2em; color: #00494f;"></i> '.$lan['chat'].' 
+                                                //     </button>';
+                                                // }else{
+                                                //     echo '
+                                                //     <p style="text-align: center;color: #00494f;">'.$lan['your_product'].'<p>
+                                                //     ';
+                                                // }
                                                 }
                                                 echo'
                                             </div>

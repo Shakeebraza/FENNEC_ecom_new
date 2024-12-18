@@ -32,4 +32,27 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-
+window.onload = function() {
+  if (window.location.hash === '#messages543') {
+      document.getElementById('messages543').style.display = 'block';
+  } else {
+      document.getElementById('messages543').style.display = 'none';
+  }
+};
+document.addEventListener('DOMContentLoaded', function() {
+  const messagesTab = document.getElementById('messages-tab');
+  const messagesContent = document.getElementById('messages543');
+  if (window.location.hash === '#messages543') {
+      messagesTab.classList.add('active');
+      messagesContent.style.display = 'block';
+  } else {
+      messagesContent.style.display = 'none';
+  }
+  $('#myTab').on('shown.bs.tab', function (e) {
+      if (e.target.getAttribute('data-bs-target') === '#messages543') {
+          messagesContent.style.display = 'block';
+      } else {
+          messagesContent.style.display = 'none';  
+      }
+  });
+});

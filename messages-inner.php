@@ -868,7 +868,8 @@ div#chat-list {
   padding-bottom: 80px !important;
 }
 </style>
-<section class="message-area">
+
+<section class="message-area" id="messages543" role="tabpanel" style="display:none;">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -898,8 +899,9 @@ div#chat-list {
                
                     <div class="chatbox" id="chat-box">
                         <div class="modal-dialog-scrollable">
-                            <div class="modal-content">
-                                <div class="msg-head" style="padding: 15px; background-color: #00494f; height: 80px;">
+                            <div style="width:100%; height: 89%">
+                          
+                                <div class="msg-head" style="padding: 15px; background-color: #00494f; height: 80px; position: sticky; top: 0; z-index: 10;">
                                     <div class="row align-items-center">
 
                                         <div class="col-2 hide-by">
@@ -916,14 +918,14 @@ div#chat-list {
                                     </div>
                                 </div>
 
-                                <div class="modal-body">
+                                <div class="modal-body" style="height: 89%;overflow-y: scroll">
                                     <div class="msg-body" id="message-body">
 
                                    
                                     </div>
                                 </div>
 
-                                <div class="send-box" style="padding: 10px; background-color: #f9f9f9; display:none;">
+                                <div class="send-box" style="padding: 10px; background-color: #f9f9f9; display:none; position: sticky; top: 0; z-index: 10;">
                                 <form id="send-message-form" action="javascript:void(0);" method="POST" enctype="multipart/form-data" style="display: flex; align-items: center;">
                                     <div style="margin: 0px 9px;">
                                         <label for="file-upload" style="cursor: pointer;">
@@ -952,6 +954,7 @@ div#chat-list {
                                 <div id="image-preview" style="margin-top: 10px;"></div>
 
                                 </div>
+                        
                             </div>
                         </div>
                     </div>
