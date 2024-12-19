@@ -332,18 +332,33 @@ $area = $productData['area'];
         <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-body">
-                    <h5 class="card-title"><?= $lan['seller_information'] ?></h5>
-                    <p class="card-text">
-                        <i class="fas fa-user"></i> <?php
-                                                    $usid = $productData['product']['user_id'];
-                                                    $datauserid = $dbFunctions->getDatanotenc('users', "id='$usid'");
-                                                    echo $datauserid[0]['username'] ?? "Not found..";
-                                                    ?><br>
-                        <small class="text-muted"><?= $lan['posting_month'] ?></small>
-                    </p>
-                    <p class="card-text">
-                        <i class="fas fa-check-circle text-success"></i> <?= $lan['email_address_verified'] ?>
-                    </p>
+                <h5 class="card-title"><?= $lan['seller_information'] ?></h5>
+
+                <?php
+                        $usid = $productData['product']['user_id'];
+                        $datauserid = $dbFunctions->getDatanotenc('users', "id='$usid'");
+                        $username = $datauserid[0]['username'] ?? "Not found..";
+                        $firstLetter = strtoupper($username[0] ?? 'N'); 
+                        $profileLink = $urlval . "user_profile.php?username=" . $username; 
+                    ?>
+
+                    <a href="<?= $profileLink ?>" class="text-decoration-none text-dark">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle text-white bg-secondary d-flex align-items-center justify-content-center" 
+                                style="width: 50px; height: 50px; font-size: 1.5rem; font-weight: bold;">
+                                <?= $firstLetter ?>
+                            </div>
+                            <span class="ms-2" style="font-size: 1.1rem; font-weight: bold;"><?= $username ?></span>
+                        </div>
+                    </a>
+
+                        <p class="card-text">
+                            <small class="text-muted"><?= $lan['posting_month'] ?></small>
+                        </p>
+
+                        <p class="card-text">
+                            <i class="fas fa-check-circle text-success"></i> <?= $lan['email_address_verified'] ?>
+                        </p>
                     <?php
                     if (isset($_SESSION['userid'])) {
                         $sessionUserId = base64_decode($_SESSION['userid']);

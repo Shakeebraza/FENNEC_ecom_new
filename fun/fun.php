@@ -951,7 +951,7 @@ function getRandomBannerByPlacement($placement) {
     return $banner;
 }
 function getSiteStatistics() {
-    // Define the queries
+   
     $queries = [
         'Users' => "SELECT COUNT(*) as count FROM users",
         'Main Categories' => "SELECT COUNT(*) as count FROM categories",
@@ -976,5 +976,82 @@ function getSiteStatistics() {
 
     return $statistics;
 }
+
+function calculatePostingDuration($created_at) {
+    $createdDate = new DateTime($created_at);
+    $currentDate = new DateTime();
+    $interval = $currentDate->diff($createdDate);
+    return $interval->y + ($interval->m / 12); 
+}
+
+function getTotalItems($user_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM products WHERE user_id = :user_id");
+    $stmt->execute(['user_id' => $user_id]);
+    return $stmt->fetchColumn();
+}
+
+function getCategories($user_id) {
+    global $pdo; 
+    $stmt = $pdo->prepare("
+        SELECT c.category_name, COUNT(p.id) AS count
+        FROM products p
+        JOIN categories c ON p.category_id = c.id
+        WHERE p.user_id = :user_id
+        GROUP BY c.category_name
+    ");
+    $stmt->execute(['user_id' => $user_id]);
+
+    $categories = [];
+    while ($row = $stmt->fetch()) {
+        $categories[] = htmlspecialchars($row['category_name']) . " (" . htmlspecialchars($row['count']) . ")";
+    }
+    return implode(", ", $categories);
+}
+
+
+
+function getListings($user_id) {
+    global $pdo; 
+
+    $stmt = $pdo->prepare("
+        SELECT p.*, COUNT(pi.id) AS photo_count
+        FROM products p
+        LEFT JOIN product_images pi ON p.id = pi.product_id
+        WHERE p.user_id = :user_id AND p.is_enable = 1
+        GROUP BY p.id
+        ORDER BY p.created_at DESC
+    ");
+    $stmt->execute(['user_id' => $user_id]);
+    $listings = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        $createdDate = new DateTime($row['created_at']);
+        $currentDate = new DateTime();
+        $interval = $currentDate->diff($createdDate);
+        $daysAgo = $interval->days;
+
+        $name = htmlspecialchars($row['name'] ?? 'N/A');
+        $image = htmlspecialchars($row['image'] ?? '') ?: 'https://via.placeholder.com/150';
+        $price = htmlspecialchars(number_format((float)$row['price'], 2));
+        $photoCount = (int)$row['photo_count'];
+
+        $listings[] = [
+            'title' => $name,               
+            'image_url' => $image,    
+            'photo_count' => $photoCount,   
+            'price' => $price,
+            'posted_days_ago' => $daysAgo,
+        ];
+    }
+    return $listings;
+}
+
+
+
+
+
+
 
 }
