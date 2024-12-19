@@ -1033,12 +1033,16 @@ function getListings($user_id) {
         $daysAgo = $interval->days;
 
         $name = htmlspecialchars($row['name'] ?? 'N/A');
+        $id = $row['id'] ?? 0;
+        $slug = $row['slug'] ?? 0;
         $image = htmlspecialchars($row['image'] ?? '') ?: 'https://via.placeholder.com/150';
         $price = htmlspecialchars(number_format((float)$row['price'], 2));
         $photoCount = (int)$row['photo_count'];
 
         $listings[] = [
             'title' => $name,               
+            'id' => $id,               
+            'slug' => $slug,               
             'image_url' => $image,    
             'photo_count' => $photoCount,   
             'price' => $price,

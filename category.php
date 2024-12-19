@@ -646,7 +646,7 @@ if(!empty($banner)){
                                         echo'
                                              <a
                                             class="heart-icon icon_heart"
-                                            data-productid="'. $proval['id'] .'?>"
+                                            data-productid="'. $proval['id'] .'"
                                             id="favorite-button-'.$proval['id'] .'">
                                             <i class="fas fa-heart" '.$fav .'></i>
                                         </a>

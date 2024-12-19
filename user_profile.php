@@ -1,7 +1,7 @@
     <?php
     require_once 'global.php';
     include_once 'header.php';
-
+  
     if (isset($_GET['username'])) {
         $username = trim($_GET['username']);
         if (!preg_match('/^[a-zA-Z0-9_]{3,20}$/', $username)) {
@@ -45,25 +45,37 @@
         include_once 'footer.php';
         exit();
     }
+
+    $loggedInUserId = base64_decode($_SESSION['userid']) ?? null;
+
+        $favoritedProductIds = [];
+
+        if ($loggedInUserId) {
+
+            $stmt_fav = $pdo->prepare("SELECT product_id FROM favorites WHERE user_id = :user_id");
+            $stmt_fav->execute(['user_id' => $loggedInUserId]);
+            $favoritedProductIds = $stmt_fav->fetchAll(PDO::FETCH_COLUMN, 0);
+        }
+     
     ?>
 
 <div class="container py-4" style="max-width: 80%; margin: auto; font-family: Arial, sans-serif;">
 
-    <!-- User Header -->
+
     <div class="d-flex align-items-center justify-content-between mb-4" style="border-bottom: 1px solid #ccc; padding-bottom: 15px;">
         <div class="d-flex align-items-center gap-3">
-            <!-- User Initials -->
+   
             <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm" 
                 style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">
                 <?= $firstLetter ?>
             </div>
-            <!-- User Details -->
+  
             <div>
                 <h5 class="mb-1" style="font-weight: 600; color: #333;"><?= $fullName ?></h5>
                 <small class="text-muted" style="font-size: 0.9rem;">Posting for <?= $postingDuration ?> years</small>
             </div>
         </div>
-        <!-- Location and Email Verification -->
+
         <div style="text-align: right;">
             <div class="d-flex align-items-center gap-2 mb-2" style="font-size: 0.9rem; color: #555;">
                 <i class="fas fa-location-dot text-danger"></i>
@@ -76,7 +88,6 @@
         </div>
     </div>
 
-    <!-- Selling History -->
     <div class="mb-4" style="padding: 10px; background-color: #f8f9fa; border-radius: 8px;">
         <h6 class="mb-3" style="color: #444; font-weight: bold;">Selling History</h6>
         <div class="mb-2" style="color: #555; font-size: 0.95rem;">
@@ -89,7 +100,6 @@
         </div>
     </div>
 
-    <!-- Tabs Section -->
     <div class="mb-4" style="border-bottom: 2px solid #ddd;">
         <ul class="nav nav-tabs" style="border-bottom: none;">
             <li class="nav-item">
@@ -98,55 +108,64 @@
         </ul>
     </div>
 
-    <!-- Listings Section -->
+
     <h6 class="mb-4" style="color: #333; font-weight: bold;"><?= count($listings) ?> Items for Sale</h6>
 
     <div class="d-flex flex-column gap-3">
         <?php if (count($listings) > 0): ?>
-            <?php foreach ($listings as $listing): ?>
-                <!-- Individual Listing Card -->
-                <div class="card shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
-                    <div class="row g-0">
-                        <!-- Image Section -->
-                        <div class="col-4" style="background: #f8f8f8;">
-                            <div class="position-relative">
-                                <img src="<?= $listing['image_url'] ?>" 
-                                    class="img-fluid rounded-start" 
-                                    alt="<?= $listing['title'] ?>" 
-                                    style="height: 100%; object-fit: cover;">
-                                <span class="position-absolute bottom-0 start-0 bg-dark text-white px-2 py-1 rounded-1" 
-                                    style="font-size: 0.8rem;">
-                                    <i class="fas fa-camera"></i> <?= $listing['photo_count'] ?>
-                                </span>
-                            </div>
+            <?php foreach ($listings as $listing) {
+    $isFavorited = in_array($listing['id'], $favoritedProductIds);
+    ?>
+    <a href="<?= $urlval?>detail.php?slug=<?= urlencode($listing['slug']) ?>" 
+       class="text-decoration-none text-dark">
+        <div class="card shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
+            <div class="row g-0">
+                <div class="col-4" style="background: #f8f8f8;">
+                    <div class="position-relative">
+                        <img src="<?= $listing['image_url'] ?>" 
+                            class="img-fluid rounded-start" 
+                            alt="<?= $listing['title'] ?>" 
+                            style="height: 100%; object-fit: cover;">
+                        <span class="position-absolute bottom-0 start-0 bg-dark text-white px-2 py-1 rounded-1" 
+                            style="font-size: 0.8rem;">
+                            <i class="fas fa-camera"></i> <?= $listing['photo_count'] ?>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="card-body d-flex justify-content-between align-items-start" style="padding: 15px;">
+                        <div>
+                            <h6 class="card-title mb-1" style="color: #333; font-weight: bold;">
+                                <?= $listing['title'] ?>
+                            </h6>
+                            <p class="card-text mb-1" style="color: #888; font-size: 0.9rem;">
+                                <i class="fas fa-map-marker-alt me-1"></i> Location
+                            </p>
+                            <p class="card-text text-success" style="font-size: 1rem; font-weight: bold;">
+                                £<?= $listing['price'] ?>
+                            </p>
                         </div>
-                        <!-- Details Section -->
-                        <div class="col-8">
-                            <div class="card-body d-flex justify-content-between align-items-start" style="padding: 15px;">
-                                <div>
-                                    <h6 class="card-title mb-1" style="color: #333; font-weight: bold;">
-                                        <?= $listing['title'] ?>
-                                    </h6>
-                                    <p class="card-text mb-1" style="color: #888; font-size: 0.9rem;">
-                                        <i class="fas fa-map-marker-alt me-1"></i><?= $location ?>
-                                    </p>
-                                    <p class="card-text text-success" style="font-size: 1rem; font-weight: bold;">
-                                        £<?= $listing['price'] ?>
-                                    </p>
-                                </div>
-                                <div class="d-flex flex-column align-items-end gap-2">
-                                    <button class="btn btn-link text-danger p-0" style="font-size: 1.2rem;">
-                                        <i class="far fa-heart"></i>
-                                    </button>
-                                    <small class="text-muted" style="font-size: 0.8rem;">
-                                        <?= $listing['posted_days_ago'] ?> days ago
-                                    </small>
-                                </div>
-                            </div>
+                        <div class="d-flex flex-column align-items-end gap-2">
+                            <button 
+                                class="btn btn-link <?= $isFavorited ? 'text-danger' : 'text-secondary' ?> p-0 icon_heart" 
+                                style="font-size: 1.2rem;" 
+                                data-productid="<?= $listing['id'] ?>"
+                                onclick="event.stopPropagation();">
+                                <i class="<?= $isFavorited ? 'fas' : 'far' ?> fa-heart"></i>
+                            </button>
+                            <small class="text-muted" style="font-size: 0.8rem;">
+                                <?= $listing['posted_days_ago'] ?> days ago
+                            </small>
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
+            </div>
+        </div>
+    </a>
+    <?php
+}
+?>
+
         <?php else: ?>
             <p class="text-center text-muted" style="font-size: 1.1rem;">No listings available.</p>
         <?php endif; ?>
@@ -157,3 +176,35 @@
     <?php
     include_once 'footer.php';
     ?>
+    <script>
+        document.querySelectorAll('.icon_heart').forEach(favoriteButton => {
+    favoriteButton.addEventListener('click', function(event) {
+        event.preventDefault(); 
+        const productId = this.getAttribute('data-productid');
+
+        fetch('<?= $urlval ?>ajax/favorite.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: productId
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                this.innerHTML = data.isFavorited ?
+                    '<i class="fas fa-heart" style="color: red;"></i>' :
+                    '<i class="far fa-heart" style="color: red;"></i>';
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+    </script>
+    </body>
+
+</html>

@@ -282,7 +282,7 @@ $area = $productData['area'];
     <div class="card one mb-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
     
 
-        <!-- Swiper Gallery -->
+  
         <div id="galleryContainer" class="swiper-container2" style="margin-bottom: 20px; border-radius: 12px; overflow: hidden;">
             <div class="swiper-wrapper">
                 <?php
