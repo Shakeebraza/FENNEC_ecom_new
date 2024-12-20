@@ -1040,13 +1040,104 @@ Class Productfun{
                 'country' => $firstProduct['con_name'],
                 'city' => $firstProduct['city_name'],
                 'area' => $firstProduct['area_name'],
-                'city_longitude' => $firstProduct['city_longitude'],  // Longitude
-                'city_latitude' => $firstProduct['city_latitude'],    // Latitude
+                'city_longitude' => $firstProduct['city_longitude'],  
+                'city_latitude' => $firstProduct['city_latitude'],   
             ];
         }
     
         return null;
     }
+
+    public function getProductDetailsBySlugsort($slug, $userId = null) {
+        $sql = "
+            SELECT 
+                p.id AS product_id,
+                p.name AS product_name,
+                p.description AS product_description,
+                p.price,
+                p.slug,
+                p.conditions,
+                p.product_type,
+                p.created_at as prodate,
+                p.image as proimage,
+                p.user_id,
+                p.category_id,
+                p.subcategory_id,
+                p.discount_price,
+                p.country_id,
+                p.city_id,
+                p.aera_id,
+                p.brand,
+                c.category_name,
+                c.slug AS catslug,
+                s.subcategory_name,
+                cou.name AS con_name,
+                city.name AS city_name,
+                area.name AS area_name,  -- Area name
+                city.longitude AS city_longitude,  -- Longitude of the city
+                city.latitude AS city_latitude,    -- Latitude of the city
+                pi.image_path AS image_path,
+                pi.sort AS image_sort,  -- Sort column for images
+                CASE WHEN f.user_id IS NOT NULL THEN 1 ELSE 0 END AS is_favorited
+            FROM 
+                products p
+            LEFT JOIN 
+                categories c ON p.category_id = c.id
+            LEFT JOIN 
+                subcategories s ON p.subcategory_id = s.id
+            LEFT JOIN 
+                product_images pi ON p.id = pi.product_id
+            LEFT JOIN 
+                favorites f ON p.id = f.product_id " . ($userId ? "AND f.user_id = :user_id" : "") . "
+            LEFT JOIN 
+                countries cou ON cou.id = p.country_id
+            LEFT JOIN 
+                cities city ON city.id = p.city_id
+            LEFT JOIN 
+                areas area ON area.id = p.aera_id  
+            WHERE 
+                p.slug = :slug
+            ORDER BY 
+                pi.sort ASC  -- Sort images by the sort column
+        ";
+    
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':slug', $slug);
+    
+        if ($userId) {
+            $stmt->bindParam(':user_id', $userId);
+        }
+    
+        $stmt->execute();
+        $productDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        if ($productDetails) {
+            $firstProduct = $productDetails[0];
+            
+     
+            $images = array_map(function ($row) {
+                return [
+                    'image_path' => $row['image_path'],
+                    'sort' => $row['image_sort']
+                ];
+            }, $productDetails);
+    
+            return [
+                'product' => $firstProduct,
+                'gallery_images' => $images,
+                'is_favorited' => $firstProduct['is_favorited'],
+                'location' => $firstProduct['con_name'] . ' | ' . $firstProduct['city_name'] . ' | ' . $firstProduct['area_name'],
+                'country' => $firstProduct['con_name'],
+                'city' => $firstProduct['city_name'],
+                'area' => $firstProduct['area_name'],
+                'city_longitude' => $firstProduct['city_longitude'], 
+                'city_latitude' => $firstProduct['city_latitude'],  
+            ];
+        }
+    
+        return null;
+    }
+    
     
     public function getProductDetailsBySlugnew($slug, $userId = null) {
                 $sql = "
@@ -1076,7 +1167,8 @@ Class Productfun{
                     area.name AS area_name,  -- Area name
                     city.longitude AS city_longitude,  -- Longitude of the city
                     city.latitude AS city_latitude,    -- Latitude of the city
-                    pi.id AS image_id,  -- Image ID
+                    pi.id AS image_id,  
+                    pi.sort AS sort,  
                     pi.image_path AS image_path,
                     CASE WHEN f.user_id IS NOT NULL THEN 1 ELSE 0 END AS is_favorited
                 FROM 
@@ -1112,11 +1204,12 @@ Class Productfun{
         if ($productDetails) {
             $firstProduct = $productDetails[0];
             
-            // Collect image data (id and path) for the gallery
+
             $images = [];
             foreach ($productDetails as $productImage) {
                 $images[] = [
                     'image_id' => $productImage['image_id'],
+                    'sort' => $productImage['sort'],
                     'image_path' => $productImage['image_path']
                 ];
             }
@@ -1129,8 +1222,8 @@ Class Productfun{
                 'country' => $firstProduct['con_name'],
                 'city' => $firstProduct['city_name'],
                 'area' => $firstProduct['area_name'],
-                'city_longitude' => $firstProduct['city_longitude'],  // Longitude
-                'city_latitude' => $firstProduct['city_latitude'],    // Latitude
+                'city_longitude' => $firstProduct['city_longitude'], 
+                'city_latitude' => $firstProduct['city_latitude'],  
             ];
         }
 
@@ -1229,7 +1322,7 @@ Class Productfun{
                 <div class="col-md-4 offset-md-4 mb-4">
                     <div class="card product-card" style="border: none; box-shadow: none; background: #fff;">
                         <div class="card-body text-center">
-                            <h5 style="color: red; font-weight: bold; font-size: 1.5rem;">No Products Found</h5>
+                            <h5 style="color: red; font-weight: bold; font-size: 1.5rem;">No Ads Found</h5>
                             <p style="color: #555; font-size: 1rem;">Upload your first product to get started!</p>
                         </div>
                     </div>
@@ -1238,7 +1331,7 @@ Class Productfun{
                 
             }
         } else {
-            return $lan['No_products_found_for_user']; // Translated message
+            return $lan['No_products_found_for_user']; 
         }
     }
     
@@ -1270,7 +1363,7 @@ Class Productfun{
                                 <small class="text-muted">' . $lan['listed'] . ' ' . $this->dbfun->time_ago($product['created_at']) . '</small>
                             </p>
                             <div class="d-flex justify-content-between">
-                                <a class="btn btn-button btn-sm" href="'.$this->urlval.'productedit.php?productid='.$this->security->encrypt($product['id']).'" style="display: inline-block; margin-right: 5px;">'.$lan['edit'].'</a>
+                                <a class="btn btn-button btn-sm" href="'.$this->urlval.'productedit.php?slug='.$product['slug'].'" style="display: inline-block; margin-right: 5px;">'.$lan['edit'].'</a>
                                 
                                 <div class="btn-delete-upload">';
                                 
@@ -1550,7 +1643,67 @@ Class Productfun{
             ];
         }
     }
+    function getSubcategories($categoryId, $selectedSubcategoryId = null) {
+        global $pdo; // Ensure PDO connection is available
+        $subcategories = [];
     
+        try {
+            // Fetch subcategories where category_id matches and is_enabled is active
+            $query = "SELECT id, subcategory_name 
+                      FROM subcategories 
+                      WHERE category_id = :category_id AND is_enable = 1 
+                      ORDER BY sort_order ASC";
+    
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $subcategories[] = [
+                    'id' => $row['id'],
+                    'name' => $row['subcategory_name'],
+                    'selected' => ($row['id'] == $selectedSubcategoryId) ? true : false
+                ];
+            }
+        } catch (PDOException $e) {
+            // Log or return an error
+            error_log('Error fetching subcategories: ' . $e->getMessage());
+        }
+    
+        return $subcategories;
+    }
+    function getCities($countryId, $selectedCityId = null) {
+        global $pdo; // Ensure PDO connection is available
+        $cities = [];
+    
+        try {
+            // Fetch cities where country_id matches
+            $query = "SELECT id, name, latitude, longitude 
+                      FROM cities 
+                      WHERE country_id = :country_id 
+                      ORDER BY name ASC";
+    
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':country_id', $countryId, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $cities[] = [
+                    'id' => $row['id'],
+                    'name' => $row['name'],
+                    'latitude' => $row['latitude'],
+                    'longitude' => $row['longitude'],
+                    'selected' => ($row['id'] == $selectedCityId) ? true : false
+                ];
+            }
+        } catch (PDOException $e) {
+            // Log or return an error
+            error_log('Error fetching cities: ' . $e->getMessage());
+        }
+    
+        return $cities;
+    }
+        
     
     
 }

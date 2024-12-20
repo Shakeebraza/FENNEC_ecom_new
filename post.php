@@ -437,6 +437,9 @@ input#gallery {
                     <div class="form-check">
                 
                         <input class="form-check-input website-redict" type="checkbox" name="website-redict" id="websiteRedict" value="1">
+                        <label class="form-check-label" for="extraVideos">
+                            Add <?= $fun->getFieldData('videos_allowed'); ?> Webiste url for <?= $fun->getFieldData('paid_videos_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
+                        </label>
                     </div>
            
                     <div id="urlInputField" style="display: none; margin-top: 10px;">

@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $slug = $_GET['slug'] ?? null;
     if (!empty($slug)) {
         $userId = isset($_SESSION['userid']) ? base64_decode($_SESSION['userid']) : NULL;
-        $productData = $productFun->getProductDetailsBySlug($slug, $userId);
+        $productData = $productFun->getProductDetailsBySlugsort($slug, $userId);
 
         if (empty($productData)) {
             header('Location: index.php');
@@ -285,23 +285,50 @@ $area = $productData['area'];
   
         <div id="galleryContainer" class="swiper-container2" style="margin-bottom: 20px; border-radius: 12px; overflow: hidden;">
             <div class="swiper-wrapper">
-                <?php
-                if (isset($productData['gallery_images'][0])) {
-                    foreach ($productData['gallery_images'] as $row) {
-                        echo '
-                            <div class="swiper-slide">
-                                <img src="' . $urlval . $row . '" class="card-img-top" alt="Not found Image" style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
-                            </div>
-                        ';
-                    }
-                } else {
-                    echo '
-                        <div class="swiper-slide">
-                            <img src="' . $urlval . $productData['product']['proimage'] . '" class="card-img-top" alt="Not found Image" style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
-                        </div>
-                    ';
-                }
-                ?>
+            <?php
+
+       if (!empty($productData['gallery_images'])) {
+      
+        if (isset($productData['gallery_images'][0]) && is_array($productData['gallery_images'][0])) {
+        
+            usort($productData['gallery_images'], function ($a, $b) {
+                return $a['sort'] <=> $b['sort']; 
+            });
+    
+
+            foreach ($productData['gallery_images'] as $row) {
+                echo '
+                    <div class="swiper-slide">
+                        <img src="' . $urlval . $row['image_path'] . '" class="card-img-top" alt="Not found Image" 
+                        style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
+                    </div>
+                ';
+            }
+        } else {
+    
+            foreach ($productData['gallery_images'] as $imagePath) {
+                echo '
+                    <div class="swiper-slide">
+                        <img src="' . $urlval . $imagePath . '" class="card-img-top" alt="Not found Image" 
+                        style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
+                    </div>
+                ';
+            }
+        }
+    } else {
+   
+        echo '
+            <div class="swiper-slide">
+                <img src="' . $urlval . $productData['product']['proimage'] . '" class="card-img-top" alt="Not found Image" 
+                style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
+            </div>
+        ';
+    }
+    
+            
+?>
+
+
             </div>
             <div class="swiper-pagination" style="bottom: 15px;"></div>
         </div>
