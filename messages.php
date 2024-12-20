@@ -155,8 +155,8 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
             <h3 class="mb-4"><?= $lan['view_my_products']?></h3>
             <div class="row">
                 <?php
-        $productFun->getProductsForUser(base64_decode($_SESSION['userid']),$lan);
-        ?>
+                $productFun->getProductsForUser(base64_decode($_SESSION['userid']),$lan);
+                ?>
             </div>
         </div>
 

@@ -319,8 +319,8 @@ input#gallery {
 
 
     <div class="mb-3 hidden321" id="input-container">
-                    <label for="brand" class="form-label">Enter youtube URL:</label>
-                    <input type="utl" class="form-control" id="brand" name="brand" required>
+                    <label for="youtube_url" class="form-label">Enter youtube URL:</label>
+                    <input type="utl" class="form-control" id="youtube_url" name="youtube_url">
                 </div>
 
                 <div class="mb-3">
@@ -430,6 +430,18 @@ input#gallery {
                         <label class="form-check-label" for="extraVideos">
                             Add <?= $fun->getFieldData('videos_allowed'); ?> Video for <?= $fun->getFieldData('paid_videos_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
                         </label>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <h5>Website Redirect</h5>
+                    <div class="form-check">
+                
+                        <input class="form-check-input website-redict" type="checkbox" name="website-redict" id="websiteRedict" value="1">
+                    </div>
+           
+                    <div id="urlInputField" style="display: none; margin-top: 10px;">
+                        <label for="redirectUrl">Enter Redirect URL:</label>
+                        <input type="url" class="form-control" id="redirectUrl" name="redirectUrl" placeholder="https://example.com">
                     </div>
                 </div>
 
@@ -685,23 +697,26 @@ function filterCategories() {
     categories.forEach(function(category) {
         let categoryName = category.getAttribute('data-name');
         if (categoryName.includes(searchTerm)) {
-            category.style.display = 'block';  // Show matching category
+            category.style.display = 'block';  
         } else {
-            category.style.display = 'none';  // Hide non-matching category
+            category.style.display = 'none';  
         }
     });
 }
 
-    </script>
 
-<script>
         const link = document.getElementById('youtube-link');
         const inputContainer = document.getElementById('input-container');
 
         link.addEventListener('click', (event) => {
-            event.preventDefault(); // Default behavior ko rokta hai
-            inputContainer.classList.toggle('hidden321'); // Hidden class ko toggle karta hai
+            event.preventDefault(); 
+            inputContainer.classList.toggle('hidden321'); 
         });
+
+        document.querySelector('.website-redict').addEventListener('change', function() {
+        var urlInputField = document.getElementById('urlInputField');
+        urlInputField.style.display = this.checked ? 'block' : 'none';
+    });
     </script>
 
 </body>

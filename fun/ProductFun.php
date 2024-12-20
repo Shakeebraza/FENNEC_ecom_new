@@ -1225,7 +1225,17 @@ Class Productfun{
             if (!empty($products)) {
                 $this->displayProducts($products, $lan);
             } else {
-                throw new Exception("No products found for user with ID: " . htmlspecialchars($userId));
+                echo '
+                <div class="col-md-4 offset-md-4 mb-4">
+                    <div class="card product-card" style="border: none; box-shadow: none; background: #fff;">
+                        <div class="card-body text-center">
+                            <h5 style="color: red; font-weight: bold; font-size: 1.5rem;">No Products Found</h5>
+                            <p style="color: #555; font-size: 1rem;">Upload your first product to get started!</p>
+                        </div>
+                    </div>
+                </div>
+                ';
+                
             }
         } else {
             return $lan['No_products_found_for_user']; // Translated message
@@ -1234,6 +1244,7 @@ Class Productfun{
     
     function displayProducts($products, $lan) {
         $currentDate = new DateTime(); 
+        if (!empty($products)) { 
         foreach ($products as $product) {
             $description = $product['description'];
             $words = explode(" ", $description);
@@ -1290,6 +1301,18 @@ Class Productfun{
                 </div>
             ';
         }
+    }else{
+        echo '
+         <div class="col-md-4 mb-4">
+                    <div class="card product-card">
+        <div class="col-12 text-center">
+            <h5>no_products_found</h5>
+            <p> upload_prompt</p>
+        </div>
+        </div>
+        </div>
+    ';
+    }
     }
     
     
