@@ -20,8 +20,10 @@ $countries = $dbFunctions->getData('countries');
 </head>
 <style>
 .custom-file-upload {
-    display: inline-block;
+    display: flex;
     padding: 20px;
+    align-items: center;
+justify-content: center;
     cursor: pointer;
     color: black;
     border-radius: 5px;
@@ -99,6 +101,128 @@ textarea:focus {
     box-shadow: 0px 0px 5px rgba(243, 156, 18, 0.5);
     outline: none;
 }
+.pdt-ads{
+    font-size: 22px;
+font-weight: 600;
+margin-bottom: 15px !important;
+}
+#step1 h2{
+    font-size: 16px;
+font-weight: 600;
+margin-bottom: 10px !important;
+}
+#step1 h6{
+    font-size: 14px;
+    margin-bottom: 15px !important;
+font-weight: 600;
+}
+.pst-inpt-serc {
+    margin-top: 20px;
+    margin-bottom: 0px;
+}
+.pst-inpt-serc input {
+   width: 300px;
+   height: 44px;
+                            line-height: 20px;
+                            padding: 4px 8px;
+                            border: 1px solid #d8d6d9;
+                            border-radius: 4px;
+                            font-size: 16px;
+                            margin-bottom: 20px;
+}
+.pst-inpt-serc input:focus ,.pst-inpt-serc input:hover {
+  box-shadow: none !important;
+  border: 1px solid #d8d6d9 !important;
+}
+.pst-inpt-serc input::placeholder{
+    font-size: 14px;
+    color: #b1adb3;
+}
+.container{
+    max-width: 1000px !important;
+}
+#step2{
+    margin-top: 0px !important;
+    border: 1px solid #d8d6d9 !important;
+    border-radius: 0px !important;
+    max-width: 1000px !important;
+    width: 100% !important;
+    min-width: 1000px !important;
+    margin-left: -24px;
+    padding: 40px !important;
+    background-color: white !important;
+}
+
+
+.sb-cytr-opt .sbrct-prere{
+padding: 15px !important;
+border: none;
+border-right: 1px solid #d8d6d9 !important;
+}
+.category-btn{
+    background-color: white !important;
+    border: 1px solid #d8d6d9 !important;
+    color: #333 !important;
+    text-align: center;
+    padding: 10px;
+    border-radius: 0px !important
+}
+.ct-mtb-mn{
+   padding: 0px !important;
+}
+.sbrct-prere::after {
+    content: "\f054";
+    font-family: "Font Awesome 5 Free"; 
+    font-weight: 900;
+    margin-left: 20px; 
+    color: #000; 
+    display: inline-block; 
+    font-size: 12px;
+}
+.sbrct-prere.active::after {
+    content: "\f00c"  ; 
+    font-family: "Font Awesome 5 Free"; 
+    font-weight: 900;
+    color: #28a745; 
+    font-size: 14px;
+}
+#step3{
+    padding: 80px 0px;
+    background-color: white !important;
+}
+input#gallery {
+    height: 50px !important;
+    width: 50px !important;
+    padding: 60px !important;
+    background: url("custom/asset/add-image-icon.ea516b80c0402f99dfb041ba4db057ce\ \(1\).png") no-repeat;
+    background-size: contain;
+    background-position: center; background-color: #ECEDEF;
+
+}
+.upld-free-imag{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+    input#gallery{
+        -webkit-appearance: none; 
+    appearance: none; opacity: 0; 
+    position: absolute; 
+    z-index: -1; 
+    }
+    .fdfadfbfhfkj {
+    padding: 20px;
+    background: #ECEDEF;
+    border-radius: 10px;
+    border: 1px dashed bl;
+}
+    .fdfadfbfhfkj img{
+        height: 50px !important;
+        width: 50px !important;
+}
+.hidden321{
+            display: none;
+        }
 </style>
 
 <body>
@@ -111,36 +235,46 @@ textarea:focus {
     </nav>
 
     <div class="container my-5">
-        <h1 class="text-center mb-4">POST YOUR AD</h1>
+        <h1 class="mb-4 pdt-ads">POST YOUR AD</h1>
 
         <div id="step1">
-            <h2 class="text-center mb-4">Choose a Category</h2>
+            <h2 class=" mb-4">Choose a Category</h2>
+            <h6>Tell us what category you are posting in</h6>
+            
             <div class="row g-4 justify-content-center">
-                <?php
-                $findCate = $categoryManager->getAllCategoriesHeaderMenu();
-                if ($findCate['status'] == 'success') {
-                    foreach ($findCate['data'] as $category) {
-                        echo '
-                        <div class="col-md-3">
-                            <button class="btn category-btn w-100" onclick="selectCategory(`' . $category['category_name'] . '`, `' . $category['id'] . '`)">
-                                <i class="fas ' . $category['icon'] . '"></i><br> ' . $category['category_name'] . '
-                            </button>
-                        </div>
-                    ';
-                    }
-                }
-                ?>
+    <div class="pst-inpt-serc">
+        <input type="text" id="categorySearch" placeholder="e.g. Cars, Sofas, Bikes, Laptops" oninput="filterCategories()">
+    </div>
+</div>
+<div class="row g-4 justify-content-center" id="categoryContainer">
+    <?php
+    $findCate = $categoryManager->getAllCategoriesHeaderMenu();
+    if ($findCate['status'] == 'success') {
+        foreach ($findCate['data'] as $category) {
+            echo '
+            <div class="col-md-2 ct-mtb-mn category-item" data-name="' . strtolower($category['category_name']) . '">
+                <div class="category-btn w-100" onclick="selectCategory(`' . $category['category_name'] . '`, `' . $category['id'] . '`)">
+                    <i class="fas ' . $category['icon'] . '"></i><br>' . $category['category_name'] . '
+                </div>
             </div>
-        </div>
+            ';
+        }
+    }
+    ?>
+</div>
 
-        <div id="step2" class="hidden">
-            <h2 class="text-center mb-4">Choose a Subcategory for <span id="selectedCategory"></span></h2>
-            <div class="row g-4 justify-content-center" id="subcategoryOptions"></div>
-            <button class="btn btn-secondary" onclick="goBackToCategory()">Back</button>
         </div>
+<div class="container"> 
+<div id="step2" class="hidden">
+            <h2 class=" mb-4">Choose a Subcategory for <span id="selectedCategory"></span></h2>
+            <div class="row d-block  sb-cytr-opt " id="subcategoryOptions"></div>
+            <!-- <button class="btn btn-secondary" onclick="goBackToCategory()">Back</button> -->
+        </div>
+</div>
+       
 
         <div id="step3" class="hidden">
-            <h2 class="text-center mb-4">Post Your Ad Details</h2>
+            <h2 class="text-center mb-4">Post an ad </h2>
             <form id="productForm" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label">Category</label>
@@ -152,13 +286,32 @@ textarea:focus {
                     <input type="text" class="form-control" id="finalSubcategory" name="finalSubcategory" readonly>
                     <input type="hidden" id="finalSubcategoryId" name="subcategory">
                 </div>
-                <div class="form-group mb-3"
-                    style="padding: 20px;border: 2px solid #28a745;border-radius: 10px;box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);background-color: #f9f9f9;">
-                    <label for="gallery" class="custom-file-upload">Upload Gallery</label>
-                    <input type="file" id="gallery" name="gallery[]" accept="image/*" multiple>
-                    <div id="imagePreview" class="image-preview"></div>
-                    <div class="text-danger" id="galleryError"></div>
+            
+
+                    <div class="form-group mb-3" style="padding: 20px;border: 1px dashed #d8d6d9 ;border-radius: 10px;box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+        <div class="upld-free-imag d-flex w-100">
+            <input type="file" id="gallery" name="gallery[]" accept="image/*" multiple>
+        </div>
+        <label for="gallery" class="custom-file-upload D-FLEX">
+            <div class="fdfadfbfhfkj">
+                <img src="custom/asset/add-image-icon.ea516b80c0402f99dfb041ba4db057ce (1).png" alt="">
+            </div>
+        </label>
+        <div id="imagePreview" class="image-preview"></div>
+        <div class="text-danger" id="galleryError"></div>
+    </div>
+    <p>
+        <a href="#" id="youtube-link">Click to open YouTube video input</a>
+    </p>
+
+
+
+
+    <div class="mb-3 hidden321" id="input-container">
+                    <label for="brand" class="form-label">Enter youtube URL:</label>
+                    <input type="utl" class="form-control" id="brand" name="brand" required>
                 </div>
+
                 <div class="mb-3">
                     <label for="brand" class="form-label">Brand<span style="color: red;">*</span></label>
                     <input type="text" class="form-control" id="brand" name="brand" required>
@@ -211,6 +364,7 @@ textarea:focus {
                     <input type="email" class="form-control" id="email" name="email" value="<?= $_SESSION['email']?>"
                         required>
                 </div>
+             
                 <div class="mb-3"
                     style="padding: 20px; border: 2px solid #007bff; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); background-color: #f0f8ff;">
                     <h5>Select Package</h5>
@@ -283,7 +437,7 @@ textarea:focus {
     <script src="<?php echo $urlval ?>admin/asset/vendor/jquery-3.2.1.min.js"></script>
     <script>
     function selectCategory(categoryName, categoryId) {
-        document.getElementById('step1').classList.add('hidden');
+      
         document.getElementById('step2').classList.remove('hidden');
         document.getElementById('selectedCategory').innerText = categoryName;
         document.getElementById('finalCategory').value = categoryName;
@@ -314,8 +468,9 @@ textarea:focus {
                                 const colDiv = document.createElement('div');
                                 colDiv.className = 'col-md-3';
                                 colDiv.innerHTML =
-                                    `<button class="btn btn-outline-primary w-100" onclick="selectSubcategory('${subcategory.name}', '${subcategory.id}')">${subcategory.name}</button>`;
+                                    `<div class=" sbrct-prere w-100" onclick="selectSubcategory('${subcategory.name}', '${subcategory.id}')">${subcategory.name}</div>`;
                                 subcategoryOptions.appendChild(colDiv);
+                                   
                             });
                         } else {
                             alert(parsedData.message);
@@ -334,6 +489,7 @@ textarea:focus {
 
     function selectSubcategory(subcategoryName, subcategoryId) {
         document.getElementById('step2').classList.add('hidden');
+        document.getElementById('step1').classList.add('hidden');
         document.getElementById('step3').classList.remove('hidden');
         document.getElementById('finalSubcategory').value = subcategoryName;
         document.getElementById('finalSubcategoryId').value = subcategoryId; 
@@ -341,12 +497,14 @@ textarea:focus {
 
     function goBackToCategory() {
         document.getElementById('step2').classList.add('hidden');
+        document.getElementById('step3').classList.add('hidden');
         document.getElementById('step1').classList.remove('hidden');
     }
 
     function goBackToSubcategory() {
         document.getElementById('step3').classList.add('hidden');
         document.getElementById('step2').classList.remove('hidden');
+        document.getElementById('step1').classList.remove('hidden');
     }
 
     document.getElementById('gallery').addEventListener('change', function(event) {
@@ -500,6 +658,39 @@ textarea:focus {
         }
 
     });
+    function toggleCheckmark(element) {
+    // Remove 'active' class from all siblings
+    document.querySelectorAll('.sbrct-prere').forEach(el => {
+        el.classList.remove('active');
+    });
+
+    // Add 'active' class to the clicked element
+    element.classList.add('active');
+}
+function filterCategories() {
+    let searchTerm = document.getElementById('categorySearch').value.toLowerCase();
+    let categories = document.querySelectorAll('.category-item');
+    
+    categories.forEach(function(category) {
+        let categoryName = category.getAttribute('data-name');
+        if (categoryName.includes(searchTerm)) {
+            category.style.display = 'block';  // Show matching category
+        } else {
+            category.style.display = 'none';  // Hide non-matching category
+        }
+    });
+}
+
+    </script>
+
+<script>
+        const link = document.getElementById('youtube-link');
+        const inputContainer = document.getElementById('input-container');
+
+        link.addEventListener('click', (event) => {
+            event.preventDefault(); // Default behavior ko rokta hai
+            inputContainer.classList.toggle('hidden321'); // Hidden class ko toggle karta hai
+        });
     </script>
 
 </body>
