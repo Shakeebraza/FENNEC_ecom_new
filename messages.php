@@ -107,6 +107,7 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
 
 }
 </style>
+
 <div class="container mt-4 pb-5">
     <ul class="nav nav-tabs justify-content-between" id="myTab" role="tablist">
         <!-- <li class="nav-item" role="presentation"> -->
@@ -350,33 +351,6 @@ $(document).ready(function() {
         }
     });
 
-});
-
-const favoriteButton = document.getElementById('favorite-button');
-
-favoriteButton.addEventListener('click', function() {
-    const productId = this.getAttribute('data-productid');
-
-    fetch('<?= $urlval ?>ajax/favorite.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: productId
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                favoriteButton.innerHTML = data.isFavorited ?
-                    '<i class="fas fa-heart heart-icon"></i>' :
-                    '<i class="far fa-heart heart-icon" style="color=#000"></i>';
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
 });
 
 
@@ -640,8 +614,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-</script>
-<script>
+
 $(document).ready(function() {
     loadChatList();
 
@@ -817,6 +790,33 @@ function openImagePopup(src) {
         document.getElementById('imageModal').style.display = 'none';
     }
 
+
+    const favoriteButton = document.getElementById('favorite-button');
+
+favoriteButton.addEventListener('click', function() {
+    const productId = this.getAttribute('data-productid');
+
+    fetch('<?= $urlval ?>ajax/favorite.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: productId
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                favoriteButton.innerHTML = data.isFavorited ?
+                    '<i class="fas fa-heart heart-icon"></i>' :
+                    '<i class="far fa-heart heart-icon" style="color=#000"></i>';
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
 
 
 </script>
