@@ -229,7 +229,18 @@ input#gallery {
 
     <nav class="navbar navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="<?= $urlval?>"><?php echo $fun->getSiteSettingValue('website_name') ?></a>
+        <a class="navbar-brand d-flex align-items-center" href="index.php" style="text-decoration: none;">
+    <?php
+    $logoData = $fun->getBox('box1');
+    $logo = $urlval . $logoData[0]['image'];
+    $title = $logoData[0]['heading'];
+    $phara = $logoData[0]['phara'];
+    ?>
+    <img src="<?php echo $logo ?>" alt="Fennec Logo" 
+         style="max-width: 50px; height: auto; margin-right: 10px;" />
+    <span style="font-size: 1.7rem; font-weight: bold; color: inherit;"><?= $title ?></span>
+</a>
+
             <a class="btn btn-outline-secondary" href="<?= $urlval?>">Back to home</a>
         </div>
     </nav>
