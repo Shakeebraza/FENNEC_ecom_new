@@ -109,29 +109,40 @@
 
 <script>
 $(document).ready(function() {
-      $('#searchInput').on('input', function() {
-        let query = $(this).val();
-        let location = getUrlParameter('location'); 
+  $('#searchInput').on('input', function () {
+    let query = $(this).val();
+    let location = getUrlParameter('location');
 
-        if (query.length > 0) {
-            $.ajax({
-                url: '<?= $urlval?>ajax/search.php',
-                type: 'GET',
-                data: { q: query, location: location }, 
-                success: function(data) {
-                    $('#searchResults').html(data).show(); 
-                }
-            });
-        } else {
-            $('#searchResults').hide();
-        }
-    });
-
-
-    function getUrlParameter(name) {
-        let urlParams = new URLSearchParams(window.location.search);
-        return urlParams.has(name) ? urlParams.get(name) : null;
+    if (query.length > 0) {
+        $.ajax({
+            url: '<?= $urlval ?>ajax/search.php',
+            type: 'GET',
+            data: { q: query, location: location },
+            success: function (data) {
+                $('#searchResults').html(data).show();
+            }
+        });
+    } else {
+        $('#searchResults').hide();
     }
+});
+
+$('#searchInput').on('keypress', function (e) {
+    if (e.which === 13) { 
+        let firstResult = $('#searchResults .suggestion-item a').first(); 
+        if (firstResult.length) {
+            e.preventDefault(); 
+            window.location.href = firstResult.attr('href'); 
+        }
+    }
+});
+
+// Function to retrieve URL parameters
+function getUrlParameter(name) {
+    var url = new URL(window.location.href);
+    var params = new URLSearchParams(url.search);
+    return params.get(name);
+}
 
     $(document).on('click', function(event) {
         if (!$(event.target).closest('#searchForm').length) {
