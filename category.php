@@ -6,6 +6,7 @@ include_once 'header.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $location = $_GET['location'] ?? null;
+    $city = $_GET['city'] ?? null;
     $min_price = $_GET['min_price'] ?? null;
     $max_price = $_GET['max_price'] ?? null;
     $subcategories = $_GET['subcategory'] ?? null;
@@ -16,7 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $filterConditions = [];
 
     if (!is_null($location)) {
-        $filterConditions['city'] = $location;
+        $filterConditions['country'] = $location;
+    }
+    if (!is_null($location)) {
+        $filterConditions['city'] = $city;
     }
     
     if ($min_price > 0) {
@@ -49,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
     if(!empty($pId)){
         $filterConditions['pid'] = $security->decrypt($pId); 
+
     }
     // $filterConditions['pid'] = $security->decrypt($pId); 
     if(!empty($sort)){
@@ -346,7 +351,7 @@ if(!empty($banner)){
 
             <h5>Sub Category</h5>
             <div class="categories-container"> 
-                <?php
+            <?php
                 $findCate = $productFun->getAllcatandSubcat($row_data['id']);
 
                 if ($findCate['status'] == 'success') {
@@ -364,7 +369,7 @@ if(!empty($banner)){
                                             <input type="radio" name="subcategory" value="' . htmlspecialchars($subcategory['id']) . '">
                                             ' . htmlspecialchars($subcategory['subcategory_name']) . '
                                         </label>
-                                      </div>';
+                                    </div>';
                             }
                         } else {
                             echo '<p class="subcategory-item">No subcategories</p>';
@@ -374,7 +379,8 @@ if(!empty($banner)){
                             </div>';
                     }
                 }
-                ?>
+            ?>
+
                                     <div class="mt-5">
                         <div class="card" style="max-width: 100%;">
                             <div class="card-body">
@@ -404,26 +410,50 @@ if(!empty($banner)){
     <div class="col-md-3 left-side">
         <div class="bg-light p-4 rounded">
         <form id="filterForm" method="GET" action="">
+        <div class="mb-4">
+                <h5>Country</h5>
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                    
+                    <select id="country" name="location" class="form-control">
+                        <option value="">Select Country</option>
+                        <?php
+                        $selectedCountry = isset($_GET['location']) ? $_GET['location'] : ''; 
+                        $countries = $dbFunctions->getData('countries');
+                        foreach ($countries as $cont) {
+                            $countryId = $security->decrypt($cont['id']);
+                            $selected = ($countryId == $selectedCountry) ? 'selected' : '';
+                            echo '<option value="' . $countryId . '" ' . $selected . '>' . $security->decrypt($cont['name']) . '</option>';
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
 
-    <div class="mb-4">
-        <h5><?= $lan['location'] ?></h5>
-        <div class="input-group mb-3">
-            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-            <select id="country-city-select" name="location" class="form-control">
-                <option value="">Select Country | City</option>
-                <?php
-                $selectedLocation = isset($_GET['location']) ? $_GET['location'] : ''; 
-                $countryCityPairs = $productFun->getCountryCityPairs();
-                foreach ($countryCityPairs as $pair) {
-                    $selected = $selectedLocation == $pair['city_id'] ? 'selected' : '';
-                    echo '<option value="' . $pair['city_id'] . '" ' . $selected . '>
-                            ' . $pair['country_name'] . ' | ' . $pair['city_name'] . '
-                        </option>';
-                }
-                ?>
-            </select>
-        </div>
-    </div>
+                <h5>City</h5>
+            <div class="mb-4">
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+               
+                    <select id="city" name="city" class="form-control">
+                        <option value="">Select City</option>
+                        <?php
+               
+                        $selectedCity = isset($_GET['city']) ? $_GET['city'] : '';
+
+                        if (!empty($selectedCountry)) {
+                            $cities = $productFun->getCities($selectedCountry); 
+                            foreach ($cities as $city) {
+              
+                                $selected = ($city['id'] == $selectedCity) ? 'selected' : '';
+                                echo '<option value="' . $city['id'] . '" ' . $selected . '>' . $city['name'] . '</option>';
+                            }
+                        }
+                        ?>
+                    </select>
+
+                </div>
+            </div>
 
  
     <div class="mb-4">
@@ -492,7 +522,7 @@ if(!empty($banner)){
 
 
     <button type="submit" class="btn btn-sell-car w-100"><?= $lan['search'] ?></button>
-</form>
+        </form>
         </div>
 
         <div class="col-md-12 mb-4 mt-4">
@@ -602,7 +632,7 @@ if(!empty($banner)){
 
                         $productFind = $productFun->getProductsWithDetailsn(1, 500000, $filterConditions);
                         $products = $productFind['products'];
-                        // var_dump($productFind);
+                  
                         if(!empty($products)){
                         foreach ($products as $proval) {
                             $description = $proval['description'];
@@ -831,6 +861,40 @@ function toggleSubcategory(index) {
         document.getElementById('sortInput').value = order;
         document.getElementById('filterForm').submit();
     }
+
+
+
+    $('#country').on('change', function() {
+    var countryId = $(this).val();
+    if (countryId) {
+      $.ajax({
+        url: '<?php echo $urlval ?>admin/ajax/product/get_cities.php',
+        type: 'POST',
+        data: {
+          country_id: countryId
+        },
+        success: function(data) {
+          $('#city').html(data);
+        },
+        error: function() {
+          alert('Error fetching cities. Please try again.');
+        }
+      });
+    } else {
+      $('#city').html('<option value="" disabled>Select City</option>');
+    }
+  });
+
+  function toggleSubcategory(index) {
+    var subcategoryDiv = document.getElementById('subcategory-' + index);
+    
+    // Toggle the display property between 'none' and 'block'
+    if (subcategoryDiv.style.display === 'none' || subcategoryDiv.style.display === '') {
+        subcategoryDiv.style.display = 'block';
+    } else {
+        subcategoryDiv.style.display = 'none';
+    }
+}
 </script>
 </body>
 

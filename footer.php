@@ -109,13 +109,15 @@
 
 <script>
 $(document).ready(function() {
-    $('#searchInput').on('input', function() {
+      $('#searchInput').on('input', function() {
         let query = $(this).val();
+        let location = getUrlParameter('location'); 
+
         if (query.length > 0) {
             $.ajax({
                 url: '<?= $urlval?>ajax/search.php',
                 type: 'GET',
-                data: { q: query },
+                data: { q: query, location: location }, 
                 success: function(data) {
                     $('#searchResults').html(data).show(); 
                 }
@@ -124,6 +126,12 @@ $(document).ready(function() {
             $('#searchResults').hide();
         }
     });
+
+
+    function getUrlParameter(name) {
+        let urlParams = new URLSearchParams(window.location.search);
+        return urlParams.has(name) ? urlParams.get(name) : null;
+    }
 
     $(document).on('click', function(event) {
         if (!$(event.target).closest('#searchForm').length) {
@@ -183,11 +191,25 @@ function closeNav() {
 }
 
 document.getElementById('locationSelect').addEventListener('change', function() {
-    var cityId = this.value; 
+    var cityId = this.value;
+    var urlParams = new URLSearchParams(window.location.search);
+    var pid = urlParams.get('pid'); 
+    var searchQuery = document.getElementById('searchInput').value;
+    
+    var url = 'category.php?location=' + cityId;
+    
+    if (pid) {
+        url += '&pid=' + pid;
+    }
+    if (searchQuery) {
+        url += '&search=' + encodeURIComponent(searchQuery);
+    }
     if (cityId) {
-        window.location.href = 'category.php?location=' + cityId;
+        window.location.href = url; 
     } else {
         alert('Please select a country and city.');
     }
-  });
+});
+
+
 </script>

@@ -407,9 +407,9 @@ Class Productfun{
 
         $appendFilters = function(&$sql, &$totalSql, $filters, &$params) {
             if (!empty($filters['pid'])) {
-                $sql .= " AND p.id LIKE :id";
-                $totalSql .= " AND p.id LIKE :id";
-                $params[':id'] = '%' . $filters['pid'] . '%';
+                $sql .= " AND p.id = :id";  
+                $totalSql .= " AND p.id = :id"; 
+                $params[':id'] = $filters['pid'];
             }
             if (!empty($filters['product_name'])) {
                 $sql .= " AND p.name LIKE :product_name";
@@ -521,7 +521,7 @@ Class Productfun{
     
         // Apply pagination
         $sql .= " LIMIT :limit OFFSET :offset";
-    
+   
         try {
             // Prepare the main SQL statement
             $stmt = $this->pdo->prepare($sql);
@@ -891,19 +891,36 @@ Class Productfun{
     
     
     public function searchData($table, $query) {
-        $sql = "SELECT p.*, c.category_name, c.slug, c.category_image 
-                FROM $table AS p
-                JOIN categories AS c ON p.category_id = c.id
-                WHERE p.name LIKE :query 
+        $sql = "
+            SELECT 
+                p.*, 
+                c.category_name, 
+                c.slug, 
+                c.category_image 
+            FROM 
+                $table AS p
+            JOIN 
+                categories AS c 
+            ON 
+                p.category_id = c.id
+            WHERE 
+                (p.name LIKE :query 
                 OR p.brand LIKE :query 
                 OR p.description LIKE :query 
-                OR c.category_name LIKE :query
-                LIMIT 10";
+                OR c.category_name LIKE :query)
+            AND (
+                (p.extension = 0 AND p.created_at >= NOW() - INTERVAL 30 DAY)
+                OR
+                (p.extension = 1 AND p.created_at >= NOW() - INTERVAL 60 DAY)
+            )
+            LIMIT 10
+        ";
     
         $stmt = $this->pdo->prepare($sql);
         $searchTerm = '%' . $query . '%';
         $stmt->bindParam(':query', $searchTerm);
         $stmt->execute();
+    
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
