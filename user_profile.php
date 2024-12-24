@@ -62,16 +62,37 @@
 <div class="container py-4" style="max-width: 80%; margin: auto; font-family: Arial, sans-serif;">
 
 
-    <div class="d-flex align-items-center justify-content-between mb-4" style="border-bottom: 1px solid #ccc; padding-bottom: 15px;">
+    <div class="d-flex align-items-left justify-content-between mb-4" style="border-bottom: 1px solid #ccc; padding-bottom: 15px;">
         <div class="d-flex align-items-center gap-3">
    
             <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm" 
-                style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">
+                style="width: 75px; height: 75px; font-size: 1.5rem; font-weight: bold;">
                 <?= $firstLetter ?>
             </div>
   
             <div>
                 <h5 class="mb-1" style="font-weight: 600; color: #333;"><?= $fullName ?></h5>
+                <div class="stars" style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+                    <svg class="star" style="width: 10px; height: 10px; color: #64748b;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    <span class="rating-count">(0)</span>
+                </div>
                 <small class="text-muted" style="font-size: 0.9rem;">Posting for <?= $postingDuration ?> years</small>
             </div>
         </div>
@@ -101,75 +122,132 @@
     </div>
 
     <div class="mb-4" style="border-bottom: 2px solid #ddd;">
-        <ul class="nav nav-tabs" style="border-bottom: none;">
-            <li class="nav-item">
-                <a class="nav-link active" href="#" style="border-bottom: 2px solid #198754; color: #198754; font-weight: bold;">Listings</a>
-            </li>
-        </ul>
-    </div>
 
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .review-container {
+            background: linear-gradient(45deg, #00494F, #198754);
+            color: white;
+            border-radius: 10px;
+            padding: 40px;
+            margin-top: 50px;
+        }
+        .btn-custom {
+            background-color: #198754;
+            color: white;
+            border-radius: 5px;
+        }
+        .btn-custom:hover {
+            background-color: #00494F;
+            color: white;
+        }
+        .review-item {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
 
-    <h6 class="mb-4" style="color: #333; font-weight: bold;"><?= count($listings) ?> Items for Sale</h6>
+        <!-- Bootstrap Tabs -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="listings-tab" data-bs-toggle="tab" href="#listings" role="tab" aria-controls="listings" aria-selected="true">Listings</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="reviews-tab" data-bs-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">Reviews</a>
+        </li>
+    </ul>
+</div>
 
-    <div class="d-flex flex-column gap-3">
-        <?php if (count($listings) > 0): ?>
-            <?php foreach ($listings as $listing) {
-    $isFavorited = in_array($listing['id'], $favoritedProductIds);
-    ?>
-    <a href="<?= $urlval?>detail.php?slug=<?= urlencode($listing['slug']) ?>" 
-       class="text-decoration-none text-dark">
-        <div class="card shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
-            <div class="row g-0">
-                <div class="col-4" style="background: #f8f8f8;">
-                    <div class="position-relative">
-                        <img src="<?= $listing['image_url'] ?>" 
-                            class="img-fluid rounded-start" 
-                            alt="<?= $listing['title'] ?>" 
-                            style="height: 100%; object-fit: cover;">
-                        <span class="position-absolute bottom-0 start-0 bg-dark text-white px-2 py-1 rounded-1" 
-                            style="font-size: 0.8rem;">
-                            <i class="fas fa-camera"></i> <?= $listing['photo_count'] ?>
-                        </span>
-                    </div>
-                </div>
-                <div class="col-8">
-                    <div class="card-body d-flex justify-content-between align-items-start" style="padding: 15px;">
-                        <div>
-                            <h6 class="card-title mb-1" style="color: #333; font-weight: bold;">
-                                <?= $listing['title'] ?>
-                            </h6>
-                            <p class="card-text mb-1" style="color: #888; font-size: 0.9rem;">
-                                <i class="fas fa-map-marker-alt me-1"></i> Location
-                            </p>
-                            <p class="card-text text-success" style="font-size: 1rem; font-weight: bold;">
-                                £<?= $listing['price'] ?>
-                            </p>
+<div class="tab-content mt-4" id="myTabContent">
+
+        <!-- Listings Tab Content -->
+        <div class="tab-pane fade show active" id="listings" role="tabpanel" aria-labelledby="listings-tab">
+        <h6 class="mb-4" style="color: #333; font-weight: bold;"><?= count($listings) ?> Items for Sale</h6>
+        <div class="d-flex flex-column gap-3">
+            <?php if (count($listings) > 0): ?>
+                <?php foreach ($listings as $listing) {
+        $isFavorited = in_array($listing['id'], $favoritedProductIds);
+        ?>
+        <a href="<?= $urlval?>detail.php?slug=<?= urlencode($listing['slug']) ?>" 
+        class="text-decoration-none text-dark" style="border-radius: 8px; overflow: hidden; box-shadow: 0 0 12px 0 rgb(0 0 0 / 20%);">
+            <div class="card shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
+                <div class="row g-0">
+                    <div class="col-4" style="background: #FFFFFF;">
+                        <div class="position-relative">
+                            <img src="<?= $listing['image_url'] ?>" 
+                                class="img-fluid rounded-start" 
+                                alt="<?= $listing['title'] ?>" 
+                                style="height: 250px !important; width: 345px !important; object-fit: cover;">
+                            <span class="position-absolute bottom-0 start-0 bg-dark text-white px-2 py-1 rounded-1" 
+                                style="font-size: 0.8rem;">
+                                <i class="fas fa-camera"></i> <?= $listing['photo_count'] ?>
+                            </span>
                         </div>
-                        <div class="d-flex flex-column align-items-end gap-2">
-                            <button 
-                                class="btn btn-link <?= $isFavorited ? 'text-danger' : 'text-secondary' ?> p-0 icon_heart" 
-                                style="font-size: 1.2rem;" 
-                                data-productid="<?= $listing['id'] ?>"
-                                onclick="event.stopPropagation();">
-                                <i class="<?= $isFavorited ? 'fas' : 'far' ?> fa-heart"></i>
-                            </button>
-                            <small class="text-muted" style="font-size: 0.8rem;">
-                                <?= $listing['posted_days_ago'] ?> days ago
-                            </small>
+                    </div>
+                    <div class="col-8">
+                        <style>
+                            .icon_heart .fa-heart {
+                                    color: #198754;
+                            }
+                        </style>
+                        <div class="card-body d-flex justify-content-between align-items-start" style="padding: 45px 40px 0px 0px;">
+                            <div>
+                                <h6 class="card-title mb-1" style="color: #333; font-weight: bold;">
+                                    <?= $listing['title'] ?>
+                                </h6>
+                                <p class="card-text mb-1" style="color: #888; font-size: 0.9rem;">
+                                    <i class="fas fa-map-marker-alt me-1"></i> Location
+                                </p>
+                                <p class="card-text text-success" style="font-size: 1rem; font-weight: bold;">
+                                    £<?= $listing['price'] ?>
+                                </p>
+                            </div>
+                            <div class="d-flex flex-column align-items-end gap-2">
+                                <button 
+                                    class="btn btn-link <?= $isFavorited ? 'text-danger' : 'text-secondary' ?> p-0 icon_heart" 
+                                    style="font-size: 1.2rem;" 
+                                    data-productid="<?= $listing['id'] ?>"
+                                    onclick="event.stopPropagation();">
+                                    <i class="<?= $isFavorited ? 'fas' : 'far' ?> fa-heart"></i>
+                                </button>
+                                <small class="text-muted" style="font-size: 0.8rem;">
+                                    <?= $listing['posted_days_ago'] ?> days ago
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </a>
-    <?php
-}
-?>
+        </a>
+        <?php
+    }
+    ?>
 
-        <?php else: ?>
-            <p class="text-center text-muted" style="font-size: 1.1rem;">No listings available.</p>
-        <?php endif; ?>
-    </div>
+            <?php else: ?>
+                <p class="text-center text-muted" style="font-size: 1.1rem;">No listings available.</p>
+            <?php endif; ?>
+        </div>
+        </div>
+
+       <!-- Reviews Tab Content -->
+       <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+
+        </div>
+
+
+</div>    
 </div>
 
 
@@ -205,6 +283,8 @@
     });
 });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
     </body>
 
 </html>
