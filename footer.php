@@ -66,6 +66,7 @@
       <?php
       if (isset($menus)) {
         foreach ($menus as $menuData):
+          // var_dump($menuData);
       ?>
           <div class="col-md-4 mb-4">
             <h4 class="text-white font-weight-bold"><?php echo htmlspecialchars($menuData['menu']['name']); ?></h4>
@@ -82,7 +83,22 @@
                     <?php echo htmlspecialchars($item['name']); ?>
                   </a>
                 </li>
-              <?php endforeach; ?>
+              <?php 
+            endforeach; 
+            
+            if($menuData['menu']['id'] == 2){
+              echo '
+              
+                            <li>
+                  <a href="'.$urlval.'/contactus.php" class="text-light hover:text-white">
+                    Contact us
+                  </a>
+                </li>
+              ';
+            }
+            ?>
+
+
             </ul>
           </div>
       <?php endforeach;

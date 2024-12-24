@@ -745,13 +745,13 @@ include_once 'footer.php';
 
     $(document).ready(function() {
         $('.slider').slick({
-            infinite: true, // Enable infinite scrolling
-            slidesToShow: 1, // Show one image at a time
-            slidesToScroll: 1, // Scroll one image at a time
-            arrows: true, // Enable previous and next arrows
-            dots: true, // Show dots navigation
-            autoplay: true, // Enable autoplay
-            autoplaySpeed: 2000, // Set the speed of autoplay
+            infinite: true,
+            slidesToShow: 1,
+            slidesToScroll: 1, 
+            arrows: true, 
+            dots: true,
+            autoplay: true,
+            autoplaySpeed: 2000, 
         });
     });
 </script>
