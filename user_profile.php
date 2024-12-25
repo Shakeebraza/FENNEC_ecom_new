@@ -35,6 +35,19 @@
             $totalItems = $fun->getTotalItems($user['id']);
             $categories = $fun->getCategories($user['id']);
             $listings = $fun->getListings($user['id']);
+
+
+
+            
+            
+    
+      
+       
+                $query = "SELECT * FROM reviews WHERE userid = :id ORDER BY created_at DESC";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute(['id' => $user['id']]);
+                $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+         
         } else {
             echo "<div class='container py-4'><p>User not found.</p></div>";
             include_once 'footer.php';
@@ -56,9 +69,61 @@
             $stmt_fav->execute(['user_id' => $loggedInUserId]);
             $favoritedProductIds = $stmt_fav->fetchAll(PDO::FETCH_COLUMN, 0);
         }
-     
-    ?>
+        $success_message = '';
+        $error_message = '';
+        
 
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            try {
+               
+                $name = htmlspecialchars($_POST['name']);
+                $review = htmlspecialchars($_POST['review']);
+                $rating = (int)$_POST['rating'];
+                $userid = (int)$_POST['useridreview']; 
+                
+            
+                $query = "INSERT INTO reviews (userid, name, review, rating) VALUES (:userid, :name, :review, :rating)";
+                $stmt = $pdo->prepare($query);
+                
+            
+                $stmt->bindParam(':userid', $userid, PDO::PARAM_INT);
+                $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+                $stmt->bindParam(':review', $review, PDO::PARAM_STR);
+                $stmt->bindParam(':rating', $rating, PDO::PARAM_INT);
+                
+             
+                if ($stmt->execute()) {
+                    $success_message = "Thank you for your review!";
+                } else {
+                    $error_message = "Failed to submit your review. Please try again.";
+                }
+            } catch (Exception $e) {
+                $error_message = "An error occurred: " . $e->getMessage();
+            }
+        }
+        
+
+ 
+      
+    ?>
+<style>
+        .star-rating {
+        display: flex;
+        cursor: pointer;
+    }
+    .star {
+        font-size: 30px;
+        color: #d3d3d3;
+        transition: color 0.2s ease !important;
+    }
+    .star.selected {
+        color: gold;
+    }
+    .star:hover,
+    .star:hover ~ .star {
+        color: gold;
+    }
+</style>
 <div class="container py-4" style="max-width: 80%; margin: auto; font-family: Arial, sans-serif;">
 
 
@@ -123,204 +188,166 @@
 
     <div class="mb-4" style="border-bottom: 2px solid #ddd;">
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-        }
-        .review-container {
-            background: linear-gradient(45deg, #00494F, #198754);
-            color: white;
-            border-radius: 10px;
-            padding: 40px;
-            margin-top: 50px;
-        }
-        .btn-custom {
-            background-color: #198754;
-            color: white;
-            border-radius: 5px;
-        }
-        .btn-custom:hover {
-            background-color: #00494F;
-            color: white;
-        }
-        .review-item {
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 14px;
-            color: #555;
-        }
-    </style>
 
-        <!-- Bootstrap Tabs -->
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="listings-tab" data-bs-toggle="tab" href="#listings" role="tab" aria-controls="listings" aria-selected="true">Listings</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="reviews-tab" data-bs-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">Reviews</a>
-        </li>
-    </ul>
-</div>
+
+   
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="listings-tab" data-bs-toggle="tab" href="#listings" role="tab" aria-controls="listings" aria-selected="true">Listings</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="reviews-tab" data-bs-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">Reviews</a>
+    </li>
+</ul>
 
 <div class="tab-content mt-4" id="myTabContent">
 
-        <!-- Listings Tab Content -->
-        <div class="tab-pane fade show active" id="listings" role="tabpanel" aria-labelledby="listings-tab">
+
+    <div class="tab-pane fade show active" id="listings" role="tabpanel" aria-labelledby="listings-tab">
         <h6 class="mb-4" style="color: #333; font-weight: bold;"><?= count($listings) ?> Items for Sale</h6>
         <div class="d-flex flex-column gap-3">
             <?php if (count($listings) > 0): ?>
                 <?php foreach ($listings as $listing) {
-        $isFavorited = in_array($listing['id'], $favoritedProductIds);
-        ?>
-        <a href="<?= $urlval?>detail.php?slug=<?= urlencode($listing['slug']) ?>" 
-        class="text-decoration-none text-dark" style="border-radius: 8px; overflow: hidden; box-shadow: 0 0 12px 0 rgb(0 0 0 / 20%);">
-            <div class="card shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
-                <div class="row g-0">
-                    <div class="col-4" style="background: #FFFFFF;">
-                        <div class="position-relative">
-                            <img src="<?= $listing['image_url'] ?>" 
-                                class="img-fluid rounded-start" 
-                                alt="<?= $listing['title'] ?>" 
-                                style="height: 250px !important; width: 345px !important; object-fit: cover;">
-                            <span class="position-absolute bottom-0 start-0 bg-dark text-white px-2 py-1 rounded-1" 
-                                style="font-size: 0.8rem;">
-                                <i class="fas fa-camera"></i> <?= $listing['photo_count'] ?>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-8">
-                        <style>
-                            .icon_heart .fa-heart {
-                                    color: #198754;
-                            }
-                        </style>
-                        <div class="card-body d-flex justify-content-between align-items-start" style="padding: 45px 40px 0px 0px;">
-                            <div>
-                                <h6 class="card-title mb-1" style="color: #333; font-weight: bold;">
-                                    <?= $listing['title'] ?>
-                                </h6>
-                                <p class="card-text mb-1" style="color: #888; font-size: 0.9rem;">
-                                    <i class="fas fa-map-marker-alt me-1"></i> Location
-                                </p>
-                                <p class="card-text text-success" style="font-size: 1rem; font-weight: bold;">
-                                    £<?= $listing['price'] ?>
-                                </p>
+                    $isFavorited = in_array($listing['id'], $favoritedProductIds);
+                ?>
+                <a href="<?= $urlval ?>detail.php?slug=<?= urlencode($listing['slug']) ?>" 
+                   class="text-decoration-none text-dark" style="border-radius: 8px; overflow: hidden; box-shadow: 0 0 12px 0 rgb(0 0 0 / 20%);">
+                    <div class="card shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
+                        <div class="row g-0">
+                            <div class="col-4" style="background: #FFFFFF;">
+                                <div class="position-relative">
+                                    <img src="<?= $listing['image_url'] ?>" 
+                                         class="img-fluid rounded-start" 
+                                         alt="<?= $listing['title'] ?>" 
+                                         style="height: 250px !important; width: 345px !important; object-fit: cover;">
+                                    <span class="position-absolute bottom-0 start-0 bg-dark text-white px-2 py-1 rounded-1" 
+                                          style="font-size: 0.8rem;">
+                                        <i class="fas fa-camera"></i> <?= $listing['photo_count'] ?>
+                                    </span>
+                                </div>
                             </div>
-                            <div class="d-flex flex-column align-items-end gap-2">
-                                <button 
-                                    class="btn btn-link <?= $isFavorited ? 'text-danger' : 'text-secondary' ?> p-0 icon_heart" 
-                                    style="font-size: 1.2rem;" 
-                                    data-productid="<?= $listing['id'] ?>"
-                                    onclick="event.stopPropagation();">
-                                    <i class="<?= $isFavorited ? 'fas' : 'far' ?> fa-heart"></i>
-                                </button>
-                                <small class="text-muted" style="font-size: 0.8rem;">
-                                    <?= $listing['posted_days_ago'] ?> days ago
-                                </small>
+                            <div class="col-8">
+                                <div class="card-body d-flex justify-content-between align-items-start" style="padding: 45px 40px 0px 0px;">
+                                    <div>
+                                        <h6 class="card-title mb-1" style="color: #333; font-weight: bold;">
+                                            <?= $listing['title'] ?>
+                                        </h6>
+                                        <p class="card-text mb-1" style="color: #888; font-size: 0.9rem;">
+                                            <i class="fas fa-map-marker-alt me-1"></i> Location
+                                        </p>
+                                        <p class="card-text text-success" style="font-size: 1rem; font-weight: bold;">
+                                            £<?= $listing['price'] ?>
+                                        </p>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-end gap-2">
+                                        <button class="btn btn-link <?= $isFavorited ? 'text-danger' : 'text-secondary' ?> p-0 icon_heart" 
+                                                style="font-size: 1.2rem;" 
+                                                data-productid="<?= $listing['id'] ?>"
+                                                onclick="event.stopPropagation();">
+                                            <i class="<?= $isFavorited ? 'fas' : 'far' ?> fa-heart"></i>
+                                        </button>
+                                        <small class="text-muted" style="font-size: 0.8rem;">
+                                            <?= $listing['posted_days_ago'] ?> days ago
+                                        </small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </a>
-        <?php
-    }
-    ?>
-
+                </a>
+                <?php } ?>
             <?php else: ?>
                 <p class="text-center text-muted" style="font-size: 1.1rem;">No listings available.</p>
             <?php endif; ?>
         </div>
-        </div>
-
-       <!-- Reviews Tab Content -->
-       <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-
-        </div>
+    </div>
 
 
-</div>  
+    <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab" style="background-color: white; padding: 40px;">
+    <div class="review-container mx-auto" style="background-color: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); border-radius: 10px; padding: 30px; max-width: 800px;">
+        <h2 style="font-size: 2rem; font-weight: bold; color: #00494f; text-align: center;">Client Reviews</h2>
 
-<div class="container">
-    <div class="review-container mx-auto">
-        <h2>Client Reviews</h2>
-
-        <!-- Success or Error Messages -->
         <?php if (!empty($success_message)): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-bottom: 20px;">
                 <?php echo $success_message; ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php endif; ?>
-        
+
         <?php if (!empty($error_message)): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-bottom: 20px;">
                 <?php echo $error_message; ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php endif; ?>
 
-        <!-- Review Submission Form -->
         <form action="" method="POST">
             <div class="mb-3">
-                <label for="name" class="form-label">Your Name</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+                <label for="name" class="form-label" style="font-weight: 600; color: #333;">Your Name</label>
+                <input type="text" class="form-control" id="name" name="name" required style="border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            </div>
+            <input type="hidden" name="useridreview" value="<?= $user['id']?>">
+            <div class="mb-3">
+                <label for="review" class="form-label" style="font-weight: 600; color: #333;">Your Review</label>
+                <textarea class="form-control" id="review" name="review" rows="4" required style="border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);"></textarea>
             </div>
             <div class="mb-3">
-                <label for="review" class="form-label">Your Review</label>
-                <textarea class="form-control" id="review" name="review" rows="4" required></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="rating" class="form-label">Your Rating</label>
-                <select class="form-select" id="rating" name="rating" required>
-                    <option value="5">5 Stars</option>
-                    <option value="4">4 Stars</option>
-                    <option value="3">3 Stars</option>
-                    <option value="2">2 Stars</option>
-                    <option value="1">1 Star</option>
-                </select>
+                <label for="rating" class="form-label" style="font-weight: 600; color: #333;">Your Rating</label>
+                <div class="star-rating" id="rating" style="display: flex; gap: 5px;">
+                    <span class="star" data-value="5">&#9733;</span>
+                    <span class="star" data-value="4">&#9733;</span>
+                    <span class="star" data-value="3">&#9733;</span>
+                    <span class="star" data-value="2">&#9733;</span>
+                    <span class="star" data-value="1">&#9733;</span>
+                </div>
+                <input type="hidden" id="rating-value" name="rating" required>
             </div>
 
-            <button type="submit" class="btn btn-custom">Submit Review</button>
+            <button type="submit" class="btn" style="background-color: #00494f; color: white; border-radius: 5px; padding: 10px 20px; font-size: 1rem; transition: background-color 0.3s ease;">
+                Submit Review
+            </button>
         </form>
 
-        <!-- List of Reviews -->
-        <?php foreach ($reviews as $review): ?>
-    <div class="review-item">
-        <h5 style="color:#000;">
-            <?php echo htmlspecialchars($review['name']); ?>
-        </h5>
-        <p style="color:#000;">
-            <?php echo htmlspecialchars($review['review']); ?>
-        </p>
-        <p>
-            <?php for ($i = 0; $i < $review['rating']; $i++): ?>
-                <span style="color: #157347;">&#9733;</span> <!-- Filled star -->
-            <?php endfor; ?>
-            <?php for ($i = $review['rating']; $i < 5; $i++): ?>
-                <span style="color: #ccc;">&#9733;</span> <!-- Empty star -->
-            <?php endfor; ?>
-        </p>
-        <small class="text-muted">
-            Reviewed on: <?php echo date("F j, Y, g:i a", strtotime($review['created_at'])); ?>
-        </small>
+
+        <?php 
+if (empty($reviews)): ?>
+    <!-- No reviews message -->
+    <div class="no-reviews" style="text-align: center; margin-top: 30px;">
+        <p style="font-size: 1.2rem; color: #555;">No reviews available for this product yet.</p>
     </div>
-<?php endforeach; ?>
+<?php else: ?>
+    <?php foreach ($reviews as $review): ?>
+        <div class="review-item" style="margin-top: 30px; padding: 20px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);">
+            <h5 style="font-size: 1.2rem; font-weight: bold; color: #00494f;">
+                <?php echo htmlspecialchars($review['name']); ?>
+            </h5>
+            <p style="color: #555; font-size: 1rem;">
+                <?php echo htmlspecialchars($review['review']); ?>
+            </p>
+            <p>
+                <?php for ($i = 0; $i < $review['rating']; $i++): ?>
+                    <span style="color: #157347;">&#9733;</span> 
+                <?php endfor; ?>
+                <?php for ($i = $review['rating']; $i < 5; $i++): ?>
+                    <span style="color: #ccc;">&#9733;</span> 
+                <?php endfor; ?>
+            </p>
+            <small class="text-muted" style="font-size: 0.9rem;">
+                Reviewed on: <?php echo date("F j, Y, g:i a", strtotime($review['created_at'])); ?>
+            </small>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>
 
     </div>
+</div>
 
-   
+
+</div>
+
+
 </div>
 </div>
-
 
     <?php
     include_once 'footer.php';
@@ -353,6 +380,28 @@
         .catch(error => console.error('Error:', error));
     });
 });
+
+
+const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('rating-value');
+
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            ratingInput.value = value; 
+            updateStars(value); 
+        });
+    });
+
+    function updateStars(value) {
+        stars.forEach(star => {
+            if (star.getAttribute('data-value') <= value) {
+                star.classList.add('selected');
+            } else {
+                star.classList.remove('selected');
+            }
+        });
+    }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
