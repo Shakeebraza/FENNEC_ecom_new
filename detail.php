@@ -321,7 +321,6 @@ $area = $productData['area'];
                     <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
                         <i class="fas fa-camera"></i> ' . $totalImages . '
                     </div>
-
                 </div>';
             }
         } else {
@@ -335,7 +334,6 @@ $area = $productData['area'];
                     <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
                         <i class="fas fa-camera"></i> ' . $totalImages . '
                     </div>
-                    
                 </div>';
             }
         }
@@ -349,9 +347,22 @@ $area = $productData['area'];
             <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
                 <i class="fas fa-camera"></i> ' . $totalImages . '
             </div>
-           
         </div>';
     }
+    ?>
+</div>
+
+
+<div id="thumbnailGallery" style="display: flex; margin-top: 10px; overflow-x: scroll; gap: 10px;">
+    <?php
+    if (!empty($productData['gallery_images'])) {
+        foreach ($productData['gallery_images'] as $row) {
+            echo '
+            <div  class="thumb-item" style="flex-shrink: 0;">
+                <img class="view-button" data-mfp-src="' . $urlval . $row['image_path'] . '" src="' . $urlval . $row['image_path'] . '" alt="Thumbnail" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; cursor: pointer;" data-src="' . $urlval . $row['image_path'] . '" />
+            </div>';
+        }
+    } 
     ?>
 </div>
 
@@ -905,7 +916,7 @@ include_once 'footer.php';
         }
     });
     $(document).ready(function () {
-    // Initialize Owl Carousel
+
     $("#galleryContainer").owlCarousel({
         items: 1,
         loop: true,
@@ -918,7 +929,7 @@ include_once 'footer.php';
         margin: 10
     });
 
-    // Initialize Magnific Popup for View button
+ 
     $('.view-button').magnificPopup({
         type: 'image',
         gallery: {
