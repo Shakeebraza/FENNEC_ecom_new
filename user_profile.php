@@ -47,7 +47,14 @@
                 $stmt = $pdo->prepare($query);
                 $stmt->execute(['id' => $user['id']]);
                 $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
-         
+                $totalStars = 0;
+                $totalReviews = count($reviews);
+                foreach ($reviews as $review) {
+                    $totalStars += $review['rating'];
+                }
+                $averageRating = $totalReviews > 0 ? $totalStars / $totalReviews : 0;
+                $averageRating = round($averageRating, 1);
+
         } else {
             header('Location: index.php');
     exit();
@@ -134,30 +141,22 @@
             </div>
   
             <div>
-                <h5 class="mb-1" style="font-weight: 600; color: #333;"><?= $fullName ?></h5>
-                <div class="stars" style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
-                    <svg class="star" style="width: 10px; height: 10px; color: #64748b;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                    <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                    <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                    <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                    <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                    <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                    <span class="rating-count">(0)</span>
-                </div>
-                <small class="text-muted" style="font-size: 0.9rem;">Posting for <?= $postingDuration ?> years</small>
+            <h5 class="mb-1" style="font-weight: 600; color: #333;"><?= $fullName ?></h5>
+            <div class="stars" style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+                <?php 
+             
+                for ($i = 1; $i <= 5; $i++) {
+                
+                    $starColor = ($i <= $averageRating) ? 'gold' : '#64748b'; 
+                    echo '<svg class="star" style="width: 10px; height: 10px; color: ' . $starColor . ';" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>';
+                }
+                ?>
+                <span class="rating-count">(<?= $totalReviews ?>)</span>
             </div>
+            <small class="text-muted" style="font-size: 0.9rem;">Posting for <?= $postingDuration ?> years</small>
+        </div>
         </div>
 
         <div style="text-align: right;">
