@@ -1501,29 +1501,42 @@ Class Productfun{
         }
     }
     public function getRelatedProducts($categoryId, $productId, $limit = 5) {
+        // Get the current date
+        $currentDate = date('Y-m-d');
+        
+        // SQL query to select products based on extension and creation date
         $sql = "
             SELECT 
                 p.id AS product_id,
                 p.name AS title,
                 p.slug,
                 p.price,
-                p.image AS image
+                p.image AS image,
+                p.extension,
+                p.created_at
             FROM 
                 products p
             WHERE 
                 p.category_id = :categoryId
                 AND p.id != :productId
+                AND (
+                    (p.extension = 1 AND p.created_at >= DATE_SUB(:currentDate, INTERVAL 60 DAY)) 
+                    OR 
+                    (p.extension = 0 AND p.created_at >= DATE_SUB(:currentDate, INTERVAL 30 DAY))
+                )
             LIMIT :limit
         ";
     
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':categoryId', $categoryId, PDO::PARAM_INT);
         $stmt->bindParam(':productId', $productId, PDO::PARAM_INT);
+        $stmt->bindParam(':currentDate', $currentDate, PDO::PARAM_STR);  // Bind the current date
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
-    
+        
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     
     function getUserFavorites($userId) {
      
@@ -1748,112 +1761,142 @@ Class Productfun{
     }
     
     public function PoplarProductgoldMultipal()
-    {
-        $conn = $this->pdo;
-        $stmt = $conn->prepare("
-            SELECT * 
-            FROM products 
-            WHERE product_type IN ('gold') 
-            AND is_enable = 1 
-            AND status = 'active' 
-            ORDER BY RAND()
-        ");
-        $stmt->execute();
-        
-        // Fetch all matching products
-        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        // If products are found, return them; otherwise, return null
-        if ($products) {
-            return $products;
-        } else {
-            return null;
-        }
-    }
-    public function PoplarProductMuultipal()
-    {
-        $conn = $this->pdo;
-        $stmt = $conn->prepare("
-            SELECT * 
-            FROM products 
-            WHERE product_type IN ('premium','gold') 
-            AND is_enable = 1 
-            AND status = 'active' 
-            ORDER BY RAND()
-        ");
-        $stmt->execute();
-        
-        // Fetch all matching products
-        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        // If products are found, return them; otherwise, return null
-        if ($products) {
-            return $products;
-        } else {
-            return null;
-        }
-    }
-    
-    function getPremiumProductsWithVideos() {
-        try {
-            // Query to fetch 5 random premium products
-            $productQuery = "
-                SELECT 
-                    p.id AS product_id,
-                    p.name,
-                    p.slug,
-                    p.description,
-                    p.brand,
-                    p.conditions,
-                    p.image,
-                    p.category_id,
-                    p.subcategory_id,
-                    p.price,
-                    p.discount_price,
-                    p.is_enable,
-                    p.status,
-                    p.product_type,
-                    p.user_id,
-                    p.country_id,
-                    p.city_id,
-                    p.date,
-                    p.created_at,
-                    p.updated_at,
-                    pv.video_paths
-                FROM 
-                    products p
-                LEFT JOIN 
-                    product_videos pv 
-                ON 
-                    p.id = pv.product_id
-                WHERE 
-                    p.product_type = 'premium' AND p.is_enable = 1
-                ORDER BY 
-                    RAND() 
-                LIMIT 5
-            ";
-    
-            $stmt = $this->pdo->prepare($productQuery);
+        {
+            $conn = $this->pdo;
+            $currentDate = date('Y-m-d'); 
+            
+            $stmt = $conn->prepare("
+                SELECT * 
+                FROM products 
+                WHERE product_type = 'gold' 
+                AND is_enable = 1 
+                AND status = 'active' 
+                AND (
+                    (extension = 1 AND created_at >= DATE_SUB(:currentDate, INTERVAL 60 DAY)) 
+                    OR 
+                    (extension = 0 AND created_at >= DATE_SUB(:currentDate, INTERVAL 30 DAY))
+                )
+                ORDER BY RAND()
+            ");
+            
+            $stmt->bindParam(':currentDate', $currentDate, PDO::PARAM_STR);
             $stmt->execute();
-    
-            $premiumProducts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-            foreach ($premiumProducts as &$product) {
-                // Check if video_paths exists and is not empty
-                if (!empty($product['video_paths'])) {
-                    $product['videos'] = explode(',', $product['video_paths']);
-                } else {
-                    $product['videos'] = []; // Default to an empty array
-                }
-                unset($product['video_paths']); // Remove the original key
+            
+      
+            $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+          
+            if ($products) {
+                return $products;
+            } else {
+                return null;
             }
-    
-            return $premiumProducts;
-        } catch (PDOException $e) {
-            error_log("Error fetching premium products: " . $e->getMessage());
-            return [];
         }
-    }
+
+        public function PoplarProductMuultipal()
+        {
+            $conn = $this->pdo;
+            $currentDate = date('Y-m-d'); // Get the current date
+            
+            $stmt = $conn->prepare("
+                SELECT * 
+                FROM products 
+                WHERE product_type IN ('premium','gold') 
+                AND is_enable = 1 
+                AND status = 'active' 
+                AND (
+                    (extension = 1 AND created_at >= DATE_SUB(:currentDate, INTERVAL 60 DAY)) 
+                    OR 
+                    (extension = 0 AND created_at >= DATE_SUB(:currentDate, INTERVAL 30 DAY))
+                )
+                ORDER BY RAND()
+            ");
+            
+            $stmt->bindParam(':currentDate', $currentDate, PDO::PARAM_STR); // Bind current date to query
+            $stmt->execute();
+            
+            // Fetch all matching products
+            $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // If products are found, return them; otherwise, return null
+            if ($products) {
+                return $products;
+            } else {
+                return null;
+            }
+        }
+        
+    
+        public function getPremiumProductsWithVideos() {
+            try {
+                $currentDate = date('Y-m-d'); // Get the current date
+                
+                $productQuery = "
+                    SELECT 
+                        p.id AS product_id,
+                        p.name,
+                        p.slug,
+                        p.description,
+                        p.brand,
+                        p.conditions,
+                        p.image,
+                        p.category_id,
+                        p.subcategory_id,
+                        p.price,
+                        p.discount_price,
+                        p.is_enable,
+                        p.status,
+                        p.product_type,
+                        p.user_id,
+                        p.country_id,
+                        p.city_id,
+                        p.date,
+                        p.created_at,
+                        p.updated_at,
+                        pv.video_paths
+                    FROM 
+                        products p
+                    LEFT JOIN 
+                        product_videos pv 
+                    ON 
+                        p.id = pv.product_id
+                    WHERE 
+                        p.product_type = 'premium' 
+                        AND p.is_enable = 1
+                        AND p.status = 'active'
+                        AND (
+                            (p.extension = 1 AND p.created_at >= DATE_SUB(:currentDate, INTERVAL 60 DAY)) 
+                            OR 
+                            (p.extension = 0 AND p.created_at >= DATE_SUB(:currentDate, INTERVAL 30 DAY))
+                        )
+                    ORDER BY 
+                        RAND() 
+                    LIMIT 5
+                ";
+        
+                $stmt = $this->pdo->prepare($productQuery);
+                $stmt->bindParam(':currentDate', $currentDate, PDO::PARAM_STR); // Bind current date to query
+                $stmt->execute();
+        
+                $premiumProducts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+                foreach ($premiumProducts as &$product) {
+                    // Check if video_paths exists and is not empty
+                    if (!empty($product['video_paths'])) {
+                        $product['videos'] = explode(',', $product['video_paths']);
+                    } else {
+                        $product['videos'] = []; // Default to an empty array
+                    }
+                    unset($product['video_paths']); // Remove the original key
+                }
+        
+                return $premiumProducts;
+            } catch (PDOException $e) {
+                error_log("Error fetching premium products: " . $e->getMessage());
+                return [];
+            }
+        }
+        
 
     public function getCategoriesWithChildren()
     {

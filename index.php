@@ -361,9 +361,9 @@ if (!empty($banner)) {
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>
-<?php
-endif;
-?>
+                <?php
+                endif;
+                ?>
                 <div class="row mt-5">
                     <!-- Sidebar Section -->
                     <div class="col-md-3 mb-4">
@@ -423,20 +423,20 @@ endif;
                                         $productName = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
 
                                         echo '
-                    <div>
-                        <a href="' . $detailsurl . '">
-                            <img src="' . $imgproductpre . '" alt="' . $productName . '" class="img-fluid">
-                        </a>
-                        <h6 class="text-center" style="color: #198754;">' . $productName . '</h6>
-                    </div>
-                ';
-                                    }
-                                } else {
-                                    echo '
-                <div>
-                    <h6 class="text-center" style="color: #198754;">Not a single product</h6>
-                </div>
-            ';
+                                                <div>
+                                                    <a href="' . $detailsurl . '">
+                                                        <img src="' . $imgproductpre . '" alt="' . $productName . '" class="img-fluid">
+                                                    </a>
+                                                    <h6 class="text-center" style="color: #198754;">' . $productName . '</h6>
+                                                </div>
+                                            ';
+                                                                }
+                                                            } else {
+                                                                echo '
+                                            <div>
+                                                <h6 class="text-center" style="color: #198754;">Not a single product</h6>
+                                            </div>
+                                        ';
                                 }
 
 
@@ -458,21 +458,21 @@ endif;
                                         $productName = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
 
                                         echo '
-                    <div>
-                        <a href="' . $detailsurl . '">
-                            <img src="' . $imgproductpre . '" alt="' . $productName . '" class="img-fluid">
-                        </a>
-                        <h6 class="text-center" style="color: #198754;">' . $productName . '</h6>
-                    </div>
-                ';
-                                    }
-                                } else {
-                                    echo '
-                <div>
-                    <h6 class="text-center" style="color: #198754;">Not a single product</h6>
-                </div>
-            ';
-                                }
+                                            <div>
+                                                <a href="' . $detailsurl . '">
+                                                    <img src="' . $imgproductpre . '" alt="' . $productName . '" class="img-fluid">
+                                                </a>
+                                                <h6 class="text-center" style="color: #198754;">' . $productName . '</h6>
+                                            </div>
+                                        ';
+                                                            }
+                                                        } else {
+                                                            echo '
+                                        <div>
+                                            <h6 class="text-center" style="color: #198754;">Not a single product</h6>
+                                        </div>
+                                    ';
+                                                        }
 
 
                                 ?>
