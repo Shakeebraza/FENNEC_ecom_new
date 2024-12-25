@@ -247,7 +247,78 @@
         </div>
 
 
-</div>    
+</div>  
+
+<div class="container">
+    <div class="review-container mx-auto">
+        <h2>Client Reviews</h2>
+
+        <!-- Success or Error Messages -->
+        <?php if (!empty($success_message)): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <?php echo $success_message; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+        
+        <?php if (!empty($error_message)): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?php echo $error_message; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <!-- Review Submission Form -->
+        <form action="" method="POST">
+            <div class="mb-3">
+                <label for="name" class="form-label">Your Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="review" class="form-label">Your Review</label>
+                <textarea class="form-control" id="review" name="review" rows="4" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="rating" class="form-label">Your Rating</label>
+                <select class="form-select" id="rating" name="rating" required>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="2">2 Stars</option>
+                    <option value="1">1 Star</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-custom">Submit Review</button>
+        </form>
+
+        <!-- List of Reviews -->
+        <?php foreach ($reviews as $review): ?>
+    <div class="review-item">
+        <h5 style="color:#000;">
+            <?php echo htmlspecialchars($review['name']); ?>
+        </h5>
+        <p style="color:#000;">
+            <?php echo htmlspecialchars($review['review']); ?>
+        </p>
+        <p>
+            <?php for ($i = 0; $i < $review['rating']; $i++): ?>
+                <span style="color: #157347;">&#9733;</span> <!-- Filled star -->
+            <?php endfor; ?>
+            <?php for ($i = $review['rating']; $i < 5; $i++): ?>
+                <span style="color: #ccc;">&#9733;</span> <!-- Empty star -->
+            <?php endfor; ?>
+        </p>
+        <small class="text-muted">
+            Reviewed on: <?php echo date("F j, Y, g:i a", strtotime($review['created_at'])); ?>
+        </small>
+    </div>
+<?php endforeach; ?>
+
+    </div>
+
+   
+</div>
 </div>
 
 

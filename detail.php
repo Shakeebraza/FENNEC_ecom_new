@@ -790,145 +790,145 @@ include_once 'footer.php';
         });
     });
 
-    async function generatePDF() {
-        const {
-            jsPDF
-        } = window.jspdf;
-        const doc = new jsPDF();
+    // async function generatePDF() {
+    //     const {
+    //         jsPDF
+    //     } = window.jspdf;
+    //     const doc = new jsPDF();
 
-        const username = "<?php echo $datauserid[0]['username'] ?? 'Not found..'; ?>";
-        const emailVerified = "<?= $lan['email_address_verified']; ?>";
-        const productTitle = "<?= htmlspecialchars($productData['product']['product_name'], ENT_QUOTES, 'UTF-8'); ?>";
-        const productPrice = "<?= htmlspecialchars($productData['product']['price'], ENT_QUOTES, 'UTF-8'); ?>";
-        const productDescription = "<?= htmlspecialchars($productData['product']['product_description'], ENT_QUOTES, 'UTF-8'); ?>";
-        const profileImage = "<?= htmlspecialchars($productData['product']['proimage'], ENT_QUOTES, 'UTF-8'); ?>";
-        const logo = "<?= $logo ?>";
-
-
-        const productUrl = window.location.href;
+    //     const username = "<?php echo $datauserid[0]['username'] ?? 'Not found..'; ?>";
+    //     const emailVerified = "<?= $lan['email_address_verified']; ?>";
+    //     const productTitle = "<?= htmlspecialchars($productData['product']['product_name'], ENT_QUOTES, 'UTF-8'); ?>";
+    //     const productPrice = "<?= htmlspecialchars($productData['product']['price'], ENT_QUOTES, 'UTF-8'); ?>";
+    //     const productDescription = "<?= htmlspecialchars($productData['product']['product_description'], ENT_QUOTES, 'UTF-8'); ?>";
+    //     const profileImage = "<?= htmlspecialchars($productData['product']['proimage'], ENT_QUOTES, 'UTF-8'); ?>";
+    //     const logo = "<?= $logo ?>";
 
 
-        const galleryImages = <?= json_encode($productData['gallery_images']) ?>;
+    //     const productUrl = window.location.href;
 
 
-        async function loadImageToBase64(url) {
-            try {
-                const res = await fetch(url);
-                const blob = await res.blob();
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result);
-                    reader.readAsDataURL(blob);
-                });
-            } catch (error) {
-                console.error("Error loading image:", url, error);
-                return null;
-            }
-        }
+    //     const galleryImages = <?= json_encode($productData['gallery_images']) ?>;
 
 
-        const logoBase64 = await loadImageToBase64(logo);
-        const profileImageBase64 = await loadImageToBase64(profileImage);
+    //     async function loadImageToBase64(url) {
+    //         try {
+    //             const res = await fetch(url);
+    //             const blob = await res.blob();
+    //             return new Promise((resolve) => {
+    //                 const reader = new FileReader();
+    //                 reader.onloadend = () => resolve(reader.result);
+    //                 reader.readAsDataURL(blob);
+    //             });
+    //         } catch (error) {
+    //             console.error("Error loading image:", url, error);
+    //             return null;
+    //         }
+    //     }
 
 
-        if (logoBase64) {
-            doc.addImage(logoBase64, 'JPEG', 10, 10, 40, 20);
-        }
+    //     const logoBase64 = await loadImageToBase64(logo);
+    //     const profileImageBase64 = await loadImageToBase64(profileImage);
 
 
-        doc.setFontSize(18);
-        doc.setTextColor(0, 102, 204);
-        doc.text("Product Details", 70, 30);
+    //     if (logoBase64) {
+    //         doc.addImage(logoBase64, 'JPEG', 10, 10, 40, 20);
+    //     }
 
 
-        doc.setLineWidth(0.5);
-        doc.line(10, 35, 200, 35);
+    //     doc.setFontSize(18);
+    //     doc.setTextColor(0, 102, 204);
+    //     doc.text("Product Details", 70, 30);
 
 
-        doc.setFontSize(12);
-        doc.setTextColor(0, 0, 0);
-        let yOffset = 50;
-        doc.text(`Seller: ${username}`, 20, yOffset);
-        yOffset += 10;
-        doc.text(`Email Verified: ${emailVerified}`, 20, yOffset);
-        yOffset += 10;
-        doc.text(`Product Title: ${productTitle}`, 20, yOffset);
-        yOffset += 10;
-        doc.text(`Price: ${productPrice}`, 20, yOffset);
-        yOffset += 10;
+    //     doc.setLineWidth(0.5);
+    //     doc.line(10, 35, 200, 35);
 
 
-        doc.setFontSize(12);
-        doc.setTextColor(34, 34, 34);
-        doc.text("Product URL:", 20, yOffset);
-        yOffset += 10;
-        doc.setFontSize(11);
-        doc.text(productUrl, 20, yOffset, {
-            maxWidth: 170
-        });
-        yOffset += 20;
+    //     doc.setFontSize(12);
+    //     doc.setTextColor(0, 0, 0);
+    //     let yOffset = 50;
+    //     doc.text(`Seller: ${username}`, 20, yOffset);
+    //     yOffset += 10;
+    //     doc.text(`Email Verified: ${emailVerified}`, 20, yOffset);
+    //     yOffset += 10;
+    //     doc.text(`Product Title: ${productTitle}`, 20, yOffset);
+    //     yOffset += 10;
+    //     doc.text(`Price: ${productPrice}`, 20, yOffset);
+    //     yOffset += 10;
 
 
-        doc.setFontSize(12);
-        doc.text("Description:", 20, yOffset);
-        yOffset += 10;
-        doc.setFontSize(11);
-        doc.text(productDescription, 20, yOffset, {
-            maxWidth: 170
-        });
-        yOffset += 20;
+    //     doc.setFontSize(12);
+    //     doc.setTextColor(34, 34, 34);
+    //     doc.text("Product URL:", 20, yOffset);
+    //     yOffset += 10;
+    //     doc.setFontSize(11);
+    //     doc.text(productUrl, 20, yOffset, {
+    //         maxWidth: 170
+    //     });
+    //     yOffset += 20;
 
 
-        if (profileImageBase64) {
-            doc.addImage(profileImageBase64, 'JPEG', 150, 50, 40, 40);
-        }
+    //     doc.setFontSize(12);
+    //     doc.text("Description:", 20, yOffset);
+    //     yOffset += 10;
+    //     doc.setFontSize(11);
+    //     doc.text(productDescription, 20, yOffset, {
+    //         maxWidth: 170
+    //     });
+    //     yOffset += 20;
 
 
-        if (Array.isArray(galleryImages) && galleryImages.length > 0) {
-            let xOffset = 20;
-            yOffset += 30;
-            const imagesPerRow = 3;
-            const imageWidth = 50;
-            const imageHeight = 40;
-            let imagesInRow = 0;
-
-            for (const imageUrl of galleryImages) {
-                const trimmedUrl = imageUrl.trim();
-                if (trimmedUrl) {
-                    const imageBase64 = await loadImageToBase64(trimmedUrl);
-                    if (imageBase64) {
-                        doc.addImage(imageBase64, 'JPEG', xOffset, yOffset, imageWidth, imageHeight);
-                        xOffset += imageWidth + 10;
-                        imagesInRow++;
-
-                        if (imagesInRow >= imagesPerRow) {
-                            xOffset = 20;
-                            yOffset += imageHeight + 10;
-                            imagesInRow = 0;
-                        }
+    //     if (profileImageBase64) {
+    //         doc.addImage(profileImageBase64, 'JPEG', 150, 50, 40, 40);
+    //     }
 
 
-                        if (yOffset > 250) {
-                            doc.addPage();
-                            yOffset = 20;
-                        }
-                    }
-                }
-            }
-        }
+    //     if (Array.isArray(galleryImages) && galleryImages.length > 0) {
+    //         let xOffset = 20;
+    //         yOffset += 30;
+    //         const imagesPerRow = 3;
+    //         const imageWidth = 50;
+    //         const imageHeight = 40;
+    //         let imagesInRow = 0;
+
+    //         for (const imageUrl of galleryImages) {
+    //             const trimmedUrl = imageUrl.trim();
+    //             if (trimmedUrl) {
+    //                 const imageBase64 = await loadImageToBase64(trimmedUrl);
+    //                 if (imageBase64) {
+    //                     doc.addImage(imageBase64, 'JPEG', xOffset, yOffset, imageWidth, imageHeight);
+    //                     xOffset += imageWidth + 10;
+    //                     imagesInRow++;
+
+    //                     if (imagesInRow >= imagesPerRow) {
+    //                         xOffset = 20;
+    //                         yOffset += imageHeight + 10;
+    //                         imagesInRow = 0;
+    //                     }
 
 
-        doc.setLineWidth(0.2);
-        doc.line(10, 280, 200, 280);
-        doc.setFontSize(10);
-        doc.setTextColor(150);
-        doc.text("Generated on " + new Date().toLocaleString(), 70, 290);
+    //                     if (yOffset > 250) {
+    //                         doc.addPage();
+    //                         yOffset = 20;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
 
 
-        const pdfBlob = doc.output("blob");
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-        window.open(pdfUrl, '_blank');
-    }
+    //     doc.setLineWidth(0.2);
+    //     doc.line(10, 280, 200, 280);
+    //     doc.setFontSize(10);
+    //     doc.setTextColor(150);
+    //     doc.text("Generated on " + new Date().toLocaleString(), 70, 290);
+
+
+    //     const pdfBlob = doc.output("blob");
+    //     const pdfUrl = URL.createObjectURL(pdfBlob);
+    //     window.open(pdfUrl, '_blank');
+    // }
    
    
     document.addEventListener('DOMContentLoaded', function () {

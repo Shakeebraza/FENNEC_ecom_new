@@ -552,7 +552,7 @@ if(!empty($banner)){
     </div>
 
 
-    <div class="mb-4" style="max-width: 300px;">
+    <!-- <div class="mb-4" style="max-width: 300px;">
        
         <div class="btn-group w-100">
             <button type="button" class="btn btn-outline-primary" onclick="setSort('oldest')">Oldest</button>
@@ -560,7 +560,7 @@ if(!empty($banner)){
         </div>
      
         <input type="hidden" name="sort" id="sortInput" value="<?= isset($_GET['sort']) ? htmlspecialchars($_GET['sort']) : '' ?>">
-    </div>
+    </div> -->
 
 
     <button type="submit" class="btn btn-sell-car w-100"><?= $lan['search'] ?></button>
