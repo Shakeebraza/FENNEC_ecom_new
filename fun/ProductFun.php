@@ -1303,94 +1303,108 @@ Class Productfun{
     }
 
     public function getProductDetailsBySlugsort($slug, $userId = null) {
-        $sql = "
-            SELECT 
-                p.id AS product_id,
-                p.name AS product_name,
-                p.description AS product_description,
-                p.price,
-                p.slug,
-                p.conditions,
-                p.product_type,
-                p.created_at as prodate,
-                p.image as proimage,
-                p.user_id,
-                p.category_id,
-                p.subcategory_id,
-                p.discount_price,
-                p.country_id,
-                p.city_id,
-                p.aera_id,
-                p.brand,
-                c.category_name,
-                c.slug AS catslug,
-                s.subcategory_name,
-                cou.name AS con_name,
-                city.name AS city_name,
-                area.name AS area_name,  -- Area name
-                city.longitude AS city_longitude,  -- Longitude of the city
-                city.latitude AS city_latitude,    -- Latitude of the city
-                pi.image_path AS image_path,
-                pi.sort AS image_sort,  -- Sort column for images
-                CASE WHEN f.user_id IS NOT NULL THEN 1 ELSE 0 END AS is_favorited
-            FROM 
-                products p
-            LEFT JOIN 
-                categories c ON p.category_id = c.id
-            LEFT JOIN 
-                subcategories s ON p.subcategory_id = s.id
-            LEFT JOIN 
-                product_images pi ON p.id = pi.product_id
-            LEFT JOIN 
-                favorites f ON p.id = f.product_id " . ($userId ? "AND f.user_id = :user_id" : "") . "
-            LEFT JOIN 
-                countries cou ON cou.id = p.country_id
-            LEFT JOIN 
-                cities city ON city.id = p.city_id
-            LEFT JOIN 
-                areas area ON area.id = p.aera_id  
-            WHERE 
-                p.slug = :slug
-            ORDER BY 
-                pi.sort ASC  -- Sort images by the sort column
-        ";
+        try {
+            $currentDate = date('Y-m-d'); // Get the current date
     
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':slug', $slug);
+            $sql = "
+                SELECT 
+                    p.id AS product_id,
+                    p.name AS product_name,
+                    p.description AS product_description,
+                    p.price,
+                    p.slug,
+                    p.conditions,
+                    p.product_type,
+                    p.created_at as prodate,
+                    p.image as proimage,
+                    p.user_id,
+                    p.category_id,
+                    p.subcategory_id,
+                    p.discount_price,
+                    p.country_id,
+                    p.city_id,
+                    p.aera_id,
+                    p.brand,
+                    c.category_name,
+                    c.slug AS catslug,
+                    s.subcategory_name,
+                    cou.name AS con_name,
+                    city.name AS city_name,
+                    area.name AS area_name,  -- Area name
+                    city.longitude AS city_longitude,  -- Longitude of the city
+                    city.latitude AS city_latitude,    -- Latitude of the city
+                    pi.image_path AS image_path,
+                    pi.sort AS image_sort,  -- Sort column for images
+                    CASE WHEN f.user_id IS NOT NULL THEN 1 ELSE 0 END AS is_favorited
+                FROM 
+                    products p
+                LEFT JOIN 
+                    categories c ON p.category_id = c.id
+                LEFT JOIN 
+                    subcategories s ON p.subcategory_id = s.id
+                LEFT JOIN 
+                    product_images pi ON p.id = pi.product_id
+                LEFT JOIN 
+                    favorites f ON p.id = f.product_id " . ($userId ? "AND f.user_id = :user_id" : "") . "
+                LEFT JOIN 
+                    countries cou ON cou.id = p.country_id
+                LEFT JOIN 
+                    cities city ON city.id = p.city_id
+                LEFT JOIN 
+                    areas area ON area.id = p.aera_id  
+                WHERE 
+                    p.slug = :slug 
+                    AND (
+                        (p.extension = 1 AND p.created_at >= DATE_SUB(:currentDate, INTERVAL 60 DAY)) 
+                        OR 
+                        (p.extension = 0 AND p.created_at >= DATE_SUB(:currentDate, INTERVAL 30 DAY))
+                    )
+                ORDER BY 
+                    pi.sort ASC  -- Sort images by the sort column
+            ";
     
-        if ($userId) {
-            $stmt->bindParam(':user_id', $userId);
-        }
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':slug', $slug);
+            $stmt->bindParam(':currentDate', $currentDate, PDO::PARAM_STR); // Bind current date to query
     
-        $stmt->execute();
-        $productDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($userId) {
+                $stmt->bindParam(':user_id', $userId);
+            }
     
-        if ($productDetails) {
-            $firstProduct = $productDetails[0];
-            
-     
-            $images = array_map(function ($row) {
+            $stmt->execute();
+            $productDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            if ($productDetails) {
+                $firstProduct = $productDetails[0];
+                
+                $images = array_map(function ($row) {
+                    return [
+                        'image_path' => $row['image_path'],
+                        'sort' => $row['image_sort']
+                    ];
+                }, $productDetails);
+    
                 return [
-                    'image_path' => $row['image_path'],
-                    'sort' => $row['image_sort']
+                    'product' => $firstProduct,
+                    'gallery_images' => $images,
+                    'is_favorited' => $firstProduct['is_favorited'],
+                    'location' => $firstProduct['con_name'] . ' | ' . $firstProduct['city_name'] . ' | ' . $firstProduct['area_name'],
+                    'country' => $firstProduct['con_name'],
+                    'city' => $firstProduct['city_name'],
+                    'area' => $firstProduct['area_name'],
+                    'city_longitude' => $firstProduct['city_longitude'], 
+                    'city_latitude' => $firstProduct['city_latitude'],  
                 ];
-            }, $productDetails);
+            }
     
-            return [
-                'product' => $firstProduct,
-                'gallery_images' => $images,
-                'is_favorited' => $firstProduct['is_favorited'],
-                'location' => $firstProduct['con_name'] . ' | ' . $firstProduct['city_name'] . ' | ' . $firstProduct['area_name'],
-                'country' => $firstProduct['con_name'],
-                'city' => $firstProduct['city_name'],
-                'area' => $firstProduct['area_name'],
-                'city_longitude' => $firstProduct['city_longitude'], 
-                'city_latitude' => $firstProduct['city_latitude'],  
-            ];
+            return null;
+    
+        } catch (PDOException $e) {
+            error_log("Error fetching product details: " . $e->getMessage());
+            return null;
         }
-    
-        return null;
     }
+    
     
     
     public function getProductDetailsBySlugnew($slug, $userId = null) {

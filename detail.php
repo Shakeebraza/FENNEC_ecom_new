@@ -9,17 +9,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $productData = $productFun->getProductDetailsBySlugsort($slug, $userId);
 
         if (empty($productData)) {
-            header('Location: index.php');
+            echo "<script>window.location.href = 'index.php';</script>";
             exit();
         }
-    } else {
-        header('Location: index.php');
-        exit();
-    }
-} else {
-    header('Location: index.php');
-    exit();
-}
+        } else {
+            echo "<script>window.location.href = 'index.php';</script>";
+            exit();
+        }
+        } else {
+            echo "<script>window.location.href = 'index.php';</script>";
+            exit();
+        }
 $latitude = $productData['city_latitude'];
 $longitude = $productData['city_longitude'];
 $country = $productData['country'];
