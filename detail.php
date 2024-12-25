@@ -315,17 +315,13 @@ $area = $productData['area'];
                 echo '
                 <div class="item" style="position: relative;">
                     <a href="' . $urlval . $row['image_path'] . '" class="popup-image">
-                        <img src="' . $urlval . $row['image_path'] . '" class="card-img-top" alt="Not found Image" 
-                        style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
+                        <img class="view-button"  src="' . $urlval . $row['image_path'] . '" class="card-img-top" alt="Not found Image" 
+                        style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;" data-mfp-src="' . $urlval . $row['image_path'] . '">
                     </a>
                     <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
                         <i class="fas fa-camera"></i> ' . $totalImages . '
                     </div>
-                    <button class="view-button" 
-                style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; border: none; padding: 5px 15px; border-radius: 20px; cursor: pointer; z-index: 1000;"
-                data-mfp-src="' . $urlval . $row['image_path'] . '">
-            View
-        </button>
+
                 </div>';
             }
         } else {
@@ -333,17 +329,13 @@ $area = $productData['area'];
                 echo '
                 <div class="item" style="position: relative;">
                     <a href="' . $urlval . $imagePath . '" class="popup-image">
-                        <img src="' . $urlval . $imagePath . '" class="card-img-top" alt="Not found Image" 
-                        style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
+                        <img class="view-button" src="' . $urlval . $imagePath . '" class="card-img-top" alt="Not found Image" 
+                        style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;" data-mfp-src="' . $urlval . $imagePath . '">
                     </a>
                     <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
                         <i class="fas fa-camera"></i> ' . $totalImages . '
                     </div>
-                    <button class="view-button" 
-                style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; border: none; padding: 5px 15px; border-radius: 20px; cursor: pointer; z-index: 1000;"
-                data-mfp-src="' . $urlval . $imagePath . '">
-            View
-        </button>
+                    
                 </div>';
             }
         }
@@ -351,17 +343,13 @@ $area = $productData['area'];
         echo '
         <div class="item" style="position: relative;">
             <a href="' . $urlval . $productData['product']['proimage'] . '" class="popup-image">
-                <img src="' . $urlval . $productData['product']['proimage'] . '" class="card-img-top" alt="Not found Image" 
-                style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
+                <img class="view-button"  src="' . $urlval . $productData['product']['proimage'] . '" class="card-img-top" alt="Not found Image" 
+                style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;" data-mfp-src="' . $urlval . $productData['product']['proimage'] . '">
             </a>
             <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
                 <i class="fas fa-camera"></i> ' . $totalImages . '
             </div>
-            <button class="view-button" 
-                style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; border: none; padding: 5px 15px; border-radius: 20px; cursor: pointer; z-index: 1000;"
-                data-mfp-src="' . $urlval . $productData['product']['proimage'] . '">
-            View
-        </button>
+           
         </div>';
     }
     ?>

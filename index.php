@@ -306,12 +306,13 @@ if (!empty($banner)) {
             $image2 = $urlval . $box2[0]['image'];
 
             $productMultipalinPrebanner = $productFun->PoplarProductperMultipal();
-
+                                    
             ?>
             <div class="container mt-4">
                 <h5 class="text-center mb-5">
                     <b><?= $lan['top_products'] ?></b>
                 </h5>
+                <?php if($productMultipalinPrebanner):?>
                 <div id="customCarousel" class="carousel slide" data-bs-ride="carousel">
 
                     <div class="carousel-indicators">
@@ -360,17 +361,23 @@ if (!empty($banner)) {
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>
-
+<?php
+endif;
+?>
                 <div class="row mt-5">
                     <!-- Sidebar Section -->
                     <div class="col-md-3 mb-4">
                         <!-- Premium Products Slider -->
+                        <?php
+                                $productMultipalinPre = $productFun->PoplarProductperMultipal();
+                                if($productMultipalinPre):
+                                ?>
                         <div class="sidebar-box"
                             style="box-shadow: 4px 3px 6px #A4A4A485; padding: 20px; background-color: white; border: 2px solid #198754;">
                             <h5 class="text-center" style="color: #198754;"><?= $lan['premium_products'] ?></h5>
                             <div class="slider" style="background-color: #fef5e6; padding: 10px;">
                                 <?php
-                                $productMultipalinPre = $productFun->PoplarProductperMultipal();
+                               
                                 if ($productMultipalinPre) {
                                     foreach ($productMultipalinPre as $row) {
                                         $imgproductpre = $urlval . $row['image'];
@@ -378,26 +385,29 @@ if (!empty($banner)) {
                                         $productName = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
 
                                         echo '
-                    <div>
-                        <a href="' . $detailsurl . '">
-                            <img src="' . $imgproductpre . '" alt="' . $productName . '" class="img-fluid">
-                        </a>
-                        <h6 class="text-center" style="color: #198754;">' . $productName . '</h6>
-                    </div>
-                ';
-                                    }
-                                } else {
-                                    echo '
-                <div>
-                    <h6 class="text-center" style="color: #198754;">Not a single product</h6>
-                </div>
-            ';
-                                }
+                                            <div>
+                                                <a href="' . $detailsurl . '">
+                                                    <img src="' . $imgproductpre . '" alt="' . $productName . '" class="img-fluid">
+                                                </a>
+                                                <h6 class="text-center" style="color: #198754;">' . $productName . '</h6>
+                                            </div>
+                                        ';
+                                                            }
+                                                        } else {
+                                                            echo '
+                                        <div>
+                                            <h6 class="text-center" style="color: #198754;">Not a single product</h6>
+                                        </div>
+                                    ';
+                                                        }
 
 
                                 ?>
                             </div>
                         </div>
+                        <?php
+                              endif;
+                                ?>
 
                         <!-- Gold Products Slider -->
                         <div class="sidebar-box"

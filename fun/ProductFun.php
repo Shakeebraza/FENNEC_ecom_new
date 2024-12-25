@@ -1728,6 +1728,10 @@ Class Productfun{
             WHERE product_type IN ('premium') 
             AND is_enable = 1 
             AND status = 'active' 
+            AND (
+                (extension = 1 AND created_at >= CURDATE() - INTERVAL 60 DAY) 
+                OR (extension != 1 AND created_at >= CURDATE() - INTERVAL 30 DAY)
+            )
             ORDER BY RAND()
         ");
         $stmt->execute();
@@ -1742,6 +1746,7 @@ Class Productfun{
             return null;
         }
     }
+    
     public function PoplarProductgoldMultipal()
     {
         $conn = $this->pdo;
