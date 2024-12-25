@@ -648,9 +648,9 @@ function loadChatList() {
 }
 
 
-function loadMessages(conversationId, productName, productImage) {
+function loadMessages(conversationId, productName, productImage, statusMessage) {
     $.ajax({
-        url: '<?= $urlval?>ajax/fetch_messages.php',
+        url: '<?= $urlval ?>ajax/fetch_messages.php',
         method: 'POST',
         data: {
             conversation_id: conversationId
@@ -661,21 +661,32 @@ function loadMessages(conversationId, productName, productImage) {
                 $(".chatbox").addClass('showbox');
                 $(".hide-by").show();
                 $(".back-button").show();
-              
             } else {
-
                 $(".hide-by").hide();
-                
             }
-                            $('.send-box').show();
+
+          
+            if (statusMessage.toLowerCase() === 'expired') {
+                $('.send-box').hide();  
+            } else {
+                $('.send-box').show();  
+                console.log('not');
+            }
 
             $('#chat-box').data('conversation-id', conversationId);
-            
             $('#message-body').scrollTop($('#message-body')[0].scrollHeight);
+
+            const firstLetter = productName.charAt(0).toUpperCase();
+            const profileLink = `user_profile.php?username=${productName}`;
+
             var headerHTML = `
                 <div class="col-8 d-flex align-items-center">
-                    <img src="${productImage}" alt="${productName}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; margin-right: 10px; border: 2px solid #00494f;">
-                    <span style="color: white; font-size: 16px; font-weight: bold;">${productName}</span>
+                    <div class="rounded-circle text-white bg-secondary d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-size: 1.5rem; font-weight: bold;">
+                        ${firstLetter}
+                    </div>
+                    <a href="${profileLink}" class="ms-2" style="font-size: 16px; font-weight: bold; color: white; text-decoration: none;">
+                        ${productName}
+                    </a>
                 </div>
             `;
 
@@ -683,6 +694,7 @@ function loadMessages(conversationId, productName, productImage) {
         }
     });
 }
+
 
 
 
