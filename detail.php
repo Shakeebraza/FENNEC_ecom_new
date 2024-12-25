@@ -302,54 +302,74 @@ $area = $productData['area'];
     
 
   
-        <div id="galleryContainer" class="swiper-container2" style="margin-bottom: 20px; border-radius: 12px; overflow: hidden;">
-            <div class="swiper-wrapper">
-            <?php
-
-       if (!empty($productData['gallery_images'])) {
-      
+    <div id="galleryContainer" class="owl-carousel owl-loaded owl-drag" style="margin-bottom: 20px; border-radius: 12px; overflow: hidden; position: relative;">
+    <?php
+    $totalImages = count($productData['gallery_images'] ?? []) ?: 1;
+    if (!empty($productData['gallery_images'])) {
         if (isset($productData['gallery_images'][0]) && is_array($productData['gallery_images'][0])) {
-        
             usort($productData['gallery_images'], function ($a, $b) {
+                return $a['sort'] <=> $b['sort'];
             });
-    
 
             foreach ($productData['gallery_images'] as $row) {
                 echo '
-                    <div class="swiper-slide">
+                <div class="item" style="position: relative;">
+                    <a href="' . $urlval . $row['image_path'] . '" class="popup-image">
                         <img src="' . $urlval . $row['image_path'] . '" class="card-img-top" alt="Not found Image" 
                         style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
+                    </a>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
+                        <i class="fas fa-camera"></i> ' . $totalImages . '
                     </div>
-                ';
+                    <button class="view-button" 
+                style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; border: none; padding: 5px 15px; border-radius: 20px; cursor: pointer; z-index: 1000;"
+                data-mfp-src="' . $urlval . $row['image_path'] . '">
+            View
+        </button>
+                </div>';
             }
         } else {
-    
             foreach ($productData['gallery_images'] as $imagePath) {
                 echo '
-                    <div class="swiper-slide">
+                <div class="item" style="position: relative;">
+                    <a href="' . $urlval . $imagePath . '" class="popup-image">
                         <img src="' . $urlval . $imagePath . '" class="card-img-top" alt="Not found Image" 
                         style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
+                    </a>
+                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
+                        <i class="fas fa-camera"></i> ' . $totalImages . '
                     </div>
-                ';
+                    <button class="view-button" 
+                style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; border: none; padding: 5px 15px; border-radius: 20px; cursor: pointer; z-index: 1000;"
+                data-mfp-src="' . $urlval . $imagePath . '">
+            View
+        </button>
+                </div>';
             }
         }
     } else {
-   
         echo '
-            <div class="swiper-slide">
+        <div class="item" style="position: relative;">
+            <a href="' . $urlval . $productData['product']['proimage'] . '" class="popup-image">
                 <img src="' . $urlval . $productData['product']['proimage'] . '" class="card-img-top" alt="Not found Image" 
                 style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;">
+            </a>
+            <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
+                <i class="fas fa-camera"></i> ' . $totalImages . '
             </div>
-        ';
+            <button class="view-button" 
+                style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; border: none; padding: 5px 15px; border-radius: 20px; cursor: pointer; z-index: 1000;"
+                data-mfp-src="' . $urlval . $productData['product']['proimage'] . '">
+            View
+        </button>
+        </div>';
     }
-    
-            
-?>
+    ?>
+</div>
 
 
-            </div>
-            <div class="swiper-pagination" style="bottom: 317px;"></div>
-        </div>
+
+
 
  
         <div id="mapContainer" style="display: none; margin-bottom: 20px; border-radius: 12px; overflow: hidden;">
@@ -366,9 +386,32 @@ $area = $productData['area'];
             <h5 class="card-title" style="font-size: 2em; font-weight: bold; color: #333; letter-spacing: 1px; margin-bottom: 0.8em; text-transform: uppercase;">
                 <?= htmlspecialchars($productData['product']['product_name'] ?? 'Product Name'); ?>
             </h5>
-            <p class="card-text" style="font-size: 1.1em; color: #777; line-height: 1.6; text-align: justify;">
-                <?= htmlspecialchars($productData['product']['product_description'] ?? 'No description available.'); ?>
-            </p>
+            <div class="product-description-section">
+            <?php
+            $fullDescription = $productData['product']['product_description'] ?? 'No description available.';
+            $wordLimit = 100;
+            if (str_word_count($fullDescription) > $wordLimit) {
+                $descriptionWords = explode(' ', $fullDescription);
+                $shortDescription = implode(' ', array_slice($descriptionWords, 0, $wordLimit)) . '...';
+                $isTruncated = true;
+            } else {
+                $shortDescription = $fullDescription;
+                $isTruncated = false;
+            }
+            ?>
+
+                <h3 class="description-heading" style="color: #333; margin-bottom: 10px;">Description</h3>
+                <p style="line-height: 1.6; text-align: justify;" id="description-text">
+                    <?= htmlspecialchars($shortDescription); ?>
+                </p>
+                <?php if ($isTruncated): ?>
+                    <button id="readMoreButton" style="background: none; border: none; color: #00494f; cursor: pointer; ">Read more</button>
+                    <p id="fullDescription" style="display: none; line-height: 1.6; text-align: justify;">
+                        <?= htmlspecialchars($fullDescription); ?>
+                    </p>
+                <?php endif; ?>
+            </div>
+
         </div>
     </div>
 </div>
@@ -709,7 +752,7 @@ include_once 'footer.php';
         });
 
         const relatedProductsSwiper = new Swiper('.swiper-container', {
-            slidesPerView: 1, // Default to 1 slide on mobile
+            slidesPerView: 1, 
             spaceBetween: 10,
             pagination: {
                 el: '.swiper-pagination',
@@ -717,15 +760,15 @@ include_once 'footer.php';
             },
             breakpoints: {
                 480: {
-                    slidesPerView: 1 // 1 slide for mobile
+                    slidesPerView: 1 
                 },
                 600: {
-                    slidesPerView: 2 // 2 slides for tablets
+                    slidesPerView: 2 
                 },
                 1024: {
-                    slidesPerView: 3 // 3 slides for desktops
+                    slidesPerView: 3 
                 },
-                // You can add more breakpoints here if needed
+              
             }
         });
 
@@ -907,8 +950,41 @@ include_once 'footer.php';
         var params = "menubar=no,toolbar=no,status=no,width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
         window.open(url, "", params);
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        const readMoreButton = document.getElementById('readMoreButton');
+        const fullDescription = document.getElementById('fullDescription');
+        const shortDescription = document.getElementById('description-text');
+        
+        if (readMoreButton) {
+            readMoreButton.addEventListener('click', function() {
+                shortDescription.style.display = 'none';
+                readMoreButton.style.display = 'none';
+                fullDescription.style.display = 'block';
+            });
+        }
+    });
+    $(document).ready(function () {
+    // Initialize Owl Carousel
+    $("#galleryContainer").owlCarousel({
+        items: 1,
+        loop: true,
+        autoplay: true,
+        autoplayTimeout: 2500,
+        autoplayHoverPause: true,
+        nav: true,
+        navText: ["<i class='fas fa-chevron-left'></i>", "<i class='fas fa-chevron-right'></i>"],
+        dots: true,
+        margin: 10
+    });
 
- 
+    // Initialize Magnific Popup for View button
+    $('.view-button').magnificPopup({
+        type: 'image',
+        gallery: {
+            enabled: true
+        }
+    });
+});
 </script>
 </body>
 

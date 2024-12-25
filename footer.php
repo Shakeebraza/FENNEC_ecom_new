@@ -120,8 +120,10 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script> -->
 <script type="text/javascript" src="<?= $urlval?>custom/js/slick/slick/slick.min.js"></script>
+<script type="text/javascript" src="<?= $urlval?>admin/asset/vendor/tinymce/tinymce.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/jquery.magnific-popup.min.js"></script>
 
 <script src="<?php echo $urlval?>custom/js/index.js"></script>
 <script src="<?php echo $urlval?>custom/js/forsale.js"></script>

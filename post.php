@@ -341,8 +341,13 @@ input#gallery {
                     <input type="text" class="form-control" id="adTitle" name="productName" required>
                 </div>
                 <div class="mb-3">
-                    <label for="description" class="form-label">Description<span style="color: red;">*</span></label>
-                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                    <label for="description" class="form-label">
+                        Description<span style="color: red;">*</span>
+                    </label>
+                    <textarea id="description" name="description"></textarea>
+                    <div id="wordCounter" style="margin-top: 5px; font-size: 0.9em; color: #555;">
+                        0 / 200 words
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="country" class="form-label">Country<span style="color: red;">*</span></label>
@@ -461,6 +466,7 @@ input#gallery {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo $urlval ?>admin/asset/vendor/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="<?= $urlval?>admin/asset/vendor/tinymce/tinymce.min.js"></script>
     <script>
     function selectCategory(categoryName, categoryId) {
       
@@ -719,6 +725,32 @@ function filterCategories() {
         document.querySelector('.website-redict').addEventListener('change', function() {
         var urlInputField = document.getElementById('urlInputField');
         urlInputField.style.display = this.checked ? 'block' : 'none';
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const wordLimit = 200;
+
+        tinymce.init({
+            selector: '#description',
+            plugins: 'wordcount',
+            toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist',
+            setup: function (editor) {
+                editor.on('keyup', function () {
+                    const content = editor.getContent({ format: 'text' });
+                    const words = content.trim().split(/\s+/).filter(word => word.length > 0);
+                    const wordCount = words.length;
+
+                    const wordCounter = document.getElementById('wordCounter');
+                    if (wordCount > wordLimit) {
+                        const truncatedContent = words.slice(0, wordLimit).join(' ');
+                        editor.setContent(truncatedContent);
+                        wordCounter.textContent = `${wordLimit} / ${wordLimit} words (Limit reached)`;
+                    } else {
+                        wordCounter.textContent = `${wordCount} / ${wordLimit} words`;
+                    }
+                });
+            }
+        });
     });
     </script>
 
