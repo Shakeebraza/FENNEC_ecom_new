@@ -249,7 +249,56 @@ $area = $productData['area'];
 .slick-prev:before, .slick-next:before {
     color: black !important;
 }
-    
+#thumbnailGallery {
+    display: flex;
+    margin-top: 10px;
+    overflow-x: auto;
+    gap: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f0f0f0;
+}
+
+/* Styling the scrollbar for Webkit browsers */
+#thumbnailGallery::-webkit-scrollbar {
+    height: 8px; /* Scrollbar height */
+}
+
+#thumbnailGallery::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+#thumbnailGallery::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+}
+
+#thumbnailGallery {
+    display: flex;
+    margin-top: 10px;
+    overflow-x: auto;
+    gap: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f0f0f0;
+    scroll-behavior: smooth; /* Add smooth scrolling */
+}
+
+.thumb-item {
+    position: relative;
+}
+
+.thumb-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.thumb-item img:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
 </style>
 
 <div class="container mt-4">
