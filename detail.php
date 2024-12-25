@@ -81,7 +81,7 @@ $area = $productData['area'];
     }
 
     .swiper-pagination.secoundpage.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
-        top: 174%;
+        top: 190%;
     }
 
 
@@ -341,7 +341,7 @@ $area = $productData['area'];
 
 
             </div>
-            <div class="swiper-pagination" style="bottom: 153px;"></div>
+            <div class="swiper-pagination" style="bottom: 317px;"></div>
         </div>
 
  
