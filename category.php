@@ -13,11 +13,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $pId = $_GET['pid'] ?? null;
     $slug = $_GET['slug'] ?? null;
     $sort = $_GET['sort'] ?? null;
+    $search = $_GET['search'] ?? null;
 
     $filterConditions = [];
 
     if (!is_null($location)) {
         $filterConditions['country'] = $location;
+    }
+    if(isset($search)){
+        $filterConditions['product_name'] = $search;
+        
     }
     if (!is_null($location)) {
         $filterConditions['city'] = $city;
