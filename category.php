@@ -316,7 +316,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         border: 1px solid #00494f;
-        width: 50%;
+        width: 60% !important;
         /* margin: auto; */
     }
 </style>
@@ -468,6 +468,7 @@ if(!empty($banner)){
                         }
                         ?>
                     </select>
+                    
                 </div>
             </div>
 
@@ -476,7 +477,7 @@ if(!empty($banner)){
                 <div class="input-group mb-3">
                     <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                
-                    <select id="city" name="city" class="form-control">
+                    <select id="city" name="city" class="form-control w-20">
                         <option value="">Select City</option>
                         <?php
                
@@ -492,11 +493,11 @@ if(!empty($banner)){
                         }
                         ?>
                     </select>
-
+                    <button type="submit" class="btn btn-sell-car w-20">Find</button>
                 </div>
             </div>
 
- 
+            
     <div class="mb-4">
         <h5><?= $lan['sub_category'] ?></h5>
         <div class="ms-3">
@@ -681,10 +682,16 @@ if(!empty($banner)){
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="sortDropdown">
                         <li>
-                            <button class="dropdown-item" onclick="setSort('oldest')">Oldest</button>
+                            <button class="dropdown-item" onclick="setSort('oldest')">Most recent first</button>
                         </li>
                         <li>
-                            <button class="dropdown-item" onclick="setSort('newest')">Newest</button>
+                            <button class="dropdown-item" onclick="setSort('pricelowtohigh')">Price: Low to High</button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item" onclick="setSort('pricehightolow')">Price: High to Low</button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item" onclick="setSort('newest')">Nearest first</button>
                         </li>
                     </ul>
                     <input
@@ -693,7 +700,7 @@ if(!empty($banner)){
                         id="sortInput"
                         value="<?= isset($_GET['sort']) ? htmlspecialchars($_GET['sort']) : '' ?>">
                 </div>
-</div>
+            </div>
 
 
             <div class="container ">
@@ -703,7 +710,7 @@ if(!empty($banner)){
                     <?php
                     
 
-                        $productFind = $productFun->getProductsWithDetailsn(1, 500000, $filterConditions);
+                        $productFind = $productFun->getProductsWithDetailsn2(1, 500000, $filterConditions);
                         $products = $productFind['products'];
                   
                         if(!empty($products)){
@@ -947,6 +954,7 @@ function toggleSubcategory(index) {
           country_id: countryId
         },
         success: function(data) {
+            
           $('#city').html(data);
         },
         error: function() {
