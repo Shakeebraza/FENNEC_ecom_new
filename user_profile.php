@@ -49,14 +49,12 @@
                 $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
          
         } else {
-            echo "<div class='container py-4'><p>User not found.</p></div>";
-            include_once 'footer.php';
-            exit();
+            header('Location: index.php');
+    exit();
         }
     } else {
-        echo "<div class='container py-4'><p>No username specified.</p></div>";
-        include_once 'footer.php';
-        exit();
+        header('Location: index.php');
+    exit();
     }
 
     $loggedInUserId = base64_decode($_SESSION['userid']) ?? null;
