@@ -25,6 +25,7 @@ $longitude = $productData['city_longitude'];
 $country = $productData['country'];
 $city = $productData['city'];
 $area = $productData['area'];
+
 ?>
 <style>
         .btn.toggle-btn {
@@ -265,6 +266,16 @@ $area = $productData['area'];
 
     <h1 class="mb-2"><?php echo htmlspecialchars($productData['product']['product_name'] ?? 'Product Title'); ?></h1>
     <p class="text-muted mb-2"><?php echo htmlspecialchars($productData['location'] ?? 'Location'); ?></p>
+    <p class="mb-2">
+        <?php 
+        if (!empty($productData['product']['prodate'])) {
+            echo '<span style="color: #000; font-weight: bold;">Posted date:</span> ';
+            echo '<span style="color: #6c757d;">' . htmlspecialchars(date('Y-m-d', strtotime($productData['product']['prodate']))) . '</span>';
+        } else {
+            echo '<span style="color: #6c757d;">Not find a Date</span>';
+        }
+        ?>
+    </p>
     <h2 class="mb-4"><?php echo  $fun->getFieldData('site_currency') ?><?php echo htmlspecialchars($productData['product']['price'] ?? '0.00'); ?></h2>
 
     <div class="row">
