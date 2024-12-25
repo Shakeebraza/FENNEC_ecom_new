@@ -697,7 +697,7 @@ $area = $productData['area'];
     <?php endif; ?>
 
     <h3 class="mt-4 mb-3"><b><?= $lan['you_may_also_like'] ?></b></h3>
-    <h3 class="mt-4 mb-3"><b><?= $lan['you_may_also_like'] ?></b></h3>
+ 
 <div id="customGalleryContainer" class="owl-carousel owl-theme my-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);">
     <?php
     $relatedProducts = $productFun->getRelatedProducts($productData['product']['category_id'], $productData['product']['product_id']);
