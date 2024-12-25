@@ -282,7 +282,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+ 
 
+    .custom-dropdown .btn-outline-primary {
+        background-color: #00494f;
+        color: white;
+        border: 2px solid #00494f;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .custom-dropdown .btn-outline-primary:hover {
+        background-color: white;
+        color: #00494f;
+        border-color: #00494f;
+    }
+
+
+    .custom-dropdown .dropdown-item {
+        background-color: white;
+        color: #00494f;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .custom-dropdown .dropdown-item:hover {
+        background-color: #00494f;
+        color: white;
+    }
+
+
+    .custom-dropdown .dropdown-menu {
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid #00494f;
+        width: 50%;
+        /* margin: auto; */
+    }
 </style>
 
 <?php
@@ -516,7 +552,7 @@ if(!empty($banner)){
 
 
     <div class="mb-4" style="max-width: 300px;">
-        <h6 class="mb-2">Sort By</h6>
+       
         <div class="btn-group w-100">
             <button type="button" class="btn btn-outline-primary" onclick="setSort('oldest')">Oldest</button>
             <button type="button" class="btn btn-outline-primary" onclick="setSort('newest')">Newest</button>
@@ -599,34 +635,66 @@ if(!empty($banner)){
 
         </div>
         <div class="col-md-9">
-            <div class="d-flex justify-content-between align-items-center mobileres">
-                <div class="d-flex align-items-center mb-4">
-                    <span class="me-2"><?= $lan['view_as']?></span>
-                    <div
-                        class="view-option icon-list"
-                        data-cols="1"
-                        title="List view">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </div>
-                    <div
-                        class="view-option icon-grid-2"
-                        data-cols="2"
-                        title="Two column grid">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </div>
-                    <div
-                        class="view-option icon-grid-3 active"
-                        data-cols="3"
-                        title="Three column grid">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </div>
+        <div class="d-flex justify-content-between align-items-center mobileres mb-4">
+
+            <div class="d-flex align-items-center">
+                <span class="me-2"><?= $lan['view_as'] ?></span>
+                <div
+                    class="view-option icon-list"
+                    data-cols="1"
+                    title="List view"
+                    onclick="setViewMode('list')">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </div>
+                <div
+                    class="view-option icon-grid-2"
+                    data-cols="2"
+                    title="Two column grid"
+                    onclick="setViewMode('grid-2')">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </div>
+                <div
+                    class="view-option icon-grid-3 active"
+                    data-cols="3"
+                    title="Three column grid"
+                    onclick="setViewMode('grid-3')">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
                 </div>
             </div>
+
+        
+            <div class="dropdown custom-dropdown" style="max-width: 300px;">
+                    <button
+                        class="btn btn-outline-primary dropdown-toggle w-100"
+                        type="button"
+                        id="sortDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        style="border-radius: 5px"
+                        >
+                        Sort By
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                        <li>
+                            <button class="dropdown-item" onclick="setSort('oldest')">Oldest</button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item" onclick="setSort('newest')">Newest</button>
+                        </li>
+                    </ul>
+                    <input
+                        type="hidden"
+                        name="sort"
+                        id="sortInput"
+                        value="<?= isset($_GET['sort']) ? htmlspecialchars($_GET['sort']) : '' ?>">
+                </div>
+</div>
+
 
             <div class="container ">
                 <div
@@ -893,13 +961,34 @@ function toggleSubcategory(index) {
   function toggleSubcategory(index) {
     var subcategoryDiv = document.getElementById('subcategory-' + index);
     
-    // Toggle the display property between 'none' and 'block'
+
     if (subcategoryDiv.style.display === 'none' || subcategoryDiv.style.display === '') {
         subcategoryDiv.style.display = 'block';
     } else {
         subcategoryDiv.style.display = 'none';
     }
 }
+
+
+document.getElementById('sortDropdown').addEventListener('click', function (e) {
+        const dropdownMenu = this.nextElementSibling; 
+        if (dropdownMenu.classList.contains('show')) {
+            dropdownMenu.classList.remove('show'); 
+        } else {
+            dropdownMenu.classList.add('show'); 
+        }
+    });
+
+    
+    document.addEventListener('click', function (event) {
+        const sortDropdown = document.getElementById('sortDropdown');
+        const dropdownMenu = sortDropdown.nextElementSibling;
+
+ 
+        if (!sortDropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.classList.remove('show');
+        }
+    });
 </script>
 </body>
 
