@@ -322,9 +322,36 @@ class Fun {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['total'];
     }
+    public function getTotalContactCount() {
+        $query = "SELECT COUNT(*) AS total FROM contacts";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'];
+    }
     public function getAllLan($start,$length) {
         try {
             $tabledata = $this->dbfun->getData('languages','', '', 'id', 'DESC', $start, $length);
+            if (empty($tabledata)) {
+
+                return [];
+            } else {
+
+            }
+            foreach ($tabledata as &$row) {
+                foreach ($row as $key => $value) {
+                    $row[$key] = $this->security->decrypt($value);
+                }
+            }
+
+            return $tabledata;
+        } catch (PDOException $e) {
+            return 'Error: ' . $e->getMessage();
+        }
+    }
+    public function getAllContact($start,$length) {
+        try {
+            $tabledata = $this->dbfun->getData('contacts','', '', 'id', 'DESC', $start, $length);
             if (empty($tabledata)) {
 
                 return [];
