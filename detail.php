@@ -44,14 +44,14 @@ $area = $productData['area'];
     .image-container {
         position: relative;
         width: 100%;
+        height: 200px;
     }
 
     .image-container img {
         width: 100%;
-        height: auto;
+        height: 100%;
     }
 
-    /* Overlay and Product Name Styling */
     .image-overlay {
         position: absolute;
         top: 0;
@@ -59,7 +59,7 @@ $area = $productData['area'];
         right: 0;
         bottom: 0;
         background: rgba(0, 0, 0, 0.5);
-        /* Semi-transparent background */
+    
         display: flex;
         justify-content: center;
         align-items: center;
@@ -242,6 +242,14 @@ $area = $productData['area'];
     .share__link i {
         pointer-events: none;
     }
+    .slick-prev, .slick-next {
+    color: black; 
+}
+
+.slick-prev:before, .slick-next:before {
+    color: black !important;
+}
+    
 </style>
 
 <div class="container mt-4">
@@ -303,7 +311,6 @@ $area = $productData['area'];
         if (isset($productData['gallery_images'][0]) && is_array($productData['gallery_images'][0])) {
         
             usort($productData['gallery_images'], function ($a, $b) {
-                return $a['sort'] <=> $b['sort']; 
             });
     
 
@@ -553,40 +560,35 @@ $area = $productData['area'];
 
                 <!-- Slick Slider -->
 
-                <div class="slider">
-                    <?php
-                    $productMultipalinPre = $productFun->PoplarProductperMultipal();
-                    if ($productMultipalinPre) {
-                        foreach ($productMultipalinPre as $row) {
-                            $imgproductpre = $urlval . $row['image'];
-                            $detailsurl = $urlval . "detail.php?slug=" . $row['slug'];
-                            $productName = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
+                <div class="owl-carousel owl-theme">
+    <?php
+    $productMultipalinPre = $productFun->PoplarProductperMultipal();
+    if ($productMultipalinPre) {
+        foreach ($productMultipalinPre as $row) {
+            $imgproductpre = $urlval . $row['image'];
+            $detailsurl = $urlval . "detail.php?slug=" . $row['slug'];
+            $productName = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
+            echo '
+            <div class="item">
+                <a href="' . $detailsurl . '">
+                    <div class="image-container">
+                        <img src="' . $imgproductpre . '" class="d-block w-100" alt="Image 1">
+                        <div class="image-overlay">
+                            <h6 class="product-name">' . $productName . '</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>';
+        }
+    } else {
+        echo '
+        <div>
+            <h6 class="text-center" style="color: #198754;">Not a single product</h6>
+        </div>';
+    }
+    ?>
+</div>
 
-                            echo '
-                    <div class="slider-item">
-                        <a href="' . $detailsurl . '">
-                                <div class="image-container">
-                                    <img src="' . $imgproductpre . '" class="d-block w-100" alt="Image 1">
-                                    <div class="image-overlay">
-                                        <h6 class="product-name">' . $productName . '</h6>
-                                    </div>
-                                </div>
-                        </a>
-                            </div>
-                ';
-                        }
-                    } else {
-                        echo '
-                <div>
-                    <h6 class="text-center" style="color: #198754;">Not a single product</h6>
-                </div>
-            ';
-                    }
-
-
-                    ?>
-
-                </div>
 
 
             </div>
@@ -776,19 +778,22 @@ include_once 'footer.php';
             }
         });
     }
+
     $(document).ready(function() {
-        $('.slider').slick({
-            infinite: true,
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            arrows: true,
-            dots: true,
-            autoplay: true,
-            autoplaySpeed: 2000,
-            fade: true,
-            speed: 1000
-        });
+    $(".owl-carousel").owlCarousel({
+        items: 1,
+        loop: true,
+        autoplay: true,
+        autoplayTimeout: 2000,
+        autoplayHoverPause: true,
+        nav: false, 
+        dots: true 
     });
+});
+
+
+
+
 
 
    
