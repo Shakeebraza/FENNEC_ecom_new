@@ -697,31 +697,30 @@ $area = $productData['area'];
     <?php endif; ?>
 
     <h3 class="mt-4 mb-3"><b><?= $lan['you_may_also_like'] ?></b></h3>
-    <div class="swiper-container my-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);">
-        <div class="swiper-wrapper">
-            <?php
-            $relatedProducts = $productFun->getRelatedProducts($productData['product']['category_id'], $productData['product']['product_id']);
-            foreach ($relatedProducts as $relatedProduct) {
-                echo '
-                <div class="swiper-slide d-flex flex-column align-items-center">
-                    <div class="slide-content text-center p-3">
-                    <a href="' . $urlval . 'detail.php?slug=' . $relatedProduct['slug'] . '">
-                        <img 
-                            src="' . htmlspecialchars($urlval . $relatedProduct['image']) . '" 
-                            alt="' . htmlspecialchars($relatedProduct['title']) . '" 
-                            class="img-fluid rounded" 
-                            style="width: 250px; height: 150px; object-fit: cover;">
-                        <h5 class="mt-2" style="font-size: 1.2em; color: #333;">' . htmlspecialchars($relatedProduct['title']) . '</h5>
-                        <p class="font-weight-bold text-success" style="font-size: 1.1em; margin-top: 5px;">£' . htmlspecialchars($relatedProduct['price']) . '</p>
-                    </a>
-                        </div>
-                </div>
-                ';
-            }
-            ?>
+    <h3 class="mt-4 mb-3"><b><?= $lan['you_may_also_like'] ?></b></h3>
+<div id="customGalleryContainer" class="owl-carousel owl-theme my-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);">
+    <?php
+    $relatedProducts = $productFun->getRelatedProducts($productData['product']['category_id'], $productData['product']['product_id']);
+    foreach ($relatedProducts as $relatedProduct) {
+        echo '
+        <div class="item d-flex flex-column align-items-center">
+            <div class="slide-content text-center p-3">
+                <a href="' . $urlval . 'detail.php?slug=' . $relatedProduct['slug'] . '">
+                    <img 
+                        src="' . htmlspecialchars($urlval . $relatedProduct['image']) . '" 
+                        alt="' . htmlspecialchars($relatedProduct['title']) . '" 
+                        class="img-fluid rounded" 
+                        style="width: 250px; height: 150px; object-fit: cover;">
+                    <h5 class="mt-2" style="font-size: 1.2em; color: #333;">' . htmlspecialchars($relatedProduct['title']) . '</h5>
+                    <p class="font-weight-bold text-success" style="font-size: 1.1em; margin-top: 5px;">£' . htmlspecialchars($relatedProduct['price']) . '</p>
+                </a>
+            </div>
         </div>
-        <div class="swiper-pagination secoundpage"></div>
-    </div>
+        ';
+    }
+    ?>
+</div>
+
 
 </div>
 
@@ -738,68 +737,19 @@ include_once 'footer.php';
     document.getElementById('cancelReportBtn').addEventListener('click', function() {
         document.getElementById('reportForm').style.display = 'none';
     });
-    document.addEventListener('DOMContentLoaded', function() {
-        const mainSwiper = new Swiper('.swiper-container2', {
+    $(document).ready(function() {
+        $("#customGalleryContainer").owlCarousel({
+            items: 3,
             loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            autoplay: {
-                delay: 2500,
-                disableOnInteraction: false,
-            },
-        });
-
-        const relatedProductsSwiper = new Swiper('.swiper-container', {
-            slidesPerView: 1, 
-            spaceBetween: 10,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            breakpoints: {
-                480: {
-                    slidesPerView: 1 
-                },
-                600: {
-                    slidesPerView: 2 
-                },
-                1024: {
-                    slidesPerView: 3 
-                },
-              
-            }
-        });
-
-        const favoriteButton = document.getElementById('favorite-button');
-
-        favoriteButton.addEventListener('click', function() {
-            const productId = this.getAttribute('data-productid');
-
-            fetch('<?= $urlval ?>ajax/favorite.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        id: productId
-                    }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        favoriteButton.innerHTML = data.isFavorited ?
-                            '<i class="fas fa-heart"></i> Favorited' :
-                            '<i class="far fa-heart"></i> Favourite';
-                    } else {
-                        alert('Error: ' + data.message);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+            autoplay: true,
+            autoplayTimeout: 2500,
+            autoplayHoverPause: true,
+            nav: true,
+            navText: false,  // Custom arrows
+            dots: true,
+            margin: 10
         });
     });
-
     function startChat(productId) {
         $.ajax({
             url: '<?= $urlval ?>ajax/start_chat.php',
