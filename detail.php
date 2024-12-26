@@ -299,6 +299,9 @@ $area = $productData['area'];
     transform: scale(1.1);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
+.selected {
+    border: 2px solid #00494f;; 
+}
 </style>
 
 <div class="container mt-4">
@@ -405,15 +408,20 @@ $area = $productData['area'];
 <div id="thumbnailGallery" style="display: flex; margin-top: 10px; overflow-x: scroll; gap: 10px;">
     <?php
     if (!empty($productData['gallery_images'])) {
-        foreach ($productData['gallery_images'] as $row) {
+        foreach ($productData['gallery_images'] as $index => $row) {
             echo '
-            <div  class="thumb-item" style="flex-shrink: 0;">
-                <img class="view-button" data-mfp-src="' . $urlval . $row['image_path'] . '" src="' . $urlval . $row['image_path'] . '" alt="Thumbnail" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; cursor: pointer;" data-src="' . $urlval . $row['image_path'] . '" />
+            <div class="thumb-item" style="flex-shrink: 0;">
+                <img 
+                     src="' . $urlval . $row['image_path'] . '" alt="Thumbnail" 
+                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; cursor: pointer;" 
+                     data-src="' . $urlval . $row['image_path'] . '" 
+                     data-index="' . $index . '" />
             </div>';
         }
-    } 
+    }
     ?>
 </div>
+
 
 
 
@@ -965,27 +973,56 @@ include_once 'footer.php';
         }
     });
     $(document).ready(function () {
+    var galleryImages = <?php echo json_encode($productData['gallery_images']); ?>;
 
-    $("#galleryContainer").owlCarousel({
+    var owl = $("#galleryContainer").owlCarousel({
         items: 1,
-        loop: true,
-        autoplay: true,
-        autoplayTimeout: 2500,
-        autoplayHoverPause: true,
-        nav: true,
-        navText: ["<i class='fas fa-chevron-left'></i>", "<i class='fas fa-chevron-right'></i>"],
+        loop: false,          
+        autoplay: false,       
+        nav: false,
+        navText: false,
         dots: true,
-        margin: 10
-    });
+        margin: 10,
+        smartSpeed: 500
+    }).data('owl.carousel');
 
- 
     $('.view-button').magnificPopup({
         type: 'image',
         gallery: {
             enabled: true
         }
     });
+
+
+    var isTransitioning = false;
+
+    $('#thumbnailGallery').on('click', '.thumb-item img', function () {
+        var index = $(this).data('index');  
+
+   
+        $('#thumbnailGallery .thumb-item img').removeClass('selected').css('opacity', '1');
+
+
+        $(this).addClass('selected').css('opacity', '0.5');
+
+       
+        if (!isTransitioning) {
+            isTransitioning = true; 
+
+           
+            $('#galleryContainer').trigger('to.owl.carousel', [index, 500]);
+
+          
+            setTimeout(function() {
+                isTransitioning = false; 
+            }, 500);
+        }
+    });
 });
+
+
+
+
 </script>
 </body>
 
