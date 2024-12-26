@@ -70,7 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
      
 
         if ($updateResult['success']) {
-            echo "<script>alert('Banner updated successfully.');";
+            echo "<script>
+            alert('Banner updated successfully.');
+            window.location.href = 'http://localhost/fennec/admin/banner/index.php';
+        </script>";
         } else {
             echo "<script>alert('Error updating banner: {$updateResult['message']}');</script>";
         }
