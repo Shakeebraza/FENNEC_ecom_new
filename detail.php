@@ -977,13 +977,14 @@ include_once 'footer.php';
 
     var owl = $("#galleryContainer").owlCarousel({
         items: 1,
-        loop: false,          
-        autoplay: false,       
-        nav: false,
-        navText: false,
-        dots: true,
+        loop: false,           // No looping, carousel will stop at the last image
+        autoplay: true,        // Autoplay enabled by default
+        autoplayTimeout: 2500, // Set timeout for autoplay
+        autoplayHoverPause: true, // Pause autoplay when hovered
+        nav: false,            // No navigation arrows
+        dots: true,            // Enable dots navigation
         margin: 10,
-        smartSpeed: 500
+        smartSpeed: 1000       // Transition speed
     }).data('owl.carousel');
 
     $('.view-button').magnificPopup({
@@ -993,32 +994,37 @@ include_once 'footer.php';
         }
     });
 
-
     var isTransitioning = false;
 
+    // Click event on thumbnail images
     $('#thumbnailGallery').on('click', '.thumb-item img', function () {
         var index = $(this).data('index');  
 
-   
+        // Remove selected class and reset opacity for all thumbnail images
         $('#thumbnailGallery .thumb-item img').removeClass('selected').css('opacity', '1');
 
-
+        // Add selected class and change opacity for the clicked image
         $(this).addClass('selected').css('opacity', '0.5');
 
-       
+        // Check if transition is not in progress
         if (!isTransitioning) {
-            isTransitioning = true; 
+            isTransitioning = true;  // Set the flag to indicate a transition is in progress
 
-           
+            // Trigger the carousel to move to the clicked index
             $('#galleryContainer').trigger('to.owl.carousel', [index, 500]);
 
-          
+            // Manually stop autoplay when a manual click occurs
+            owl.trigger('stop.owl.autoplay');  // This stops the autoplay
+
+            // Reset the transition flag after the transition duration
             setTimeout(function() {
-                isTransitioning = false; 
-            }, 500);
+                isTransitioning = false;  // Reset the flag after the transition is complete
+            }, 500);  // Duration of transition (500ms)
         }
     });
 });
+
+
 
 
 
