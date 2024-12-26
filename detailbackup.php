@@ -340,16 +340,16 @@ $area = $productData['area'];
 
     <div class="row">
     <div class="col-md-8">
-    <div style="display: flex; height: 90px; justify-content: space-around; padding: 0; background-color: #fff; border: 1px solid #00494f; gap: 5px; margin-bottom: 20px; border-radius: 10px; overflow: hidden;">
-            <button id="showGallery" class="btn toggle-btn active" style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f; border: 1px solid #00494f; border-top-left-radius: 10px; border-bottom-left-radius: 10px;">
+        <div style="display: flex; height: 120px; justify-content: space-around; padding: 1em 0; background-color: #f7f7f7; border: 1px solid #00494f; gap:20px;margin-bottom: 20px;border-radius: 10px;">
+            <button id="showGallery" class="btn toggle-btn active" style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f;">
                 <span style="font-size: 1.2em; margin-bottom: 0.5em;">Images</span>
                 <i class="fa fa-image" style="font-size: 1.5em;"></i>
             </button>
-            <button id="showMap" class="btn toggle-btn" style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f; border: 1px solid #00494f; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
+            <button id="showMap" class="btn toggle-btn" style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f;">
                 <span style="font-size: 1.2em; margin-bottom: 0.5em;">Map</span>
                 <i class="fa fa-map-marker-alt" style="font-size: 1.5em;"></i>
             </button>
-    </div>
+         </div>
     <div class="card one mb-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
     
 
@@ -368,7 +368,7 @@ $area = $productData['area'];
                 <div class="item" style="position: relative;">
                     <a href="' . $urlval . $row['image_path'] . '" class="popup-image">
                         <img class="view-button"  src="' . $urlval . $row['image_path'] . '" class="card-img-top" alt="Not found Image" 
-                        style="width: 100%; height: 80%; max-height: 400px; object-fit: contain; border-radius: 12px;" data-mfp-src="' . $urlval . $row['image_path'] . '">
+                        style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;" data-mfp-src="' . $urlval . $row['image_path'] . '">
                     </a>
                     <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
                         <i class="fas fa-camera"></i> ' . $totalImages . '
@@ -381,7 +381,7 @@ $area = $productData['area'];
                 <div class="item" style="position: relative;">
                     <a href="' . $urlval . $imagePath . '" class="popup-image">
                         <img class="view-button" src="' . $urlval . $imagePath . '" class="card-img-top" alt="Not found Image" 
-                        style="width: 100%; height: 80%; max-height: 400px; object-fit: contain; border-radius: 12px;" data-mfp-src="' . $urlval . $imagePath . '">
+                        style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;" data-mfp-src="' . $urlval . $imagePath . '">
                     </a>
                     <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
                         <i class="fas fa-camera"></i> ' . $totalImages . '
@@ -394,7 +394,7 @@ $area = $productData['area'];
         <div class="item" style="position: relative;">
             <a href="' . $urlval . $productData['product']['proimage'] . '" class="popup-image">
                 <img class="view-button"  src="' . $urlval . $productData['product']['proimage'] . '" class="card-img-top" alt="Not found Image" 
-                style="width: 100%; height: 80%; max-height: 400px; object-fit: contain; border-radius: 12px;" data-mfp-src="' . $urlval . $productData['product']['proimage'] . '">
+                style="width: 100%; height: 80%; object-fit: cover; border-radius: 12px;" data-mfp-src="' . $urlval . $productData['product']['proimage'] . '">
             </a>
             <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
                 <i class="fas fa-camera"></i> ' . $totalImages . '
@@ -470,7 +470,7 @@ $area = $productData['area'];
 
         </div>
     </div>
-    </div>
+</div>
 
 
         <div class="col-md-4">

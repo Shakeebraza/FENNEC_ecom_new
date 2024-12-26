@@ -174,7 +174,7 @@ function fetchProducts(page) {
             if (data.products.length > 0) {
                 $.each(data.products, function(index, product) {
                     console.log(product);
-                    var productHTML = `
+                    var productHTML = `a
                     <div class="col-md-4">
                         <div class="card product-card mb-4 shadow-sm">
                             <img class="card-img-top" src="${product.image}" alt="Product image">
