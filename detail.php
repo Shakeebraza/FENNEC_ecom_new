@@ -879,8 +879,15 @@ include_once 'footer.php';
 
     document.getElementById('showMap').addEventListener('click', function() {
         document.getElementById('galleryContainer').style.display = 'none';
+        document.getElementById('thumbnailGallery').style.display = 'none';
         document.getElementById('mapContainer').style.display = 'block';
     });
+    document.getElementById('showGallery').addEventListener('click', function() {
+       
+        document.getElementById('thumbnailGallery').style.display = 'flex';
+       
+    });
+   
     document.addEventListener('DOMContentLoaded', function() {
         const reportForm = document.getElementById('reportForm');
         const cancelReportBtn = document.getElementById('cancelReportBtn');
