@@ -799,10 +799,10 @@ include_once 'footer.php';
     $(document).ready(function() {
         $("#customGalleryContainer").owlCarousel({
             items: 3,
-            loop: true,
-            autoplay: true,
+            loop: false,
+            autoplay: false,
             autoplayTimeout: 2500,
-            autoplayHoverPause: true,
+            autoplayHoverPause: false,
             nav: true,
             navText: false,  // Custom arrows
             dots: true,
@@ -834,10 +834,10 @@ include_once 'footer.php';
     $(document).ready(function() {
     $(".owl-carousel").owlCarousel({
         items: 1,
-        loop: true,
-        autoplay: true,
+        loop: false,
+        autoplay: false,
         autoplayTimeout: 2000,
-        autoplayHoverPause: true,
+        autoplayHoverPause: false,
         nav: false, 
         dots: true 
     });
@@ -978,13 +978,13 @@ include_once 'footer.php';
     var owl = $("#galleryContainer").owlCarousel({
         items: 1,
         loop: false,        
-        autoplay: true,        
-        autoplayTimeout: 2500,
-        autoplayHoverPause: true,
+        autoplay: false,        
+        
+        
         nav: false,      
         dots: true,           
         margin: 10,
-        smartSpeed: 1000     
+       
     }).data('owl.carousel');
 
     $('.view-button').magnificPopup({
@@ -1006,8 +1006,9 @@ include_once 'footer.php';
        
         $(this).addClass('selected').css('opacity', '0.5');
 
+     
         if (!isTransitioning) {
-            isTransitioning = true; 
+            isTransitioning = false; 
 
             
             $('#galleryContainer').trigger('to.owl.carousel', [index, 500]);
