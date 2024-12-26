@@ -9,10 +9,10 @@ class Security {
     }
 
     public function encrypt($data) {
-        return base64_encode(openssl_encrypt($data, $this->cipher, $this->key, OPENSSL_RAW_DATA));
+        return base64_encode(base64_encode(base64_encode($data)));
     }
 
     public function decrypt($data) {
-        return openssl_decrypt(base64_decode($data), $this->cipher, $this->key, OPENSSL_RAW_DATA);
+        return base64_decode(base64_decode(base64_decode($data)));
     }
 }

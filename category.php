@@ -612,12 +612,8 @@ if(!empty($banner)){
         <div style="background-color: <?php echo $banner['bg_color']; ?>; color: <?php echo $banner['text_color']; ?>; min-height: 50vh; position: relative;width: 15vw; display: flex; flex-direction: column; padding: 2rem;">
             <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
                 <h1 style="font-size: 2rem; margin-bottom: 0.5rem;"><?php echo $banner['title']; ?></h1>
-                <h2 style="font-size: 3rem; font-weight: 300; margin-bottom: 2rem; color: <?php echo $banner['text_color']; ?>"><?php echo $banner['description']; ?></h2>
-                
-         
-                <div style="width: 300px; height: 300px; position: relative; margin: 2rem 0;">
-                    <img src="<?php echo $banner['image']; ?>" alt="">
-                </div>
+                <h2 style="font-size: 3rem; font-weight: 300;  color: <?php echo $banner['text_color']; ?>"><?php echo $banner['description']; ?></h2>               
+                <img src="<?php echo $banner['image']; ?>" alt="" style="width: 100%; height: 280px; margin-bottom:20px; border-radius:7px;">
             </div>
 
  
