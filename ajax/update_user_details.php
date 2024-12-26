@@ -3,74 +3,113 @@ require_once("../global.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // if ($CsrfProtection->validateToken($_POST['token'])) {
-        if ($fun->RequestSessioncheck()) {
+    if ($fun->RequestSessioncheck()) {
+  
+        $firstName = $_POST['first-name'] ?? '';
+        $lastName = $_POST['last-name'] ?? '';
+        $country = $_POST['country'] ?? '';
+        $city = $_POST['city'] ?? '';
+        $contactNumber = $_POST['contactNumber'] ?? '';
+        $address = $_POST['address'] ?? '';
+        $language = $_POST['language'] ?? '';
+        $username = $_POST['username'] ?? '';
+
+        $userId = base64_decode($_SESSION['userid']);
+        if ($userId === false) {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid user ID']);
+            exit;
+        }
+
+        $data = [
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'country' => $country,
+            'city' => $city,
+            'number' => $contactNumber,
+            'address' => $address,
+            'language' => $language,
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        $checkUserExists = $dbFunctions->getDatanotenc('user_detail', "userid = $userId");
+
+        if ($checkUserExists) {
+            $userDetailId = $checkUserExists[0]['id'];
+            $response = $dbFunctions->updateData('user_detail', $data, $userDetailId);
+
+            if ($response['success']) {
+                if ($username) {
+             
+                    $usernameCheckQuery = "SELECT COUNT(*) FROM users WHERE username = :username AND id != :user_id";
+                    $stmt = $pdo->prepare($usernameCheckQuery);
+                    $stmt->bindParam(':username', $username);
+                    $stmt->bindParam(':user_id', $userId);
+                    $stmt->execute();
+                    $usernameExists = $stmt->fetchColumn();
+
+                    if ($usernameExists > 0) {
+                        echo json_encode(['status' => 'error', 'message' => 'Username already exists. Please choose another.']);
+                        exit();
+                    }
+
       
-            $firstName = $_POST['first-name'] ?? '';
-            $lastName = $_POST['last-name'] ?? '';
-            $country = $_POST['country'] ?? '';
-            $city = $_POST['city'] ?? '';
-            $contactNumber = $_POST['contactNumber'] ?? '';
-            $address = $_POST['address'] ?? '';
+                    $updateUsernameData = ['username' => $username];
+                    $updateUserResponse = $dbFunctions->updateData('users', $updateUsernameData, $userId);
 
-
-            $userId = base64_decode($_SESSION['userid']);
-            if ($userId === false) {
-                echo json_encode(['status' => 'error', 'message' => 'Invalid user ID']);
-                exit;
-            }
-
-       
-            $data = [
-                'first_name' => $firstName,
-                'last_name' => $lastName,
-                'country' => $country,
-                'city' => $city,
-                'number' => $contactNumber,
-                'address' => $address,
-                'updated_at' => date('Y-m-d H:i:s')
-            ];
-
-       
-            $checkUserExists = $dbFunctions->getDatanotenc('user_detail', "userid = $userId");
-
-            if ($checkUserExists) {
-      
-                $userDetailId = $checkUserExists[0]['id'];
-                $response = $dbFunctions->updateData('user_detail', $data, $userDetailId);
-
-                if ($response['success']) {
-                    echo json_encode(['status' => 'success', 'message' => 'Details updated successfully']);
+                    if ($updateUserResponse['success']) {
+                        $_SESSION['username'] = $username;
+                        echo json_encode(['status' => 'success', 'message' => 'Username updated successfully']);
+                    } else {
+                        echo json_encode(['status' => 'success', 'message' => 'Username updated successfully']);
+                    }
                 } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Failed to update details']);
+                    echo json_encode(['status' => 'success', 'message' => 'Details updated successfully']);
                 }
             } else {
-             
-                $data['userid'] = $userId;
-                $data['created_at'] = date('Y-m-d H:i:s');
-
-                $insertResponse = $dbFunctions->setData('user_detail', $data);
-                if ($insertResponse['success']) {
-                    echo json_encode(['status' => 'success', 'message' => 'Details inserted successfully']);
-                } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Failed to insert details']);
-                }
+                echo json_encode(['status' => 'error', 'message' => 'Failed to update details']);
             }
-
-         
-            // $username = strtolower($firstName . '.' . $lastName);
-            // $updateUsernameData = ['username' => $username];
-
-            // $updateUserResponse = $dbFunctions->updateData('users', $updateUsernameData, $userId);
-            // if (!$updateUserResponse['success']) {
-            //     echo json_encode(['status' => 'error', 'message' => 'Failed to update username']);
-            // }
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Session validation failed']);
+        
+            $data['userid'] = $userId;
+            $data['created_at'] = date('Y-m-d H:i:s');
+
+            $insertResponse = $dbFunctions->setData('user_detail', $data);
+            if ($insertResponse['success']) {
+                if ($username) {
+             
+                    $usernameCheckQuery = "SELECT COUNT(*) FROM users WHERE username = :username AND id != :user_id";
+                    $stmt = $pdo->prepare($usernameCheckQuery);
+                    $stmt->bindParam(':username', $username);
+                    $stmt->bindParam(':user_id', $userId);
+                    $stmt->execute();
+                    $usernameExists = $stmt->fetchColumn();
+
+                    if ($usernameExists > 0) {
+                        echo json_encode(['status' => 'error', 'message' => 'Username already exists. Please choose another.']);
+                        exit();
+                    }
+
+            
+                    $updateUsernameData = ['username' => $username];
+                    $updateUserResponse = $dbFunctions->updateData('users', $updateUsernameData, $userId);
+
+                    if ($updateUserResponse['success']) {
+                        echo json_encode(['status' => 'success', 'message' => 'Username updated successfully']);
+                    } else {
+                        echo json_encode(['status' => 'success', 'message' => 'Username updated successfully']);
+                    }
+                }
+
+                echo json_encode(['status' => 'success', 'message' => 'Details inserted successfully']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to insert details']);
+            }
         }
-    // } else {
-    //     echo json_encode(['status' => 'error', 'message' => 'Invalid CSRF token']);
-    // }
+
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Session validation failed']);
+    }
+
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
 }

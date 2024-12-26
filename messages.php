@@ -221,11 +221,11 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
                                             <?php echo !empty($userData[0]['last_name']) ? 'readonly' : ''; ?>>
                                     </div>
                                 </div>
-                                                            <!-- <div class="mb-3">
-                                    <label for="fullName" class="form-label">Username</label>
-                                    <input type="text" class="form-control" id="fullName"
-                                        value="<?php //echo $_SESSION['username'] ?>" readonly />
-                                </div> -->
+                                                         <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username"
+                                        value="<?php echo $_SESSION['username'] ?>" />
+                                </div> 
                                 <div class="mb-3">
                                     <label for="email" class="form-label"><?= $lan['email_address']?></label>
                                     <input type="email" class="form-control" id="email"
@@ -249,6 +249,11 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
                                     <label for="contactNumber" class="form-label"><?= $lan['contact_number']?></label>
                                     <input type="tel" class="form-control" id="contactNumber"
                                         value="<?php echo $userData[0]['number'] ?? '' ?>" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="language" class="form-label">Language</label>
+                                    <input type="text" class="form-control" id="language"
+                                        value="<?php echo $userData[0]['language'] ?? '' ?>" />
                                 </div>
                                 <div class="mb-3">
                                     <label for="address" class="form-label"><?= $lan['address']?></label>
@@ -365,6 +370,8 @@ function submitForm(event) {
         formData.append('city', document.getElementById('cityy').value);
         formData.append('contactNumber', document.getElementById('contactNumber').value);
         formData.append('address', document.getElementById('address').value);
+        formData.append('language', document.getElementById('language').value);
+        formData.append('username', document.getElementById('username').value);
         formData.append('token', document.getElementById('csrf_token_update_info').value);
 
     const responseMessageDiv = document.getElementById('responseMessage');
@@ -379,6 +386,7 @@ function submitForm(event) {
         .then(response => response.json())
         .then(data => {
             console.log('Response received:', data);
+            console.log('Response received:', data.status);
 
             if (data.status === 'success') {
                 responseMessageDiv.className = 'alert alert-success';
