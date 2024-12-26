@@ -984,6 +984,8 @@ Class Productfun{
                 p.id AS product_id,
                 p.name AS product_name,
                 p.slug AS product_slug,
+                p.created_at AS product_date,
+                p.extension AS product_ext,
                 p.description AS product_description,
                 p.image AS product_image,
                 p.is_enable AS is_enable,
@@ -1100,10 +1102,26 @@ Class Productfun{
     
         foreach ($products as $pro) {
             $image = $this->urlval . $pro['product_image'];
+            $expiryDate = null;
+            $status = 'active';
+            if ($pro['product_ext'] == 1) {
+                $expiryDate = date('Y-m-d', strtotime($pro['product_date'] . ' +60 days'));
+            } else {
+                $expiryDate = date('Y-m-d', strtotime($pro['product_date'] . ' +30 days'));
+            }
+    
+           
+            $currentDate = date('Y-m-d');
+            if ($expiryDate < $currentDate) {
+                $status = 'expired';
+            }
+
+
             $response['products'][] = [
                 'id' => $pro['product_id'],
                 'base64id' => base64_encode(base64_encode($pro['product_id'])),
                 'name' => $pro['product_name'],
+                'status' => $status,
                 'slug' => $pro['product_slug'],
                 'description' => $pro['product_description'],
                 'image' => $image,

@@ -173,11 +173,14 @@ function fetchProducts(page) {
             $('#product-container').empty();
             if (data.products.length > 0) {
                 $.each(data.products, function(index, product) {
-                    console.log(product);
-                    var productHTML = `a
+                    var status = product.status;
+                    var labelClass = (product.status === 'expired') ? 'label-danger' : 'label-success';
+                    var labelText = (product.status === 'expired') ? 'Expired' : 'Active';
+                    var productHTML = `
                     <div class="col-md-4">
                         <div class="card product-card mb-4 shadow-sm">
                             <img class="card-img-top" src="${product.image}" alt="Product image">
+                            <span class="label ${labelClass}">${labelText}</span>
                             <div class="card-body">
                                 <h5 class="card-title">${product.name}</h5>
                                 <p class="card-text">

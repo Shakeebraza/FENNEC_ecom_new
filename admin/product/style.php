@@ -420,5 +420,30 @@ h4 {
             width: 100%;
         } */
     }
-    
+    .product-image-container {
+    position: relative;
+}
+
+.product-image-container img {
+    width: 100%;
+    height: auto;
+}
+
+.label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    color: white;
+    font-size: 14px;
+}
+
+.label-danger {
+    background-color: red;
+}
+
+.label-success {
+    background-color: green;
+}
 </style>
