@@ -528,10 +528,28 @@ $area = $productData['area'];
                     <?php
 
                     if ($productData['is_favorited'] == 1): ?>
-                        <button class="btn buttonss w-100 mb-2" data-productid="<?php echo $productData['product']['product_id']; ?>" id="favorite-button">
-                            <i class="<?php echo $productData['is_favorited'] ? 'fas' : 'far'; ?> fa-heart"></i>
-                            <?php echo $productData['is_favorited'] ? $lan['Favorited'] : $lan['Favourite']; ?>
-                        </button>
+                    <?php
+                    if (isset($_SESSION['userid'])) {
+                        $sessionUserId = base64_decode($_SESSION['userid']);
+                            $productUserId = $productData['product']['user_id'];
+                                if($productUserId != $sessionUserId){
+                                    echo '
+                                    <button class="btn buttonss w-100 mb-2" data-productid="' . $productData['product']['product_id'] . '" id="favorite-button">
+                                        <i class="' . ($productData['is_favorited'] ? 'fas' : 'far') . ' fa-heart"></i>
+                                        ' . ($productData['is_favorited'] ? $lan['Favorited'] : $lan['Favourite']) . '
+                                    </button>
+                                ';
+                            } 
+                        }else {
+                            echo '
+                                <a class="btn buttonss w-100 mb-2" href="' . $urlval . 'LoginRegister.php">
+                                    <i class="far fa-heart"></i> ' . $lan['Favourite'] . '
+                                </a>
+                            
+                            ';
+                        }
+                            ?>
+                    
                     <?php else:
                         if (isset($_SESSION['userid'])) {
                             $sessionUserId = base64_decode($_SESSION['userid']);
@@ -543,14 +561,14 @@ $area = $productData['area'];
                         </button>
                             
                             ';
-                        } else {
-                            echo '
-                                <a class="btn buttonss w-100 mb-2" href="' . $urlval . 'LoginRegister.php">
-                                    <i class="far fa-heart"></i> ' . $lan['Favourite'] . '
-                                </a>
-                            
-                            ';
-                        }
+                        } 
+                    }else {
+                        echo '
+                            <a class="btn buttonss w-100 mb-2" href="' . $urlval . 'LoginRegister.php">
+                                <i class="far fa-heart"></i> ' . $lan['Favourite'] . '
+                            </a>
+                        
+                        ';
                     }
                     ?>
 
@@ -568,6 +586,11 @@ $area = $productData['area'];
                             echo '  <button class="btn btn-outline-secondary btn buttonss w-100 mt-2" id="toggleReportBtn" '.$checkUserSame.'>
                         <i class="bi bi-flag"></i> Report
                     </button>';
+                        }else{
+
+                            echo '  <button class="btn btn-outline-secondary btn buttonss w-100 mt-2" id="toggleReportBtn" style="display:none;">
+                            <i class="bi bi-flag"></i> Report
+                        </button>';
                         }
                         ?>
                   
