@@ -1651,7 +1651,7 @@ Class Productfun{
                 $statusLabel = $isExpired ? 'Expired' : 'Active';
                 $labelClass = $isExpired ? 'label-danger' : 'label-success';
     
-                $detailUrl = 'http://localhost/fennec/detail.php?slug=' . $product['slug'];
+                $detailUrl = $this->urlval.'detail.php?slug=' . $product['slug'];
     
                 echo '
                     <div class="col-md-4 mb-4">
