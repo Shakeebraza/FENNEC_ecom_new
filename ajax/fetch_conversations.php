@@ -82,23 +82,30 @@ if (isset($_SESSION['userid'])) {
             }
 
             echo '
-    <a href="#messages543" class="d-flex align-items-center" onclick="loadMessages(
-        \'' . $conversation_id . '\', 
-        \'' . addslashes($display_name) . '\', 
-        \'' . $urlval . addslashes($product_image) . '\',
-        \'' . addslashes($status_message) . '\'
-    )">
-        <div class="flex-shrink-0">
-            <img class="img-fluid" src="' . $urlval . $product_image . '" alt="user img" style="width: 40px; height: 40px; border-radius: 50%;">
-        </div>
-        <div class="flex-grow-1 ms-3">
-            <h3 style="font-size: 16px; margin: 0; color: #157347; font-weight:700">' . $display_name . '</h3>
-            <p style="font-size: 12px; color: #000; ' . $message_style . '">' . $truncated_message . '</p> 
-            <p style="font-size: 12px; color: ' . $status_color . ';">' . $status_message . '</p>
-        </div>
-    </a>
-    <hr style="color: #157347 !important; width:100%; height:2px;">
-';
+            <div class="d-flex align-items-center message-container">
+                <a href="#messages543" class="d-flex align-items-center message-item" onclick="loadMessages(
+            \'' . $conversation_id . '\', 
+            \'' . addslashes($display_name) . '\', 
+            \'' . $urlval . addslashes($product_image) . '\',
+            \'' . addslashes($status_message) . '\'
+        ); updateUrlWithChatId(\'' . $conversation_id . '\')">
+                    <div class="flex-shrink-0">
+                        <img class="img-fluid" src="' . $urlval . $product_image . '" alt="user img" style="width: 40px; height: 40px; border-radius: 50%;">
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h3 style="font-size: 16px; margin: 0; color: #157347; font-weight:700">' . $display_name . '</h3>
+                        <p style="font-size: 12px; color: #000; ' . $message_style . '">' . $truncated_message . '</p> 
+                        <p style="font-size: 12px; color: ' . $status_color . ';">' . $status_message . '</p>
+                    </div>
+                </a>
+                <div class="delete-icon">
+                    <i class="fas fa-trash-alt" title="Delete" onclick="deleteConversation(\'' . $conversation_id . '\')"></i>
+                </div>
+            </div>
+            <hr style="color: #157347 !important; width:100%; height:2px;">
+        ';
+        
+
         }
     } else {
         echo '<p>No conversations found</p>';

@@ -173,6 +173,75 @@ class DatabaseFunctions {
             return ['success' => false, 'message' => 'Database error: ' . $e->getMessage()];
         }
     }
+    public function setData2($tableName, $data, $where = null) {
+        // Sanitize table name
+        $tableName = preg_replace('/[^a-zA-Z0-9_.]/', '', $tableName);
+    
+        // Sanitize input data
+        $sanitizedData = [];
+        foreach ($data as $key => $value) {
+            $value = is_string($value) ? strip_tags($value) : $value; // Remove HTML tags for strings
+            if ($key !== 'name' && is_string($value)) { // Exclude htmlspecialchars for specific fields
+                $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+            }
+            $sanitizedData[$key] = $value;
+        }
+    
+        try {
+            $params = [];
+            if ($where) {
+                // Prepare UPDATE query
+                $set = '';
+                foreach ($sanitizedData as $key => $value) {
+                    $set .= "`$key` = :$key, ";
+                    $params[":$key"] = $value;
+                }
+                $set = rtrim($set, ', ');
+    
+                $whereClause = '';
+                foreach ($where as $col => $val) {
+                    $whereClause .= "`$col` = :where_$col AND ";
+                    $params[":where_$col"] = $val;
+                }
+                $whereClause = rtrim($whereClause, ' AND ');
+    
+                $stmt = $this->pdo->prepare("UPDATE `$tableName` SET $set WHERE $whereClause");
+            } else {
+                // Prepare INSERT query
+                $columns = implode('`, `', array_keys($sanitizedData));
+                $placeholders = ':' . implode(', :', array_keys($sanitizedData));
+    
+                $stmt = $this->pdo->prepare("INSERT INTO `$tableName` (`$columns`) VALUES ($placeholders)");
+                foreach ($sanitizedData as $key => $value) {
+                    $params[":$key"] = $value;
+                }
+            }
+    
+            // Execute query
+            $stmt->execute($params);
+    
+            // Return result
+            $result = ['success' => true, 'message' => 'Data saved successfully.'];
+            if (!$where) {
+                // Return `last_insert_id` for INSERT operations
+                $result['last_insert_id'] = $this->pdo->lastInsertId();
+            }
+            return $result;
+        } catch (PDOException $e) {
+            // Handle duplicate entry error
+            if ($e->getCode() == 23000) {
+                return [
+                    'success' => false,
+                    'message' => 'Duplicate entry error: The email or field you are trying to use already exists.'
+                ];
+            }
+            // General database error
+            return [
+                'success' => false,
+                'message' => 'Database error: ' . $e->getMessage()
+            ];
+        }
+    }
     
 
     public function setDataWithHtmlAllowed($tableName, $data, $where = null) {

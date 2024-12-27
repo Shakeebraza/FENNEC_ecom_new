@@ -133,6 +133,31 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
 .label-success {
     background-color: green;
 }
+.message-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.message-item {
+    flex: 1;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.delete-icon {
+    margin-left: 10px;
+    color: red;
+    cursor: pointer;
+    display: none;
+    font-size: 18px;
+}
+
+.message-container:hover .delete-icon {
+    display: block;
+}
 
 </style>
 
@@ -865,7 +890,26 @@ favoriteButton.addEventListener('click', function() {
         })
         .catch(error => console.error('Error:', error));
 });
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
 
+document.addEventListener('DOMContentLoaded', function () {
+    const chatId = getQueryParam('chatid');
+
+    if (chatId) {
+ 
+        const productName = "Demo Product"; 
+        const statusMessage = "active"; 
+        loadMessages(chatId, productName, statusMessage);
+    }
+});
+
+function updateUrlWithChatId(chatId) {
+    const newUrl = window.location.href.split('?')[0] + '?chatid=' + chatId;
+    window.history.pushState({ path: newUrl }, '', newUrl);  // Update the URL without reloading the page
+}
 
 </script>
 </body>

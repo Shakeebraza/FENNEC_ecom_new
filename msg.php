@@ -1170,7 +1170,21 @@ function openImagePopup(src) {
     function closeImagePopup() {
         document.getElementById('imageModal').style.display = 'none';
     }
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
 
+document.addEventListener('DOMContentLoaded', function () {
+    const chatId = getQueryParam('chatid');
+
+    if (chatId) {
+ 
+        const productName = "Demo Product"; 
+        const statusMessage = "active"; 
+        loadMessages(chatId, productName, statusMessage);
+    }
+});
 
 </script>
 </body>

@@ -850,26 +850,29 @@ include_once 'footer.php';
         });
     });
     function startChat(productId) {
-        $.ajax({
-            url: '<?= $urlval ?>ajax/start_chat.php',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                product_id: productId
-            },
-            success: function(response) {
-                if (response && response.success) {
-                    window.location.href = '<?= $urlval ?>messages.php#messages543';
-                } else {
-                    alert(response.message || 'Could not start chat.');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX Error:', status, error);
-                alert('Error connecting to chat. Please try again.');
+    $.ajax({
+        url: '<?= $urlval ?>ajax/start_chat.php',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            product_id: productId
+        },
+        success: function(response) {
+            if (response && response.success) {
+                // Redirect to the specific chat with the conversation ID
+                const chatId = response.conversationId;
+                window.location.href = `<?= $urlval ?>messages.php?chatid=${chatId}#messages543`;
+            } else {
+                alert(response.message || 'Could not start chat.');
             }
-        });
-    }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+            alert('Error connecting to chat. Please try again.');
+        }
+    });
+}
+
 
     $(document).ready(function() {
     $(".owl-carousel").owlCarousel({
