@@ -1601,12 +1601,11 @@ Class Productfun{
     function getProductsForUser($userId, $lan) {
         if ($userId) {
             $query = "
-                SELECT id, name, slug, description, extension,image, price, created_at, product_type
+                SELECT id, name, slug, description, extension, image, price, created_at, product_type
                 FROM products
                 WHERE user_id = :user_id AND is_enable = 1 AND status = 'active'
                 ORDER BY FIELD(product_type, 'premium', 'gold', 'standard'), created_at DESC
             ";
-
     
             $stmt = $this->pdo->prepare($query);
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
@@ -1627,7 +1626,6 @@ Class Productfun{
                     </div>
                 </div>
                 ';
-                
             }
         } else {
             return $lan['No_products_found_for_user']; 
@@ -1635,77 +1633,90 @@ Class Productfun{
     }
     
     function displayProducts($products, $lan) {
-        $currentDate = new DateTime(); 
-        if (!empty($products)) { 
-        foreach ($products as $product) {
-            $description = $product['description'];
-            $words = explode(" ", $description);
-            $description = count($words) > 5 ? implode(" ", array_slice($words, 0, 5)) . '...' : $description;
+        $currentDate = new DateTime();
+        if (!empty($products)) {
+            foreach ($products as $product) {
+                $description = $product['description'];
+                $words = explode(" ", $description);
+                $description = count($words) > 5 ? implode(" ", array_slice($words, 0, 5)) . '...' : $description;
     
-            $createdDate = new DateTime($product['created_at']);
-            $dateDiff = $currentDate->diff($createdDate);
-            $isOlderThan30Days = $dateDiff->days > 30;
+                $createdDate = new DateTime($product['created_at']);
+                // Determine expiration date based on the extension value
+                $expiryDays = ($product['extension'] == 1) ? 30 : 20;
+                $expiryDate = $createdDate->modify("+$expiryDays days");
+                $dateDiff = $currentDate->diff($expiryDate);
+                $isExpired = ($dateDiff->days > 0 && $currentDate > $expiryDate) ? true : false;
     
-            echo '
-                <div class="col-md-4 mb-4">
-                    <div class="card product-card">
-                        <img
-                            src="' . htmlspecialchars($product['image']) . '"
-                            class="card-img-top"
-                            alt="' . htmlspecialchars($product['name']) . '"
-                        />
-                        <div class="card-body">
-                            <h5 class="card-title">' . htmlspecialchars($product['name']) . '</h5>
-                            <p class="card-text">' . htmlspecialchars($description) . '</p>
-                            <p class="card-text"><strong>' . $lan['price'] . ':</strong> $' . number_format($product['price'], 2) . '</p>
-                            <p class="card-text">
-                                <small class="text-muted">' . $lan['listed'] . ' ' . $this->dbfun->time_ago($product['created_at']) . '</small>
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <a class="btn btn-button btn-sm" href="'.$this->urlval.'productedit.php?slug='.$product['slug'].'" style="display: inline-block; margin-right: 5px;">'.$lan['edit'].'</a>
-                                
-                                <div class="btn-delete-upload">';
-                                
-                            
-                                if ($product['extension'] != 1) {
-                                    if ($isOlderThan30Days) {
-                                        echo '<form action="' . $this->urlval . 'productextend.php" method="POST" style="display:inline;">
-                                            <input type="hidden" name="productid" value="' . base64_encode($product['id']) . '" />
-                                            <input type="hidden" name="plan_name" value="' . htmlspecialchars($product['name']) . '" />
-                                            <button type="submit" class="btn btn-button btn-sm btn-extend" style="display: inline-block; margin-right: 5px;">Extend</button>
-                                        </form>';
-
-                                    }
-                                }
+                // Add the expired status to the product array
+                $statusLabel = $isExpired ? 'Expired' : 'Active';
+                $labelClass = $isExpired ? 'label-danger' : 'label-success';
     
-                              
-                                if ($product['product_type'] == 'standard') {
-                                    echo '<a class="btn btn-button btn-sm btn-boost" href="'.$this->urlval.'productboost.php?productid='.base64_encode($product['id']).'" style="display: inline-block; margin-right: 5px;">'.$lan['boost'].'</a>';
-                                } else {
-                                    echo '<a class="btn btn-button btn-sm btn-boost" href="'.$this->urlval.'uploadgalvideo.php?productid='.base64_encode($product['id']).'" style="display: inline-block; margin-right: 5px;">'.$lan['upload_gallery_video'].'</a>';
-                                }
-    
-                                echo '<button class="btn btn-button btn-sm btn-delete" data-product-id="' . $this->security->encrypt($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['delete'] . '</button>
+                echo '
+                    <div class="col-md-4 mb-4">
+                        <div class="card product-card">
+                            <div class="product-image-container" style="position: relative;">
+                                <img
+                                    src="' . htmlspecialchars($product['image']) . '"
+                                    class="card-img-top"
+                                    alt="' . htmlspecialchars($product['name']) . '"
+                                     style="width: 100%; height: 300px; object-fit: cover;"
+                                />
+                                <span class="label ' . $labelClass . '" style="position: absolute; top: 10px; left: 10px; padding: 5px 10px; border-radius: 3px; color: white; font-size: 14px;">
+                                    ' . $statusLabel . '
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">' . htmlspecialchars($product['name']) . '</h5>
+                                <p class="card-text">' . htmlspecialchars($description) . '</p>
+                                <p class="card-text"><strong>' . $lan['price'] . ':</strong> $' . number_format($product['price'], 2) . '</p>
+                                <p class="card-text">
+                                    <small class="text-muted">' . $lan['listed'] . ' ' . $this->dbfun->time_ago($product['created_at']) . '</small>
+                                </p>
+                                <div class="d-flex justify-content-between">
+                                    
+                                    <!-- Conditionally render the edit button only if the product is not expired -->
+                                    ' . (!$isExpired ? '<a class="btn btn-button btn-sm" href="' . $this->urlval . 'productedit.php?slug=' . $product['slug'] . '" style="display: inline-block; margin-right: 5px;">' . $lan['edit'] . '</a>' : '') . '
+                                        
+                                    <div class="btn-delete-upload">';
+                                            
+                                        if ($product['extension'] != 1) {
+                                            if ($isExpired) {
+                                                echo '<form action="' . $this->urlval . 'productextend.php" method="POST" style="display:inline;">
+                                                    <input type="hidden" name="productid" value="' . base64_encode($product['id']) . '" />
+                                                    <input type="hidden" name="plan_name" value="' . htmlspecialchars($product['name']) . '" />
+                                                    <button type="submit" class="btn btn-button btn-sm btn-extend" style="display: inline-block; margin-right: 5px;">Extend</button>
+                                                </form>';
+                                            }
+                                        }
+            
+                                        if ($product['product_type'] == 'standard') {
+                                            echo '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'productboost.php?productid=' . base64_encode($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['boost'] . '</a>';
+                                        } else {
+                                            echo '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'uploadgalvideo.php?productid=' . base64_encode($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['upload_gallery_video'] . '</a>';
+                                        }
+            
+                                        echo '<button class="btn btn-button btn-sm btn-delete" data-product-id="' . $this->security->encrypt($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['delete'] . '</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                ';
+            }
+        } else {
+            echo '
+            <div class="col-md-4 mb-4">
+                <div class="card product-card">
+                    <div class="col-12 text-center">
+                        <h5>No products found</h5>
+                        <p>Upload your first product!</p>
+                    </div>
                 </div>
+            </div>
             ';
         }
-    }else{
-        echo '
-         <div class="col-md-4 mb-4">
-                    <div class="card product-card">
-        <div class="col-12 text-center">
-            <h5>no_products_found</h5>
-            <p> upload_prompt</p>
-        </div>
-        </div>
-        </div>
-    ';
     }
-    }
+    
     
     
     
