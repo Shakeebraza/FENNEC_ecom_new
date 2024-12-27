@@ -1651,51 +1651,47 @@ Class Productfun{
                 $statusLabel = $isExpired ? 'Expired' : 'Active';
                 $labelClass = $isExpired ? 'label-danger' : 'label-success';
     
+                $detailUrl = 'http://localhost/fennec/detail.php?slug=' . $product['slug'];
+    
                 echo '
                     <div class="col-md-4 mb-4">
                         <div class="card product-card">
                             <div class="product-image-container" style="position: relative;">
-                                <img
-                                    src="' . htmlspecialchars($product['image']) . '"
-                                    class="card-img-top"
-                                    alt="' . htmlspecialchars($product['name']) . '"
-                                     style="width: 100%; height: 300px; object-fit: cover;"
-                                />
+                                <a href="' . $detailUrl . '">
+                                    <img
+                                        src="' . htmlspecialchars($product['image']) . '"
+                                        class="card-img-top"
+                                        alt="' . htmlspecialchars($product['name']) . '"
+                                        style="width: 100%; height: 300px; object-fit: cover;"
+                                    />
+                                </a>
                                 <span class="label ' . $labelClass . '" style="position: absolute; top: 10px; left: 10px; padding: 5px 10px; border-radius: 3px; color: white; font-size: 14px;">
                                     ' . $statusLabel . '
                                 </span>
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title">' . htmlspecialchars($product['name']) . '</h5>
-                                <p class="card-text">' . htmlspecialchars($description) . '</p>
-                                <p class="card-text"><strong>' . $lan['price'] . ':</strong> $' . number_format($product['price'], 2) . '</p>
+                                <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
+                                    <h5 class="card-title">' . htmlspecialchars($product['name']) . '</h5>
+                                </a>
+                                <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
+                                    <p class="card-text">' . htmlspecialchars($description) . '</p>
+                                </a>
+                                <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
+                                    <p class="card-text"><strong>' . $lan['price'] . ':</strong> $' . number_format($product['price'], 2) . '</p>
+                                </a>
                                 <p class="card-text">
                                     <small class="text-muted">' . $lan['listed'] . ' ' . $this->dbfun->time_ago($product['created_at']) . '</small>
                                 </p>
                                 <div class="d-flex justify-content-between">
-                                    
-                                    <!-- Conditionally render the edit button only if the product is not expired -->
                                     ' . (!$isExpired ? '<a class="btn btn-button btn-sm" href="' . $this->urlval . 'productedit.php?slug=' . $product['slug'] . '" style="display: inline-block; margin-right: 5px;">' . $lan['edit'] . '</a>' : '') . '
-                                        
-                                    <div class="btn-delete-upload">';
-                                            
-                                        if ($product['extension'] != 1) {
-                                            if ($isExpired) {
-                                                echo '<form action="' . $this->urlval . 'productextend.php" method="POST" style="display:inline;">
-                                                    <input type="hidden" name="productid" value="' . base64_encode($product['id']) . '" />
-                                                    <input type="hidden" name="plan_name" value="' . htmlspecialchars($product['name']) . '" />
-                                                    <button type="submit" class="btn btn-button btn-sm btn-extend" style="display: inline-block; margin-right: 5px;">Extend</button>
-                                                </form>';
-                                            }
-                                        }
-            
-                                        if ($product['product_type'] == 'standard') {
-                                            echo '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'productboost.php?productid=' . base64_encode($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['boost'] . '</a>';
-                                        } else {
-                                            echo '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'uploadgalvideo.php?productid=' . base64_encode($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['upload_gallery_video'] . '</a>';
-                                        }
-            
-                                        echo '<button class="btn btn-button btn-sm btn-delete" data-product-id="' . $this->security->encrypt($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['delete'] . '</button>
+                                    <div class="btn-delete-upload">
+                                        ' . ($product['extension'] != 1 && $isExpired ? '<form action="' . $this->urlval . 'productextend.php" method="POST" style="display:inline;">
+                                            <input type="hidden" name="productid" value="' . base64_encode($product['id']) . '" />
+                                            <input type="hidden" name="plan_name" value="' . htmlspecialchars($product['name']) . '" />
+                                            <button type="submit" class="btn btn-button btn-sm btn-extend" style="display: inline-block; margin-right: 5px;">Extend</button>
+                                        </form>' : '') . '
+                                        ' . ($product['product_type'] == 'standard' ? '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'productboost.php?productid=' . base64_encode($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['boost'] . '</a>' : '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'uploadgalvideo.php?productid=' . base64_encode($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['upload_gallery_video'] . '</a>') . '
+                                        <button class="btn btn-button btn-sm btn-delete" data-product-id="' . $this->security->encrypt($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['delete'] . '</button>
                                     </div>
                                 </div>
                             </div>
