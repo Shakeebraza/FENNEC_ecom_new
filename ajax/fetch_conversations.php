@@ -82,7 +82,7 @@ if (isset($_SESSION['userid'])) {
             }
 
             echo '
-    <a href="#" class="d-flex align-items-center" onclick="loadMessages(
+    <a href="#messages543" class="d-flex align-items-center" onclick="loadMessages(
         \'' . $conversation_id . '\', 
         \'' . addslashes($display_name) . '\', 
         \'' . $urlval . addslashes($product_image) . '\',
