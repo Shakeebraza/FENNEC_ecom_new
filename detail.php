@@ -859,7 +859,7 @@ include_once 'footer.php';
             },
             success: function(response) {
                 if (response && response.success) {
-                    window.location.href = '<?= $urlval ?>msg.php';
+                    window.location.href = '<?= $urlval ?>messages.php#messages543';
                 } else {
                     alert(response.message || 'Could not start chat.');
                 }
