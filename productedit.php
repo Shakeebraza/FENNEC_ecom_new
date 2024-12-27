@@ -379,7 +379,8 @@ include_once 'footer.php';
       contentType: false,
       success: function(response) {
         if (response.success) {
-
+          $('.btn-success').hide();
+          $('.btn-success').after('<div class="alert alert-success mt-3">Listing updated successfully!</div>');
           showSuccessAlert();
         } else {
 
