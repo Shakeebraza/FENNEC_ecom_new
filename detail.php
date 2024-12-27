@@ -507,13 +507,18 @@ $area = $productData['area'];
                     if (isset($_SESSION['userid'])) {
                         $sessionUserId = base64_decode($_SESSION['userid']);
                         $productId = $productData['product']['product_id'];
+                        $productUserId = $productData['product']['user_id'];
 
                         if ($sessionUserId != $productId) {
                             $encryptedProductId = $security->encrypt($productData['product']['product_id']);
 
 
                     ?>
+                    <?php
+                    if($productUserId != $sessionUserId):
+                        ?>
                             <button onclick="startChat('<?= $encryptedProductId ?>')" class="btn btn-success w-100 mb-2"><?= $lan['chat'] ?></button>
+                            <?php endif;?>
                     <?php
                         }
                     } else {
@@ -529,6 +534,9 @@ $area = $productData['area'];
                         </button>
                     <?php else:
                         if (isset($_SESSION['userid'])) {
+                            $sessionUserId = base64_decode($_SESSION['userid']);
+                        $productUserId = $productData['product']['user_id'];
+                            if($productUserId != $sessionUserId){
                             echo '
                         <button class="btn buttonss w-100 mb-2" data-productid="' . $productData['product']['product_id'] . '" id="favorite-button">
                             <i class="far fa-heart"></i> ' . $lan['Favourite'] . '
@@ -543,6 +551,7 @@ $area = $productData['area'];
                             
                             ';
                         }
+                    }
                     ?>
 
                     <?php endif; ?>
@@ -550,10 +559,18 @@ $area = $productData['area'];
                         <i class="fas fa-print"></i> Print
                     </button> -->
                     <!-- Action Buttons -->
-
-                    <button class="btn btn-outline-secondary btn buttonss w-100 mt-2" id="toggleReportBtn">
+                        <?php
+                        if (isset($_SESSION['userid'])) {
+                            $sessionUserId = base64_decode($_SESSION['userid']);
+                            $productUserId = $productData['product']['user_id'];
+                            $checkUserSame = $sessionUserId == $productUserId ?'style="display:none;"':" " ;
+                        
+                            echo '  <button class="btn btn-outline-secondary btn buttonss w-100 mt-2" id="toggleReportBtn" '.$checkUserSame.'>
                         <i class="bi bi-flag"></i> Report
-                    </button>
+                    </button>';
+                        }
+                        ?>
+                  
                     <div class="container mt-5">
 
 
