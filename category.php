@@ -289,7 +289,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         color: white;
         border: 2px solid #00494f;
         font-weight: bold;
-        transition: all 0.3s ease;
+        transition: all 0.6s ease;
     }
 
     .custom-dropdown .btn-outline-primary:hover {
@@ -304,6 +304,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         color: #00494f;
         font-weight: bold;
         transition: all 0.3s ease;
+        padding:10px;
     }
 
     .custom-dropdown .dropdown-item:hover {
@@ -316,9 +317,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         border: 1px solid #00494f;
-        width: 60% !important;
+        width: 200px !important;
+        margin-top:1px;
         /* margin: auto; */
     }
+    #sortDropdown:hover .custom-dropdown{
+        display:block;
+    }
+ 
 </style>
 
 <?php
