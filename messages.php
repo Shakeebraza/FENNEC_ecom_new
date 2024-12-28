@@ -908,12 +908,37 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatId = getQueryParam('chatid');
 
     if (chatId) {
- 
-        const productName = "Demo Product"; 
-        const statusMessage = "active"; 
-        loadMessages(chatId, productName, statusMessage);
+        fetchProductName(chatId);
     }
 });
+
+function fetchProductName(chatId) {
+    $.ajax({
+        url: `<?=$urlval?>ajax/productname.php`,
+        method: 'GET',
+        data: { chatid: chatId },
+        success: function(response) {
+            try {
+                const data = JSON.parse(response);
+
+                const productName = data.productName;
+
+                if (productName) {
+                    const firstLetter = productName.charAt(0).toUpperCase();
+                    const statusMessage = "active";
+                    loadMessages(chatId, productName, firstLetter, statusMessage);
+                }
+            } catch (e) {
+                console.error('Error parsing the JSON response');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching product name:', error);
+        }
+    });
+}
+
+
 
 function updateUrlWithChatId(chatId) {
     const newUrl = window.location.href.split('?')[0] + '?chatid=' + chatId;
