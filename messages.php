@@ -873,32 +873,7 @@ function openImagePopup(src) {
     }
 
 
-    const favoriteButton = document.getElementById('favorite-button');
 
-favoriteButton.addEventListener('click', function() {
-    const productId = this.getAttribute('data-productid');
-
-    fetch('<?= $urlval ?>ajax/favorite.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: productId
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                favoriteButton.innerHTML = data.isFavorited ?
-                    '<i class="fas fa-heart heart-icon"></i>' :
-                    '<i class="far fa-heart heart-icon" style="color=#000"></i>';
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-});
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
@@ -969,6 +944,36 @@ function deleteConversation(conversationId) {
         }
     });
 }
+document.addEventListener('DOMContentLoaded', function () {
+    const favoriteButton = document.getElementById('favorite-button');
+
+    if (favoriteButton) {
+        favoriteButton.addEventListener('click', function() {
+            const productId = this.getAttribute('data-productid');
+
+            fetch('<?= $urlval ?>ajax/favorite.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: productId
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        favoriteButton.innerHTML = data.isFavorited ?
+                            '<i class="fas fa-heart heart-icon"></i>' :
+                            '<i class="far fa-heart heart-icon" style="color=#000"></i>';
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    }
+});
 
 
 </script>
