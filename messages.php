@@ -148,7 +148,7 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
 }
 
 .delete-icon {
-    margin-left: 10px;
+    margin-right: 20px;fix:""
     color: red;
     cursor: pointer;
     display: none;
