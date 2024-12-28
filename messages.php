@@ -912,6 +912,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+
 function fetchProductName(chatId) {
     $.ajax({
         url: `<?=$urlval?>ajax/productname.php`,
