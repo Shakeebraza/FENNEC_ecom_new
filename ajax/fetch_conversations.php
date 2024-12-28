@@ -57,7 +57,12 @@ if (isset($_SESSION['userid'])) {
             $sender_name = $conversation['sender_name'];
             $receiver_name = $conversation['receiver_name'];
 
-            $display_name = ($conversation['user_one'] == $user_id) ? $receiver_name : $sender_name;
+            // If user_two is null, show only the sender name
+            if ($conversation['user_two'] == null) {
+                $display_name = $sender_name;
+            } else {
+                $display_name = ($conversation['user_one'] == $user_id) ? $receiver_name : $sender_name;
+            }
 
             if ($last_sender_id != $user_id) {
                 $message_style = ($last_message_read == 0) ? 'font-weight: bold;' : '';
@@ -65,7 +70,6 @@ if (isset($_SESSION['userid'])) {
                 $message_style = '';
             }
 
- 
             $message_words = explode(' ', $last_message);
             $truncated_message = implode(' ', array_slice($message_words, 0, 2)) . (count($message_words) > 2 ? '...' : '');
 
@@ -85,9 +89,9 @@ if (isset($_SESSION['userid'])) {
             <div class="d-flex align-items-center message-container">
                 <a href="#messages543" class="d-flex align-items-center message-item" onclick="loadMessages(
             \'' . $conversation_id . '\', 
-            \'' . addslashes($display_name) . '\', 
-            \'' . $urlval . addslashes($product_image) . '\',
-            \'' . addslashes($status_message) . '\'
+            \'' . addslashes($display_name ?? '') . '\', 
+            \'' . $urlval . addslashes($product_image ?? '') . '\',
+            \'' . addslashes($status_message ?? '') . '\'
         ); updateUrlWithChatId(\'' . $conversation_id . '\')">
                     <div class="flex-shrink-0">
                         <img class="img-fluid" src="' . $urlval . $product_image . '" alt="user img" style="width: 40px; height: 40px; border-radius: 50%;">
@@ -104,8 +108,6 @@ if (isset($_SESSION['userid'])) {
             </div>
             <hr style="color: #157347 !important; width:100%; height:2px;">
         ';
-        
-
         }
     } else {
         echo '<p>No conversations found</p>';

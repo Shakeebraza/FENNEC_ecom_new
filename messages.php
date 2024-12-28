@@ -710,6 +710,9 @@ function loadChatList() {
 
 
 function loadMessages(conversationId, productName, productImage, statusMessage) {
+
+    statusMessage = statusMessage || '';  
+
     $.ajax({
         url: '<?= $urlval ?>ajax/fetch_messages.php',
         method: 'POST',
@@ -718,6 +721,7 @@ function loadMessages(conversationId, productName, productImage, statusMessage) 
         },
         success: function(response) {
             $('#message-body').html(response);
+
             if ($(window).width() <= 768) {
                 $(".chatbox").addClass('showbox');
                 $(".hide-by").show();
@@ -726,20 +730,24 @@ function loadMessages(conversationId, productName, productImage, statusMessage) 
                 $(".hide-by").hide();
             }
 
-          
             if (statusMessage.toLowerCase() === 'expired') {
-                $('.send-box').hide();  
+                $('.send-box').hide();
             } else {
-                $('.send-box').show();  
-                console.log('not');
+                $('.send-box').show();
+                console.log('not expired');
             }
 
+      
             $('#chat-box').data('conversation-id', conversationId);
+
+    
             $('#message-body').scrollTop($('#message-body')[0].scrollHeight);
 
+       
             const firstLetter = productName.charAt(0).toUpperCase();
             const profileLink = `user_profile.php?username=${productName}`;
 
+        
             var headerHTML = `
                 <div class="col-8 d-flex align-items-center">
                     <div class="rounded-circle text-white bg-secondary d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-size: 1.5rem; font-weight: bold;">
@@ -751,6 +759,7 @@ function loadMessages(conversationId, productName, productImage, statusMessage) 
                 </div>
             `;
 
+           
             $('.msg-head-innder').html(headerHTML); 
         }
     });
@@ -908,8 +917,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function updateUrlWithChatId(chatId) {
     const newUrl = window.location.href.split('?')[0] + '?chatid=' + chatId;
-    window.history.pushState({ path: newUrl }, '', newUrl);  // Update the URL without reloading the page
+    window.history.pushState({ path: newUrl }, '', newUrl); 
 }
+
+function deleteConversation(conversationId) {
+    $.ajax({
+        url: '<?= $urlval?>ajax/deleteConversation.php', 
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            conversation_id: conversationId
+        },
+        success: function(response) {
+            if (response.success) {
+                alert(response.message); 
+                
+                location.reload();  
+            } else {
+                alert(response.message);  
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+            alert('Error connecting to server. Please try again.');
+        }
+    });
+}
+
 
 </script>
 </body>
