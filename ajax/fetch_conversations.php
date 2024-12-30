@@ -46,33 +46,36 @@ if (isset($_SESSION['userid'])) {
     $conversations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($conversations) {
+        echo '<form id="deleteConversationsForm" method="post">';
+      
+        
         foreach ($conversations as $conversation) {
             $product_image = $conversation['product_image'] ? $conversation['product_image'] : 'images/admin.jpg';  
-
+    
             $conversation_id = base64_encode($conversation['id']);
             $last_message = $conversation['last_message'] ? $conversation['last_message'] : 'Send a message to start the conversation';
             $last_message_read = $conversation['last_message_read']; 
             $last_sender_id = $conversation['last_sender_id']; 
-
+    
             $sender_name = $conversation['sender_name'];
             $receiver_name = $conversation['receiver_name'];
-
+    
             // If user_two is null, show only the sender name
             if ($conversation['user_two'] == null) {
                 $display_name = $sender_name;
             } else {
                 $display_name = ($conversation['user_one'] == $user_id) ? $receiver_name : $sender_name;
             }
-
+    
             if ($last_sender_id != $user_id) {
                 $message_style = ($last_message_read == 0) ? 'font-weight: bold;' : '';
             } else {
                 $message_style = '';
             }
-
+    
             $message_words = explode(' ', $last_message);
             $truncated_message = implode(' ', array_slice($message_words, 0, 2)) . (count($message_words) > 2 ? '...' : '');
-
+    
             $product_status = $conversation['product_status'];
             if ($product_status == 'expired') {
                 $status_message = 'Expired';
@@ -84,15 +87,19 @@ if (isset($_SESSION['userid'])) {
                 $status_message = 'Admin chat';
                 $status_color = '#6c757d'; 
             }
-
+    
+            // Format last message time
+            $last_message_time = !empty($conversation['last_message_time']) ? date('F j, Y, g:i a', strtotime($conversation['last_message_time'])) : 'No messages yet';
+    
             echo '
             <div class="d-flex align-items-center message-container">
-                <a href="#messages543" class="d-flex align-items-center message-item" onclick="loadMessages(
-            \'' . $conversation_id . '\', 
-            \'' . addslashes($display_name ?? '') . '\', 
-            \'' . $urlval . addslashes($product_image ?? '') . '\',
-            \'' . addslashes($status_message ?? '') . '\'
-        ); updateUrlWithChatId(\'' . $conversation_id . '\')">
+                <input type="checkbox" name="delete_conversations[]" value="' . $conversation_id . '" class="delete-checkbox" style="margin-right: 10px;">
+                <a href="#Messages" class="d-flex align-items-center message-item" onclick="loadMessages(
+                \'' . $conversation_id . '\', 
+                \'' . addslashes($display_name ?? '') . '\', 
+                \'' . $urlval . addslashes($product_image ?? '') . '\',
+                \'' . addslashes($status_message ?? '') . '\'
+            ); updateUrlWithChatId(\'' . $conversation_id . '\')">
                     <div class="flex-shrink-0">
                         <img class="img-fluid" src="' . $urlval . $product_image . '" alt="user img" style="width: 40px; height: 40px; border-radius: 50%;">
                     </div>
@@ -100,6 +107,7 @@ if (isset($_SESSION['userid'])) {
                         <h3 style="font-size: 16px; margin: 0; color: #157347; font-weight:700">' . $display_name . '</h3>
                         <p style="font-size: 12px; color: #000; ' . $message_style . '">' . $truncated_message . '</p> 
                         <p style="font-size: 12px; color: ' . $status_color . ';">' . $status_message . '</p>
+                        <small style="font-size: 10px; color: #555;">Last message at ' . $last_message_time . '</small>
                     </div>
                 </a>
                 <div class="delete-icon">
@@ -109,7 +117,9 @@ if (isset($_SESSION['userid'])) {
             <hr style="color: #157347 !important; width:100%; height:2px;">
         ';
         }
-    } else {
+        echo '</form>';
+    }
+    else {
         echo '<p>No conversations found</p>';
     }
 } else {

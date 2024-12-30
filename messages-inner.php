@@ -886,6 +886,10 @@ div#chat-list {
                                 <div class="modal-body">
 
                                     <div class="chat-lists">
+                                        <div style="text-align: center;">
+                                            <button type="button" id="deleteChatButton" class="btn"
+                                                style="padding: 10px 20px;">Delete Selected Chats</button>
+                                        </div>
                                         <div class="tab-content" id="myTabContent">
                                             <div class="tab-pane fade show active" id="Open" role="tabpanel"
                                                 aria-labelledby="Open-tab">

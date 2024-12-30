@@ -5,7 +5,7 @@ if (isset($_SESSION['userid'])) {
     $conversationId = base64_decode($_POST['conversation_id']) ?? NULL;
     $message = $_POST['message'] ?? '';
 
-
+   
     $attachments = [];
   
     if (isset($_FILES['attachments']) && !empty($_FILES['attachments']['name'][0])) {
@@ -23,7 +23,7 @@ if (isset($_SESSION['userid'])) {
 
     $attachmentsString = !empty($attachments) ? implode(',', $attachments) : null;
 
-    if ($conversationId && !empty($message)) {
+    if ($conversationId || empty($message)) {
         $checkQuery = "SELECT id FROM conversations WHERE id = :conversation_id";
         $stmtCheck = $pdo->prepare($checkQuery);
         $stmtCheck->bindParam(':conversation_id', $conversationId);

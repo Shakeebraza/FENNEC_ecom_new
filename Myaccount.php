@@ -963,6 +963,40 @@ function deleteConversation(conversationId) {
         }
     });
 }
+
+document.getElementById('deleteChatButton').addEventListener('click', function() {
+    var selectedConversations = [];
+
+    // Collect all checked checkboxes
+    var checkboxes = document.querySelectorAll('.delete-checkbox:checked');
+    checkboxes.forEach(function(checkbox) {
+        selectedConversations.push(checkbox.value);
+    });
+
+    if (selectedConversations.length > 0) {
+        // Make the AJAX request to delete the selected conversations
+        var formData = new FormData();
+        formData.append('delete_conversations', JSON.stringify(selectedConversations));
+
+        fetch('<?= $urlval?>ajax/deleteConversations.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    location.reload(); // Reload to update the conversation list
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    } else {
+        alert("Please select at least one conversation to delete.");
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     const favoriteButton = document.getElementById('favorite-button');
 

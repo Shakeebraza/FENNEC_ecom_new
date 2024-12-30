@@ -1,6 +1,15 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Allow encoded characters and spaces
+    # Remove .php extension for general URLs
+    RewriteRule ^([a-zA-Z0-9-]+)/$ $1.php [L,QSA]
+
+    # Specific pages
+    RewriteRule ^index/$ index.php [L,QSA]
+    RewriteRule ^category/$ category.php [L,QSA]
+    RewriteRule ^myaccount/$ myaccount.php [L,QSA]
+    RewriteRule ^LoginRegister/$ LoginRegister.php [L,QSA]
+
+    # Handle dynamic URL like /p/slug/title/description
     RewriteRule ^p/([^/]+)/([^/]+)/([^/]+)$ detail.php?slug=$1&title=$2&dsc=$3 [L,QSA]
 </IfModule>

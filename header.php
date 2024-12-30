@@ -165,8 +165,7 @@ $lan = $fun->loadLanguage($lang);
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark ">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="<?=$urlval?>index.php"
-                style="text-decoration: none;">
+            <a class="navbar-brand d-flex align-items-center" href="<?=$urlval?>" style="text-decoration: none;">
                 <?php
         $logoData = $fun->getBox('box1');
         $logo = $urlval . $logoData[0]['image'];
@@ -219,7 +218,7 @@ $lan = $fun->loadLanguage($lang);
                   if (isset($_SESSION['userid'])) {
                     echo $urlval . 'post.php';
                   } else {
-                    echo $urlval . 'LoginRegister.php';
+                    echo $urlval . 'LoginRegister/';
                   }
                   ?>" class="btn custom-btn me-2 mb-lg-0 d-flex flex-column align-items-center">
                     <i class="fa-solid fa-dollar-sign mb-1 fa-plus-circle"></i>
@@ -328,7 +327,7 @@ $lan = $fun->loadLanguage($lang);
                 foreach ($findCate['data'] as $category) {
                   echo '
                 <li class="' . htmlspecialchars($category['slug']) . '">
-                  <a href="' . $urlval . 'category.php?slug=' . $category['slug'] . '">' . htmlspecialchars($category['category_name']) . '</a>
+                  <a href="' . $urlval . 'category/?slug=' . $category['slug'] . '">' . htmlspecialchars($category['category_name']) . '</a>
                   <div class="nav-main-dwdisnmn" style="display:none;">
                     <div class="nav-snm-innnn">
                       <h2>'.$browse_by.'</h2>
@@ -337,7 +336,7 @@ $lan = $fun->loadLanguage($lang);
 
                   $duncatdata = $categoryManager->getAllSubCategoriesHeaderMenu($category['id']);
                   foreach ($duncatdata['data'] as $val) {
-                    echo '<li class="lihpoverset"><a href="' . $urlval . 'category.php?slug=' . $category['slug'] . '&subcategory=' . htmlspecialchars($val['id']) . '">' . htmlspecialchars(ucwords(strtolower($val['subcategory_name']))) . '</a></li>';
+                    echo '<li class="lihpoverset"><a href="' . $urlval . 'category/?slug=' . $category['slug'] . '&subcategory=' . htmlspecialchars($val['id']) . '">' . htmlspecialchars(ucwords(strtolower($val['subcategory_name']))) . '</a></li>';
                   }
                   $productPremium=$productFun->PoplarProductper();
                   echo '
@@ -346,7 +345,7 @@ $lan = $fun->loadLanguage($lang);
                     </div>
                     <div class="div-img-right-submenu" style="width:20%">';
                     if(!empty($productPremium)){
-                    echo'  <a href="'.$urlval.'detail.php?slug='.$productPremium['slug'].'">
+                    echo'  <a href="'.$urlval.'detail/?slug='.$productPremium['slug'].'">
                                           <img src="'.$urlval.$productPremium['image'].'" alt="" style="width:100%">
                                           <a>';
                     }else{

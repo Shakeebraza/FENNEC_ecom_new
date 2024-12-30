@@ -275,7 +275,7 @@ if (!empty($banner)) {
                                 ?>
                                 <div class="col-md-3">
                                     <div class="card crt-timg-hm">
-                                        <a href="<?= $urlval ?>category.php?slug=<?= $category['slug'] ?>">
+                                        <a href="<?= $urlval ?>category/?slug=<?= $category['slug'] ?>">
                                             <img src="<?php echo htmlspecialchars($urlval . $category['category_image']); ?>"
                                                 class="card-img-top"
                                                 alt="<?php echo htmlspecialchars($category['category_name']); ?>" />
@@ -573,7 +573,7 @@ if (!empty($banner)) {
                                         <i class="fas fa-heart" <?php echo $fav; ?>></i>
                                     </a>
                                     <?php } else { ?>
-                                    <a class="heart-icon" href="<?= $urlval ?>LoginRegister.php">
+                                    <a class="heart-icon" href="<?= $urlval ?>LoginRegister">
                                         <i class="fas fa-heart"></i>
                                     </a>
                                     <?php } ?>
@@ -655,7 +655,7 @@ if (!empty($banner)) {
                     <?php
                             // Create links for each city
                             $cityLinks = array_map(function ($city) use ($urlval) {
-                                return '<a href="' . htmlspecialchars($urlval) . 'category.php?location=' . htmlspecialchars($city['id']) . '">' . htmlspecialchars($city['name']) . '</a>';
+                                return '<a href="' . htmlspecialchars($urlval) . 'category/?location=' . htmlspecialchars($city['id']) . '">' . htmlspecialchars($city['name']) . '</a>';
                             }, $cities);
                             echo implode(' | ', $cityLinks);
                             ?>
