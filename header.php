@@ -165,7 +165,8 @@ $lan = $fun->loadLanguage($lang);
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark ">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="index.php" style="text-decoration: none;">
+            <a class="navbar-brand d-flex align-items-center" href="<?=$urlval?>index.php"
+                style="text-decoration: none;">
                 <?php
         $logoData = $fun->getBox('box1');
         $logo = $urlval . $logoData[0]['image'];
