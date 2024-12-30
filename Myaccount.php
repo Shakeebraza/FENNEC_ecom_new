@@ -95,13 +95,15 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
     .btn-mobile {
         margin-bottom: 10px;
     }
+
     .msg-head-innder {
-    TOP: 4PX !important;
-    POSITION: ABSOLUTE !important;
-    left: -30PX  !important;
-   
-}
-/* .product-msg-tp{
+        TOP: 4PX !important;
+        POSITION: ABSOLUTE !important;
+        left: -30PX !important;
+
+    }
+
+    /* .product-msg-tp{
     display: block !important;
 } */
 
@@ -133,6 +135,7 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
 .label-success {
     background-color: green;
 }
+
 .message-container {
     position: relative;
     display: flex;
@@ -158,13 +161,12 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
 .message-container:hover .delete-icon {
     display: block;
 }
-
 </style>
 
 <div class="container mt-4 pb-5">
     <ul class="nav nav-tabs justify-content-between" id="myTab" role="tablist">
         <!-- <li class="nav-item" role="presentation"> -->
-            <!-- <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button"
+        <!-- <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button"
                 role="tab">
                 <i class="fas fa-upload me-2"></i><?php //echo $lan['upload_new_product'] ?>
             </button> -->
@@ -176,16 +178,10 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button
-            class="nav-link"
-            id="messages-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#messages543"
-            type="button"
-            role="tab"
-          >
-            <i class="fas fa-comment me-2"></i>Messages
-          </button>
+            <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#Messages" type="button"
+                role="tab">
+                <i class="fas fa-comment me-2"></i>Messages
+            </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="favourite-tab" data-bs-toggle="tab" data-bs-target="#favourite" type="button"
@@ -202,7 +198,7 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
     </ul>
     <div class="tab-content mt-4" id="myTabContent">
         <div class="tab-content mt-4" id="myTabContent">
-         
+
         </div>
         <div class="tab-pane fade" id="view-products" role="tabpanel">
             <h3 class="mb-4"><?= $lan['view_my_products']?></h3>
@@ -214,15 +210,15 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
         </div>
 
         <div class="tab-pane fade" id="favourite" role="tabpanel">
-    <h3 class="mb-4" style="font-size: 1.5rem; color: #333;">
-        <?= $lan['hi']?> <?php echo $_SESSION['username'] ?>, <?= $lan['you_have']?> 
-        <?php 
+            <h3 class="mb-4" style="font-size: 1.5rem; color: #333;">
+                <?= $lan['hi']?> <?php echo $_SESSION['username'] ?>, <?= $lan['you_have']?>
+                <?php 
             $isFavorit = $productFun->getUserFavorites(base64_decode($_SESSION['userid']));
             echo $isFavorit['count']; 
         ?> <?= $lan['saved_ads']?>
-    </h3>
-    <div class="row">
-        <?php
+            </h3>
+            <div class="row">
+                <?php
         foreach ($isFavorit['favorites'] as $favorite) {
             $description = $favorite['description'];
             $words = explode(" ", $description);
@@ -247,8 +243,8 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
             </div>';
         }
         ?>
-    </div>
-</div>
+            </div>
+        </div>
 
 
         <div class="tab-pane fade" id="details" role="tabpanel">
@@ -262,23 +258,25 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="first-name" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" id="first-name" placeholder="Enter first name" 
+                                        <input type="text" class="form-control" id="first-name"
+                                            placeholder="Enter first name"
                                             value="<?php echo $userData[0]['first_name'] ?? '' ?>"
                                             <?php echo !empty($userData[0]['first_name']) ? 'readonly' : ''; ?>>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label for="last-name" class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" id="last-name" placeholder="Enter last name" 
+                                        <input type="text" class="form-control" id="last-name"
+                                            placeholder="Enter last name"
                                             value="<?php echo $userData[0]['last_name'] ?? '' ?>"
                                             <?php echo !empty($userData[0]['last_name']) ? 'readonly' : ''; ?>>
                                     </div>
                                 </div>
-                                                         <div class="mb-3">
+                                <div class="mb-3">
                                     <label for="username" class="form-label">Username</label>
                                     <input type="text" class="form-control" id="username"
                                         value="<?php echo $_SESSION['username'] ?>" />
-                                </div> 
+                                </div>
                                 <div class="mb-3">
                                     <label for="email" class="form-label"><?= $lan['email_address']?></label>
                                     <input type="email" class="form-control" id="email"
@@ -327,48 +325,62 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
 
 
                         </div>
-                    
+
                     </div>
                 </div>
             </div>
         </div>
-        </div>
-     
+    </div>
 
-            <?php
+
+    <?php
 include_once 'messages-inner.php';
 ?>
-   </div>     
+</div>
 
 <!-- Transaction History Modal -->
-<div id="transactionHistoryModal" class="modal" style="z-index:999;display: none; background-color: rgba(0, 0, 0, 0.5); padding: 50px;">
-    <div class="modal-content" style="position: fixed;top: 35%;left: 33%;background-color: white; padding: 30px; border-radius: 8px; max-width: 600px; margin: auto;">
-        <span class="close-btn" onclick="closeModal()" style="font-size: 28px; color: #00494F; cursor: pointer; position: absolute; top: 15px; right: 20px;">&times;</span>
-        <h2 style="color: #00494F; text-align: center; font-size: 24px; margin-bottom: 20px;"><?= $lan['transaction_history'] ?></h2>
+<div id="transactionHistoryModal" class="modal"
+    style="z-index:999;display: none; background-color: rgba(0, 0, 0, 0.5); padding: 50px;">
+    <div class="modal-content"
+        style="position: fixed;top: 35%;left: 33%;background-color: white; padding: 30px; border-radius: 8px; max-width: 600px; margin: auto;">
+        <span class="close-btn" onclick="closeModal()"
+            style="font-size: 28px; color: #00494F; cursor: pointer; position: absolute; top: 15px; right: 20px;">&times;</span>
+        <h2 style="color: #00494F; text-align: center; font-size: 24px; margin-bottom: 20px;">
+            <?= $lan['transaction_history'] ?></h2>
         <div id="transactionHistory"></div>
         <!-- View More Button -->
-        <a href="<?= $urlval?>transaction_history.php" class="btn" style="display: block; margin-top: 20px; text-align: center; background-color: #00494F; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-size: 16px;">
+        <a href="<?= $urlval?>transaction_history.php" class="btn"
+            style="display: block; margin-top: 20px; text-align: center; background-color: #00494F; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-size: 16px;">
             <?= $lan['view_more'] ?>
         </a>
     </div>
 </div>
 
 <!-- Password Update Modal -->
-<div id="passwordModal" class="modal" style="z-index:999; display: none; background-color: rgba(0, 0, 0, 0.5); padding: 50px;">
-    <div class="modal-content" style="position: fixed;top: 35%;left: 33%;background-color: white; padding: 30px; border-radius: 8px; max-width: 600px; margin: auto;">
-        <span class="close" onclick="closePasswordModal()" style="font-size: 28px; color: white; cursor: pointer; position: absolute; top: 15px; right: 20px;">&times;</span>
+<div id="passwordModal" class="modal"
+    style="z-index:999; display: none; background-color: rgba(0, 0, 0, 0.5); padding: 50px;">
+    <div class="modal-content"
+        style="position: fixed;top: 35%;left: 33%;background-color: white; padding: 30px; border-radius: 8px; max-width: 600px; margin: auto;">
+        <span class="close" onclick="closePasswordModal()"
+            style="font-size: 28px; color: white; cursor: pointer; position: absolute; top: 15px; right: 20px;">&times;</span>
         <h4 style="color: white; text-align: center; font-size: 24px; margin-bottom: 20px;">Update Password</h4>
         <form id="passwordForm" onsubmit="updatePassword(event)">
             <div class="mb-3">
-                <label for="newPassword" class="form-label" style="color: #00494F; font-size: 16px;"><?= $lan['new_password']?></label>
-                <input type="password" class="form-control" id="newPassword" required style="border-color: #00494F; padding: 10px 15px; font-size: 16px;"/>
+                <label for="newPassword" class="form-label"
+                    style="color: #00494F; font-size: 16px;"><?= $lan['new_password']?></label>
+                <input type="password" class="form-control" id="newPassword" required
+                    style="border-color: #00494F; padding: 10px 15px; font-size: 16px;" />
             </div>
             <div class="mb-3">
-                <label for="confirmPassword" class="form-label" style="color: #00494F; font-size: 16px;"><?= $lan['confirm_password']?></label>
-                <input type="password" class="form-control" id="confirmPassword" required style="border-color: #00494F; padding: 10px 15px; font-size: 16px;"/>
+                <label for="confirmPassword" class="form-label"
+                    style="color: #00494F; font-size: 16px;"><?= $lan['confirm_password']?></label>
+                <input type="password" class="form-control" id="confirmPassword" required
+                    style="border-color: #00494F; padding: 10px 15px; font-size: 16px;" />
             </div>
-            <input type="hidden" name="token" id="csrf_token_password_chnage" value="<?php echo $CsrfProtection->generateToken() ?>">
-            <button type="submit" class="btn" style="background-color: #00494F; color: white; padding: 12px 24px; border-radius: 5px; border: none; cursor: pointer; font-size: 16px;">
+            <input type="hidden" name="token" id="csrf_token_password_chnage"
+                value="<?php echo $CsrfProtection->generateToken() ?>">
+            <button type="submit" class="btn"
+                style="background-color: #00494F; color: white; padding: 12px 24px; border-radius: 5px; border: none; cursor: pointer; font-size: 16px;">
                 <?= $lan['save_password']?>
             </button>
         </form>
@@ -393,12 +405,12 @@ $(document).ready(function() {
                 },
                 success: function(response) {
                     if (response.success) {
-                        alert(response.message); 
+                        alert(response.message);
                         location.reload();
                     } else {
                         alert(
                             'Product deleted successfully!'
-                        ); 
+                        );
                         location.reload();
                     }
                 },
@@ -417,15 +429,15 @@ function submitForm(event) {
     event.preventDefault();
 
     const formData = new FormData();
-        formData.append('country', document.getElementById('countryyy').value);
-        formData.append('first-name', document.getElementById('first-name').value);
-        formData.append('last-name', document.getElementById('last-name').value);
-        formData.append('city', document.getElementById('cityy').value);
-        formData.append('contactNumber', document.getElementById('contactNumber').value);
-        formData.append('address', document.getElementById('address').value);
-        formData.append('language', document.getElementById('language').value);
-        formData.append('username', document.getElementById('username').value);
-        formData.append('token', document.getElementById('csrf_token_update_info').value);
+    formData.append('country', document.getElementById('countryyy').value);
+    formData.append('first-name', document.getElementById('first-name').value);
+    formData.append('last-name', document.getElementById('last-name').value);
+    formData.append('city', document.getElementById('cityy').value);
+    formData.append('contactNumber', document.getElementById('contactNumber').value);
+    formData.append('address', document.getElementById('address').value);
+    formData.append('language', document.getElementById('language').value);
+    formData.append('username', document.getElementById('username').value);
+    formData.append('token', document.getElementById('csrf_token_update_info').value);
 
     const responseMessageDiv = document.getElementById('responseMessage');
     responseMessageDiv.style.display = 'none';
@@ -524,10 +536,10 @@ $('#productForm').on('submit', function(e) {
         processData: false,
         contentType: false,
         success: function(response) {
-            let parsedResponse = JSON.parse(response); 
+            let parsedResponse = JSON.parse(response);
             if (parsedResponse.success) {
                 displayMessage('Product added successfully!', 'success');
-                $('#productForm')[0].reset(); 
+                $('#productForm')[0].reset();
             } else if (parsedResponse.errors) {
                 displayMessage('There are errors in the form. Please fix them and try again.',
                     'danger');
@@ -624,12 +636,12 @@ $('#city').on('change', function() {
 });
 
 function openTransactionHistory() {
- 
+
     document.getElementById('transactionHistoryModal').style.display = 'block';
 
 
-    fetch('<?=$urlval?>ajax/get_transaction_history.php') 
-        .then(response => response.json()) 
+    fetch('<?=$urlval?>ajax/get_transaction_history.php')
+        .then(response => response.json())
         .then(data => {
             let historyHtml = '<ul>';
             data.forEach(transaction => {
@@ -650,9 +662,9 @@ function closeModal() {
     document.getElementById('transactionHistoryModal').style.display = 'none';
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     function activateTabFromHash() {
-        const urlHash = window.location.hash; 
+        const urlHash = window.location.hash;
         if (urlHash) {
             const tabTrigger = document.querySelector(`[data-bs-target="${urlHash}"]`);
             if (tabTrigger) {
@@ -665,9 +677,9 @@ document.addEventListener("DOMContentLoaded", function () {
     activateTabFromHash();
     const tabLinks = document.querySelectorAll('.nav-link[data-bs-toggle="tab"]');
     tabLinks.forEach(tabLink => {
-        tabLink.addEventListener("shown.bs.tab", function (event) {
-            const targetHash = event.target.getAttribute("data-bs-target"); 
-            history.replaceState(null, null, targetHash); 
+        tabLink.addEventListener("shown.bs.tab", function(event) {
+            const targetHash = event.target.getAttribute("data-bs-target");
+            history.replaceState(null, null, targetHash);
         });
     });
 
@@ -711,7 +723,7 @@ function loadChatList() {
 
 function loadMessages(conversationId, productName, productImage, statusMessage) {
 
-    statusMessage = statusMessage || '';  
+    statusMessage = statusMessage || '';
 
     $.ajax({
         url: '<?= $urlval ?>ajax/fetch_messages.php',
@@ -737,17 +749,17 @@ function loadMessages(conversationId, productName, productImage, statusMessage) 
                 console.log('not expired');
             }
 
-      
+
             $('#chat-box').data('conversation-id', conversationId);
 
-    
+
             $('#message-body').scrollTop($('#message-body')[0].scrollHeight);
 
-       
+
             const firstLetter = productName.charAt(0).toUpperCase();
             const profileLink = `user_profile.php?username=${productName}`;
 
-        
+
             var headerHTML = `
                 <div class="col-8 d-flex align-items-center">
                     <div class="rounded-circle text-white bg-secondary d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-size: 1.5rem; font-weight: bold;">
@@ -759,8 +771,8 @@ function loadMessages(conversationId, productName, productImage, statusMessage) 
                 </div>
             `;
 
-           
-            $('.msg-head-innder').html(headerHTML); 
+
+            $('.msg-head-innder').html(headerHTML);
         }
     });
 }
@@ -774,7 +786,8 @@ document.getElementById('file-upload').addEventListener('change', function(event
         const reader = new FileReader();
         reader.onload = function(e) {
             const imagePreview = document.getElementById('image-preview');
-            imagePreview.innerHTML = `<img src="${e.target.result}" style="max-width: 100px; max-height: 100px; border-radius: 10px;">`;
+            imagePreview.innerHTML =
+                `<img src="${e.target.result}" style="max-width: 100px; max-height: 100px; border-radius: 10px;">`;
             document.getElementById('image-file').value = e.target.result;
         };
         reader.readAsDataURL(file);
@@ -837,8 +850,10 @@ $(document).on('click', '.back-button', function() {
 });
 
 
-$(document).ready(function () {
-    const emojis = ['😊', '😂', '😍', '😢', '😎', '👍', '🎉', '❤️', '🔥', '💯', '😜', '🥳', '😏', '🙌', '💃', '🕺', '🤩', '😎', '🤗', '😇'];
+$(document).ready(function() {
+    const emojis = ['😊', '😂', '😍', '😢', '😎', '👍', '🎉', '❤️', '🔥', '💯', '😜', '🥳', '😏', '🙌', '💃',
+        '🕺', '🤩', '😎', '🤗', '😇'
+    ];
 
     const emojiList = $('#emoji-list');
 
@@ -847,14 +862,14 @@ $(document).ready(function () {
             fontSize: '25px',
             cursor: 'pointer',
             margin: '5px',
-        }).click(function () {
+        }).click(function() {
             $('#message-input').val($('#message-input').val() + emoji);
-            emojiList.hide();  
+            emojiList.hide();
         });
         emojiList.append(span);
     });
 
-    $('.emoji-picker i').click(function () {
+    $('.emoji-picker i').click(function() {
         emojiList.toggle();
     });
 
@@ -864,13 +879,13 @@ $(document).ready(function () {
 });
 
 function openImagePopup(src) {
-        document.getElementById('modalImage').src = src;
-        document.getElementById('imageModal').style.display = 'flex';
-    }
+    document.getElementById('modalImage').src = src;
+    document.getElementById('imageModal').style.display = 'flex';
+}
 
-    function closeImagePopup() {
-        document.getElementById('imageModal').style.display = 'none';
-    }
+function closeImagePopup() {
+    document.getElementById('imageModal').style.display = 'none';
+}
 
 
 
@@ -879,7 +894,7 @@ function getQueryParam(param) {
     return urlParams.get(param);
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     const chatId = getQueryParam('chatid');
 
     if (chatId) {
@@ -892,7 +907,9 @@ function fetchProductName(chatId) {
     $.ajax({
         url: `<?=$urlval?>ajax/productname.php`,
         method: 'GET',
-        data: { chatid: chatId },
+        data: {
+            chatid: chatId
+        },
         success: function(response) {
             try {
                 const data = JSON.parse(response);
@@ -918,12 +935,14 @@ function fetchProductName(chatId) {
 
 function updateUrlWithChatId(chatId) {
     const newUrl = window.location.href.split('?')[0] + '?chatid=' + chatId;
-    window.history.pushState({ path: newUrl }, '', newUrl); 
+    window.history.pushState({
+        path: newUrl
+    }, '', newUrl);
 }
 
 function deleteConversation(conversationId) {
     $.ajax({
-        url: '<?= $urlval?>ajax/deleteConversation.php', 
+        url: '<?= $urlval?>ajax/deleteConversation.php',
         type: 'POST',
         dataType: 'json',
         data: {
@@ -931,11 +950,11 @@ function deleteConversation(conversationId) {
         },
         success: function(response) {
             if (response.success) {
-                alert(response.message); 
-                
-                location.reload();  
+                alert(response.message);
+
+                location.reload();
             } else {
-                alert(response.message);  
+                alert(response.message);
             }
         },
         error: function(xhr, status, error) {
@@ -944,7 +963,7 @@ function deleteConversation(conversationId) {
         }
     });
 }
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     const favoriteButton = document.getElementById('favorite-button');
 
     if (favoriteButton) {
@@ -974,8 +993,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-
-
 </script>
 </body>
 

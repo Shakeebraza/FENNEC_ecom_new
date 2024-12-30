@@ -1,5 +1,4 @@
 <style>
-
 html,
 body,
 div,
@@ -192,7 +191,7 @@ h4 {
     background-color: #00494F;
     color: white;
     padding-top: 24px;
-  padding-bottom: 23px;
+    padding-bottom: 23px;
 }
 
 h5 {
@@ -689,8 +688,9 @@ li.repaly .time {
 .modal-content {
     margin: 0px !important;
     padding: 0px !important;
-    width:100% !important;
+    width: 100% !important;
 }
+
 .send-btns .attach .form-control {
     display: inline-block;
     width: 120px;
@@ -834,20 +834,23 @@ button:focus {
     .ms-3 {
         text-align: center;
     }
+
     .msg-head-innder {
-    width: 100%;
-    position: absolute;
-    top: 7px;
-    left: 50px;
+        width: 100%;
+        position: absolute;
+        top: 7px;
+        left: 50px;
+    }
+
+    .msg-head-innder div {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: start !important;
+        justify-content: start !important;
+    }
+
 }
-.msg-head-innder div {
-    display: flex !important;
-     flex-wrap: wrap !important;
-    align-items: start !important;
-    justify-content: start !important;
-}
-  
-}
+
 .emoji-picker i:hover,
 label[for="file-upload"]:hover i {
     color: #007bff;
@@ -863,30 +866,31 @@ label[for="file-upload"]:hover i {
     background-color: #f1f1f1;
     border-radius: 5px;
 }
+
 div#chat-list {
 
-  padding-bottom: 80px !important;
+    padding-bottom: 80px !important;
 }
 </style>
 
-<section class="message-area" id="messages543" role="tabpanel" style="display:none;">
+<section class="tab-pane fade" id="Messages" role="tabpanel" aria-labelledby="messages-tab" style="display:none;">
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="chat-area">
-                   
+
                     <div class="chatlist">
                         <h4>Conversation</h4>
                         <div class="modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-body">
-                                
+
                                     <div class="chat-lists">
                                         <div class="tab-content" id="myTabContent">
                                             <div class="tab-pane fade show active" id="Open" role="tabpanel"
                                                 aria-labelledby="Open-tab">
                                                 <div class="chat-list" id="chat-list">
-                                                   
+
                                                 </div>
                                             </div>
                                         </div>
@@ -896,12 +900,13 @@ div#chat-list {
                         </div>
                     </div>
 
-               
+
                     <div class="chatbox" id="chat-box">
                         <div class="modal-dialog-scrollable">
                             <div style="width:100%; height: 89%">
-                          
-                                <div class="msg-head" style="padding: 15px; background-color: #00494f; height: 80px; position: sticky; top: 0; z-index: 10;">
+
+                                <div class="msg-head"
+                                    style="padding: 15px; background-color: #00494f; height: 80px; position: sticky; top: 0; z-index: 10;">
                                     <div class="row align-items-center">
 
                                         <div class="col-2 hide-by">
@@ -911,9 +916,9 @@ div#chat-list {
                                             </button>
                                         </div>
 
-                                      
+
                                         <div class="msg-head-innder">
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -921,44 +926,54 @@ div#chat-list {
                                 <div class="modal-body" style="height: 89%;overflow-y: scroll">
                                     <div class="msg-body" id="message-body">
 
-                                   
+
                                     </div>
                                 </div>
 
-                                <div class="send-box" style="padding: 10px; background-color: #f9f9f9; display:none; position: sticky; top: 0; z-index: 10;">
-                                <form id="send-message-form" action="javascript:void(0);" method="POST" enctype="multipart/form-data" style="display: flex; align-items: center;">
-                                    <div style="margin: 0px 9px;">
-                                        <label for="file-upload" style="cursor: pointer;">
-                                            <i class="fa fa-paperclip" aria-hidden="true" style="font-size: 20px; color: #00494f;"></i>
-                                        </label>
-                                        <input type="file" id="file-upload" name="attachments[]" style="display: none;" accept="image/*">
-                                    </div>
-
-                                    <div class="emoji-picker" style="position: relative; margin: 0px 9px;">
-                                        <i class="fa fa-smile" aria-hidden="true" style="font-size: 20px; color: #00494f; cursor: pointer;"></i>
-                                        <div id="emoji-list" style="display: none; position: absolute; bottom: 40px; left: 0; background: white; border: 1px solid #ccc; padding: 5px; border-radius: 5px; max-width: 300px; z-index: 1000; white-space: nowrap; overflow-x: auto; display: flex; align-items: center; gap: 10px;">
+                                <div class="send-box"
+                                    style="padding: 10px; background-color: #f9f9f9; display:none; position: sticky; top: 0; z-index: 10;">
+                                    <form id="send-message-form" action="javascript:void(0);" method="POST"
+                                        enctype="multipart/form-data" style="display: flex; align-items: center;">
+                                        <div style="margin: 0px 9px;">
+                                            <label for="file-upload" style="cursor: pointer;">
+                                                <i class="fa fa-paperclip" aria-hidden="true"
+                                                    style="font-size: 20px; color: #00494f;"></i>
+                                            </label>
+                                            <input type="file" id="file-upload" name="attachments[]"
+                                                style="display: none;" accept="image/*">
                                         </div>
-                                    </div>
 
-                                    <input type="text" id="message-input" class="form-control" placeholder="Write message…" style="flex-grow: 1; border-radius: 10px; padding: 10px;">
+                                        <div class="emoji-picker" style="position: relative; margin: 0px 9px;">
+                                            <i class="fa fa-smile" aria-hidden="true"
+                                                style="font-size: 20px; color: #00494f; cursor: pointer;"></i>
+                                            <div id="emoji-list"
+                                                style="display: none; position: absolute; bottom: 40px; left: 0; background: white; border: 1px solid #ccc; padding: 5px; border-radius: 5px; max-width: 300px; z-index: 1000; white-space: nowrap; overflow-x: auto; display: flex; align-items: center; gap: 10px;">
+                                            </div>
+                                        </div>
 
-                                    <input type="hidden" id="image-file" name="image-file" value="">
+                                        <input type="text" id="message-input" class="form-control"
+                                            placeholder="Write message…"
+                                            style="flex-grow: 1; border-radius: 10px; padding: 10px;">
 
-                                    <button type="submit" style="border: none; background-color: transparent; margin-left: 10px; cursor: pointer;">
-                                        <i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 20px; color: #00494f;"></i>
-                                    </button>
-                                </form>
+                                        <input type="hidden" id="image-file" name="image-file" value="">
+
+                                        <button type="submit"
+                                            style="border: none; background-color: transparent; margin-left: 10px; cursor: pointer;">
+                                            <i class="fa fa-paper-plane" aria-hidden="true"
+                                                style="font-size: 20px; color: #00494f;"></i>
+                                        </button>
+                                    </form>
 
 
-                              
-                                <div id="image-preview" style="margin-top: 10px;"></div>
+
+                                    <div id="image-preview" style="margin-top: 10px;"></div>
 
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                   
+
                 </div>
             </div>
         </div>

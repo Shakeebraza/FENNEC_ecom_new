@@ -26,14 +26,15 @@ $lan = $fun->loadLanguage($lang);
         href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
-   
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css">
 
-        <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
-        <meta http-equiv="pragma" content="no-cache">
-        <meta http-equiv="expires" content="0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css">
+
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="0">
 
     <?php
   $googleAddScript = $fun->getSiteSettingValue('google_add_script');
@@ -133,25 +134,30 @@ $lan = $fun->loadLanguage($lang);
         .premium-item {
             width: 100%;
         }
+
         .nav-men-sub-res-ct-inn ul {
-  padding: 10PX  !important;
-    width: 98VW !important;
-  }
-  .nav-men-sub-res-ct-inn ul li{
+            padding: 10PX !important;
+            width: 98VW !important;
+        }
 
-text-wrap: nowrap  !important;
-text-decoration: none;
+        .nav-men-sub-res-ct-inn ul li {
 
-}   
-span.input-group-text.bg-white.border-0.rounded-0 {
-    height: 40px !important;
-  }
+            text-wrap: nowrap !important;
+            text-decoration: none;
+
+        }
+
+        span.input-group-text.bg-white.border-0.rounded-0 {
+            height: 40px !important;
+        }
     }
-    div#mySidebar{
-        color:white !important;
+
+    div#mySidebar {
+        color: white !important;
     }
-    div#mySidebar a{
-        color:white !important;
+
+    div#mySidebar a {
+        color: white !important;
     }
     </style>
 </head>
@@ -182,11 +188,9 @@ span.input-group-text.bg-white.border-0.rounded-0 {
                       $selectedLocation = isset($_GET['location']) ? $_GET['location'] : '';
                       $search = isset($_GET['search']) ? $_GET['search'] : '';
                       ?>
-                      <input id="searchInput" class="form-control p-2 rounded-0 search-input" 
-                            type="search"
-                            placeholder="<?= $lan['Search_fennec'] ?>" 
-                            aria-label="Search" 
-                            value="<?= !empty($search) ? htmlspecialchars($search) : '' ?>" />
+                    <input id="searchInput" class="form-control p-2 rounded-0 search-input" type="search"
+                        placeholder="<?= $lan['Search_fennec'] ?>" aria-label="Search"
+                        value="<?= !empty($search) ? htmlspecialchars($search) : '' ?>" />
                 </div>
                 <div class="input-group w-25 mb-2 mb-lg-0 custom-form-location">
                     <span class="input-group-text rounded-0 bg-light border-0">
@@ -226,7 +230,7 @@ span.input-group-text.bg-white.border-0.rounded-0 {
           echo '
           <div class="d-flex">
               <!-- Messages Button with Badge -->
-              <a class="btn btn-outline-light me-2 position-relative" href="' . $urlval . 'messages.php#messages543">
+              <a class="btn btn-outline-light me-2 position-relative" href="' . $urlval . 'Myaccount.php#Messages">
                   <i class="fas fa-envelope"></i> ' . $lan['messages'] . '
                  <span id="unread-count" 
       class="position-absolute badge rounded-pill bg-danger" 
@@ -241,10 +245,10 @@ span.input-group-text.bg-white.border-0.rounded-0 {
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                       
-                  <li><a class="dropdown-item" href="' . $urlval . 'messages.php#view-products">' . $lan['view_job_ads'] . '</a></li>
-                      <li><a class="dropdown-item" href="' . $urlval . 'messages.php#messages543">' . $lan['messages'] . '</a></li>
-                      <li><a class="dropdown-item" href="' . $urlval . 'messages.php#favourite">' . $lan['favourites'] . '</a></li>
-                      <li><a class="dropdown-item" href="' . $urlval . 'messages.php#details">' . $lan['my_details'] . '</a></li>
+                  <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#view-products">' . $lan['view_job_ads'] . '</a></li>
+                      <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#Messages">' . $lan['messages'] . '</a></li>
+                      <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#favourite">' . $lan['favourites'] . '</a></li>
+                      <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#details">' . $lan['my_details'] . '</a></li>
                       <li><a class="dropdown-item" href="' . $urlval . 'transaction_history.php">' . $lan['transaction_history'] . '</a></li>
                       <li><a class="dropdown-item" href="' . $urlval . 'logout.php">' . $lan['logout'] . '</a></li>
                   </ul>

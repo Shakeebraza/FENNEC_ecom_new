@@ -33,26 +33,32 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 window.onload = function() {
-  if (window.location.hash === '#messages543') {
-      document.getElementById('messages543').style.display = 'block';
+  if (window.location.hash === '#Messages') {
+      document.getElementById('Messages').style.display = 'block';
   } else {
-      document.getElementById('messages543').style.display = 'none';
+      document.getElementById('Messages').style.display = 'none';
   }
 };
 document.addEventListener('DOMContentLoaded', function() {
   const messagesTab = document.getElementById('messages-tab');
-  const messagesContent = document.getElementById('messages543');
-  if (window.location.hash === '#messages543') {
+  const messagesContent = document.getElementById('Messages');
+
+  // Initial Check Based on URL Hash
+  if (window.location.hash === '#Messages') {
       messagesTab.classList.add('active');
-      messagesContent.style.display = 'block';
+      messagesContent.classList.add('show', 'active');
   } else {
-      messagesContent.style.display = 'none';
+      messagesContent.classList.remove('show', 'active');
   }
-  $('#myTab').on('shown.bs.tab', function (e) {
-      if (e.target.getAttribute('data-bs-target') === '#messages543') {
-          messagesContent.style.display = 'block';
+
+  // Listen for Bootstrap Tab Show Event
+  const myTab = document.querySelector('#myTab');
+  myTab.addEventListener('shown.bs.tab', function(e) {
+      if (e.target.getAttribute('data-bs-target') === '#Messages') {
+          messagesContent.classList.add('show', 'active');
       } else {
-          messagesContent.style.display = 'none';  
+          messagesContent.classList.remove('show', 'active');
       }
   });
 });
+
