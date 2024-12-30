@@ -78,11 +78,11 @@ if (isset($_SESSION['userid'])) {
     
             $product_status = $conversation['product_status'];
             if ($product_status == 'expired') {
-                $status_message = 'Expired';
+                $status_message = 'Ad Expired';
                 $status_color = '#d9534f'; 
             } elseif ($product_status == 'available') {
-                $status_message = 'Available';
-                $status_color = '#28a745'; 
+                $status_message = '';
+                $status_color = ''; 
             } else {
                 $status_message = 'Admin chat';
                 $status_color = '#6c757d'; 
@@ -94,7 +94,7 @@ if (isset($_SESSION['userid'])) {
             echo '
             <div class="d-flex align-items-center message-container">
                 <input type="checkbox" name="delete_conversations[]" value="' . $conversation_id . '" class="delete-checkbox" style="margin-right: 10px;">
-                <a href="#Messages" class="d-flex align-items-center message-item" onclick="loadMessages(
+                <a href="Myaccount.php?chatid='.$conversation_id.'#Messages" class="d-flex align-items-center message-item" onclick="loadMessages(
                 \'' . $conversation_id . '\', 
                 \'' . addslashes($display_name ?? '') . '\', 
                 \'' . $urlval . addslashes($product_image ?? '') . '\',
