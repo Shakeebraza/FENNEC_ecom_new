@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Allow encoded characters and spaces
+    RewriteRule ^p/([^/]+)/([^/]+)/([^/]+)$ detail.php?slug=$1&title=$2&dsc=$3 [L,QSA]
+</IfModule>
