@@ -28,227 +28,232 @@ $area = $productData['area'];
 
 ?>
 <style>
-        .btn.toggle-btn {
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-    .btn.toggle-btn.active {
-        background-color: #00494f;
-        color: white;
-    }
-    /* Slider Item Styling */
-    .slider-item {
-        position: relative;
-    }
-
-    .image-container {
-        position: relative;
-        width: 100%;
-        height: 200px;
-    }
-
-    .image-container img {
-        width: 100%;
-        height: 100%;
-    }
-
-    .image-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-    
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-    }
-
-    .image-container:hover .image-overlay {
-        opacity: 1;
-
-    }
-
-    .product-name {
-        color: #fff;
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-
-    }
-
-    .swiper-pagination.secoundpage.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
-        top: 190%;
-    }
-
-
-    @media screen and (max-width: 768px) {
-        .swiper-pagination.secoundpage.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
-            top: 275%;
-        }
-    }
-
-
-    @media screen and (max-width: 480px) {
-        .swiper-pagination.secoundpage.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
-            top: 275%;
-        }
-    }
-
-    .gallery-container {
-        padding: 30px;
-        max-width: 1200px;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    /* Gallery Title */
-    .gallery-title {
-        font-size: 2em;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 20px;
-        text-transform: uppercase;
-        border-bottom: 2px solid #ff5733;
-        display: inline-block;
-        padding-bottom: 5px;
-    }
-
-    /* Gallery Grid */
-    .gallery-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        justify-content: center;
-    }
-
-    /* Gallery Item */
-    .gallery-item {
-        position: relative;
-        width: 300px;
-        height: 200px;
-        overflow: hidden;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .gallery-item:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Video */
-    .gallery-video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 8px;
-        cursor: pointer;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .gallery-item {
-            width: 100%;
-        }
-    }
-
-    .form-check-label a {
-        color: #0d6efd;
-    }
-
-    .form-check-label a:hover {
-        text-decoration: underline;
-    }
-
-    .btn-report {
-        background: #65ff00;
-        border: none;
-        color: #000;
-    }
-
-    .btn-report:hover {
-        background: #5ce600;
-    }
-
-    .share__wrapper {
-        padding: 20px;
-        background: #f8f9fa;
-        border-radius: 8px;
-        text-align: center;
-    }
-
-    .share__title {
-        font-size: 1.2rem;
-        margin-bottom: 15px;
-        font-weight: bold;
-        color: #333;
-    }
-
-    .share__list {
-        list-style: none;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .share__item {
-        display: inline-block;
-    }
-
-    .share__link {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border: none;
-        color: white;
-        font-size: 1.5rem;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .share__link:hover {
-        transform: scale(1.1);
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .share__link--facebook {
-        background-color: #3b5998;
-    }
-
-    .share__link--twitter {
-        background-color: #1da1f2;
-    }
-
-    .share__link--linkedin {
-        background-color: #0077b5;
-    }
-
-    .share__link--mail {
-        background-color: #d44638;
-    }
-
-    .share__link--whatsapp {
-        background-color: #25d366;
-    }
-
-    .share__link i {
-        pointer-events: none;
-    }
-    .slick-prev, .slick-next {
-    color: black; 
+.btn.toggle-btn {
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.slick-prev:before, .slick-next:before {
+.btn.toggle-btn.active {
+    background-color: #00494f;
+    color: white;
+}
+
+/* Slider Item Styling */
+.slider-item {
+    position: relative;
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.image-container:hover .image-overlay {
+    opacity: 1;
+
+}
+
+.product-name {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+}
+
+.swiper-pagination.secoundpage.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
+    top: 190%;
+}
+
+
+@media screen and (max-width: 768px) {
+    .swiper-pagination.secoundpage.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
+        top: 275%;
+    }
+}
+
+
+@media screen and (max-width: 480px) {
+    .swiper-pagination.secoundpage.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
+        top: 275%;
+    }
+}
+
+.gallery-container {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Gallery Title */
+.gallery-title {
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #ff5733;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/* Gallery Grid */
+.gallery-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Gallery Item */
+.gallery-item {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Video */
+.gallery-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .gallery-item {
+        width: 100%;
+    }
+}
+
+.form-check-label a {
+    color: #0d6efd;
+}
+
+.form-check-label a:hover {
+    text-decoration: underline;
+}
+
+.btn-report {
+    background: #65ff00;
+    border: none;
+    color: #000;
+}
+
+.btn-report:hover {
+    background: #5ce600;
+}
+
+.share__wrapper {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.share__title {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #333;
+}
+
+.share__list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.share__item {
+    display: inline-block;
+}
+
+.share__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.share__link:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.share__link--facebook {
+    background-color: #3b5998;
+}
+
+.share__link--twitter {
+    background-color: #1da1f2;
+}
+
+.share__link--linkedin {
+    background-color: #0077b5;
+}
+
+.share__link--mail {
+    background-color: #d44638;
+}
+
+.share__link--whatsapp {
+    background-color: #25d366;
+}
+
+.share__link i {
+    pointer-events: none;
+}
+
+.slick-prev,
+.slick-next {
+    color: black;
+}
+
+.slick-prev:before,
+.slick-next:before {
     color: black !important;
 }
+
 #thumbnailGallery {
     display: flex;
     margin-top: 10px;
@@ -260,7 +265,8 @@ $area = $productData['area'];
 
 /* Styling the scrollbar for Webkit browsers */
 #thumbnailGallery::-webkit-scrollbar {
-    height: 8px; /* Scrollbar height */
+    height: 8px;
+    /* Scrollbar height */
 }
 
 #thumbnailGallery::-webkit-scrollbar-thumb {
@@ -279,7 +285,8 @@ $area = $productData['area'];
     gap: 10px;
     scrollbar-width: thin;
     scrollbar-color: #888 #f0f0f0;
-    scroll-behavior: smooth; /* Add smooth scrolling */
+    scroll-behavior: smooth;
+    /* Add smooth scrolling */
 }
 
 .thumb-item {
@@ -299,8 +306,10 @@ $area = $productData['area'];
     transform: scale(1.1);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
+
 .selected {
-    border: 2px solid #00494f;; 
+    border: 2px solid #00494f;
+    ;
 }
 </style>
 
@@ -310,16 +319,17 @@ $area = $productData['area'];
             <li class="breadcrumb-item"><a href="<?= $urlval ?>">Home</a></li>
 
             <li class="breadcrumb-item" aria-current="page">
-                <a href="<?= $urlval ?>category.php?slug=<?= urlencode($productData['product']['catslug'] ?? 'Not Found'); ?>">
+                <a
+                    href="<?= $urlval ?>category.php?slug=<?= urlencode($productData['product']['catslug'] ?? 'Not Found'); ?>">
                     <?php echo htmlspecialchars($productData['product']['category_name'] ?? 'Not Found'); ?>
                 </a>
             </li>
 
             <?php if (!empty($productData['product']['subcategory_name'])): ?>
-                <li class="breadcrumb-item" aria-current="page">
-                    <?php echo htmlspecialchars($productData['product']['subcategory_name']); ?>
+            <li class="breadcrumb-item" aria-current="page">
+                <?php echo htmlspecialchars($productData['product']['subcategory_name']); ?>
 
-                </li>
+            </li>
             <?php endif; ?>
         </ol>
     </nav>
@@ -336,26 +346,33 @@ $area = $productData['area'];
         }
         ?>
     </p>
-    <h2 class="mb-4"><?php echo  $fun->getFieldData('site_currency') ?><?php echo htmlspecialchars($productData['product']['price'] ?? '0.00'); ?></h2>
+    <h2 class="mb-4">
+        <?php echo  $fun->getFieldData('site_currency') ?><?php echo htmlspecialchars($productData['product']['price'] ?? '0.00'); ?>
+    </h2>
 
     <div class="row">
-    <div class="col-md-8">
-    <div style="display: flex; height: 90px; justify-content: space-around; padding: 0; background-color: #fff; border: 1px solid #00494f; gap: 5px; margin-bottom: 20px; border-radius: 10px; overflow: hidden;">
-            <button id="showGallery" class="btn toggle-btn active" style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f; border: 1px solid #00494f; border-top-left-radius: 10px; border-bottom-left-radius: 10px;">
-                <span style="font-size: 1.2em; margin-bottom: 0.5em;">Images</span>
-                <i class="fa fa-image" style="font-size: 1.5em;"></i>
-            </button>
-            <button id="showMap" class="btn toggle-btn" style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f; border: 1px solid #00494f; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
-                <span style="font-size: 1.2em; margin-bottom: 0.5em;">Map</span>
-                <i class="fa fa-map-marker-alt" style="font-size: 1.5em;"></i>
-            </button>
-    </div>
-    <div class="card one mb-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-    
+        <div class="col-md-8">
+            <div
+                style="display: flex; height: 90px; justify-content: space-around; padding: 0; background-color: #fff; border: 1px solid #00494f; gap: 5px; margin-bottom: 20px; border-radius: 10px; overflow: hidden;">
+                <button id="showGallery" class="btn toggle-btn active"
+                    style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f; border: 1px solid #00494f; border-top-left-radius: 10px; border-bottom-left-radius: 10px;">
+                    <span style="font-size: 1.2em; margin-bottom: 0.5em;">Images</span>
+                    <i class="fa fa-image" style="font-size: 1.5em;"></i>
+                </button>
+                <button id="showMap" class="btn toggle-btn"
+                    style="width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1em 0; background-color: white; color: #00494f; border: 1px solid #00494f; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
+                    <span style="font-size: 1.2em; margin-bottom: 0.5em;">Map</span>
+                    <i class="fa fa-map-marker-alt" style="font-size: 1.5em;"></i>
+                </button>
+            </div>
+            <div class="card one mb-4"
+                style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
 
-  
-    <div id="galleryContainer" class="owl-carousel owl-loaded owl-drag" style="margin-bottom: 20px; border-radius: 12px; overflow: hidden; position: relative;">
-    <?php
+
+
+                <div id="galleryContainer" class="owl-carousel owl-loaded owl-drag"
+                    style="margin-bottom: 20px; border-radius: 12px; overflow: hidden; position: relative;">
+                    <?php
     $totalImages = count($productData['gallery_images'] ?? []) ?: 1;
     if (!empty($productData['gallery_images'])) {
         if (isset($productData['gallery_images'][0]) && is_array($productData['gallery_images'][0])) {
@@ -402,11 +419,11 @@ $area = $productData['area'];
         </div>';
     }
     ?>
-</div>
+                </div>
 
 
-<div id="thumbnailGallery" style="display: flex; margin-top: 10px; overflow-x: scroll; gap: 10px;">
-    <?php
+                <div id="thumbnailGallery" style="display: flex; margin-top: 10px; overflow-x: scroll; gap: 10px;">
+                    <?php
     if (!empty($productData['gallery_images'])) {
         foreach ($productData['gallery_images'] as $index => $row) {
             echo '
@@ -420,30 +437,34 @@ $area = $productData['area'];
         }
     }
     ?>
-</div>
+                </div>
 
 
 
 
 
 
- 
-        <div id="mapContainer" style="display: none; margin-bottom: 20px; border-radius: 12px; overflow: hidden;">
-        <?php 
+
+                <div id="mapContainer"
+                    style="display: none; margin-bottom: 20px; border-radius: 12px; overflow: hidden;">
+                    <?php 
         $cleanedLocation = preg_replace('/\|+\s*/', ',', $productData['location']);  
         $cleanedLocation = trim($cleanedLocation, ', ');  
         $encodedLocation = urlencode($cleanedLocation); 
         ?>
-        <iframe width="100%" height="450" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?key=<?php echo $fun->getSiteSettingValue('google_map_key') ?>&q=<?php echo $encodedLocation ?>&maptype=roadmap"></iframe>
+                    <iframe width="100%" height="450" loading="lazy" allowfullscreen
+                        src="https://www.google.com/maps/embed/v1/place?key=<?php echo $fun->getSiteSettingValue('google_map_key') ?>&q=<?php echo $encodedLocation ?>&maptype=roadmap"></iframe>
 
-        </div>
+                </div>
 
-        <div class="card-body" style="padding: 1.5em; background: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
-            <h5 class="card-title" style="font-size: 2em; font-weight: bold; color: #333; letter-spacing: 1px; margin-bottom: 0.8em; text-transform: uppercase;">
-                <?= htmlspecialchars($productData['product']['product_name'] ?? 'Product Name'); ?>
-            </h5>
-            <div class="product-description-section">
-            <?php
+                <div class="card-body"
+                    style="padding: 1.5em; background: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+                    <h5 class="card-title"
+                        style="font-size: 2em; font-weight: bold; color: #333; letter-spacing: 1px; margin-bottom: 0.8em; text-transform: uppercase;">
+                        <?= htmlspecialchars($productData['product']['product_name'] ?? 'Product Name'); ?>
+                    </h5>
+                    <div class="product-description-section">
+                        <?php
             $fullDescription = $productData['product']['product_description'] ?? 'No description available.';
             $wordLimit = 100;
             if (str_word_count($fullDescription) > $wordLimit) {
@@ -456,29 +477,30 @@ $area = $productData['area'];
             }
             ?>
 
-                <h3 class="description-heading" style="color: #333; margin-bottom: 10px;">Description</h3>
-                <p style="line-height: 1.6; text-align: justify;" id="description-text">
-                    <?= htmlspecialchars($shortDescription); ?>
-                </p>
-                <?php if ($isTruncated): ?>
-                    <button id="readMoreButton" style="background: none; border: none; color: #00494f; cursor: pointer; ">Read more</button>
-                    <p id="fullDescription" style="display: none; line-height: 1.6; text-align: justify;">
-                        <?= htmlspecialchars($fullDescription); ?>
-                    </p>
-                <?php endif; ?>
-            </div>
+                        <h3 class="description-heading" style="color: #333; margin-bottom: 10px;">Description</h3>
+                        <p style="line-height: 1.6; text-align: justify;" id="description-text">
+                            <?= htmlspecialchars($shortDescription); ?>
+                        </p>
+                        <?php if ($isTruncated): ?>
+                        <button id="readMoreButton"
+                            style="background: none; border: none; color: #00494f; cursor: pointer; ">Read more</button>
+                        <p id="fullDescription" style="display: none; line-height: 1.6; text-align: justify;">
+                            <?= htmlspecialchars($fullDescription); ?>
+                        </p>
+                        <?php endif; ?>
+                    </div>
 
+                </div>
+            </div>
         </div>
-    </div>
-    </div>
 
 
         <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-body">
-                <h5 class="card-title"><?= $lan['seller_information'] ?></h5>
+                    <h5 class="card-title"><?= $lan['seller_information'] ?></h5>
 
-                <?php
+                    <?php
                         $usid = $productData['product']['user_id'];
                         $datauserid = $dbFunctions->getDatanotenc('users', "id='$usid'");
                         $username = $datauserid[0]['username'] ?? "Not found..";
@@ -488,7 +510,7 @@ $area = $productData['area'];
 
                     <a href="<?= $profileLink ?>" class="text-decoration-none text-dark">
                         <div class="d-flex align-items-center mb-3">
-                            <div class="rounded-circle text-white bg-secondary d-flex align-items-center justify-content-center" 
+                            <div class="rounded-circle text-white bg-secondary d-flex align-items-center justify-content-center"
                                 style="width: 50px; height: 50px; font-size: 1.5rem; font-weight: bold;">
                                 <?= $firstLetter ?>
                             </div>
@@ -496,13 +518,13 @@ $area = $productData['area'];
                         </div>
                     </a>
 
-                        <p class="card-text">
-                            <small class="text-muted"><?= $lan['posting_month'] ?></small>
-                        </p>
+                    <p class="card-text">
+                        <small class="text-muted"><?= $lan['posting_month'] ?></small>
+                    </p>
 
-                        <p class="card-text">
-                            <i class="fas fa-check-circle text-success"></i> <?= $lan['email_address_verified'] ?>
-                        </p>
+                    <p class="card-text">
+                        <i class="fas fa-check-circle text-success"></i> <?= $lan['email_address_verified'] ?>
+                    </p>
                     <?php
                     if (isset($_SESSION['userid'])) {
                         $sessionUserId = base64_decode($_SESSION['userid']);
@@ -517,8 +539,9 @@ $area = $productData['area'];
                     <?php
                     if($productUserId != $sessionUserId):
                         ?>
-                            <button onclick="startChat('<?= $encryptedProductId ?>')" class="btn btn-success w-100 mb-2"><?= $lan['chat'] ?></button>
-                            <?php endif;?>
+                    <button onclick="startChat('<?= $encryptedProductId ?>')"
+                        class="btn btn-success w-100 mb-2"><?= $lan['chat'] ?></button>
+                    <?php endif;?>
                     <?php
                         }
                     } else {
@@ -549,7 +572,7 @@ $area = $productData['area'];
                             ';
                         }
                             ?>
-                    
+
                     <?php else:
                         if (isset($_SESSION['userid'])) {
                             $sessionUserId = base64_decode($_SESSION['userid']);
@@ -577,7 +600,7 @@ $area = $productData['area'];
                         <i class="fas fa-print"></i> Print
                     </button> -->
                     <!-- Action Buttons -->
-                        <?php
+                    <?php
                         if (isset($_SESSION['userid'])) {
                             $sessionUserId = base64_decode($_SESSION['userid']);
                             $productUserId = $productData['product']['user_id'];
@@ -593,62 +616,68 @@ $area = $productData['area'];
                         </button>';
                         }
                         ?>
-                  
+
                     <div class="container mt-5">
 
 
 
-                    <form id="reportForm" style="display: none;">
-                    <input type="hidden" name="productid" value="<?= $productData['product']['product_id'] ?>">
-                    
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="reportReason" id="illegal" value="illegal">
-                        <label class="form-check-label" for="illegal">
-                            This is illegal/fraudulent
-                        </label>
-                    </div>
+                        <form id="reportForm" style="display: none;">
+                            <input type="hidden" name="productid" value="<?= $productData['product']['product_id'] ?>">
 
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="reportReason" id="spam" value="spam">
-                        <label class="form-check-label" for="spam">
-                            This ad is spam
-                        </label>
-                    </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="reportReason" id="illegal"
+                                    value="illegal">
+                                <label class="form-check-label" for="illegal">
+                                    This is illegal/fraudulent
+                                </label>
+                            </div>
 
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="reportReason" id="duplicate" value="duplicate">
-                        <label class="form-check-label" for="duplicate">
-                            This ad is a duplicate
-                        </label>
-                    </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="reportReason" id="spam" value="spam">
+                                <label class="form-check-label" for="spam">
+                                    This ad is spam
+                                </label>
+                            </div>
 
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="reportReason" id="wrongCategory" value="wrong_category">
-                        <label class="form-check-label" for="wrongCategory">
-                            This ad is in the wrong category
-                        </label>
-                    </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="reportReason" id="duplicate"
+                                    value="duplicate">
+                                <label class="form-check-label" for="duplicate">
+                                    This ad is a duplicate
+                                </label>
+                            </div>
 
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="radio" name="reportReason" id="rules" value="against_rules">
-                        <label class="form-check-label" for="rules">
-                            The ad goes against <a href="#" class="posting-rules">posting rules</a>
-                        </label>
-                    </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="reportReason" id="wrongCategory"
+                                    value="wrong_category">
+                                <label class="form-check-label" for="wrongCategory">
+                                    This ad is in the wrong category
+                                </label>
+                            </div>
 
-                    <!-- Text Area -->
-                    <textarea class="form-control mb-3" rows="3" name="additionalInfo" placeholder="Please provide more information"></textarea>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="reportReason" id="rules"
+                                    value="against_rules">
+                                <label class="form-check-label" for="rules">
+                                    The ad goes against <a href="#" class="posting-rules">posting rules</a>
+                                </label>
+                            </div>
 
-                    <!-- Footer Buttons -->
-                    <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-outline-secondary w-50" id="cancelReportBtn">Cancel</button>
-                        <?php if (isset($_SESSION['userid'])): ?>
-                            <button type="submit" class="btn btn-report w-50">Send report</button>
-                        <?php else: ?>
-                            <a href="<?= $urlval ?>LoginRegister.php" class="btn btn-report w-50">Login</a>
-                        <?php endif; ?>
-                    </div>
-                </form>
+                            <!-- Text Area -->
+                            <textarea class="form-control mb-3" rows="3" name="additionalInfo"
+                                placeholder="Please provide more information"></textarea>
+
+                            <!-- Footer Buttons -->
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-secondary w-50"
+                                    id="cancelReportBtn">Cancel</button>
+                                <?php if (isset($_SESSION['userid'])): ?>
+                                <button type="submit" class="btn btn-report w-50">Send report</button>
+                                <?php else: ?>
+                                <a href="<?= $urlval ?>LoginRegister.php" class="btn btn-report w-50">Login</a>
+                                <?php endif; ?>
+                            </div>
+                        </form>
 
                     </div>
                 </div>
@@ -693,14 +722,14 @@ $area = $productData['area'];
                     </div>
                 </div>
             </div>
-            
+
 
             <div class="card card-body">
 
                 <!-- Slick Slider -->
 
                 <div class="owl-carousel owl-theme">
-    <?php
+                    <?php
     $productMultipalinPre = $productFun->PoplarProductperMultipal();
     if ($productMultipalinPre) {
         foreach ($productMultipalinPre as $row) {
@@ -726,7 +755,7 @@ $area = $productData['area'];
         </div>';
     }
     ?>
-</div>
+                </div>
 
 
 
@@ -764,10 +793,10 @@ $area = $productData['area'];
         </div>
     </div> -->
     <?php if ($productData['product']['product_type'] != 'standard'): ?>
-        <div id="video-gallery" class="gallery-container">
-            <h2 class="gallery-title"><?= $lan['video_gallery'] ?></h2>
-            <div class="gallery-grid">
-                <?php
+    <div id="video-gallery" class="gallery-container">
+        <h2 class="gallery-title"><?= $lan['video_gallery'] ?></h2>
+        <div class="gallery-grid">
+            <?php
                 $proid = $productData['product']['product_id'];
                 $getVideoGalleryData = $dbFunctions->getDatanotenc('product_videos', "product_id ='$proid'");
 
@@ -776,26 +805,27 @@ $area = $productData['area'];
 
                     foreach ($videoPaths as $videoPath) {
                 ?>
-                        <div class="gallery-item">
-                            <video class="gallery-video" controls>
-                                <source src="<?= $urlval . htmlspecialchars($videoPath) ?>" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                        </div>
-                <?php
+            <div class="gallery-item">
+                <video class="gallery-video" controls>
+                    <source src="<?= $urlval . htmlspecialchars($videoPath) ?>" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <?php
                     }
                 } else {
                     echo "<p>No videos available for this product.</p>";
                 }
                 ?>
-            </div>
         </div>
+    </div>
     <?php endif; ?>
 
     <h3 class="mt-4 mb-3"><b><?= $lan['you_may_also_like'] ?></b></h3>
- 
-<div id="customGalleryContainer" class="owl-carousel owl-theme my-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);">
-    <?php
+
+    <div id="customGalleryContainer" class="owl-carousel owl-theme my-4"
+        style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);">
+        <?php
     $relatedProducts = $productFun->getRelatedProducts($productData['product']['category_id'], $productData['product']['product_id']);
     foreach ($relatedProducts as $relatedProduct) {
         echo '
@@ -815,7 +845,7 @@ $area = $productData['area'];
         ';
     }
     ?>
-</div>
+    </div>
 
 
 </div>
@@ -828,28 +858,29 @@ include_once 'footer.php';
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/jquery.magnific-popup.min.js"></script>
 <script>
-    document.getElementById('toggleReportBtn').addEventListener('click', function() {
-        const reportForm = document.getElementById('reportForm');
-        reportForm.style.display = reportForm.style.display === 'none' ? 'block' : 'none';
-    });
+document.getElementById('toggleReportBtn').addEventListener('click', function() {
+    const reportForm = document.getElementById('reportForm');
+    reportForm.style.display = reportForm.style.display === 'none' ? 'block' : 'none';
+});
 
-    document.getElementById('cancelReportBtn').addEventListener('click', function() {
-        document.getElementById('reportForm').style.display = 'none';
+document.getElementById('cancelReportBtn').addEventListener('click', function() {
+    document.getElementById('reportForm').style.display = 'none';
+});
+$(document).ready(function() {
+    $("#customGalleryContainer").owlCarousel({
+        items: 3,
+        loop: false,
+        autoplay: false,
+        autoplayTimeout: 2500,
+        autoplayHoverPause: false,
+        nav: true,
+        navText: false, // Custom arrows
+        dots: true,
+        margin: 10
     });
-    $(document).ready(function() {
-        $("#customGalleryContainer").owlCarousel({
-            items: 3,
-            loop: false,
-            autoplay: false,
-            autoplayTimeout: 2500,
-            autoplayHoverPause: false,
-            nav: true,
-            navText: false,  // Custom arrows
-            dots: true,
-            margin: 10
-        });
-    });
-    function startChat(productId) {
+});
+
+function startChat(productId) {
     $.ajax({
         url: '<?= $urlval ?>ajax/start_chat.php',
         type: 'POST',
@@ -861,7 +892,7 @@ include_once 'footer.php';
             if (response && response.success) {
                 // Redirect to the specific chat with the conversation ID
                 const chatId = response.conversationId;
-                window.location.href = `<?= $urlval ?>messages.php?chatid=${chatId}#messages543`;
+                window.location.href = `<?= $urlval ?>Myaccount.php?chatid=${chatId}#Messages`;
             } else {
                 alert(response.message || 'Could not start chat.');
             }
@@ -874,15 +905,15 @@ include_once 'footer.php';
 }
 
 
-    $(document).ready(function() {
+$(document).ready(function() {
     $(".owl-carousel").owlCarousel({
         items: 1,
         loop: false,
         autoplay: false,
         autoplayTimeout: 2000,
         autoplayHoverPause: false,
-        nav: false, 
-        dots: true 
+        nav: false,
+        dots: true
     });
 });
 
@@ -891,150 +922,152 @@ include_once 'footer.php';
 
 
 
-   
-    document.addEventListener('DOMContentLoaded', function () {
-        const showGalleryBtn = document.getElementById('showGallery');
-        const showMapBtn = document.getElementById('showMap');
-        const galleryContainer = document.getElementById('galleryContainer');
-        const mapContainer = document.getElementById('mapContainer');
 
-        function toggleView(buttonToActivate, buttonToDeactivate, containerToShow, containerToHide) {
-            buttonToActivate.classList.add('active');
-            buttonToActivate.style.backgroundColor = '#00494f';
-            buttonToActivate.style.color = 'white';
+document.addEventListener('DOMContentLoaded', function() {
+    const showGalleryBtn = document.getElementById('showGallery');
+    const showMapBtn = document.getElementById('showMap');
+    const galleryContainer = document.getElementById('galleryContainer');
+    const mapContainer = document.getElementById('mapContainer');
 
-            buttonToDeactivate.classList.remove('active');
-            buttonToDeactivate.style.backgroundColor = 'white';
-            buttonToDeactivate.style.color = '#00494f';
+    function toggleView(buttonToActivate, buttonToDeactivate, containerToShow, containerToHide) {
+        buttonToActivate.classList.add('active');
+        buttonToActivate.style.backgroundColor = '#00494f';
+        buttonToActivate.style.color = 'white';
 
-            containerToShow.style.display = 'block';
-            containerToHide.style.display = 'none';
-        }
+        buttonToDeactivate.classList.remove('active');
+        buttonToDeactivate.style.backgroundColor = 'white';
+        buttonToDeactivate.style.color = '#00494f';
 
-        showGalleryBtn.addEventListener('click', () => {
-            toggleView(showGalleryBtn, showMapBtn, galleryContainer, mapContainer);
-        });
-
-        showMapBtn.addEventListener('click', () => {
-            toggleView(showMapBtn, showGalleryBtn, mapContainer, galleryContainer);
-        });
-    });
-
-    document.getElementById('showMap').addEventListener('click', function() {
-        document.getElementById('galleryContainer').style.display = 'none';
-        document.getElementById('thumbnailGallery').style.display = 'none';
-        document.getElementById('mapContainer').style.display = 'block';
-    });
-    document.getElementById('showGallery').addEventListener('click', function() {
-       
-        document.getElementById('thumbnailGallery').style.display = 'flex';
-       
-    });
-   
-    document.addEventListener('DOMContentLoaded', function() {
-        const reportForm = document.getElementById('reportForm');
-        const cancelReportBtn = document.getElementById('cancelReportBtn');
-
-
-        cancelReportBtn.addEventListener('click', () => {
-            reportForm.style.display = 'none';
-        });
-
-
-        reportForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(reportForm);
-
-            fetch('<?= $urlval ?>ajax/processReport.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Your report has been submitted successfully.');
-                        reportForm.style.display = 'none';
-                    } else {
-                        alert('Failed to submit the report. Please try again.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred. Please try again.');
-                });
-        });
-    });
-
-    window.onload = setShareLinks;
-
-    function setShareLinks() {
-        var pageUrl = encodeURIComponent(document.URL);
-        var pageTitle = encodeURIComponent(document.title);
-
-        document.addEventListener('click', function(event) {
-            let url = null;
-
-            if (event.target.classList.contains('share__link--facebook')) {
-                url = "https://www.facebook.com/sharer.php?u=" + pageUrl;
-                socialWindow(url, 570, 570);
-            }
-
-            if (event.target.classList.contains('share__link--twitter')) {
-                url = "https://twitter.com/intent/tweet?url=" + pageUrl + "&text=" + pageTitle;
-                socialWindow(url, 570, 300);
-            }
-
-            if (event.target.classList.contains('share__link--linkedin')) {
-                url = "https://www.linkedin.com/shareArticle?mini=true&url=" + pageUrl;
-                socialWindow(url, 570, 570);
-            }
-
-            if (event.target.classList.contains('share__link--whatsapp')) {
-                url = "whatsapp://send?text=" + pageTitle + "%20" + pageUrl;
-                socialWindow(url, 570, 450);
-            }
-
-            if (event.target.classList.contains('share__link--mail')) {
-                url = "mailto:?subject=%22" + pageTitle + "%22&body=Read%20the%20article%20%22" + pageTitle + "%22%20on%20" + pageUrl;
-                socialWindow(url, 570, 450);
-            }
-
-        }, false);
+        containerToShow.style.display = 'block';
+        containerToHide.style.display = 'none';
     }
 
-    function socialWindow(url, width, height) {
-        var left = (screen.width - width) / 2;
-        var top = (screen.height - height) / 2;
-        var params = "menubar=no,toolbar=no,status=no,width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
-        window.open(url, "", params);
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-        const readMoreButton = document.getElementById('readMoreButton');
-        const fullDescription = document.getElementById('fullDescription');
-        const shortDescription = document.getElementById('description-text');
-        
-        if (readMoreButton) {
-            readMoreButton.addEventListener('click', function() {
-                shortDescription.style.display = 'none';
-                readMoreButton.style.display = 'none';
-                fullDescription.style.display = 'block';
+    showGalleryBtn.addEventListener('click', () => {
+        toggleView(showGalleryBtn, showMapBtn, galleryContainer, mapContainer);
+    });
+
+    showMapBtn.addEventListener('click', () => {
+        toggleView(showMapBtn, showGalleryBtn, mapContainer, galleryContainer);
+    });
+});
+
+document.getElementById('showMap').addEventListener('click', function() {
+    document.getElementById('galleryContainer').style.display = 'none';
+    document.getElementById('thumbnailGallery').style.display = 'none';
+    document.getElementById('mapContainer').style.display = 'block';
+});
+document.getElementById('showGallery').addEventListener('click', function() {
+
+    document.getElementById('thumbnailGallery').style.display = 'flex';
+
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const reportForm = document.getElementById('reportForm');
+    const cancelReportBtn = document.getElementById('cancelReportBtn');
+
+
+    cancelReportBtn.addEventListener('click', () => {
+        reportForm.style.display = 'none';
+    });
+
+
+    reportForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(reportForm);
+
+        fetch('<?= $urlval ?>ajax/processReport.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Your report has been submitted successfully.');
+                    reportForm.style.display = 'none';
+                } else {
+                    alert('Failed to submit the report. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
             });
-        }
     });
-    $(document).ready(function () {
+});
+
+window.onload = setShareLinks;
+
+function setShareLinks() {
+    var pageUrl = encodeURIComponent(document.URL);
+    var pageTitle = encodeURIComponent(document.title);
+
+    document.addEventListener('click', function(event) {
+        let url = null;
+
+        if (event.target.classList.contains('share__link--facebook')) {
+            url = "https://www.facebook.com/sharer.php?u=" + pageUrl;
+            socialWindow(url, 570, 570);
+        }
+
+        if (event.target.classList.contains('share__link--twitter')) {
+            url = "https://twitter.com/intent/tweet?url=" + pageUrl + "&text=" + pageTitle;
+            socialWindow(url, 570, 300);
+        }
+
+        if (event.target.classList.contains('share__link--linkedin')) {
+            url = "https://www.linkedin.com/shareArticle?mini=true&url=" + pageUrl;
+            socialWindow(url, 570, 570);
+        }
+
+        if (event.target.classList.contains('share__link--whatsapp')) {
+            url = "whatsapp://send?text=" + pageTitle + "%20" + pageUrl;
+            socialWindow(url, 570, 450);
+        }
+
+        if (event.target.classList.contains('share__link--mail')) {
+            url = "mailto:?subject=%22" + pageTitle + "%22&body=Read%20the%20article%20%22" + pageTitle +
+                "%22%20on%20" + pageUrl;
+            socialWindow(url, 570, 450);
+        }
+
+    }, false);
+}
+
+function socialWindow(url, width, height) {
+    var left = (screen.width - width) / 2;
+    var top = (screen.height - height) / 2;
+    var params = "menubar=no,toolbar=no,status=no,width=" + width + ",height=" + height + ",top=" + top + ",left=" +
+        left;
+    window.open(url, "", params);
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const readMoreButton = document.getElementById('readMoreButton');
+    const fullDescription = document.getElementById('fullDescription');
+    const shortDescription = document.getElementById('description-text');
+
+    if (readMoreButton) {
+        readMoreButton.addEventListener('click', function() {
+            shortDescription.style.display = 'none';
+            readMoreButton.style.display = 'none';
+            fullDescription.style.display = 'block';
+        });
+    }
+});
+$(document).ready(function() {
     var galleryImages = <?php echo json_encode($productData['gallery_images']); ?>;
 
     var owl = $("#galleryContainer").owlCarousel({
         items: 1,
-        loop: false,        
-        autoplay: false,        
-        
-        
-        nav: false,      
-        dots: true,           
+        loop: false,
+        autoplay: false,
+
+
+        nav: false,
+        dots: true,
         margin: 10,
-       
+
     }).data('owl.carousel');
 
     $('.view-button').magnificPopup({
@@ -1046,39 +1079,33 @@ include_once 'footer.php';
 
     var isTransitioning = false;
 
-  
-    $('#thumbnailGallery').on('click', '.thumb-item img', function () {
-        var index = $(this).data('index');  
 
-      
+    $('#thumbnailGallery').on('click', '.thumb-item img', function() {
+        var index = $(this).data('index');
+
+
         $('#thumbnailGallery .thumb-item img').removeClass('selected').css('opacity', '1');
 
-       
+
         $(this).addClass('selected').css('opacity', '0.5');
 
-     
-        if (!isTransitioning) {
-            isTransitioning = false; 
 
-            
+        if (!isTransitioning) {
+            isTransitioning = false;
+
+
             $('#galleryContainer').trigger('to.owl.carousel', [index, 500]);
 
-          
-            owl.trigger('stop.owl.autoplay');  
 
-        
+            owl.trigger('stop.owl.autoplay');
+
+
             setTimeout(function() {
-                isTransitioning = false;  
-            }, 500);  
+                isTransitioning = false;
+            }, 500);
         }
     });
 });
-
-
-
-
-
-
 </script>
 </body>
 
