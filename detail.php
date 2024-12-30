@@ -734,7 +734,7 @@ $area = $productData['area'];
     if ($productMultipalinPre) {
         foreach ($productMultipalinPre as $row) {
             $imgproductpre = $urlval . $row['image'];
-            $detailsurl = $urlval . "detail.php?slug=" . $row['slug'];
+            $detailsurl = $urlval . "p/" . urlencode($row['slug']) . '/' . urlencode($row['name']) . '/' . urlencode($row['description']);
             $productName = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
             echo '
             <div class="item">
@@ -831,7 +831,7 @@ $area = $productData['area'];
         echo '
         <div class="item d-flex flex-column align-items-center">
             <div class="slide-content text-center p-3">
-                <a href="' . $urlval . 'detail.php?slug=' . $relatedProduct['slug'] . '">
+                <a href="' . $urlval . 'p/' . urlencode($relatedProduct['slug']) . '/' . urlencode($relatedProduct['title']) . '/' . urlencode($relatedProduct['title']) . '">
                     <img 
                         src="' . htmlspecialchars($urlval . $relatedProduct['image']) . '" 
                         alt="' . htmlspecialchars($relatedProduct['title']) . '" 

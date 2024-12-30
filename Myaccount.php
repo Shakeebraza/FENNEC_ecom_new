@@ -230,7 +230,7 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
                     <a data-productid="' . $favorite['id'] . '" id="favorite-button" style="position: absolute; top: 10px; right: 10px; color: #f00;">
                         <i class="fas fa-heart heart-icon" style="font-size: 1.5rem;"></i>
                     </a>
-                    <a href="'.$urlval.'detail.php?slug='.$favorite['slug'].'" style="text-decoration: none; color: inherit;">
+                    <a href="'.$urlval.'p/'.urlencode($favorite['slug']).'/'.urlencode($favorite['name']).'/' .urlencode($description).'" style="text-decoration: none; color: inherit;">
                         <div class="p-3" style="background-color: #fff;">
                             <h5 class="mb-1" style="font-size: 1.25rem; font-weight: bold;">' . htmlspecialchars($favorite['name']) . '</h5>
                             <p class="mb-2" style="font-size: 1rem; color: #555;">' . htmlspecialchars($description) . '</p>
