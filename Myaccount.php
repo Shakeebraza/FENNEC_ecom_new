@@ -401,6 +401,7 @@ include_once 'messages-inner.php';
 
 
 <?php
+include_once 'pop.php';
 include_once 'footer.php';
 ?>
 <script src="<?= $urlval ?>custom/js/messages.js"></script>
@@ -952,18 +953,42 @@ function updateUrlWithChatId(chatId) {
     }, '', newUrl);
 }
 
+let conversationIdToDelete = null;
+
 function deleteConversation(conversationId) {
+    // Store the conversationId and show the popup
+    conversationIdToDelete = conversationId;
+    document.querySelector('.containermain').style.display = 'flex';
+}
+
+function closePopup() {
+    // Hide the popup and reset conversationId
+    document.querySelector('.containermain').style.display = 'none';
+    conversationIdToDelete = null;
+}
+
+function proceedDelete() {
+    // Check if a radio button is selected
+    const selectedOption = document.querySelector('input[name="sold"]:checked');
+    if (!selectedOption) {
+        alert('Please select whether the item was sold.');
+        return;
+    }
+
+    const soldValue = selectedOption.value;
+
+    // Proceed with AJAX only if user confirms and selects an option
     $.ajax({
         url: '<?= $urlval?>ajax/deleteConversation.php',
         type: 'POST',
         dataType: 'json',
         data: {
-            conversation_id: conversationId
+            conversation_id: conversationIdToDelete,
+            sold: soldValue
         },
         success: function(response) {
             if (response.success) {
                 alert(response.message);
-
                 location.reload();
             } else {
                 alert(response.message);
@@ -974,6 +999,9 @@ function deleteConversation(conversationId) {
             alert('Error connecting to server. Please try again.');
         }
     });
+
+    // Hide the popup after making the AJAX call
+    closePopup();
 }
 document.addEventListener('click', function(e) {
     if (e.target.closest('.send-email-btn')) { // Check if the click is on the <i> tag or its child
