@@ -93,7 +93,7 @@ if (isset($_SESSION['userid'])) {
     
             echo '
             <div class="d-flex align-items-center message-container">
-                <input type="checkbox" name="delete_conversations[]" value="' . $conversation_id . '" class="delete-checkbox" style="margin-right: 10px;">
+                <input type="checkbox" name="delete_conversations[]" value="' . base64_decode($conversation_id) . '" class="delete-checkbox" style="margin-right: 10px;">
                 <a href="Myaccount.php?chatid='.$conversation_id.'#Messages" class="d-flex align-items-center message-item" onclick="loadMessages(
                 \'' . $conversation_id . '\', 
                 \'' . addslashes($display_name ?? '') . '\', 
@@ -110,6 +110,9 @@ if (isset($_SESSION['userid'])) {
                         <small style="font-size: 10px; color: #555;">Last message at ' . $last_message_time . '</small>
                     </div>
                 </a>
+                <div class="mail-icon" style=>
+                    <i class="fas fa-envelope" title="Send Mail" onclick="sendMail(\'' . $conversation_id . '\')"></i>
+                </div>
                 <div class="delete-icon">
                     <i class="fas fa-trash-alt" title="Delete" onclick="deleteConversation(\'' . $conversation_id . '\')"></i>
                 </div>

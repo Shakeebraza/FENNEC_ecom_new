@@ -161,6 +161,18 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
 .message-container:hover .delete-icon {
     display: block;
 }
+
+.mail-icon {
+    margin-right: 10px;
+    color: #00494F;
+    cursor: pointer;
+    display: none;
+    font-size: 18px;
+}
+
+.message-container:hover .mail-icon {
+    display: block;
+}
 </style>
 
 <div class="container mt-4 pb-5">
@@ -1023,6 +1035,29 @@ document.getElementById('deleteChatButton').addEventListener('click', function()
     }
 });
 
+function sendMail(conversationId) {
+
+    $.ajax({
+        url: '<?= $urlval?>ajax/sendMailmsg.php',
+        type: 'POST',
+        data: {
+            conversation_id: conversationId,
+        },
+        success: function(response) {
+
+            let data = JSON.parse(response);
+            if (data.success) {
+                alert("Mail has been sent successfully!");
+            } else {
+                alert("Error: " + data.message);
+            }
+        },
+        error: function(xhr, status, error) {
+
+            alert("An error occurred while sending the mail: " + error);
+        }
+    });
+}
 document.addEventListener('DOMContentLoaded', function() {
     const favoriteButton = document.getElementById('favorite-button');
 
