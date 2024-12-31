@@ -787,7 +787,7 @@ document.getElementById('file-upload').addEventListener('change', function(event
         reader.onload = function(e) {
             const imagePreview = document.getElementById('image-preview');
             imagePreview.innerHTML =
-                `<img src="${e.target.result}" style="max-width: 100px; max-height: 100px; border-radius: 10px;">`;
+                `<img src="${e.target.result}" style="max-width: 86px; max-height: 100px; border-radius: 10px; margin-right: 10px;">`;
             document.getElementById('image-file').value = e.target.result;
         };
         reader.readAsDataURL(file);

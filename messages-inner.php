@@ -938,13 +938,19 @@ div#chat-list {
                                     style="padding: 10px; background-color: #f9f9f9; display:none; position: sticky; top: 0; z-index: 10;">
                                     <form id="send-message-form" action="javascript:void(0);" method="POST"
                                         enctype="multipart/form-data" style="display: flex; align-items: center;">
-                                        <div style="margin: 0px 9px;">
-                                            <label for="file-upload" style="cursor: pointer;">
+                                        <div style="margin: 0px 9px; display: flex; align-items: center;">
+                                            <label for="file-upload" style="cursor: pointer; display: inline-block;">
                                                 <i class="fa fa-paperclip" aria-hidden="true"
                                                     style="font-size: 20px; color: #00494f;"></i>
                                             </label>
                                             <input type="file" id="file-upload" name="attachments[]"
                                                 style="display: none;" accept="image/*">
+                                        </div>
+
+                                        <!-- Image preview container -->
+                                        <div id="image-preview"
+                                            style="display: flex; margin-top: 10px; align-items: center;">
+                                            <!-- This is where the image preview will go -->
                                         </div>
 
                                         <div class="emoji-picker" style="position: relative; margin: 0px 9px;">
@@ -970,7 +976,6 @@ div#chat-list {
 
 
 
-                                    <div id="image-preview" style="margin-top: 10px;"></div>
 
                                 </div>
 
