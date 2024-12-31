@@ -311,6 +311,55 @@ $area = $productData['area'];
     border: 2px solid #00494f;
     ;
 }
+
+.owl-carousel-container {
+    position: relative;
+
+}
+
+.custom-nav {
+    position: absolute;
+    top: 50%;
+
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+
+    align-items: center;
+    transform: translateY(-50%);
+
+    pointer-events: none;
+
+}
+
+.owl-prev-btn,
+.owl-next-btn {
+    background-color: #000;
+
+    color: #fff;
+
+    border: none;
+    width: 40px;
+    height: 40px;
+
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: all;
+
+    transition: background-color 0.3s ease;
+}
+
+.owl-prev-btn:hover,
+.owl-next-btn:hover {
+    background-color: #333;
+
+}
 </style>
 
 <div class="container mt-4">
@@ -373,52 +422,52 @@ $area = $productData['area'];
                 <div id="galleryContainer" class="owl-carousel owl-loaded owl-drag"
                     style="margin-bottom: 20px; border-radius: 12px; overflow: hidden; position: relative;">
                     <?php
-    $totalImages = count($productData['gallery_images'] ?? []) ?: 1;
-    if (!empty($productData['gallery_images'])) {
-        if (isset($productData['gallery_images'][0]) && is_array($productData['gallery_images'][0])) {
-            usort($productData['gallery_images'], function ($a, $b) {
-                return $a['sort'] <=> $b['sort'];
-            });
+                        $totalImages = count($productData['gallery_images'] ?? []) ?: 1;
+                        if (!empty($productData['gallery_images'])) {
+                            if (isset($productData['gallery_images'][0]) && is_array($productData['gallery_images'][0])) {
+                                usort($productData['gallery_images'], function ($a, $b) {
+                                    return $a['sort'] <=> $b['sort'];
+                                });
 
-            foreach ($productData['gallery_images'] as $row) {
-                echo '
-                <div class="item" style="position: relative;">
-                    <a href="' . $urlval . $row['image_path'] . '" class="popup-image">
-                        <img class="view-button"  src="' . $urlval . $row['image_path'] . '" class="card-img-top" alt="Not found Image" 
-                        style="width: 100%; height: 80%; max-height: 400px; object-fit: contain; border-radius: 12px;" data-mfp-src="' . $urlval . $row['image_path'] . '">
-                    </a>
-                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
-                        <i class="fas fa-camera"></i> ' . $totalImages . '
-                    </div>
-                </div>';
-            }
-        } else {
-            foreach ($productData['gallery_images'] as $imagePath) {
-                echo '
-                <div class="item" style="position: relative;">
-                    <a href="' . $urlval . $imagePath . '" class="popup-image">
-                        <img class="view-button" src="' . $urlval . $imagePath . '" class="card-img-top" alt="Not found Image" 
-                        style="width: 100%; height: 80%; max-height: 400px; object-fit: contain; border-radius: 12px;" data-mfp-src="' . $urlval . $imagePath . '">
-                    </a>
-                    <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
-                        <i class="fas fa-camera"></i> ' . $totalImages . '
-                    </div>
-                </div>';
-            }
-        }
-    } else {
-        echo '
-        <div class="item" style="position: relative;">
-            <a href="' . $urlval . $productData['product']['proimage'] . '" class="popup-image">
-                <img class="view-button"  src="' . $urlval . $productData['product']['proimage'] . '" class="card-img-top" alt="Not found Image" 
-                style="width: 100%; height: 80%; max-height: 400px; object-fit: contain; border-radius: 12px;" data-mfp-src="' . $urlval . $productData['product']['proimage'] . '">
-            </a>
-            <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
-                <i class="fas fa-camera"></i> ' . $totalImages . '
-            </div>
-        </div>';
-    }
-    ?>
+                                foreach ($productData['gallery_images'] as $row) {
+                                    echo '
+                                    <div class="item" style="position: relative;">
+                                        <a href="' . $urlval . $row['image_path'] . '" class="popup-image">
+                                            <img class="view-button"  src="' . $urlval . $row['image_path'] . '" class="card-img-top" alt="Not found Image" 
+                                            style="width: 100%; height: 80%; max-height: 400px; object-fit: contain; border-radius: 12px;" data-mfp-src="' . $urlval . $row['image_path'] . '">
+                                        </a>
+                                        <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
+                                            <i class="fas fa-camera"></i> ' . $totalImages . '
+                                        </div>
+                                    </div>';
+                                }
+                            } else {
+                                foreach ($productData['gallery_images'] as $imagePath) {
+                                    echo '
+                                    <div class="item" style="position: relative;">
+                                        <a href="' . $urlval . $imagePath . '" class="popup-image">
+                                            <img class="view-button" src="' . $urlval . $imagePath . '" class="card-img-top" alt="Not found Image" 
+                                            style="width: 100%; height: 80%; max-height: 400px; object-fit: contain; border-radius: 12px;" data-mfp-src="' . $urlval . $imagePath . '">
+                                        </a>
+                                        <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
+                                            <i class="fas fa-camera"></i> ' . $totalImages . '
+                                        </div>
+                                    </div>';
+                                }
+                            }
+                        } else {
+                            echo '
+                            <div class="item" style="position: relative;">
+                                <a href="' . $urlval . $productData['product']['proimage'] . '" class="popup-image">
+                                    <img class="view-button"  src="' . $urlval . $productData['product']['proimage'] . '" class="card-img-top" alt="Not found Image" 
+                                    style="width: 100%; height: 80%; max-height: 400px; object-fit: contain; border-radius: 12px;" data-mfp-src="' . $urlval . $productData['product']['proimage'] . '">
+                                </a>
+                                <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 14px; z-index: 1000;">
+                                    <i class="fas fa-camera"></i> ' . $totalImages . '
+                                </div>
+                            </div>';
+                        }
+                        ?>
                 </div>
 
 
@@ -1057,19 +1106,31 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 $(document).ready(function() {
     var galleryImages = <?php echo json_encode($productData['gallery_images']); ?>;
-
     var owl = $("#galleryContainer").owlCarousel({
         items: 1,
         loop: false,
         autoplay: false,
-
-
         nav: false,
         dots: true,
-        margin: 10,
-
+        margin: 10
     }).data('owl.carousel');
 
+
+    $("#galleryContainer").append(
+        '<div class="custom-nav">' +
+        '<button class="owl-prev-btn">&lt;</button>' +
+        '<button class="owl-next-btn">&gt;</button>' +
+        '</div>'
+    );
+
+
+    $(".owl-prev-btn").click(function() {
+        owl.prev(); // Go to the previous slide
+    });
+
+    $(".owl-next-btn").click(function() {
+        owl.next(); // Go to the next slide
+    });
     $('.view-button').magnificPopup({
         type: 'image',
         gallery: {
