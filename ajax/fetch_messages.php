@@ -102,24 +102,31 @@ if (isset($_SESSION['userid'])) {
                     $sender = (isset($message['sender_id']) && $message['sender_id'] == $UserId) ? 'sender' : 'receiver';
                     $created_at = date("h:i a", strtotime($message['message_created_at']));
                 
-                    // Check if there are attachments (images)
+           
                     $attachments = isset($message['attachments']) ? explode(',', $message['attachments']) : [];
                 
                     echo '<li class="' . $sender . '" style="margin-bottom: 15px; word-wrap: break-word; padding: 10px; border-radius: 10px; width: 40%; background-color: ' . ($sender == 'sender' ? '#e1f7d5' : '#f0f0f0') . ';margin-left: ' . ($sender == 'sender' ? '50%' : '0%') . '; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">';
                     echo '<p style="text-align: start; padding-left: 7px; margin: 0; font-size: 14px;">' . $message_text . '</p>';
                 
-                    // Display attachments (images)
+                
                     if (!empty($attachments)) {
                         foreach ($attachments as $attachment) {
-                            // Check if the attachment is an image
+                            
                             if (in_array(pathinfo($attachment, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
                                 echo '<img src="' . $urlval . 'upload/messages/' . htmlspecialchars($attachment) . '" alt="Image attachment" style="max-width: 100%; height: auto; margin-top: 10px; border-radius: 8px;" />';
                             }
                         }
                     }
-                
+                    
                     echo '<span class="time" style="font-size: 12px; color: #888; display: block; text-align: right;">' . $created_at . '</span>';
-                    echo '</li>';
+                    echo '<button class="send-email-btn" data-message-id="' . htmlspecialchars($message['message_id']) . '" style="background: none; border: none; cursor: pointer; margin-top: 10px;">';
+                    echo '<i class="fa fa-envelope" aria-hidden="true"></i>';
+                    echo '</button>';
+                    echo '</li>
+                    
+                    ';
+
+                    
                 }
                 
 

@@ -3,7 +3,7 @@ include('smtp/PHPMailerAutoload.php');
 
 // echo smtp_mailer('shakeebrazamuhammad@gmail.com', 'test mail', 'hello world');
 
-function smtp_mailer($to, $subject, $msg) {
+function smtp_mailer($to, $subject, $msg, $attachments = []) {
     $mail = new PHPMailer(); 
     $mail->IsSMTP(); 
     $mail->SMTPAuth = true; 
@@ -20,6 +20,16 @@ function smtp_mailer($to, $subject, $msg) {
     $mail->Body = $msg;
     $mail->AddAddress($to);
 
+    // Ensure $attachments is an array before processing
+    if (is_array($attachments)) {
+        foreach ($attachments as $filePath) {
+            if (file_exists($filePath)) {
+                $mail->addAttachment($filePath);
+            } else {
+                error_log('Attachment missing: ' . $filePath);
+            }
+        }
+    }
 
     $mail->SMTPOptions = array(
         'ssl' => array(
@@ -30,9 +40,11 @@ function smtp_mailer($to, $subject, $msg) {
     );
 
     if (!$mail->Send()) {
-        echo $mail->ErrorInfo;
+        error_log('Mailer Error: ' . $mail->ErrorInfo);
+        return $mail->ErrorInfo;
     } else {
         return 'Sent';
     }
 }
+
 ?>

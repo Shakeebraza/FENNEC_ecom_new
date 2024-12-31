@@ -963,6 +963,32 @@ function deleteConversation(conversationId) {
         }
     });
 }
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.send-email-btn')) { // Check if the click is on the <i> tag or its child
+        const messageId = e.target.closest('.send-email-btn').dataset.messageId;
+        fetch('<?= $urlval?>ajax/send_email.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message_id: messageId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Email sent successfully!');
+                } else {
+                    alert('Failed to send email: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while sending the email.');
+            });
+    }
+});
 
 document.getElementById('deleteChatButton').addEventListener('click', function() {
     var selectedConversations = [];
