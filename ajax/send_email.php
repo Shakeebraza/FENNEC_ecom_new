@@ -23,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 $subject = 'Message from Conversation';
-                $mesg = htmlspecialchars_decode($messageData['message']);
-                $message=empty($mesg) ?? "Attachment";
+                $message = !empty($messageData['message'])?$messageData['message']:$urlval.'upload/messages/'.$messageData['attachments'];
+             
                 // Process a single attachment if it exists
                 $attachment = $messageData['attachments'];
                 $attachmentPath = null;
