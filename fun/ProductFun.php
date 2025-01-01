@@ -1598,7 +1598,7 @@ Class Productfun{
         ];
     }
 
-    function getProductsForUser($userId, $lan) {
+    function getProductsForUser($userId, $lan, $filter = 'all') {
         if ($userId) {
             $query = "
                 SELECT id, name, slug, description, extension, image, price, created_at, product_type
@@ -1612,23 +1612,75 @@ Class Productfun{
             $stmt->execute();
     
             $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
     
             if (!empty($products)) {
-                $this->displayProducts($products, $lan);
+                $filteredProducts = array_filter($products, function ($product) use ($filter) {
+                    $createdDate = new DateTime($product['created_at']);
+                    $expiryDays = ($product['extension'] == 1) ? 30 : 20;
+                    $expiryDate = (clone $createdDate)->modify("+$expiryDays days");
+                    $isExpired = (new DateTime() > $expiryDate);
+    
+                    if ($filter === 'active') {
+                        return !$isExpired;
+                    } elseif ($filter === 'expired') {
+                        return $isExpired;
+                    }
+                    return true;
+                });
+                if (!empty($filteredProducts)) {
+                    $this->displayProducts($filteredProducts, $lan);
+                } else {
+                    echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
+                }
             } else {
-                echo '
-                <div class="col-md-4 offset-md-4 mb-4">
-                    <div class="card product-card" style="border: none; box-shadow: none; background: #fff;">
-                        <div class="card-body text-center">
-                            <h5 style="color: red; font-weight: bold; font-size: 1.5rem;">No Ads Found</h5>
-                            <p style="color: #555; font-size: 1rem;">Upload your first product to get started!</p>
-                        </div>
-                    </div>
-                </div>
-                ';
+                echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
             }
         } else {
-            return $lan['No_products_found_for_user']; 
+            echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
+        }
+    }
+    
+    function getProductsForUserexp($userId, $lan, $filter) {
+        if ($userId) {
+            $query = "
+                SELECT id, name, slug, description, extension, image, price, created_at, product_type
+                FROM products
+                WHERE user_id = :user_id AND is_enable = 1 AND status = 'active'
+                ORDER BY FIELD(product_type, 'premium', 'gold', 'standard'), created_at DESC
+            ";
+    
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+    
+            if (!empty($products)) {
+                $filteredProducts = array_filter($products, function ($product) use ($filter) {
+                    $createdDate = new DateTime($product['created_at']);
+                    $expiryDays = ($product['extension'] == 1) ? 60 : 30;
+                    $expiryDate = (clone $createdDate)->modify("+$expiryDays days");
+                    $isExpired = (new DateTime() > $expiryDate);
+                    if ($filter === 'active') {
+                        return !$isExpired;
+                    } elseif ($filter === 'expired') {
+                        return $isExpired;
+                    }
+                    return true;
+                });
+               
+                if (!empty($filteredProducts)) {
+                    return $filteredProducts;
+                } else {
+                    echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
+                }
+            } else {
+                echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
+            }
+        } else {
+            echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
         }
     }
     
