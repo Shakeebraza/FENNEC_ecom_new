@@ -15,7 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $products = $productFun->getProductsForUserexp($userId, $lan,$filter);
-    $productsren = $productFun->displayProducts($products, $lan);
+    if(!empty($products)){
+        
+        $productsren = $productFun->displayProducts($products, $lan);
+    }else{
+        
+    }
 
 } else {
     echo '<p>Invalid request method.</p>';
