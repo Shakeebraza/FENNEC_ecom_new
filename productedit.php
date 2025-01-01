@@ -18,7 +18,44 @@ $slug = $_GET['slug'];
 $product = $productFun->getProductDetailsBySlugnew($slug);
 
 ?>
+<style>
+  input#gallery {
+    height: 50px !important;
+    width: 50px !important;
+    padding: 60px !important;
+    background: url("custom/asset/add-image-icon.ea516b80c0402f99dfb041ba4db057ce\ \(1\).png") no-repeat;
+    background-size: contain;
+    background-position: center;
+    background-color: #ECEDEF;
 
+}
+
+.upld-free-imag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+input#gallery {
+    -webkit-appearance: none;
+    appearance: none;
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+.fdfadfbfhfkj {
+    padding: 20px;
+    background: #ECEDEF;
+    border-radius: 10px;
+    border: 1px dashed bl;
+}
+
+.fdfadfbfhfkj img {
+    height: 50px !important;
+    width: 50px !important;
+}
+</style>
 
 <div class="card col-6 mt-5 m-auto mb-5">
   <div class="card-header">
@@ -260,23 +297,22 @@ $product = $productFun->getProductDetailsBySlugnew($slug);
           }
           ?>
         </div>
-        <input
-          class="form-control"
-          type="file"
-          id="gallery"
-          name="gallery[]"
-          multiple
-          style="
-            display: block; 
-            margin-top: 20px; 
-            border-radius: 5px; 
-            padding: 10px; 
-            font-size: 14px; 
-            border: 1px solid #ccc;
-        " />
+        <div class="form-group mb-3"
+                    style="padding: 20px;border: 1px dashed #d8d6d9 ;border-radius: 10px;box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);display: grid;justify-content: center;">
+                    <div class="upld-free-imag d-flex w-100">
+                        <input type="file" id="gallery" name="gallery[]" accept="image/*" multiple>
+                    </div>
+                    <label for="gallery" class="custom-file-upload D-FLEX">
+                        <div class="fdfadfbfhfkj">
+                            <img src="custom/asset/add-image-icon.ea516b80c0402f99dfb041ba4db057ce (1).png" alt="">
+                        </div>
+                    </label>
+                    
+                </div>
       </div>
 
       <button type="submit" class="btn btn-success float-end mt-3">Update Listing</button>
+      <button type="button" class="btn btn-secondary float-end mt-3 me-2" onclick="goBack()">Cancel</button>
     </form>
   </div>
 </div>
@@ -323,43 +359,42 @@ include_once 'footer.php';
 
 
     Sortable.create(imagePreview, {
-      animation: 150,
-      ghostClass: 'sortable-ghost',
-      onEnd: function(evt) {
+    animation: 150,
+    ghostClass: 'sortable-ghost',
+    onEnd: function(evt) {
 
         const updatedOrder = [];
         document.querySelectorAll('.image-card').forEach((card, index) => {
-          const key = card.querySelector('.delete-btn').getAttribute('data-key');
-          updatedOrder.push({
-            key: key,
-            sort: index
-          });
+            const key = card.querySelector('.delete-btn').getAttribute('data-key');
+            const url = card.querySelector('img').getAttribute('src');  
+            updatedOrder.push({
+                key: key,
+                sort: index,
+                url: url  
+            });
         });
-
-        // console.log('Updated Order:', updatedOrder);
-
 
         fetch('<?= $urlval ?>ajax/update_sort_order.php', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              order: updatedOrder
+                order: updatedOrder
             })
-          })
-          .then(response => response.json())
-          .then(data => {
+        })
+        .then(response => response.json())
+        .then(data => {
             if (data.success) {
-              // console.log('Sort order updated successfully');
+      
             } else {
-              alert('Error updating sort order');
+                alert('Error updating sort order');
             }
-          })
-          .catch(error => console.error('Error:', error));
-      }
-    });
-  });
+        })
+        .catch(error => console.error('Error:', error));
+    }
+});
+});
 
   $('#productForm').on('submit', function(e) {
     e.preventDefault();
@@ -380,7 +415,10 @@ include_once 'footer.php';
       success: function(response) {
         if (response.success) {
           $('.btn-success').hide();
-          $('.btn-success').after('<div class="alert alert-success mt-3">Listing updated successfully!</div>');
+          $('.btn-success').after('<div class="alert alert-success mt-3">Ads updated successfully!</div>');
+          setTimeout(function() {
+                            window.location.href = '<?=$urlval?>success_page.php';
+                        }, 1000); 
           showSuccessAlert();
         } else {
 
@@ -470,6 +508,94 @@ include_once 'footer.php';
       $('#subcategory').html('<option value="" disabled selected>Select a city</option>');
     }
   });
+
+  document.getElementById('gallery').addEventListener('change', function(e) {
+    const files = e.target.files;
+    const previewContainer = document.getElementById('imagePreview');
+
+    // Check the current number of images in the preview container
+    if (previewContainer.children.length >= 8) {
+        alert('You can only upload up to 8 images.');
+        return; // Prevent further upload if 8 images are already present
+    }
+
+    for (let i = 0; i < files.length; i++) {
+        if (previewContainer.children.length >= 8) break; // Stop if 8 images are already uploaded
+
+        const file = files[i];
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+            const imageUrl = event.target.result;
+
+            // Create the image card
+            const imageCard = document.createElement('div');
+            imageCard.classList.add('image-card');
+            imageCard.style.cssText = `
+                position: relative;
+                width: 120px;
+                height: 120px;
+                overflow: hidden;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                cursor: grab;
+            `;
+            imageCard.setAttribute('draggable', 'true');
+
+            // Create the image element
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.style.cssText = `
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 8px;
+            `;
+
+            // Create the delete button with a distinct style
+            const deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
+            deleteBtn.classList.add('btn', 'btn-danger', 'btn-sm');
+            deleteBtn.style.cssText = `
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                background-color: #ff4d4d;  /* More distinct red */
+                color: white;
+                border: none;
+                border-radius: 50%;
+                font-size: 16px;   /* Larger button */
+                width: 30px;
+                height: 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            `;
+            deleteBtn.innerHTML = '&times;';
+            
+          
+            deleteBtn.addEventListener('click', function() {
+                previewContainer.removeChild(imageCard);  
+            });
+
+      
+            imageCard.appendChild(img);
+            imageCard.appendChild(deleteBtn);
+
+        
+            previewContainer.appendChild(imageCard);
+        };
+
+      
+        reader.readAsDataURL(file);
+    }
+});
+function goBack() {
+    window.history.back(); 
+  }
 </script>
 
 

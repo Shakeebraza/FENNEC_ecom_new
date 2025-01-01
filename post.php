@@ -359,7 +359,7 @@ input#gallery {
                         <option value="new">New</option>
                         <option value="used">Used</option>
                     </select>
-                    <div class="text-danger" id="conditionError"></div> <!-- Error message -->
+                    <div class="text-danger" id="conditionError"></div> 
                 </div>
                 <div class="mb-3">
                     <label for="adTitle" class="form-label">Ad Title<span style="color: red;">*</span></label>
@@ -391,9 +391,9 @@ input#gallery {
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="aera" class="form-label">Aera</label>
+                    <label for="aera" class="form-label">Area</label>
                     <select class="form-select" id="aera" name="aera">
-                        <option value="" disabled>Select Aera</option>
+                        <option value="" disabled>Select Area</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -593,43 +593,53 @@ input#gallery {
     }
 
     document.getElementById('gallery').addEventListener('change', function(event) {
-        const imagePreview = document.getElementById('imagePreview');
-        imagePreview.innerHTML = '';
+    const imagePreview = document.getElementById('imagePreview');
+    imagePreview.innerHTML = '';  // Clear previous previews
 
-        const files = event.target.files;
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const reader = new FileReader();
+    const files = event.target.files;
+    const filesToShow = files.length > 8 ? Array.from(files).slice(files.length - 8) : files;
 
-            reader.onload = function(e) {
-                const imgContainer = document.createElement('div');
-                imgContainer.style.position = 'relative';
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                imgContainer.appendChild(img);
 
-                const removeButton = document.createElement('button');
-                removeButton.innerText = 'X';
-                removeButton.style.position = 'absolute';
-                removeButton.style.top = '0px';
-                removeButton.style.right = '10px';
-                removeButton.style.background = 'red';
-                removeButton.style.color = 'white';
-                removeButton.style.border = 'none';
-                removeButton.style.borderRadius = '5px';
-                removeButton.style.padding = '3px';
-                removeButton.style.cursor = 'pointer';
-                removeButton.onclick = function() {
-                    imgContainer.remove();
-                }
+    filesToShow.forEach(function(file) {
+        const reader = new FileReader();
 
-                imgContainer.appendChild(removeButton);
-                imagePreview.appendChild(imgContainer);
+        reader.onload = function(e) {
+            const imgContainer = document.createElement('div');
+            imgContainer.style.position = 'relative';
+            imgContainer.style.margin = '5px';
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.width = '100px';  
+            img.style.height = '100px'; 
+            img.style.objectFit = 'cover'; 
+
+    
+            const removeButton = document.createElement('button');
+            removeButton.innerText = 'X';
+            removeButton.style.position = 'absolute';
+            removeButton.style.top = '0px';
+            removeButton.style.right = '0px';
+            removeButton.style.background = 'red';
+            removeButton.style.color = 'white';
+            removeButton.style.border = 'none';
+            removeButton.style.borderRadius = '5px';
+            removeButton.style.padding = '3px';
+            removeButton.style.cursor = 'pointer';
+
+            removeButton.onclick = function() {
+                imgContainer.remove(); 
             }
 
-            reader.readAsDataURL(file);
+      
+            imgContainer.appendChild(img);
+            imgContainer.appendChild(removeButton);
+            imagePreview.appendChild(imgContainer);
         }
+
+        reader.readAsDataURL(file);
     });
+});
 
     $(document).ready(function() {
         // Fetch cities based on country selection
@@ -710,7 +720,7 @@ input#gallery {
                         // Redirect to success_page.php after 5 seconds
                         setTimeout(function() {
                             window.location.href = '<?=$urlval?>success_page.php';
-                        }, 5000); // 5000 ms = 5 seconds
+                        }, 5000); 
                     } else if (parsedResponse.errors) {
                         handleErrors(parsedResponse.errors);
                     }
@@ -811,6 +821,8 @@ input#gallery {
             }
         });
     });
+
+
     </script>
 
 </body>
