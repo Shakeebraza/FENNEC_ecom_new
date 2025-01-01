@@ -2,14 +2,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const editContactDetailsBtn = document.getElementById("editContactDetailsBtn");
   const editPasswordBtn = document.getElementById("editPasswordBtn");
   
-  // Update the contactFields to match your HTML input IDs
+
   const contactFields = ["country", "city", "contactNumber"];
   const passwordField = document.getElementById("password");
 
 
 
 
-  // Image preview functionality
+
   const imageInput = document.getElementById("images");
   const imagePreview = document.getElementById("imagePreview");
 
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const messagesTab = document.getElementById('messages-tab');
   const messagesContent = document.getElementById('Messages');
 
-  // Initial Check Based on URL Hash
+
   if (window.location.hash === '#Messages') {
       messagesTab.classList.add('active');
       messagesContent.classList.add('show', 'active');
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
       messagesContent.classList.remove('show', 'active');
   }
 
-  // Listen for Bootstrap Tab Show Event
+
   const myTab = document.querySelector('#myTab');
   myTab.addEventListener('shown.bs.tab', function(e) {
       if (e.target.getAttribute('data-bs-target') === '#Messages') {

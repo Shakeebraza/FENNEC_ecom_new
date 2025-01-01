@@ -14,7 +14,7 @@ if (isset($_GET['q'])) {
         echo '<div class="suggestions" id="suggestions">';
         foreach ($results as $result) {
             echo '<div class="suggestion-item" style="display: flex; align-items: center;">';
-            echo '<a href="category.php?search=' . urlencode($query) . '&pid=' . $security->encrypt(htmlspecialchars($result['id'])) . '&slug=' . htmlspecialchars($result['slug']) . ''.$location.'" style="display: flex; align-items: center; text-decoration: none; color: inherit;">';
+            echo '<a href="category.php?search=' . urlencode($result['name']) . '&pid=' . $security->encrypt(htmlspecialchars($result['id'])) . '&slug=' . htmlspecialchars($result['slug']) . ''.$location.'" style="display: flex; align-items: center; text-decoration: none; color: inherit;">';
             echo '<i class="fa fa-search" style="margin-right: 8px; color: #555;"></i>'; 
             echo '<span>' . htmlspecialchars($result['name']) . '</span>';
             echo '</a>';

@@ -46,7 +46,7 @@ if (isset($_POST['conversation_id'])) {
             $clearChatStmt = $pdo->prepare($clearChatSql);
             $clearChatStmt->execute([$conversation_id]);
 
-            // Optionally mark messages as archived or update their status
+     
             $archiveMessagesSql = "
                 UPDATE messages 
                 SET is_read = 1 
