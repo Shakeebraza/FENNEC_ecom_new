@@ -594,11 +594,11 @@ input#gallery {
 
     document.getElementById('gallery').addEventListener('change', function(event) {
     const imagePreview = document.getElementById('imagePreview');
-    imagePreview.innerHTML = '';  // Clear previous previews
+    imagePreview.innerHTML = ''; // Clear previous previews
 
-    const files = event.target.files;
-    const filesToShow = files.length > 8 ? Array.from(files).slice(files.length - 8) : files;
-
+    const files = event.target.files; // FileList
+    const filesArray = Array.from(files); // Convert to Array
+    const filesToShow = filesArray.length > 8 ? filesArray.slice(filesArray.length - 8) : filesArray;
 
     filesToShow.forEach(function(file) {
         const reader = new FileReader();
@@ -610,11 +610,10 @@ input#gallery {
 
             const img = document.createElement('img');
             img.src = e.target.result;
-            img.style.width = '100px';  
-            img.style.height = '100px'; 
-            img.style.objectFit = 'cover'; 
+            img.style.width = '100px';
+            img.style.height = '100px';
+            img.style.objectFit = 'cover';
 
-    
             const removeButton = document.createElement('button');
             removeButton.innerText = 'X';
             removeButton.style.position = 'absolute';
@@ -628,14 +627,13 @@ input#gallery {
             removeButton.style.cursor = 'pointer';
 
             removeButton.onclick = function() {
-                imgContainer.remove(); 
-            }
+                imgContainer.remove();
+            };
 
-      
             imgContainer.appendChild(img);
             imgContainer.appendChild(removeButton);
             imagePreview.appendChild(imgContainer);
-        }
+        };
 
         reader.readAsDataURL(file);
     });
