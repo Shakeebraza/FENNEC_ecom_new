@@ -831,7 +831,7 @@ if(!empty($banner)){
                                     Save this search to receive email alerts and notifications when new items are available.
                                 </p>
 
-                                <a href="<?= $urlval?>index.php" style="text-decoration: none; display: inline-block;
+                                <a href="'.$urlval.'" style="text-decoration: none; display: inline-block;
                     margin-top: 20px;">
                     <button
                         style="padding: 10px 20px; font-size: 1rem; background-color: #00494f; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
