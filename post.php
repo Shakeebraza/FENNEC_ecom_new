@@ -246,6 +246,77 @@ input#gallery {
 .hidden321 {
     display: none;
 }
+ /* Boost packages */
+ .boost-container {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .boost-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .boost-package {
+            border: 1px solid #e5e5e5;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .boost-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .boost-description {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        /* Submit button */
+        .submit-button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 2rem;
+        }
+
+        .submit-button:hover {
+            background-color: #16a34a;
+        }
+
+        /* Radio buttons */
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        /* Character counter */
+        .char-counter {
+            font-size: 0.875rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
 </style>
 
 <body>
@@ -270,7 +341,51 @@ input#gallery {
 
     <div class="container my-5">
         <h1 class="mb-4 pdt-ads">POST YOUR AD</h1>
+        <?php
+$banner = $fun->getRandomBannerByPlacement('home_header');
+if (!empty($banner)) {
+?>
+        <div class="fls-rs-bl"
+            style="width: 100%;  display: flex; justify-content:center; margin: 0 auto; padding:14px 16px; align-items: center;">
+            <div class="bnn-mn-ct"
+                style="width: 1000px; background-color: <?php echo $banner['bg_color']; ?>; overflow: hidden; position: relative; padding: 24px 16px;">
+                <div class="fls-rs-bl"
+                    style="display: flex; justify-content: space-between; max-width: 1200px; background-color: <?php echo $banner['bg_color']; ?>; margin: 0 auto; padding: 24px 16px; align-items: center;">
 
+                    <div class="fls-rs-bl" style="display: flex; align-items: center; gap: 16px; width: 70%; ">
+
+                        <div
+                            style="border: 2px solid transparent; background: url('<?php echo $banner['image']; ?>') no-repeat; background-size: contain; width: 200px; height: 120px;">
+                        </div>
+
+                        <div class="bnner-vt-txt" style="margin-left: 16px; width: 100%;">
+
+                            <h2 style="font-size: 14px; font-weight: 600; color: <?php echo $banner['text_color']; ?>;">
+                                <?php echo $banner['title']; ?></h2>
+                            <p style="font-size: 20px; font-weight: 700; color: <?php echo $banner['text_color']; ?>;">
+                                <?php echo $banner['description']; ?></p>
+                        </div>
+                    </div>
+
+                    <div class="bnneer-btn-rs" style="display: flex; align-items: center; width: 30%;">
+
+                        <?php if ($banner['btn_text'] && $banner['btn_url']) : ?>
+                        <a href="<?php echo $banner['btn_url']; ?>" target="_blank"
+                            style="background-color: <?php echo $banner['btn_color']; ?>; padding: 12px 24px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: background-color 0.3s ease;">
+                            <span style="font-size: 14px; font-weight: 500;"><?php echo $banner['btn_text']; ?></span>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                style="width: 16px; height: 16px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+}
+?>
         <div id="step1">
             <h2 class=" mb-4">Choose a Category</h2>
             <h6>Tell us what category you are posting in</h6>
@@ -311,6 +426,7 @@ input#gallery {
         <div id="step3" class="hidden">
             <h2 class="text-center mb-4">Post an ad </h2>
             <form id="productForm" enctype="multipart/form-data">
+            <div style="font-family: Arial, sans-serif; max-width: 100%; margin: 0 auto; padding: 20px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
                 <div class="mb-3">
                     <label class="form-label">Category</label>
                     <input type="text" class="form-control" id="finalCategory" name="finalCategory" readonly>
@@ -322,20 +438,24 @@ input#gallery {
                     <input type="hidden" id="finalSubcategoryId" name="subcategory">
                 </div>
 
-
                 <div class="form-group mb-3"
-                    style="padding: 20px;border: 1px dashed #d8d6d9 ;border-radius: 10px;box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+                    style="padding: 20px; border: 1px dashed #d8d6d9; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
                     <div class="upld-free-imag d-flex w-100">
                         <input type="file" id="gallery" name="gallery[]" accept="image/*" multiple>
                     </div>
-                    <label for="gallery" class="custom-file-upload D-FLEX">
-                        <div class="fdfadfbfhfkj">
-                            <img src="custom/asset/add-image-icon.ea516b80c0402f99dfb041ba4db057ce (1).png" alt="">
+                    <label for="gallery" class="custom-file-upload d-flex align-items-center justify-content-center">
+                        <div>
+                            <img src="custom/asset/add-image-icon.ea516b80c0402f99dfb041ba4db057ce (1).png" alt=""
+                                style="width: 50px; height: 50px; cursor: pointer;">
                         </div>
                     </label>
-                    <div id="imagePreview" class="image-preview"></div>
-                    <div class="text-danger" id="galleryError"></div>
+                    <div id="imagePreview" class="image-preview d-flex flex-wrap" style="margin-top: 10px;"></div>
+                    <div id="imageCounter" style="margin-top: 10px; font-weight: bold; text-align: center;">
+                        Selected Images: 0
+                    </div>
                 </div>
+
+
                 <p>
                     <a href="#" id="youtube-link">Click to open YouTube video input</a>
                 </p>
@@ -406,112 +526,107 @@ input#gallery {
                         required>
                 </div>
 
-                <div class="mb-3"
-                    style="padding: 20px; border: 2px solid #007bff; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); background-color: #f0f8ff;">
-                    <h5>Select Package</h5>
-                    <div>
-                        <!-- Free Package Option -->
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="boostPlan" id="packageFree"
-                                value="standard" checked>
-                            <label class="form-check-label" for="packageFree">
-                                Free Package
-                            </label>
+                <div class="boost-container">
+                <h3 class="boost-title">Boost Your Ad</h3>
+                
+                <?php
+                $boostPlans = $fun->getBoostPlans();
+                if (!empty($boostPlans)) :
+                    foreach ($boostPlans as $plan) : ?>
+                        <div class="boost-package">
+                            <div class="boost-header">
+                                <span><?= $plan['name']; ?></span>
+                                <select class="form-select" style="width: auto;">
+                                    <option value="" disabled selected>Select Option</option>
+                                    <option value="basic">Basic</option>
+                                    <option value="premium">Premium</option>
+                                    <option value="ultimate">Ultimate</option>
+                                </select>
+                            </div>
+                            <p class="boost-description">
+                                <?= $plan['description'] ?? 'Short text explaining what this Boost Pack is all about. The short text must take 1 to 2 lines.'; ?>
+                            </p>
                         </div>
-
-                        <!-- Dynamically Loaded Boost Plans -->
-                        <?php
-                        $boostPlans = $fun->getBoostPlans(); 
-                        if (!empty($boostPlans)) : ?>
-                        <?php foreach ($boostPlans as $plan) : ?>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="boostPlan"
-                                id="package_<?= $plan['id'] ?>" value="<?= $plan['id'] ?>">
-                            <label class="form-check-label" for="package_<?= $plan['id'] ?>">
-                                <?=$plan['name'] ?> - <?= $plan['price'] ?> USD
-                            </label>
-                        </div>
-                        <?php endforeach; ?>
-                        <?php else : ?>
-                        <p>No packages available.</p>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <h5>Image Packages</h5>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="freeImages" value="free" disabled checked>
-                        <label class="form-check-label" for="freeImages">
+                    <?php endforeach;
+                else : ?>
+                    <p>No packages available.</p>
+                <?php endif; ?>
+            </div>
+            <div style="margin-top:30px;max-width: 100%; ">
+                <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Image Packages</h5>
+                    <div style="margin-bottom: 10px;">
+                        <input style="margin-right: 10px;" type="checkbox" id="freeImages" value="free" disabled checked>
+                        <label style="color: #555; font-size: 16px;" for="freeImages">
                             Free Images Allowed: <?= $fun->getFieldData('free_images'); ?>
                         </label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="extraImages" id="extraImages" value="6">
-                        <label class="form-check-label" for="extraImages">
+                    <div style="margin-bottom: 10px;">
+                        <input style="margin-right: 10px;" type="checkbox" name="extraImages" id="extraImages" value="6">
+                        <label style="color: #555; font-size: 16px;" for="extraImages">
                             Add <?= $fun->getFieldData('images_allowed'); ?> More Images for
                             <?= $fun->getFieldData('paid_images_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
                         </label>
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <h5>Video Packages</h5>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="extraVideos" id="extraVideos" value="1">
-                        <label class="form-check-label" for="extraVideos">
+                <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Video Packages</h5>
+                    <div style="margin-bottom: 10px;">
+                        <input style="margin-right: 10px;" type="checkbox" name="extraVideos" id="extraVideos" value="1">
+                        <label style="color: #555; font-size: 16px;" for="extraVideos">
                             Add <?= $fun->getFieldData('videos_allowed'); ?> Video for
                             <?= $fun->getFieldData('paid_videos_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
                         </label>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <h5>Website Redirect</h5>
-                    <div class="form-check">
 
-                        <input class="form-check-input website-redict" type="checkbox" name="website-redict"
-                            id="websiteRedict" value="1">
-                        <label class="form-check-label" for="extraVideos">
-                            Add <?= $fun->getFieldData('videos_allowed'); ?> Webiste url for
+                <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Website Redirect</h5>
+                    <div style="margin-bottom: 10px;">
+                        <input style="margin-right: 10px;" class="website-redict" type="checkbox" name="website-redict" id="websiteRedict" value="1">
+                        <label style="color: #555; font-size: 16px;" for="websiteRedict">
+                            Add <?= $fun->getFieldData('videos_allowed'); ?> Website url for
                             <?= $fun->getFieldData('paid_videos_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
                         </label>
                     </div>
-
-                    <div id="urlInputField" style="display: none; margin-top: 10px;">
-                        <label for="redirectUrl">Enter Redirect URL:</label>
-                        <input type="url" class="form-control" id="redirectUrl" name="redirectUrl"
-                            placeholder="https://example.com">
+                    <div id="urlInputField" style="display: none; margin-top: 15px;">
+                        <label style="display: block; margin-bottom: 5px; color: #555;" for="redirectUrl">Enter Redirect URL:</label>
+                        <input style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;" type="url" id="redirectUrl" name="redirectUrl" placeholder="https://example.com">
                     </div>
                 </div>
-                <div class="mb-3">
-                    <h5>Payment Options</h5>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="paymentOption" id="paypal" value="paypal">
-                        <label class="form-check-label" for="paypal">
+
+                <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Payment Options</h5>
+                    <div style="margin-bottom: 10px;">
+                        <input style="margin-right: 10px;" type="radio" name="paymentOption" id="paypal" value="paypal">
+                        <label style="color: #555; font-size: 16px;" for="paypal">
                             PayPal
                         </label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="paymentOption" id="bitcoin" value="bitcoin">
-                        <label class="form-check-label" for="bitcoin">
+                    <div style="margin-bottom: 10px;">
+                        <input style="margin-right: 10px;" type="radio" name="paymentOption" id="bitcoin" value="bitcoin">
+                        <label style="color: #555; font-size: 16px;" for="bitcoin">
                             Bitcoin
                         </label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="paymentOption" id="onlinePayment"
-                            value="online">
-                        <label class="form-check-label" for="onlinePayment">
+                    <div style="margin-bottom: 10px;">
+                        <input style="margin-right: 10px;" type="radio" name="paymentOption" id="onlinePayment" value="online">
+                        <label style="color: #555; font-size: 16px;" for="onlinePayment">
                             Online Transfer
                         </label>
                     </div>
                 </div>
+               
+                </div>
 
-
+      
                 <div class="btn-main-div" style="display: flex;justify-content: space-between;">
                     <button type="submit" class="btn btn-primary post-btn">Post Ad</button>
                     <button type="button" class="btn btn-secondary" onclick="goBackToSubcategory()">Back</button>
                     <div class="success-message" style="display: none; margin-top: 10px; color: green;"></div>
                 </div>
-
+                </div>
             </form>
 
         </div>
@@ -594,11 +709,16 @@ input#gallery {
 
     document.getElementById('gallery').addEventListener('change', function(event) {
     const imagePreview = document.getElementById('imagePreview');
+    const imageCounter = document.getElementById('imageCounter');
     imagePreview.innerHTML = ''; // Clear previous previews
 
     const files = event.target.files; // FileList
     const filesArray = Array.from(files); // Convert to Array
-    const filesToShow = filesArray.length > 8 ? filesArray.slice(filesArray.length - 8) : filesArray;
+    const filesToShow = filesArray.length > 8 ? filesArray.slice(-8) : filesArray; // Get last 8 files
+
+    // Update the image counter
+    const totalImages = filesArray.length;
+    imageCounter.innerText = `Selected Images: ${totalImages > 8 ? 8 : totalImages}`;
 
     filesToShow.forEach(function(file) {
         const reader = new FileReader();
@@ -607,27 +727,37 @@ input#gallery {
             const imgContainer = document.createElement('div');
             imgContainer.style.position = 'relative';
             imgContainer.style.margin = '5px';
+            imgContainer.style.width = '100px';
+            imgContainer.style.height = '100px';
 
             const img = document.createElement('img');
             img.src = e.target.result;
-            img.style.width = '100px';
-            img.style.height = '100px';
+            img.style.width = '100%';
+            img.style.height = '100%';
             img.style.objectFit = 'cover';
+            img.style.borderRadius = '5px';
 
             const removeButton = document.createElement('button');
             removeButton.innerText = 'X';
             removeButton.style.position = 'absolute';
-            removeButton.style.top = '0px';
-            removeButton.style.right = '0px';
+            removeButton.style.top = '5px';
+            removeButton.style.right = '5px';
             removeButton.style.background = 'red';
             removeButton.style.color = 'white';
             removeButton.style.border = 'none';
-            removeButton.style.borderRadius = '5px';
-            removeButton.style.padding = '3px';
+            removeButton.style.borderRadius = '50%';
+            removeButton.style.width = '20px';
+            removeButton.style.height = '20px';
+            removeButton.style.padding = '0';
             removeButton.style.cursor = 'pointer';
+            removeButton.style.fontSize = '12px';
+            removeButton.style.lineHeight = '20px';
+            removeButton.style.textAlign = 'center';
 
             removeButton.onclick = function() {
                 imgContainer.remove();
+                const remainingImages = imagePreview.childElementCount;
+                imageCounter.innerText = `Selected Images: ${remainingImages}`;
             };
 
             imgContainer.appendChild(img);
