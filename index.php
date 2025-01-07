@@ -175,6 +175,22 @@ p {
     object-fit: cover;
     border-radius: 8px;
 }
+.carousel-control-prev, .carousel-control-next {
+        background-color: rgba(0, 0, 0, 0.5); 
+        width: 50px;
+        height: 78%;
+        border-radius: 5px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .carousel-control-prev:hover, .carousel-control-next:hover {
+        background-color: rgba(0, 0, 0, 0.7); 
+    }
+
+ 
 </style>
 <?php
 $banner = $fun->getRandomBannerByPlacement('home_header');
@@ -251,68 +267,60 @@ if (!empty($banner)) {
 
                 <h3 class="mt-5"><?= $lan['Featured_Categories'] ?></h3>
                 <div class="container mt-5">
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <?php
+            $findCate = $categoryManager->getAllCategoriesHeaderMenu();
 
-                    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-                        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner">
-                                <?php
-                                $findCate = $categoryManager->getAllCategoriesHeaderMenu();
+            if ($findCate['status'] == 'success') {
+                $active = true;
+                $count = 0;
 
-                                if ($findCate['status'] == 'success') {
-                                    $active = true;
-                                    $count = 0;
-
-                                    foreach ($findCate['data'] as $index => $category) {
-                                        if ($count % 4 == 0) {
-
-                                            if ($count > 0) {
-                                                echo '</div></div>';
-                                            }
-                                            echo '<div class="carousel-item ' . ($active ? 'active' : '') . '" data-bs-interval="10000">';
-                                            echo '<div class="row">';
-                                            $active = false;
-                                        }
-                                ?>
-                                <div class="col-md-3">
-                                    <div class="card crt-timg-hm">
-                                        <a href="<?= $urlval ?>category/?slug=<?= $category['slug'] ?>">
-                                            <img src="<?php echo htmlspecialchars($urlval . $category['category_image']); ?>"
-                                                class="card-img-top"
-                                                alt="<?php echo htmlspecialchars($category['category_name']); ?>" />
-                                        </a>
-                                        <div class="card-body">
-                                            <p class="card-text crt-txt-hm">
-                                                <?php echo htmlspecialchars($category['category_name']); ?></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <?php
-                                        $count++;
-                                        if ($count == count($findCate['data'])) {
-                                            echo '</div></div>';
-                                        }
-                                    }
-                                } else {
-                                    echo '<p>No categories available</p>';
-                                }
-                                ?>
-                            </div>
-                        </div>
-
-
-
-                        <button class="carousel-control-prev" type="button"
-                            data-bs-target="<?php echo $urlval ?>carouselExample" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button"
-                            data-bs-target="<?php echo $urlval ?>carouselExample" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
+                foreach ($findCate['data'] as $index => $category) {
+                    if ($count % 4 == 0) {
+                        if ($count > 0) {
+                            echo '</div></div>';
+                        }
+                        echo '<div class="carousel-item ' . ($active ? 'active' : '') . '" data-bs-interval="10000">';
+                        echo '<div class="row">';
+                        $active = false;
+                    }
+            ?>
+            <div class="col-md-3">
+                <div class="card crt-timg-hm">
+                    <a href="<?= $urlval ?>category/?slug=<?= $category['slug'] ?>">
+                        <img src="<?php echo htmlspecialchars($urlval . $category['category_image']); ?>"
+                             class="card-img-top"
+                             alt="<?php echo htmlspecialchars($category['category_name']); ?>" />
+                    </a>
+                    <div class="card-body">
+                        <p class="card-text crt-txt-hm">
+                            <?php echo htmlspecialchars($category['category_name']); ?></p>
                     </div>
                 </div>
+            </div>
+            <?php
+                    $count++;
+                    if ($count == count($findCate['data'])) {
+                        echo '</div></div>';
+                    }
+                }
+            } else {
+                echo '<p>No categories available</p>';
+            }
+            ?>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+
             </div>
             <?php
             $box2 = $fun->getBox('box2');
@@ -765,9 +773,7 @@ document.getElementById('topLocationsToggle').addEventListener('click', function
 // }
 
 // Automatically show the popup after a few seconds
-window.onload = function() {
-    setTimeout(showPopup, 2000); // Show after 2 seconds
-};
+
 
 $(document).ready(function() {
     $('.slider').slick({

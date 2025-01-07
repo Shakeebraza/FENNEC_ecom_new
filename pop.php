@@ -17,6 +17,24 @@
     /* Hidden by default */
     z-index: 999;
 }
+.containermain2 {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    /* Ensure it stays on top */
+    top: 0;
+    left: 0;
+    height: 100vh;
+    /* Full height of the viewport */
+    width: 100vw;
+    /* Full width of the viewport */
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    /* Hidden by default */
+    z-index: 999;
+}
 
 .dialog {
     background: white;
@@ -134,15 +152,38 @@
                 <input type="radio" id="yes" name="sold" value="yes">
                 <label for="yes">Yes</label>
             </div>
-            <!-- <div class="radio-option">
+            <div class="radio-option">
                 <input type="radio" id="no" name="sold" value="no">
                 <label for="no">No</label>
-            </div> -->
+            </div>
         </div>
 
         <div class="button-group">
             <button class="button button-cancel" onclick="closePopup()">Cancel</button>
             <button class="button button-delete" onclick="proceedDelete()">Delete</button>
+        </div>
+    </div>
+</div>
+
+<div class="containermain2" id="confirmationModal">
+    <div class="dialog">
+        <h2>Are you sure you want to delete this item?</h2>
+        <p>If yes, was the item sold?</p>
+
+        <div class="radio-group">
+            <div class="radio-option">
+                <input type="radio" id="yes" name="sold" value="yes">
+                <label for="yes">Yes</label>
+            </div>
+        </div>
+        <div class="radio-option">
+                <input type="radio" id="no" name="sold" value="no">
+                <label for="no">No</label>
+            </div>
+
+        <div class="button-group">
+            <button class="button button-cancel" onclick="closePopup2()">Cancel</button>
+            <button class="button button-delete" onclick="proceedDelete2()">Delete</button>
         </div>
     </div>
 </div>

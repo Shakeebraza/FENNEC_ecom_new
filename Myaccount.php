@@ -213,13 +213,21 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
 
         </div>
         <div class="tab-pane fade" id="view-products" role="tabpanel">
-            <h3 class="mb-4"><?= $lan['view_my_products']?></h3>
-            <div class="row">
-                <?php
-                $productFun->getProductsForUser(base64_decode($_SESSION['userid']),$lan);
-                ?>
-            </div>
+    <h3 class="mb-4"><?= $lan['view_my_products'] ?></h3>
+            <div class="mb-4">
+            <button class="btn" style="background-color: #00494f; color: white;" onclick="filterAds('all')"><?= $lan['all_ads'] ?></button>
+            <button class="btn" style="background-color: green; color: white;" onclick="filterAds('active')"><?= $lan['active_ads'] ?></button>
+            <button class="btn" style="background-color: red; color: white;" onclick="filterAds('expired')"><?= $lan['expired_ads'] ?></button>
         </div>
+
+        <div class="row" id="product-list">
+            <?php
+           
+            $productFun->getProductsForUser(base64_decode($_SESSION['userid']), $lan, 'all'); 
+            ?>
+        </div>
+    </div>
+
 
         <div class="tab-pane fade" id="favourite" role="tabpanel">
             <h3 class="mb-4" style="font-size: 1.5rem; color: #333;">
@@ -406,10 +414,21 @@ include_once 'footer.php';
 ?>
 <script src="<?= $urlval ?>custom/js/messages.js"></script>
 <script>
-$(document).ready(function() {
+
+    let productId;
     $('.btn-delete').on('click', function() {
-        const productId = $(this).data('product-id');
-        if (confirm('Are you sure you want to delete this product?')) {
+        productId = $(this).data('product-id');
+        $('#confirmationModal').show();
+        document.querySelector('#confirmationModal').style.display = 'flex';
+    });
+
+
+    function proceedDelete2() {
+
+        const sold = $('input[name="sold"]:checked').val();
+
+        if (sold === 'yes') {
+  
             $.ajax({
                 url: '<?= $urlval ?>ajax/delete_product.php',
                 method: 'POST',
@@ -421,9 +440,7 @@ $(document).ready(function() {
                         alert(response.message);
                         location.reload();
                     } else {
-                        alert(
-                            'Product deleted successfully!'
-                        );
+                        alert('Product deleted successfully!');
                         location.reload();
                     }
                 },
@@ -432,9 +449,19 @@ $(document).ready(function() {
                 }
             });
         }
+
+  
+        $('#confirmationModal').hide();
+    }
+    function closePopup2() {
+        $('#confirmationModal').hide();
+    }
+    $(window).click(function(event) {
+        if ($(event.target).is('#confirmationModal')) {
+            closePopup2();
+        }
     });
 
-});
 
 
 
@@ -977,7 +1004,7 @@ function proceedDelete() {
 
     const soldValue = selectedOption.value;
 
-    // Proceed with AJAX only if user confirms and selects an option
+   
     $.ajax({
         url: '<?= $urlval?>ajax/deleteConversation.php',
         type: 'POST',
@@ -1000,11 +1027,11 @@ function proceedDelete() {
         }
     });
 
-    // Hide the popup after making the AJAX call
+    
     closePopup();
 }
 document.addEventListener('click', function(e) {
-    if (e.target.closest('.send-email-btn')) { // Check if the click is on the <i> tag or its child
+    if (e.target.closest('.send-email-btn')) { 
         const messageId = e.target.closest('.send-email-btn').dataset.messageId;
         fetch('<?= $urlval?>ajax/send_email.php', {
                 method: 'POST',
@@ -1086,6 +1113,24 @@ function sendMail(conversationId) {
         }
     });
 }
+function filterAds(filter) {
+    const userId = "<?= base64_decode($_SESSION['userid']) ?>";
+    const lan = <?= json_encode($lan) ?>;
+
+    fetch('<?= $urlval?>ajax/getProducts.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, lan, filter }),
+    })
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('product-list').innerHTML = html;
+        })
+        .catch(error => console.error('Error:', error));
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const favoriteButton = document.getElementById('favorite-button');
 
