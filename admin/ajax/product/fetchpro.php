@@ -32,6 +32,6 @@ if (isset($_POST['city'])) {
 }
 
 
-$response = $productFun->getProductsWithDetailsAdminFixed($page, $limit, $filters);
+$response = $productFun->getProductsWithDetailsAdminFixed2($page, $limit, $filters);
 
 echo json_encode($response);

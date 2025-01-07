@@ -1142,6 +1142,183 @@ Class Productfun{
     }
     
     
+    function getProductsWithDetailsAdminFixed2($page, $limit, $filters = [], $orderBy = 'p.id', $orderDir = 'DESC') {
+        $offset = ($page - 1) * $limit;
+    
+        // List of allowed columns for ordering
+        $allowedColumns = [
+            'p.id', 'p.name', 'p.slug', 'p.created_at', 'p.price', 
+            'p.date', 'p.product_type', 'p.discount_price'
+        ];
+    
+        // Validate orderBy and orderDir
+        if (!in_array($orderBy, $allowedColumns)) {
+            $orderBy = 'p.id';
+        }
+        $orderDir = strtoupper($orderDir) === 'ASC' ? 'ASC' : 'DESC';
+    
+        $sql = "
+            SELECT 
+                p.id AS product_id,
+                p.name AS product_name,
+                p.slug AS product_slug,
+                p.created_at AS product_date,
+                p.extension AS product_ext,
+                p.description AS product_description,
+                p.image AS product_image,
+                p.is_enable AS is_enable,
+                p.price AS product_price,
+                p.date AS product_date,
+                p.user_id AS product_user_id,
+                p.product_type AS product_type,
+                p.discount_price AS product_discount_price,
+                c.category_name AS category_name,
+                s.subcategory_name AS subcategory_name,
+                ci.name AS city_name,
+                co.name AS country_name
+            FROM products p
+            LEFT JOIN categories c ON p.category_id = c.id
+            LEFT JOIN subcategories s ON p.subcategory_id = s.id
+            LEFT JOIN cities ci ON p.city_id = ci.id
+            LEFT JOIN countries co ON p.country_id = co.id
+            WHERE 1 = 1
+        ";
+    
+        $params = [];
+    
+        // Adding filters dynamically
+        if (!empty($filters['pid'])) {
+            $sql .= " AND p.id LIKE :pid";
+            $params[':pid'] = '%' . $filters['pid'] . '%';
+        }
+        if (!empty($filters['name'])) {
+            $sql .= " AND p.name LIKE :name";
+            $params[':name'] = '%' . $filters['name'] . '%';
+        }
+        if (!empty($filters['slug'])) {
+            $sql .= " AND p.slug LIKE :slug";
+            $params[':slug'] = '%' . $filters['slug'] . '%';
+        }
+        if (!empty($filters['min_price'])) {
+            $sql .= " AND p.price >= :min_price";
+            $params[':min_price'] = $filters['min_price'];
+        }
+        if (!empty($filters['max_price'])) {
+            $sql .= " AND p.price <= :max_price";
+            $params[':max_price'] = $filters['max_price'];
+        }
+        if (!empty($filters['category'])) {
+            $sql .= " AND p.category_id = :category";
+            $params[':category'] = $filters['category'];
+        }
+        if (!empty($filters['subcategory'])) {
+            $sql .= " AND p.subcategory_id = :subcategory";
+            $params[':subcategory'] = $filters['subcategory'];
+        }
+        if (!empty($filters['product_type'])) {
+            $sql .= " AND p.product_type = :product_type";
+            $params[':product_type'] = $filters['product_type'];
+        }
+        if (!empty($filters['country'])) {
+            $sql .= " AND p.country_id = :country";
+            $params[':country'] = $filters['country'];
+        }
+        if (!empty($filters['city'])) {
+            $sql .= " AND p.city_id = :city";
+            $params[':city'] = $filters['city'];
+        }
+    
+        // Append ORDER BY clause
+        $sql .= " ORDER BY $orderBy $orderDir";
+    
+        // Append LIMIT and OFFSET
+        $sql .= " LIMIT :limit OFFSET :offset";
+        $params[':limit'] = intval($limit);
+        $params[':offset'] = intval($offset);
+    
+        // Execute the query
+        $stmt = $this->pdo->prepare($sql);
+        foreach ($params as $key => $value) {
+            if (in_array($key, [':limit', ':offset'])) {
+                $stmt->bindValue($key, $value, PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue($key, $value);
+            }
+        }
+        $stmt->execute();
+    
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Total count query
+        $countSql = "
+            SELECT COUNT(*) AS total
+            FROM products p
+            LEFT JOIN categories c ON p.category_id = c.id
+            LEFT JOIN subcategories s ON p.subcategory_id = s.id
+            LEFT JOIN cities ci ON p.city_id = ci.id
+            LEFT JOIN countries co ON p.country_id = co.id
+            WHERE 1 = 1
+        ";
+    
+        foreach ($filters as $key => $value) {
+            if (!empty($value) && in_array($key, ['pid', 'name', 'slug', 'min_price', 'max_price', 'category', 'subcategory', 'product_type', 'country', 'city'])) {
+                $countSql .= " AND p." . $key . " = :" . $key;
+            }
+        }
+    
+        $countStmt = $this->pdo->prepare($countSql);
+        foreach ($params as $key => $value) {
+            if (!in_array($key, [':limit', ':offset'])) {
+                $countStmt->bindValue($key, $value);
+            }
+        }
+        $countStmt->execute();
+        $total = $countStmt->fetchColumn();
+    
+        // Prepare response
+        $response = [
+            'products' => [],
+            'total' => $total
+        ];
+    
+        foreach ($products as $pro) {
+            $image = $this->urlval . $pro['product_image'];
+            $expiryDate = null;
+            $status = 'active';
+            if ($pro['product_ext'] == 1) {
+                $expiryDate = date('Y-m-d', strtotime($pro['product_date'] . ' +60 days'));
+            } else {
+                $expiryDate = date('Y-m-d', strtotime($pro['product_date'] . ' +30 days'));
+            }
+    
+            $currentDate = date('Y-m-d');
+            if ($expiryDate < $currentDate) {
+                $status = 'expired';
+            }
+    
+            $response['products'][] = [
+                'id' => $pro['product_id'],
+                'base64id' => base64_encode(base64_encode($pro['product_id'])),
+                'name' => $pro['product_name'],
+                'status' => $status,
+                'slug' => $pro['product_slug'],
+                'description' => $pro['product_description'],
+                'image' => $image,
+                'price' => $pro['product_price'],
+                'discount_price' => $pro['product_discount_price'],
+                'product_type' => $pro['product_type'],
+                'category' => $pro['category_name'],
+                'subcategory' => $pro['subcategory_name'],
+                'city' => $pro['city_name'],
+                'country' => $pro['country_name'],
+                'date' => $pro['product_date'],
+                'product_user_id' => $pro['product_user_id'],
+                'is_enable' => $pro['is_enable'],
+            ];
+        }
+    
+        return $response;
+    }
     
     
     
