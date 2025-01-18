@@ -55,6 +55,20 @@ $lan = $fun->loadLanguage($lang);
         overflow-y: hidden;
         padding: 0px 20px;
     }
+    .btn-header {
+      background-color:rgb(240, 185, 4);
+      border: 1px solid #008000;
+      color: #008000;
+      padding: 8px 12px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-size: 14px;
+    }
+    .btn-header:hover {
+      background-color: #008000;
+      border: 1px solid rgb(240, 185, 4);
+      color:rgb(240, 185, 4)
+
+    }
 
     .language-switcher {
         margin: 20px;
@@ -167,48 +181,76 @@ $lan = $fun->loadLanguage($lang);
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="<?=$urlval?>" style="text-decoration: none;">
                 <?php
-        $logoData = $fun->getBox('box1');
-        $logo = $urlval . $logoData[0]['image'];
-        $title = $logoData[0]['heading'];
-        $phara = $logoData[0]['phara'];
-        ?>
+                $logoData = $fun->getBox('box1');
+                $logo = $urlval . $logoData[0]['image'];
+                $title = $logoData[0]['heading'];
+                $phara = $logoData[0]['phara'];
+                ?>
                 <img src="<?php echo $logo ?>" alt="Fennec Logo" style="max-width: 100%; margin-right: 10px;" />
                 <span style="font-size: 1.7rem; font-weight: bold; color: inherit;"><?= $title ?></span>
             </a>
             <button id="menuToggle" class="navbar-toggler" type="button" onclick="openNav()" style="display: none">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <form id="searchForm"
-                class="d-flex mx-lg-auto my-lg-0 flex-column flex-lg-row w-100 justify-content-center custom-form">
-                <div class="input-group w-50 me-lg-1 mb-2 mb-lg-0 custom-form">
-                    <span class="input-group-text bg-white border-0 rounded-0">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </span>
-                    <?php
-                      $selectedLocation = isset($_GET['location']) ? $_GET['location'] : '';
-                      $search = isset($_GET['search']) ? $_GET['search'] : '';
-                      ?>
-                    <input id="searchInput" class="form-control p-2 rounded-0 search-input" type="search"
-                        placeholder="<?= $lan['Search_fennec'] ?>" aria-label="Search"
-                        value="<?= !empty($search) ? htmlspecialchars($search) : '' ?>" />
-                </div>
-                <div class="input-group w-25 mb-2 mb-lg-0 custom-form-location">
-                    <span class="input-group-text rounded-0 bg-light border-0">
-                        <i class="fa-solid fa-location-dot me-2"></i>
-                    </span>
-                    <select class="form-select rounded-0 location-select custom-select" id="locationSelect">
-                        <option value="" selected><?= $lan['Select_country']?></option>
-                        <?php
-                          $countryPairs = $productFun->getCountries();
-                          foreach ($countryPairs as $country) {
-                              $isSelected = ($selectedLocation == $country['country_id']) ? 'selected' : '';
-                              echo '<option value="' . $country['country_id'] . '" ' . $isSelected . '>'
-                                  . htmlspecialchars($country['country_name']) . '</option>';
-                          }
-                  ?>
-                    </select>
-                </div>
-            </form>
+            <form
+                  id="searchForm"
+                  class="d-flex mx-lg-auto my-lg-0 flex-column flex-lg-row w-100 justify-content-center custom-form"
+                  onsubmit="return false" 
+              >
+              <?php
+                $selectedLocation = isset($_GET['location']) ? $_GET['location'] : '';
+                $search = isset($_GET['search']) ? $_GET['search'] : '';
+              ?>
+                  <!-- Search Input Group -->
+                  <div class="input-group w-50 me-lg-1 mb-2 mb-lg-0 custom-form">
+                      <span class="input-group-text bg-white border-0 rounded-0">
+                          <i class="fa-solid fa-magnifying-glass"></i>
+                      </span>
+                      <input
+                          id="searchInput"
+                          class="form-control p-2 rounded-0 search-input"
+                          type="search"
+                          placeholder="<?= $lan['Search_fennec'] ?>"
+                          aria-label="Search"
+                          value="<?= !empty($search) ? htmlspecialchars($search) : '' ?>"
+                      />
+                  </div>
+
+                  <!-- Location Select Group -->
+                  <div class="input-group w-25 mb-2 mb-lg-0 custom-form-location">
+                      <span class="input-group-text rounded-0 bg-light border-0">
+                          <i class="fa-solid fa-location-dot me-2"></i>
+                      </span>
+                      <select
+                          class="form-select rounded-0 location-select custom-select"
+                          id="locationSelect"
+                      >
+                          <option value="" selected><?= $lan['Select_country']?></option>
+                          <?php
+                              $countryPairs = $productFun->getCountries();
+                              foreach ($countryPairs as $country) {
+                                  $isSelected = ($selectedLocation == $country['country_id']) ? 'selected' : '';
+                                  echo '<option value="' . $country['country_id'] . '" ' . $isSelected . '>'
+                                      . htmlspecialchars($country['country_name']) . '</option>';
+                              }
+                          ?>
+                      </select>
+                  </div>
+
+                  <!-- ADD A BUTTON here for explicit search -->
+                  <button
+                      type="button"
+                      class="btn btn-primary btn-header mb-2 mb-lg-0"
+                      id="searchButton"
+                      style="margin-left: 10px;"
+                  >
+                      <?= $lan['Search'] ?? 'Search'; ?>
+                  </button>
+              </form>
+
+              <!-- Container to show the auto-complete suggestions -->
+              <div id="searchResults" class="searchResults mt-3"></div>
+
 
 
 
@@ -290,7 +332,7 @@ $lan = $fun->loadLanguage($lang);
 
         </div>
     </nav>
-    <div id="searchResults" class="searchResults mt-3"></div>
+    <!-- <div id="searchResults" class="searchResults mt-3"></div> -->
     <!-- mobile ka  h -->
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>

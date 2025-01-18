@@ -32,11 +32,6 @@
 
 
 
-
-
-
-
-
 <footer class="text-light pt-5">
   <div class="container">
     <div class="row">
@@ -127,119 +122,166 @@
 <script src="<?php echo $urlval?>custom/js/script.js"></script>
 
 <script>
-$(document).ready(function() {
-  $('#searchInput').on('input', function () {
-    let query = $(this).val();
-    let location = getUrlParameter('location');
+/**
+ * Change site language
+ */
+function changeLanguage(languageFile) {
+    // Adjust if your language switch logic differs
+    window.location.href = '?lang=' + languageFile;
+}
 
-    if (query.length > 0) {
-        $.ajax({
-            url: '<?= $urlval ?>ajax/search.php',
-            type: 'GET',
-            data: { q: query, location: location },
-            success: function (data) {
-                $('#searchResults').html(data).show();
-            }
-        });
-    } else {
-        $('#searchResults').hide();
-    }
-});
+/**
+ * Open side navigation (mobile)
+ */
+function openNav() {
+    document.getElementById("mySidebar").style.width = "70%";
+}
 
-$('#searchInput').on('keypress', function (e) {
-    if (e.which === 13) { 
-        let firstResult = $('#searchResults .suggestion-item a').first(); 
-        if (firstResult.length) {
-            e.preventDefault(); 
-            window.location.href = firstResult.attr('href'); 
-        }
-    }
-});
+/**
+ * Close side navigation (mobile)
+ */
+function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+}
 
-// Function to retrieve URL parameters
+/**
+ * Get URL parameter by name
+ */
 function getUrlParameter(name) {
     var url = new URL(window.location.href);
     var params = new URLSearchParams(url.search);
     return params.get(name);
 }
 
-    $(document).on('click', function(event) {
-        if (!$(event.target).closest('#searchForm').length) {
-            $('#searchResults').hide();
-        }
-    });
-});
 $(document).ready(function() {
-  $('.nav-men-sub-ct-inn ul li').hover(
-    function() {
-      $(this).find('.nav-main-dwdisnmn').stop(true, true).slideDown(200);
-    }, 
-    function() {
-      $(this).find('.nav-main-dwdisnmn').stop(true, true).slideUp(200);
-    }
-  );
-});
-function changeLanguage(languageFile) {
-
-    window.location.href = '?lang=' + languageFile;
-}
-
-
-
-$(document).ready(function () {
-
+    // =============================================
+    // 1. FETCH UNREAD MESSAGES (Badge in Menu)
+    // =============================================
     function fetchUnreadMessages() {
         $.ajax({
             url: "<?= $urlval?>ajax/unread_messages.php",
             type: "GET",
             dataType: "json",
-            success: function (response) {
+            success: function(response) {
                 if (response.unread_count > 0) {
-                 
                     $("#unread-count").text(response.unread_count).show();
                 } else {
-                  
                     $("#unread-count").hide();
                 }
             },
-            error: function () {
+            error: function() {
                 console.error("Error fetching unread messages.");
             }
         });
     }
-
-
+    // Immediately fetch unread messages
     fetchUnreadMessages();
+
+    // =============================================
+    // 2. NAV MENU HOVER (Desktop)
+    // =============================================
+    $('.nav-men-sub-ct-inn ul li').hover(
+        function() {
+            $(this).find('.nav-main-dwdisnmn').stop(true, true).slideDown(200);
+        },
+        function() {
+            $(this).find('.nav-main-dwdisnmn').stop(true, true).slideUp(200);
+        }
+    );
+
+    // =============================================
+    // 3. AUTOCOMPLETE SUGGESTIONS WHEN TYPING
+    // =============================================
+    $('#searchInput').on('input', function() {
+        let query = $(this).val();
+        let location = getUrlParameter('location');
+
+        if (query.length > 0) {
+            $.ajax({
+                url: '<?= $urlval ?>ajax/search.php',
+                type: 'GET',
+                data: { q: query, location: location },
+                success: function(data) {
+                    $('#searchResults').html(data).show();
+                }
+            });
+        } else {
+            $('#searchResults').hide();
+        }
+    });
+
+    // =============================================
+    // 4. PRESS ENTER => REDIRECT TO FIRST SUGGESTION
+    // =============================================
+    $('#searchInput').on('keypress', function(e) {
+        if (e.which === 13) {
+            let firstResult = $('#searchResults .suggestion-item a').first();
+            if (firstResult.length) {
+                e.preventDefault();
+                window.location.href = firstResult.attr('href');
+            }
+        }
+    });
+
+    // =============================================
+    // 5. CLICK OUTSIDE => HIDE SUGGESTIONS
+    // =============================================
+    $(document).on('click', function(event) {
+        // Hide if click outside search form
+        if (!$(event.target).closest('#searchForm').length) {
+            $('#searchResults').hide();
+        }
+    });
+
+    // =============================================
+    // 6. EXPLICIT SEARCH BUTTON
+    // =============================================
+    $('#searchButton').on('click', function() {
+        // Build the URL using the selected location and search query
+        var cityId     = $('#locationSelect').val();
+        var searchQuery = $('#searchInput').val().trim();
+        var url        = 'category.php?'; // Adjust if your "search results" page is different
+
+        // If location is selected, add to the URL
+        if (cityId) {
+            url += 'location=' + encodeURIComponent(cityId) + '&';
+        }
+        // If user typed a search query, add to the URL
+        if (searchQuery) {
+            url += 'search=' + encodeURIComponent(searchQuery);
+        }
+
+        // Perform the redirect
+        window.location.href = url;
+    });
+
+    // =============================================
+    // 7. LOCATION SELECT => AUTO REDIRECT
+    //    (If you only want the Search Button to finalize,
+    //    remove or comment out this event listener.)
+    // =============================================
+    document.getElementById('locationSelect').addEventListener('change', function() {
+        var cityId      = this.value;
+        var urlParams   = new URLSearchParams(window.location.search);
+        var pid         = urlParams.get('pid');
+        var searchQuery = document.getElementById('searchInput').value;
+        
+        // Build your desired URL
+        var url = 'category.php?location=' + cityId;
+        
+        if (pid) {
+            url += '&pid=' + pid;
+        }
+        if (searchQuery) {
+            url += '&search=' + encodeURIComponent(searchQuery);
+        }
+
+        // Only redirect if a city is selected
+        if (cityId) {
+            window.location.href = url;
+        } else {
+            alert('Please select a country and city.');
+        }
+    });
 });
-
-function openNav() {
-    document.getElementById("mySidebar").style.width = "70%";
-}
-
-function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
-}
-
-document.getElementById('locationSelect').addEventListener('change', function() {
-    var cityId = this.value;
-    var urlParams = new URLSearchParams(window.location.search);
-    var pid = urlParams.get('pid'); 
-    var searchQuery = document.getElementById('searchInput').value;
-    
-    var url = 'category.php?location=' + cityId;
-    
-    if (pid) {
-        url += '&pid=' + pid;
-    }
-    if (searchQuery) {
-        url += '&search=' + encodeURIComponent(searchQuery);
-    }
-    if (cityId) {
-        window.location.href = url; 
-    } else {
-        alert('Please select a country and city.');
-    }
-});
-
-
 </script>

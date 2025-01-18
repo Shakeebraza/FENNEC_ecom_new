@@ -1499,8 +1499,7 @@ Class Productfun{
 
     public function getProductDetailsBySlugsort($slug, $userId = null) {
         try {
-            $currentDate = date('Y-m-d'); // Get the current date
-    
+            $currentDate = date('Y-m-d');
             $sql = "
                 SELECT 
                     p.id AS product_id,
@@ -1525,11 +1524,11 @@ Class Productfun{
                     s.subcategory_name,
                     cou.name AS con_name,
                     city.name AS city_name,
-                    area.name AS area_name,  -- Area name
-                    city.longitude AS city_longitude,  -- Longitude of the city
-                    city.latitude AS city_latitude,    -- Latitude of the city
+                    area.name AS area_name,
+                    city.longitude AS city_longitude,
+                    city.latitude AS city_latitude,
                     pi.image_path AS image_path,
-                    pi.sort AS image_sort,  -- Sort column for images
+                    pi.sort AS image_sort,
                     CASE WHEN f.user_id IS NOT NULL THEN 1 ELSE 0 END AS is_favorited
                 FROM 
                     products p
@@ -1555,30 +1554,24 @@ Class Productfun{
                         (p.extension = 0 AND p.created_at >= DATE_SUB(:currentDate, INTERVAL 30 DAY))
                     )
                 ORDER BY 
-                    pi.sort ASC  -- Sort images by the sort column
+                    pi.sort ASC
             ";
-    
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindParam(':slug', $slug);
-            $stmt->bindParam(':currentDate', $currentDate, PDO::PARAM_STR); // Bind current date to query
-    
+            $stmt->bindParam(':currentDate', $currentDate, PDO::PARAM_STR);
             if ($userId) {
                 $stmt->bindParam(':user_id', $userId);
             }
-    
             $stmt->execute();
             $productDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
             if ($productDetails) {
                 $firstProduct = $productDetails[0];
-                
                 $images = array_map(function ($row) {
                     return [
                         'image_path' => $row['image_path'],
                         'sort' => $row['image_sort']
                     ];
                 }, $productDetails);
-    
                 return [
                     'product' => $firstProduct,
                     'gallery_images' => $images,
@@ -1588,17 +1581,16 @@ Class Productfun{
                     'city' => $firstProduct['city_name'],
                     'area' => $firstProduct['area_name'],
                     'city_longitude' => $firstProduct['city_longitude'], 
-                    'city_latitude' => $firstProduct['city_latitude'],  
+                    'city_latitude' => $firstProduct['city_latitude'],
                 ];
             }
-    
             return null;
-    
         } catch (PDOException $e) {
             error_log("Error fetching product details: " . $e->getMessage());
             return null;
         }
     }
+    
     
     
     
