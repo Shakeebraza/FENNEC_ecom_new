@@ -314,29 +314,45 @@ if (isset($_SESSION['userid'])) {
         </div>
     </div>
 
-    <!-- Language Switcher -->
+    <!-- LANGUAGE SWITCHER + BALANCE SNIPPET -->
     <div class="language-switcher">
-        <?php
-        // Show user balance (you can style this differently as needed)
-        echo '<div class="me-2 d-flex align-items-center text-white fw-bold">';
-        echo '<span style="margin-right: 8px;">' . ($lan['balance'] ?? 'Balance') . ':</span>';
-        echo '<span style="color: #FFEB3B; font-size: 1rem;">' . $fun->getFieldData('site_currency') . number_format($userBalance, 2) . '</span>';
-        echo '</div>';
-        ?>
+        <?php if (isset($_SESSION['userid'])): ?>
+            <!-- Show user balance with a plus button -->
+            <div class="me-2 d-flex align-items-center text-white fw-bold">
+                <span style="margin-right: 8px;"><?php echo $lan['balance'] ?? 'Balance'; ?>:</span>
+                <span style="color: #FFEB3B; font-size: 1rem;">
+                    <?php echo $fun->getFieldData('site_currency') . number_format($userBalance, 2); ?>
+                </span>
+                
+                <!-- Plus button linking to addBalance.php -->
+                <a 
+                    href="<?php echo $urlval; ?>addBalance.php" 
+                    class="btn btn-success ms-2" 
+                    style="padding: 5px 10px; display: inline-flex; align-items: center;"
+                >
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>
+        <?php endif; ?>
+
+        <!-- Existing language dropdown remains the same -->
         <select id="languageSelect" onchange="changeLanguage(this.value)">
-            <option value="en" <?php echo ($lang == 'en') ? 'selected' : ''; ?>>English</option>
+            <option value="en" <?php echo ($lang == 'en') ? 'selected' : ''; ?>>
+                English
+            </option>
             <?php
             $languages = $fun->FindAllLan();
             if ($languages) {
                 foreach ($languages as $language) {
                     $fileName = pathinfo(basename($language['file_path']), PATHINFO_FILENAME);
                     echo '<option value="' . $fileName . '" ' . ($lang == $fileName ? 'selected' : '') . '>'
-                         . $language['language_name'] . '</option>';
+                        . $language['language_name'] . '</option>';
                 }
             }
             ?>
         </select>
     </div>
+
 </nav>
 
 <!-- MOBILE SIDEBAR -->
