@@ -541,7 +541,7 @@ $countries = $dbFunctions->getData('countries');
                             </div>
                         </div>
 
-                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <!-- <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Payment Options</h5>
                             <div style="margin-bottom: 10px;">
                                 <input style="margin-right: 10px;" type="radio" name="paymentOption" id="paypal" value="paypal">
@@ -555,7 +555,7 @@ $countries = $dbFunctions->getData('countries');
                                 <input style="margin-right: 10px;" type="radio" name="paymentOption" id="onlinePayment" value="online">
                                 <label style="color: #555; font-size: 16px;" for="onlinePayment">Online Transfer</label>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     
                     <div class="btn-main-div" style="display: flex;justify-content: space-between;">
