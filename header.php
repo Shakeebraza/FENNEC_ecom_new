@@ -17,8 +17,8 @@ if (isset($_SESSION['userid'])) {
 
     // If you have a method like $fun->getUserBalance($decodedUserId),
     // use it here:
-    $userBalance = $fun->getUserBalance($decodedUserId);
-    
+    // $userBalance = $fun->getUserBalance($decodedUserId);
+    $userBalance = 100.00;
     // Or if your $dbFunctions can fetch the user record:
     //   $result      = $dbFunctions->getDatanotenc('users', "id = '$decodedUserId'");
     //   $userBalance = $result[0]['wallet_balance'] ?? 0;
