@@ -213,15 +213,15 @@ $(document).ready(function() {
     // =============================================
     // 4. PRESS ENTER => REDIRECT TO FIRST SUGGESTION
     // =============================================
-    $('#searchInput').on('keypress', function(e) {
-        if (e.which === 13) {
-            let firstResult = $('#searchResults .suggestion-item a').first();
-            if (firstResult.length) {
-                e.preventDefault();
-                window.location.href = firstResult.attr('href');
-            }
-        }
-    });
+    // $('#searchInput').on('keypress', function(e) {
+    //     if (e.which === 13) {
+    //         let firstResult = $('#searchResults .suggestion-item a').first();
+    //         if (firstResult.length) {
+    //             e.preventDefault();
+    //             window.location.href = firstResult.attr('href');
+    //         }
+    //     }
+    // });
 
     // =============================================
     // 5. CLICK OUTSIDE => HIDE SUGGESTIONS

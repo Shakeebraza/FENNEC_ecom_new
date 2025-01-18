@@ -501,6 +501,147 @@ $countries = $dbFunctions->getData('countries');
                         <?php endif; ?>
                     </div>
                     <div style="margin-top:30px;max-width: 100%;">
+                        <!-- Image Packages -->
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; 
+                                    border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">
+                                Image Packages
+                            </h5>
+                            <div style="margin-bottom: 10px;">
+                                <input style="margin-right: 10px;" type="checkbox" id="freeImages" value="free" disabled checked>
+                                <label style="color: #555; font-size: 16px;" for="freeImages">
+                                    Free Images Allowed: <?= $fun->getFieldData('free_images'); ?>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <input style="margin-right: 10px;" type="checkbox" name="extraImages" id="extraImages" value="6">
+                                <label style="color: #555; font-size: 16px;" for="extraImages">
+                                    Add <?= $fun->getFieldData('images_allowed'); ?> More Images for 
+                                    <?= $fun->getFieldData('paid_images_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <input style="margin-right: 10px;" type="checkbox" id="imageGallery" name="imageGallery" 
+                                    value="<?= $fun->getFieldData('image_gallery_fee'); ?>">
+                                <label style="color: #555; font-size: 16px;" for="imageGallery">
+                                    Image Gallery Featured – Fee 
+                                    <?= $fun->getFieldData('image_gallery_fee'); ?> <?= $fun->getFieldData('site_currency'); ?> <br />
+                                    <small>
+                                        Classified will appear in the Image Gallery Featured Classifieds section on the main page.
+                                        At least one image must be uploaded with the classified.
+                                    </small>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Video Packages -->
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; 
+                                    border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">
+                                Video Packages
+                            </h5>
+                            <div style="margin-bottom: 10px;">
+                                <input style="margin-right: 10px;" type="checkbox" name="extraVideos" id="extraVideos" value="1">
+                                <label style="color: #555; font-size: 16px;" for="extraVideos">
+                                    Add <?= $fun->getFieldData('videos_allowed'); ?> Video for 
+                                    <?= $fun->getFieldData('paid_videos_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <input style="margin-right: 10px;" type="checkbox" id="videoGallery" name="videoGallery" 
+                                    value="<?= $fun->getFieldData('video_gallery_fee'); ?>">
+                                <label style="color: #555; font-size: 16px;" for="videoGallery">
+                                    Video Gallery Featured – Fee 
+                                    <?= $fun->getFieldData('video_gallery_fee'); ?> <?= $fun->getFieldData('site_currency'); ?> <br />
+                                    <small>
+                                        Classified will appear in the Video Gallery Featured Classifieds section on the main page.
+                                        At least one video must be uploaded with the classified.
+                                    </small>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Website Redirect -->
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; 
+                                    border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">
+                                Website Redirect
+                            </h5>
+                            <div style="margin-bottom: 10px;">
+                                <input style="margin-right: 10px;" class="website-redict" 
+                                    type="checkbox" name="websiteRedirect" id="websiteRedirect" value="1">
+                                <label style="color: #555; font-size: 16px;" for="websiteRedirect">
+                                    Add Website URL for <?= $fun->getFieldData('paid_videos_price'); ?> 
+                                    <?= $fun->getFieldData('site_currency'); ?>
+                                </label>
+                            </div>
+                            <div id="urlInputField" style="display: none; margin-top: 15px;">
+                                <label style="display: block; margin-bottom: 5px; color: #555;" for="redirectUrl">
+                                    Enter Redirect URL:
+                                </label>
+                                <input style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; 
+                                            font-size: 16px;" 
+                                    type="url" id="redirectUrl" name="redirectUrl" placeholder="https://example.com">
+                            </div>
+                        </div>
+
+                        <!-- Bold Option -->
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; 
+                                    border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">
+                                Bold Option
+                            </h5>
+                            <div style="margin-bottom: 10px;">
+                                <input style="margin-right: 10px;" type="checkbox" id="bold" name="bold" 
+                                    value="<?= $fun->getFieldData('bold_fee'); ?>">
+                                <label style="color: #555; font-size: 16px;" for="bold">
+                                    Bold – Fee <?= $fun->getFieldData('bold_fee'); ?> <?= $fun->getFieldData('site_currency'); ?> <br />
+                                    <small>
+                                        Classified will appear in bold font.
+                                    </small>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Featured Option -->
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; 
+                                    border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">
+                                Featured Option
+                            </h5>
+                            <div style="margin-bottom: 10px;">
+                                <input style="margin-right: 10px;" type="checkbox" id="featured" name="featured" 
+                                    value="<?= $fun->getFieldData('featured_fee'); ?>">
+                                <label style="color: #555; font-size: 16px;" for="featured">
+                                    Featured – Fee <?= $fun->getFieldData('featured_fee'); ?> <?= $fun->getFieldData('site_currency'); ?> <br />
+                                    <small>
+                                        Classified will appear as featured, e.g., in search results pages.
+                                    </small>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Highlighted Option -->
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; 
+                                    border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">
+                                Highlighted Option
+                            </h5>
+                            <div style="margin-bottom: 10px;">
+                                <input style="margin-right: 10px;" type="checkbox" id="highlighted" name="highlighted" 
+                                    value="<?= $fun->getFieldData('highlighted_fee'); ?>">
+                                <label style="color: #555; font-size: 16px;" for="highlighted">
+                                    Highlighted – Fee <?= $fun->getFieldData('highlighted_fee'); ?> <?= $fun->getFieldData('site_currency'); ?> <br />
+                                    <small>
+                                        Classified will appear highlighted with a different color, e.g., in search results.
+                                    </small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- <div style="margin-top:30px;max-width: 100%;">
                         <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Image Packages</h5>
                             <div style="margin-bottom: 10px;">
@@ -541,7 +682,21 @@ $countries = $dbFunctions->getData('countries');
                             </div>
                         </div>
 
-                        <!-- <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Bold - Fee</h5>
+                            <div style="margin-bottom: 10px;">
+                                <input style="margin-right: 10px;" class="website-redict" type="checkbox" name="website-redict" id="websiteRedict" value="1">
+                                <label style="color: #555; font-size: 16px;" for="websiteRedict">
+                                     for <?= $fun->getFieldData('paid_videos_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
+                                </label>
+                            </div>
+                            <div id="urlInputField" style="display: none; margin-top: 15px;">
+                                <label style="display: block; margin-bottom: 5px; color: #555;" for="redirectUrl">Enter Redirect URL:</label>
+                                <input style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;" type="url" id="redirectUrl" name="redirectUrl" placeholder="https://example.com">
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Payment Options</h5>
                             <div style="margin-bottom: 10px;">
                                 <input style="margin-right: 10px;" type="radio" name="paymentOption" id="paypal" value="paypal">
@@ -555,8 +710,8 @@ $countries = $dbFunctions->getData('countries');
                                 <input style="margin-right: 10px;" type="radio" name="paymentOption" id="onlinePayment" value="online">
                                 <label style="color: #555; font-size: 16px;" for="onlinePayment">Online Transfer</label>
                             </div>
-                        </div> -->
-                    </div>
+                        </div>
+                    </div> -->
                     
                     <div class="btn-main-div" style="display: flex;justify-content: space-between;">
                         <button type="submit" class="btn btn-primary post-btn">Post Ad</button>
