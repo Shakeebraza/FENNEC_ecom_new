@@ -6,47 +6,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $remember = $_POST['remember'] ?? false;
 
-
     if (empty($email) || empty($password)) {
         echo json_encode(['status' => 'error', 'message' => 'Email and Password are required.']);
         exit;
     }
 
     try {
-      
         $where = "email = '" . $email . "'";
         $user = $dbFunctions->getDatanotenc('users', $where);
 
         if ($user) {
- 
             $user = $user[0];
 
-   
             if (is_null($user['email_verified_at'])) {
                 echo json_encode(['status' => 'error', 'message' => 'Please verify your email first.']);
                 exit;
             }
             if ($user['status'] == 0) {
-                echo json_encode(['status' => 'error', 'message' => 'Your block by Admin contact at admin ']);
+                echo json_encode(['status' => 'error', 'message' => 'You are blocked by Admin. Contact the admin.']);
                 exit;
             }
             if (password_verify($password, $user['password'])) {
-                
                 if ($remember) {
                     $token = bin2hex(random_bytes(16));
                     $expiryTime = time() + (86400 * 30);
-                    
                     $dbFunctions->updateData('users', ['remember_token' => $token], $user['id']);
-                
-                    setcookie("remember_token",  $token, $expiryTime, "/", "", true, true);
+                    setcookie("remember_token", $token, $expiryTime, "/", "", true, true);
                 }
 
-          
+                // Set email and role in session
                 $email = $user['email'];
-                $sessionSet = $fun->sessionSet($email);
+                $role = $user['role'];
+                $fun->sessionSet($email); // Existing session set method
+                $_SESSION['role'] = $role; // Add role to session
 
-     
-                echo json_encode(['status' => 'success', 'role' => $user['role']]);
+                echo json_encode(['status' => 'success', 'role' => $role]);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Invalid password.']);
             }
@@ -54,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(['status' => 'error', 'message' => 'No user found with this email.']);
         }
     } catch (PDOException $e) {
-    
         echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
     }
 }

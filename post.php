@@ -5,6 +5,7 @@ if (!isset($_SESSION['userid'])) {
     header('Location: index.php');
     exit();
 }
+
 $countries = $dbFunctions->getData('countries');
 ?>
 <!DOCTYPE html>
@@ -731,6 +732,7 @@ $countries = $dbFunctions->getData('countries');
     <script>
     // Manage selected files in an array
     let selectedFiles = [];
+    
 
     // ========== Category & Subcategory Functions ==========
     function selectCategory(categoryName, categoryId) {

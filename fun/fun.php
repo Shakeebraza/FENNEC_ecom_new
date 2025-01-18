@@ -161,6 +161,24 @@ class Fun {
             return null;
         }
     }
+public function getUserBalance($userId)
+{
+    // If you have access to the PDO connection in $this->pdo, do something like:
+    // (Adjust table/column names as needed)
+    $sql = "SELECT wallet_balance FROM users WHERE id = :userId LIMIT 1";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row && isset($row['wallet_balance'])) {
+        return (float)$row['wallet_balance'];
+    }
+
+    // If no row found or something else, return 0 (or handle as needed)
+    return 0.0;
+}
+
     public function FindAllLan() {
      
         $getLan = $this->dbfun->getDatanotenc('languages');

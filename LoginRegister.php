@@ -257,6 +257,7 @@ include_once 'footer.php';
       dataType: 'json',
       success: function(response) {
         $('#alert-message').removeClass('d-none fade alert-danger alert-success');
+        console.log(response);
         
         if (response.status === 'success') {
           $('#alert-message').addClass('alert-success show');
