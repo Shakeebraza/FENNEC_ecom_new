@@ -799,46 +799,99 @@ public function getUserBalance($userId)
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // function updateBoostPlanStatus($planId, $txnId, $userId, $amount, $productId) {
+    //     global $pdo;
+    
+    //     try {
+    //         $pdo->beginTransaction();
+    
+    //         // Insert into payments table
+    //         $stmt2 = $pdo->prepare("INSERT INTO payments (plan_id,proid, user_id, txn_id, amount, status) VALUES (?,?, ?, ?, ?, 'completed')");
+    //         $stmt2->execute([$planId,$productId, $userId, $txnId, $amount]);
+    
+    //         // Determine product type based on plan ID
+    //         $productType = '';
+    //         switch ($planId) {
+    //             case 1:
+    //                 $productType = 'standard';
+    //                 break;
+    //             case 2:
+    //                 $productType = 'premium';
+    //                 break;
+    //             case 3:
+    //                 $productType = 'gold';
+    //                 break;
+    //             default:
+    //                 $productType = 'standard';
+    //                 break;
+    //         }
+    
+    //         // Update the product table's product_type based on the selected plan
+    //         $stmt3 = $pdo->prepare("UPDATE products SET product_type = ? WHERE id = ?");
+    //         $stmt3->execute([$productType, $productId]);
+    
+    //         $pdo->commit();
+    //         return true;
+    
+    //     } catch (Exception $e) {
+    //         $pdo->rollBack();
+    //         echo "Failed: " . $e->getMessage();
+    //         return false;
+    //     }
+    // }
     function updateBoostPlanStatus($planId, $txnId, $userId, $amount, $productId) {
         global $pdo;
     
         try {
+            // Start transaction
             $pdo->beginTransaction();
     
-            // Insert into payments table
-            $stmt2 = $pdo->prepare("INSERT INTO payments (plan_id,proid, user_id, txn_id, amount, status) VALUES (?,?, ?, ?, ?, 'completed')");
-            $stmt2->execute([$planId,$productId, $userId, $txnId, $amount]);
+            // Check if the product already has the same active plan
+            $stmt1 = $pdo->prepare("SELECT product_type FROM products WHERE id = :productId");
+            $stmt1->execute([':productId' => $productId]);
+            $currentPlan = $stmt1->fetchColumn();
     
-            // Determine product type based on plan ID
+            // Determine the requested product type based on the plan ID
             $productType = '';
             switch ($planId) {
                 case 1:
-                    $productType = 'standard';
+                    $productType = 'gold';
                     break;
                 case 2:
                     $productType = 'premium';
-                    break;
-                case 3:
-                    $productType = 'gold';
                     break;
                 default:
                     $productType = 'standard';
                     break;
             }
     
-            // Update the product table's product_type based on the selected plan
+            // If the current product type matches the requested type, return early with a specific code
+            if ($currentPlan === $productType) {
+                $pdo->rollBack(); // Roll back transaction
+                return 'already_active'; // Return specific status for already active plan
+            }
+    
+            // Insert payment record
+            $stmt2 = $pdo->prepare("INSERT INTO payments (plan_id, proid, user_id, txn_id, amount, status) VALUES (?, ?, ?, ?, ?, 'completed')");
+            $stmt2->execute([$planId, $productId, $userId, $txnId, $amount]);
+    
+            // Update the product's plan type
             $stmt3 = $pdo->prepare("UPDATE products SET product_type = ? WHERE id = ?");
             $stmt3->execute([$productType, $productId]);
     
+            // Commit transaction
             $pdo->commit();
             return true;
     
         } catch (Exception $e) {
+            // Roll back transaction on error
             $pdo->rollBack();
-            echo "Failed: " . $e->getMessage();
-            return false;
+            return ['error' => $e->getMessage()];
         }
     }
+    
+    
+    
     
     public function getTotalPayment()
         {

@@ -184,6 +184,8 @@ function confirmBoostPlan(boostType, planId, price) {
                     Swal.fire('Success', data.message, 'success').then(() => {
                         window.location.href = "index.php";
                     });
+                } else if (data.message === 'Plan is already active for this product.') {
+                    Swal.fire('Info', 'This plan is already active for the selected product.', 'info');
                 } else {
                     Swal.fire('Error', data.message, 'error');
                 }
@@ -194,4 +196,5 @@ function confirmBoostPlan(boostType, planId, price) {
         }
     });
 }
+
 </script>

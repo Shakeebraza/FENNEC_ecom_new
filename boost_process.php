@@ -30,8 +30,10 @@ try {
     // Update boost plan
     $updateStatus = $fun->updateBoostPlanStatus($planId, $txnId, $userId, $price, $productId);
 
-    if ($updateStatus) {
+    if ($updateStatus === true) {
         echo json_encode(['success' => true, 'message' => 'Boost plan activated successfully.']);
+    } elseif ($updateStatus === 'already_active') {
+        echo json_encode(['success' => false, 'message' => 'Plan is already active for this product.']);
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to activate boost plan.']);
     }
