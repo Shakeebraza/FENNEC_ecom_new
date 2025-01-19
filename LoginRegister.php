@@ -7,74 +7,43 @@ $setSession = $fun->isSessionSet();
 
 if ($setSession == true) {
     $redirectUrl = $urlval . 'index.php'; 
-    echo '
-    <script>
-        window.location.href = "' . $redirectUrl . '";
-    </script>'; 
+    echo '<script>window.location.href = "' . $redirectUrl . '";</script>';
     exit();
 }
-
 ?>
-<div
-  class="container-fluid bg-light min-vh-100 d-flex justify-content-center align-items-center">
+<div class="container-fluid bg-light min-vh-100 d-flex justify-content-center align-items-center">
   <div class="row w-100 justify-content-center">
     <div class="col-12 col-md-6 col-lg-4">
       <div class="card shadow border">
         <div class="card-body">
-          <ul
-            class="nav nav-tabs justify-content-center"
-            id="loginTabs"
-            role="tablist">
+          <ul class="nav nav-tabs justify-content-center" id="loginTabs" role="tablist">
             <li class="nav-item" role="presentation">
-              <button
-                class="nav-link active"
-                id="login-tab"
-                data-bs-toggle="tab"
-                data-bs-target="#login"
-                type="button"
-                role="tab"
-                aria-controls="login"
-                aria-selected="true">
+              <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true">
                 <?=$lan['login']?>
               </button>
             </li>
             <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                id="register-tab"
-                data-bs-toggle="tab"
-                data-bs-target="#register"
-                type="button"
-                role="tab"
-                aria-controls="register"
-                aria-selected="false">
+              <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab" aria-controls="register" aria-selected="false">
                 <?=$lan['REGISTER']?>
               </button>
             </li>
           </ul>
           <div class="tab-content mt-3" id="loginTabsContent">
-            <div
-              class="tab-pane fade show active"
-              id="login"
-              role="tabpanel"
-              aria-labelledby="login-tab">
-              
+            <!-- Login Form -->
+            <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
               <form id="loginForm" data-url="<?php echo $urlval ?>ajax/login.php">
                 <div id="alert-message" class="alert alert-danger alert-dismissible fade d-none" role="alert">
                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   <span id="message-content"></span>
                 </div>
                 <div class="mb-3 text-center">
-                <a class="btn btn-outline-dark w-100" href="<?php echo $client->createAuthUrl(); ?>">
+                  <a class="btn btn-outline-dark w-100" href="<?php echo $client->createAuthUrl(); ?>">
                     <img src="https://www.google.com/favicon.ico" alt="Google icon" class="me-2" style="width: 20px; height: 20px" />
                     <?= $lan['sign_in_with_google']?>
-                </a>
+                  </a>
                 </div>
                 <div class="mb-3 text-center">
-                  <!-- <button class="btn btn-primary w-100">
-                    <i class="bi bi-facebook me-2"></i>
-                    Sign in with Facebook
-                  </button> -->
+                  <!-- Optional Facebook login button -->
                 </div>
                 <div class="text-center mb-3">
                   <hr class="divider" />
@@ -102,37 +71,22 @@ if ($setSession == true) {
                   <?= $lan['login_privacy_policy']?>
                 </p>
               </form>
-
               <div class="card mt-3 shadow">
                 <div class="card-body">
                   <h5 class="card-title">Welcome to Fennec.</h5>
                   <p class="card-text">Sign in or Register to:</p>
                   <ul class="list-unstyled">
-                    <li>
-                      <i class="bi bi-chat-dots me-2"></i> Send and receive messages
-                    </li>
-                    <li>
-                      <i class="bi bi-pencil-square me-2"></i> Post and manage your
-                      ads
-                    </li>
+                    <li><i class="bi bi-chat-dots me-2"></i> Send and receive messages</li>
+                    <li><i class="bi bi-pencil-square me-2"></i> Post and manage your ads</li>
                     <li><i class="bi bi-star me-2"></i> Rate other users</li>
-                    <li>
-                      <i class="bi bi-heart me-2"></i> Favourite ads to check them
-                      out later
-                    </li>
-                    <li>
-                      <i class="bi bi-bell me-2"></i> Set alerts for your searches
-                      and never miss a new ad in your area
-                    </li>
+                    <li><i class="bi bi-heart me-2"></i> Favourite ads to check them out later</li>
+                    <li><i class="bi bi-bell me-2"></i> Set alerts for your searches and never miss a new ad in your area</li>
                   </ul>
                 </div>
               </div>
             </div>
-            <div
-              class="tab-pane fade"
-              id="register"
-              role="tabpanel"
-              aria-labelledby="register-tab">
+            <!-- Register Form with Role Selection -->
+            <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
               <h5 class="card-title text-center">Welcome to Fennec.</h5>
               <p class="card-text text-center">Sign in or Register to:</p>
               <ul class="list-unstyled custom-list">
@@ -143,32 +97,27 @@ if ($setSession == true) {
                 <li><i class="fas fa-bell me-2"></i> Set alerts for your searches and never miss a new ad in your area</li>
               </ul>
               <div id="alert-message2" class="alert alert-danger d-none" role="alert">
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  <span id="message-content"></span>
-                </div>
-              <div class="mb-3 text-center">
-                <a class="btn btn-outline-dark w-100" href="<?php echo $client->createAuthUrl(); ?>">
-                      <img src="https://www.google.com/favicon.ico" alt="Google icon" class="me-2" style="width: 20px; height: 20px" />
-                      <?= $lan['sign_in_with_google']?>
-                  </a>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <span id="message-content"></span>
               </div>
               <div class="mb-3 text-center">
-                <!-- <button class="btn btn-primary w-100">
-                  <i class="bi bi-facebook me-2"></i>
-                  Sign in with Facebook
-                </button> -->
+                <a class="btn btn-outline-dark w-100" href="<?php echo $client->createAuthUrl(); ?>">
+                  <img src="https://www.google.com/favicon.ico" alt="Google icon" class="me-2" style="width: 20px; height: 20px" />
+                  <?= $lan['sign_in_with_google']?>
+                </a>
+              </div>
+              <div class="mb-3 text-center">
+                <!-- Optional Facebook login button -->
               </div>
               <div class="text-center mb-3">
                 <hr class="divider" />
                 <span class="text-muted">OR</span>
                 <hr class="divider" />
               </div>
-
               <form id="registerForm" action="ajax/register.php" method="post">
                 <div class="mb-3">
                   <input type="text" class="form-control" name="username" placeholder="Enter username" required>
                 </div>
-
                 <div class="mb-3">
                   <input type="email" class="form-control" name="email" placeholder="Email" required>
                 </div>
@@ -177,6 +126,15 @@ if ($setSession == true) {
                     <input type="password" class="form-control password" name="password" id="registerPassword" placeholder="Choose a strong password" required>
                     <button class="btn btn-outline-secondary" type="button" onclick="togglePassword2()">Show</button>
                   </div>
+                </div>
+                <!-- Role Selection Field -->
+                <div class="mb-3">
+                  <label for="userRole" class="form-label">Select Role:</label>
+                  <select class="form-select" name="role" id="userRole" required>
+                    <option value="">-- Select Role --</option>
+                    <option value="0">Private</option>
+                    <option value="2">Trader</option>
+                  </select>
                 </div>
                 <div class="mb-3 form-check">
                   <input type="checkbox" class="form-check-input" id="marketingEmails" name="marketingEmails">
@@ -189,122 +147,111 @@ if ($setSession == true) {
                   By selecting Register you agree you've read and accepted our Terms of Use. Please see our Privacy Notice for information regarding the processing of your data.
                 </p>
               </form>
-
             </div>
-          </div>
-        </div>
-      </div>
+          </div><!-- end tab-content -->
+        </div><!-- end card-body -->
+      </div><!-- end card -->
     </div>
   </div>
 </div>
-
-
-
 <?php
 include_once 'footer.php';
 ?>
 <script>
+  // Toggle password visibility for login form
   function togglePassword() {
-    const passwordField = document.getElementById("registerPassword");
-    passwordField.type = passwordField.type === "password" ? "text" : "password";
+    const passwordField = document.getElementById('password');
+    const toggleButton = event.target;
+    if (passwordField.type === 'password') {
+      passwordField.type = 'text';
+      toggleButton.textContent = "<?= 'hide' ?>";
+    } else {
+      passwordField.type = 'password';
+      toggleButton.textContent = "<?= $lan['show'] ?>";
+    }
   }
 
-  $(document).on('submit', '#registerForm', function(e) {
-  e.preventDefault();
-
-  $.ajax({
-    url: $(this).attr('action'),
-    type: 'POST',
-    data: $(this).serialize(),
-    dataType: 'json',
-    success: function(response) {
-      if (response.status === 'success') {
-        $('#alert-message2')
-          .removeClass('d-none alert-danger')
-          .addClass('alert-success')
-          .find('#message-content').text('Registration successful!');
-        
-        setTimeout(function() {
-          window.location.href = 'index.php';
-        }, 2000);
-      } else {
-     
-        $('#alert-message2')
-          .removeClass('d-none alert-success')
-          .addClass('alert-danger')
-          .find('#message-content').text(response.errors || 'An error occurred. Please try again.');
-      }
-    },
-    error: function() {
-      $('#alert-message2')
-        .removeClass('d-none alert-success')
-        .addClass('alert-danger')
-        .find('#message-content').text('An unexpected error occurred. Please try again.');
+  // Toggle password visibility for register form
+  function togglePassword2() {
+    const passwordField = document.getElementById('registerPassword');
+    const toggleButton = event.target;
+    if (passwordField.type === 'password') {
+      passwordField.type = 'text';
+      toggleButton.textContent = "<?= 'hide' ?>";
+    } else {
+      passwordField.type = 'password';
+      toggleButton.textContent = "<?= $lan['show'] ?>";
     }
-  });
-});
+  }
 
-  $(document).ready(function() {
-  $('#loginForm').on('submit', function(event) {
-    event.preventDefault();
-
-    let url = $(this).data('url');
-
+  // Handle registration form submission via AJAX
+  $(document).on('submit', '#registerForm', function(e) {
+    e.preventDefault();
     $.ajax({
-      url: url,
-      method: 'POST',
+      url: $(this).attr('action'),
+      type: 'POST',
       data: $(this).serialize(),
       dataType: 'json',
       success: function(response) {
-        $('#alert-message').removeClass('d-none fade alert-danger alert-success');
-        console.log(response);
-        
         if (response.status === 'success') {
-          $('#alert-message').addClass('alert-success show');
-          $('#message-content').text('Login successful! Redirecting...');
+          $('#alert-message2')
+            .removeClass('d-none alert-danger')
+            .addClass('alert-success')
+            .find('#message-content').text('Registration successful!');
           setTimeout(function() {
-            window.location.href =  '<?= $urlval?>index.php';
+            window.location.href = 'index.php';
           }, 2000);
         } else {
-          $('#alert-message').addClass('alert-danger show');
-          $('#message-content').text(response.message);
+          $('#alert-message2')
+            .removeClass('d-none alert-success')
+            .addClass('alert-danger')
+            .find('#message-content').text(response.errors || 'An error occurred. Please try again.');
         }
       },
       error: function() {
-        $('#alert-message').removeClass('d-none fade').addClass('alert-danger show');
-        $('#message-content').text('An unexpected error occurred.');
+        $('#alert-message2')
+          .removeClass('d-none alert-success')
+          .addClass('alert-danger')
+          .find('#message-content').text('An unexpected error occurred. Please try again.');
       }
     });
   });
-});
 
-function togglePassword() {
-    const passwordField = document.getElementById('password');
-    const toggleButton = event.target;
-
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        toggleButton.textContent = "<?= 'hide' ?>"; 
-    } else {
-        passwordField.type = 'password';
-        toggleButton.textContent = "<?= $lan['show'] ?>"; 
-    }
-}
-function togglePassword2() {
-    const passwordField = document.getElementById('registerPassword');
-    const toggleButton = event.target;
-
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        toggleButton.textContent = "<?= 'hide' ?>"; 
-    } else {
-        passwordField.type = 'password';
-        toggleButton.textContent = "<?= $lan['show'] ?>"; 
-    }
-}
+  // Handle login form submission via AJAX with role-based redirection
+  $(document).ready(function() {
+    $('#loginForm').on('submit', function(event) {
+      event.preventDefault();
+      let url = $(this).data('url');
+      $.ajax({
+        url: url,
+        method: 'POST',
+        data: $(this).serialize(),
+        dataType: 'json',
+        success: function(response) {
+          $('#alert-message').removeClass('d-none fade alert-danger alert-success');
+          if (response.status === 'success') {
+            $('#alert-message').addClass('alert-success show');
+            $('#message-content').text('Login successful! Redirecting...');
+            // Redirect based on role value
+            setTimeout(function() {
+              if (response.role == 2) { // Trader
+                window.location.href = '<?= $urlval ?>index.php';
+              } else {
+                window.location.href = '<?= $urlval ?>index.php';
+              }
+            }, 2000);
+          } else {
+            $('#alert-message').addClass('alert-danger show');
+            $('#message-content').text(response.message);
+          }
+        },
+        error: function() {
+          $('#alert-message').removeClass('d-none fade').addClass('alert-danger show');
+          $('#message-content').text('An unexpected error occurred.');
+        }
+      });
+    });
+  });
 </script>
 </body>
-
 </html>
-
-

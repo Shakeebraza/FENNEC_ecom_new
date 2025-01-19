@@ -2,18 +2,20 @@
 require_once("../global.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
-    $email = $_POST['email'] ?? '';
+    // Retrieve and trim input values
+    $username = trim($_POST['username'] ?? '');
+    $email    = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
+    // Retrieve role from POST; default to 0 if not provided
+    $role     = isset($_POST['role']) && $_POST['role'] !== '' ? (int)$_POST['role'] : 0;
 
- 
+    // Configuration for username and password length
     $minUsernameLength = $fun->getFieldData('username_length'); 
     $maxUsernameLength = 50; 
-
     $minPasswordLength = $fun->getFieldData('password_length'); 
     $maxPasswordLength = 128; 
 
-    // Validate username
+    // --- Username Validation ---
     if (empty($username)) {
         echo json_encode(['status' => 'error', 'errors' => 'Username is required.']);
         exit();
@@ -31,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Validate email
+    // --- Email Validation ---
     if (empty($email)) {
         echo json_encode(['status' => 'error', 'errors' => 'Email is required.']);
         exit();
@@ -50,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-
+    // --- Password Validation ---
     if (empty($password)) {
         echo json_encode(['status' => 'error', 'errors' => 'Password is required.']);
         exit();
@@ -62,20 +64,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
- 
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    // --- Prepare Data for Insertion ---
+    $hashedPassword    = password_hash($password, PASSWORD_DEFAULT);
     $verificationToken = bin2hex(random_bytes(16)); 
 
-
     $data = [
-        'username' => $username,
-        'email' => $email,
-        'password' => $hashedPassword,
-        'role' => 0,
+        'username'           => $username,
+        'email'              => $email,
+        'password'           => $hashedPassword,
+        'role'               => $role,  // Use the selected role from the form
         'verification_token' => $verificationToken
     ];
 
-  
     $response = $dbFunctions->setData('users', $data);
 
     if (!$response['success']) {
@@ -83,11 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-
+    // --- Send Verification Email ---
     $verificationLink = $urlval . "verify_email.php?token=$verificationToken&email=$email";
-    $temp = $emialTemp->getVerificationTemplate($verificationLink);
-    $mailResponse = smtp_mailer($email, 'Email Verification', $temp);
-
+    $emailTemplate    = $emialTemp->getVerificationTemplate($verificationLink);
+    $mailResponse     = smtp_mailer($email, 'Email Verification', $emailTemplate);
 
     if ($mailResponse == 'Sent') {
         echo json_encode(['status' => 'success', 'message' => 'Registration successful! Verification email sent.']);
@@ -96,3 +95,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     exit();
 }
+?>

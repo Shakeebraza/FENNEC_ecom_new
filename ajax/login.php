@@ -2,7 +2,7 @@
 require_once("../global.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
+    $email    = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
     $remember = $_POST['remember'] ?? false;
 
@@ -34,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     setcookie("remember_token", $token, $expiryTime, "/", "", true, true);
                 }
 
-                // Set email and role in session
+                // Set session variables
                 $email = $user['email'];
-                $role = $user['role'];
+                $role  = $user['role'];
                 $fun->sessionSet($email); // Existing session set method
                 $_SESSION['role'] = $role; // Add role to session
 
