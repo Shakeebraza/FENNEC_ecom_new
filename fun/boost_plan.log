@@ -1,4 +1,0 @@
-[2025-01-19 16:34:58] Starting transaction for productId: 162 with planId: 1
-[2025-01-19 16:34:58] Current product plan for productId 162: gold
-[2025-01-19 16:34:58] Requested product type for planId 1: gold
-[2025-01-19 16:34:58] Plan already active for productId 162. Aborting update.
