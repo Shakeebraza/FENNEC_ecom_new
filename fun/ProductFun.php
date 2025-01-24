@@ -1843,10 +1843,10 @@ Class Productfun{
                 if (!empty($filteredProducts)) {
                     return $filteredProducts;
                 } else {
-                    // echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
+                    echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
                 }
             } else {
-                echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
+                // echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
             }
         } else {
             echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
