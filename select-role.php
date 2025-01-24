@@ -36,58 +36,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow-lg">
-                    <div class="card-header text-center bg-primary text-white">
-                        <h4>Select Your Role</h4>
-                    </div>
-                    <div class="card-body">
-                        <?php if ($error): ?>
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <?= htmlspecialchars($error) ?>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        <?php endif; ?>
-                        
-                        <?php if ($success): ?>
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <?= htmlspecialchars($success) ?>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        <?php endif; ?>
-                        
-                        <form method="POST" action="">
-                            <div class="mb-4">
-                                <label class="form-label">Choose your role:</label>
-                                <div class="d-flex justify-content-around mt-2">
-                                    <div class="form-check text-center role-option">
-                                        <input class="form-check-input" type="radio" name="role" id="privateRole" value="0" required>
-                                        <label class="form-check-label" for="privateRole">
-                                            <strong>Private</strong><br>
-                                            <small>Personal use and individual transactions.</small>
-                                        </label>
-                                    </div>
-                                    <div class="form-check text-center role-option">
-                                        <input class="form-check-input" type="radio" name="role" id="traderRole" value="2" required>
-                                        <label class="form-check-label" for="traderRole">
-                                            <strong>Trader</strong><br>
-                                            <small>Business use with advanced features.</small>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-lg">Continue</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="card-footer text-muted text-center">
-                        <a href="logout.php" class="text-decoration-none">Cancel</a>
-                    </div>
-                </div>
-            </div>
+<div class="container">
+    <h2>Select Your Role</h2>
+    <?php if(isset($error)): ?>
+        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+    <?php endif; ?>
+    <form method="POST" action="">
+        <div class="mb-3">
+            <label for="role" class="form-label">Choose your role:</label>
+            <select class="form-select" id="role" name="role" required>
+                <option value="">-- Select Role --</option>
+                <option value="0">Private</option>
+                <option value="2">Trader</option>
+            </select>
         </div>
-    </div>
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+</div>
+
 <?php include_once 'footer.php'; ?>
