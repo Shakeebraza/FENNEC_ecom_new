@@ -1,7 +1,11 @@
 <?php
 // select-role.php
 require_once 'global.php';
-include_once 'header.php';
+
+// Start session if not already started
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Enable error reporting for debugging (remove in production)
 ini_set('display_errors', 1);
@@ -49,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: index.php");
             exit();
         }
-        
     }
 }
 ?>
@@ -58,16 +61,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta httpequiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Your Role - Fennec</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional: Custom CSS -->
     <style>
         body {
             background-color: #f8f9fa;
         }
         .card {
             border-radius: 15px;
+        }
+        .role-option {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .role-option:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -98,14 +110,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="mb-4">
                                 <label class="form-label">Choose your role:</label>
                                 <div class="d-flex justify-content-around mt-2">
-                                    <div class="form-check">
+                                    <div class="form-check text-center role-option">
                                         <input class="form-check-input" type="radio" name="role" id="privateRole" value="0" required>
                                         <label class="form-check-label" for="privateRole">
                                             <strong>Private</strong><br>
                                             <small>Personal use and individual transactions.</small>
                                         </label>
                                     </div>
-                                    <div class="form-check">
+                                    <div class="form-check text-center role-option">
                                         <input class="form-check-input" type="radio" name="role" id="traderRole" value="2" required>
                                         <label class="form-check-label" for="traderRole">
                                             <strong>Trader</strong><br>
