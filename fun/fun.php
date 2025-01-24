@@ -1037,17 +1037,35 @@ function getFieldData($fieldName, $id = 1) {
     }
 }
 function getRandomBannerByPlacement($placement) {
-    $query = "SELECT id, image, title, description, btn_text, btn_url, text_color, btn_color, bg_color, placement, is_active, created_at, updated_at
-              FROM banners
-              WHERE placement = :placement AND is_active = 1
-              ORDER BY RAND()
-              LIMIT 1";
+    $query = "
+        SELECT 
+            id, 
+            CONCAT('../', image) AS image, 
+            title, 
+            description, 
+            btn_text, 
+            btn_url, 
+            text_color, 
+            btn_color, 
+            bg_color, 
+            placement, 
+            is_active, 
+            created_at, 
+            updated_at
+        FROM banners
+        WHERE placement = :placement 
+          AND is_active = 1
+        ORDER BY RAND()
+        LIMIT 1
+    ";
+    
     $stmt = $this->pdo->prepare($query);
     $stmt->bindParam(':placement', $placement, PDO::PARAM_STR);
     $stmt->execute();
     $banner = $stmt->fetch(PDO::FETCH_ASSOC);
     return $banner;
 }
+
 function getSiteStatistics() {
    
     $queries = [
