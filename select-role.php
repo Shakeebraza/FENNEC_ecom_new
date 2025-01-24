@@ -46,9 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $dbFunctions->setData('users', $data);
             $fun->sessionSet($email);
             unset($_SESSION['temp_user']);
+            header("Location: index.php");
+            exit();
         }
-        header("Location: index.php");
-        exit();
+        
     }
 }
 ?>
@@ -60,9 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Your Role - Fennec</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Optional: Custom CSS -->
     <style>
         body {
             background-color: #f8f9fa;
