@@ -1,6 +1,7 @@
 <?php
 // select-role.php
 require_once 'global.php';
+include_once 'header.php';
 
 // Start session if not already started
 if (session_status() == PHP_SESSION_NONE) {
