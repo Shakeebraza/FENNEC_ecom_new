@@ -213,20 +213,20 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
 
         </div>
         <div class="tab-pane fade" id="view-products" role="tabpanel">
-    <h3 class="mb-4"><?= $lan['view_my_products'] ?></h3>
+            <h3 class="mb-4"><?= $lan['view_my_products'] ?></h3>
             <div class="mb-4">
-            <button class="btn" style="background-color: #00494f; color: white;" onclick="filterAds('all')"><?= $lan['all_ads'] ?></button>
-            <button class="btn" style="background-color: green; color: white;" onclick="filterAds('active')"><?= $lan['active_ads'] ?></button>
-            <button class="btn" style="background-color: red; color: white;" onclick="filterAds('expired')"><?= $lan['expired_ads'] ?></button>
-        </div>
+                <button class="btn" style="background-color: #00494f; color: white;" onclick="filterAds('all')"><?= $lan['all_ads'] ?></button>
+                <button class="btn" style="background-color: green; color: white;" onclick="filterAds('active')"><?= $lan['active_ads'] ?></button>
+                <button class="btn" style="background-color: red; color: white;" onclick="filterAds('expired')"><?= $lan['expired_ads'] ?></button>
+            </div>
 
-        <div class="row" id="product-list">
-            <?php
-           
-            $productFun->getProductsForUser(base64_decode($_SESSION['userid']), $lan, 'all'); 
-            ?>
+            <div class="row" id="product-list">
+                <?php
+            
+                $productFun->getProductsForUser(base64_decode($_SESSION['userid']), $lan, 'all'); 
+                ?>
+            </div>
         </div>
-    </div>
 
 
         <div class="tab-pane fade" id="favourite" role="tabpanel">
