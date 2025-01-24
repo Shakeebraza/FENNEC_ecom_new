@@ -71,7 +71,6 @@ if (isset($_SESSION['userid'])) {
             height: 47px;
             overflow-y: hidden;
             padding: 0px 20px -10px;
-            /* margin : 0px 0px 0px 0px; */
         }
         .btn-header {
             background-color: rgb(240, 185, 4);
