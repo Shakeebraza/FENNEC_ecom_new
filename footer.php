@@ -163,10 +163,20 @@ $(document).ready(function() {
             type: "GET",
             dataType: "json",
             success: function(response) {
+                // Update menu badge
                 if (response.unread_count > 0) {
                     $("#unread-count").text(response.unread_count).show();
                 } else {
                     $("#unread-count").hide();
+                }
+
+                // Update trader stats page
+                if ($("#unread-stat-count").length) {
+                    if (response.unread_count > 0) {
+                        $("#unread-stat-count").text(response.unread_count).show();
+                    } else {
+                        $("#unread-stat-count").text('0');
+                    }
                 }
             },
             error: function() {

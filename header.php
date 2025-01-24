@@ -372,16 +372,16 @@ if (isset($_SESSION['userid'])) {
         <?php echo $lan['post']; ?>
     </a>
     <?php if (isset($_SESSION['userid'])): ?>
-        <a href="<?php echo $urlval; ?>messages.php#upload"><?php echo $lan['manage_ads']; ?></a>
+        <a href="<?php echo $urlval; ?>Myaccount.php#upload"><?php echo $lan['manage_ads']; ?></a>
         <a href="<?php echo $urlval; ?>msg.php"><?php echo $lan['messages']; ?></a>
-        <a href="<?php echo $urlval; ?>messages.php#favourite"><?php echo $lan['favourites']; ?></a>
-        <a href="<?php echo $urlval; ?>messages.php#details"><?php echo $lan['my_details']; ?></a>
-        <a href="<?php echo $urlval; ?>messages.php#view-products"><?php echo $lan['view_job_ads']; ?></a>
+        <a href="<?php echo $urlval; ?>Myaccount.php#favourite"><?php echo $lan['favourites']; ?></a>
+        <a href="<?php echo $urlval; ?>Myaccount.php#details"><?php echo $lan['my_details']; ?></a>
+        <a href="<?php echo $urlval; ?>Myaccount.php#view-products"><?php echo $lan['view_job_ads']; ?></a>
         <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 2): ?>
             <a href="<?php echo $urlval; ?>trader_stats.php">Trader Stats</a>
         <?php endif; ?>
     <?php endif; ?>
-    <a href="<?php echo $urlval; ?>LoginRegister.php"><?php echo $lan['login']; ?></a>
+    <a href="<?php echo $urlval; ?>logout.php"><?php echo $lan['logout']; ?></a>
     
     <!-- Trader Stats Link (visible only for role = 2) -->
 
