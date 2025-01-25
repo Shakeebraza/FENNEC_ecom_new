@@ -331,6 +331,23 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
                                     <textarea class="form-control" id="address"
                                         rows="3"><?php echo $userData[0]['address'] ?? '' ?></textarea>
                                 </div>
+                                <!-- If trader (role=2), show these fields -->
+                                <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 2): ?>
+                                    <hr/>
+                                    <h4 class="mt-4 mb-3">Trader Details</h4>
+                                    <div class="mb-3">
+                                        <label for="companyName" class="form-label">Company Name</label>
+                                        <input type="text" class="form-control" id="companyName"
+                                               placeholder="Enter company name"
+                                               value="<?php echo $userData[0]['company_name'] ?? '' ?>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="urlLink" class="form-label">URL Link</label>
+                                        <input type="text" class="form-control" id="urlLink"
+                                               placeholder="Enter URL Link"
+                                               value="<?php echo $userData[0]['url_link'] ?? '' ?>">
+                                    </div>
+                                <?php endif; ?>
                                 <input type="hidden" name="token" id="csrf_token_update_info"
                                     value="<?php echo $CsrfProtection->generateToken() ?>">
 
@@ -478,6 +495,12 @@ function submitForm(event) {
     formData.append('language', document.getElementById('language').value);
     formData.append('username', document.getElementById('username').value);
     formData.append('token', document.getElementById('csrf_token_update_info').value);
+
+    // Only append these if role=2
+    <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 2): ?>
+        formData.append('companyName', document.getElementById('companyName').value);
+        formData.append('urlLink',      document.getElementById('urlLink').value);
+    <?php endif; ?>
 
     const responseMessageDiv = document.getElementById('responseMessage');
     responseMessageDiv.style.display = 'none';
