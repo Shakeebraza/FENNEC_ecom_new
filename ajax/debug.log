@@ -1,0 +1,81 @@
+[2025-01-26 03:25:54] Script accessed via POST request.
+[2025-01-26 03:25:54] POST data received: {"country":"dsa","first-name":"dsa","last-name":"dsa","city":"dsa","contactNumber":"","address":"dsa","language":"","username":"sheroz","token":"60110be53490aae68319faddbe61557bcbd7e30d77f253688601690f49568715","companyName":"","urlLink":""}
+[2025-01-26 03:25:54] Decoded user ID: 65
+[2025-01-26 03:25:54] Data to be updated/inserted: {"first_name":null,"last_name":null,"country":null,"city":null,"number":null,"address":null,"language":null,"updated_at":"2025-01-26 03:25:54"}
+[2025-01-26 03:25:54] User is a trader. Added company_name and url_ink to data.
+[2025-01-26 03:25:54] Checked if user exists: [{"id":9,"userid":65,"first_name":"dsa","last_name":"dsa","city":"dsa","country":"dsa","language":"","address":"dsa","number":"","created_at":"2025-01-18 21:12:59","updated_at":"2025-01-26 03:18:10","company_name":"","url_link":""}]
+[2025-01-26 03:25:54] User detail ID found: 9
+[2025-01-26 03:25:54] Update response: {"success":true,"message":"Data updated successfully."}
+[2025-01-26 03:25:54] Details updated successfully for user ID: 65
+[2025-01-26 03:29:50] Script accessed via POST request.
+[2025-01-26 03:29:50] POST data received: {"country":"dsa","first-name":"dsa","last-name":"dsa","city":"dsa","contactNumber":"","address":"dsa","language":"","username":"sheroz","token":"60110be53490aae68319faddbe61557bcbd7e30d77f253688601690f49568715","companyName":"","urlLink":""}
+[2025-01-26 03:29:50] Decoded user ID: 65
+[2025-01-26 03:29:50] User is a trader. Added company_name and url_link to data.
+[2025-01-26 03:29:50] Data to be updated/inserted: {"first_name":"dsa","last_name":"dsa","country":"dsa","city":"dsa","number":"","address":"dsa","language":"","updated_at":"2025-01-26 03:29:50","company_name":"","url_link":""}
+[2025-01-26 03:29:50] Checked if user exists: [{"id":9,"userid":65,"first_name":"","last_name":"","city":"","country":"","language":"","address":"","number":"","created_at":"2025-01-18 21:12:59","updated_at":"2025-01-26 03:25:54","company_name":"","url_link":""}]
+[2025-01-26 03:29:50] User detail ID found: 9
+[2025-01-26 03:29:50] Update response: {"success":true,"message":"Data updated successfully."}
+[2025-01-26 03:29:50] Username change requested: sheroz
+[2025-01-26 03:29:50] Current username: sheroz
+[2025-01-26 03:29:50] Username remains unchanged.
+[2025-01-26 03:29:50] Details updated successfully for user ID: 65
+[2025-01-26 03:30:04] Script accessed via POST request.
+[2025-01-26 03:30:04] POST data received: {"country":"dsa","first-name":"dsa","last-name":"dsa","city":"dsa","contactNumber":"","address":"dsa","language":"","username":"sheroz","token":"bc88a9ecf83090b8af227110f2df4e87887c7d31ae1637d00bfb3957a422124b","companyName":"dsa","urlLink":"dsa"}
+[2025-01-26 03:30:04] Decoded user ID: 65
+[2025-01-26 03:30:04] User is a trader. Added company_name and url_link to data.
+[2025-01-26 03:30:04] Data to be updated/inserted: {"first_name":"dsa","last_name":"dsa","country":"dsa","city":"dsa","number":"","address":"dsa","language":"","updated_at":"2025-01-26 03:30:04","company_name":"dsa","url_link":"dsa"}
+[2025-01-26 03:30:04] Checked if user exists: [{"id":9,"userid":65,"first_name":"dsa","last_name":"dsa","city":"dsa","country":"dsa","language":"","address":"dsa","number":"","created_at":"2025-01-18 21:12:59","updated_at":"2025-01-26 03:29:50","company_name":"","url_link":""}]
+[2025-01-26 03:30:04] User detail ID found: 9
+[2025-01-26 03:30:04] Update response: {"success":true,"message":"Data updated successfully."}
+[2025-01-26 03:30:04] Username change requested: sheroz
+[2025-01-26 03:30:04] Current username: sheroz
+[2025-01-26 03:30:04] Username remains unchanged.
+[2025-01-26 03:30:04] Details updated successfully for user ID: 65
+[2025-01-26 03:30:19] Script accessed via POST request.
+[2025-01-26 03:30:19] POST data received: {"country":"dsa","first-name":"dsa","last-name":"dsa","city":"dsa","contactNumber":"","address":"dsa","language":"","username":"sheroz","token":"bc88a9ecf83090b8af227110f2df4e87887c7d31ae1637d00bfb3957a422124b","companyName":"hello","urlLink":"how are u"}
+[2025-01-26 03:30:19] Decoded user ID: 65
+[2025-01-26 03:30:19] User is a trader. Added company_name and url_link to data.
+[2025-01-26 03:30:19] Data to be updated/inserted: {"first_name":"dsa","last_name":"dsa","country":"dsa","city":"dsa","number":"","address":"dsa","language":"","updated_at":"2025-01-26 03:30:19","company_name":"hello","url_link":"how are u"}
+[2025-01-26 03:30:19] Checked if user exists: [{"id":9,"userid":65,"first_name":"dsa","last_name":"dsa","city":"dsa","country":"dsa","language":"","address":"dsa","number":"","created_at":"2025-01-18 21:12:59","updated_at":"2025-01-26 03:30:04","company_name":"dsa","url_link":"dsa"}]
+[2025-01-26 03:30:19] User detail ID found: 9
+[2025-01-26 03:30:19] Update response: {"success":true,"message":"Data updated successfully."}
+[2025-01-26 03:30:19] Username change requested: sheroz
+[2025-01-26 03:30:19] Current username: sheroz
+[2025-01-26 03:30:19] Username remains unchanged.
+[2025-01-26 03:30:19] Details updated successfully for user ID: 65
+[2025-01-26 03:30:21] Script accessed via POST request.
+[2025-01-26 03:30:21] POST data received: {"country":"dsa","first-name":"dsa","last-name":"dsa","city":"dsa","contactNumber":"","address":"dsa","language":"","username":"sheroz","token":"bc88a9ecf83090b8af227110f2df4e87887c7d31ae1637d00bfb3957a422124b","companyName":"hello","urlLink":"how are u"}
+[2025-01-26 03:30:21] Decoded user ID: 65
+[2025-01-26 03:30:21] User is a trader. Added company_name and url_link to data.
+[2025-01-26 03:30:21] Data to be updated/inserted: {"first_name":"dsa","last_name":"dsa","country":"dsa","city":"dsa","number":"","address":"dsa","language":"","updated_at":"2025-01-26 03:30:21","company_name":"hello","url_link":"how are u"}
+[2025-01-26 03:30:21] Checked if user exists: [{"id":9,"userid":65,"first_name":"dsa","last_name":"dsa","city":"dsa","country":"dsa","language":"","address":"dsa","number":"","created_at":"2025-01-18 21:12:59","updated_at":"2025-01-26 03:30:19","company_name":"hello","url_link":"how are u"}]
+[2025-01-26 03:30:21] User detail ID found: 9
+[2025-01-26 03:30:21] Update response: {"success":true,"message":"Data updated successfully."}
+[2025-01-26 03:30:21] Username change requested: sheroz
+[2025-01-26 03:30:21] Current username: sheroz
+[2025-01-26 03:30:21] Username remains unchanged.
+[2025-01-26 03:30:21] Details updated successfully for user ID: 65
+[2025-01-26 03:30:47] Script accessed via POST request.
+[2025-01-26 03:30:47] POST data received: {"country":"dsa","first-name":"dsa","last-name":"dsa","city":"dsa","contactNumber":"","address":"dsa","language":"","username":"sheroz","token":"43598d20319d18f7817c755d12382329f8fea42ea840598394ab326271a6b5ba","companyName":"hello","urlLink":"how are u"}
+[2025-01-26 03:30:47] Decoded user ID: 65
+[2025-01-26 03:30:47] User is a trader. Added company_name and url_link to data.
+[2025-01-26 03:30:47] Data to be updated/inserted: {"first_name":"dsa","last_name":"dsa","country":"dsa","city":"dsa","number":"","address":"dsa","language":"","updated_at":"2025-01-26 03:30:47","company_name":"hello","url_link":"how are u"}
+[2025-01-26 03:30:47] Checked if user exists: [{"id":9,"userid":65,"first_name":"dsa","last_name":"dsa","city":"dsa","country":"dsa","language":"","address":"dsa","number":"","created_at":"2025-01-18 21:12:59","updated_at":"2025-01-26 03:30:21","company_name":"hello","url_link":"how are u"}]
+[2025-01-26 03:30:47] User detail ID found: 9
+[2025-01-26 03:30:47] Update response: {"success":true,"message":"Data updated successfully."}
+[2025-01-26 03:30:47] Username change requested: sheroz
+[2025-01-26 03:30:47] Current username: sheroz
+[2025-01-26 03:30:47] Username remains unchanged.
+[2025-01-26 03:30:47] Details updated successfully for user ID: 65
+[2025-01-26 03:30:57] Script accessed via POST request.
+[2025-01-26 03:30:57] POST data received: {"country":"dsa","first-name":"dsa","last-name":"dsa","city":"dsa","contactNumber":"","address":"dsa","language":"","username":"sheroz","token":"ca1861c6ee2a1d970c7d5eb2515f08795b5f7b56434e8db432020f3d1dbe1c23","companyName":"hello","urlLink":""}
+[2025-01-26 03:30:57] Decoded user ID: 65
+[2025-01-26 03:30:57] User is a trader. Added company_name and url_link to data.
+[2025-01-26 03:30:57] Data to be updated/inserted: {"first_name":"dsa","last_name":"dsa","country":"dsa","city":"dsa","number":"","address":"dsa","language":"","updated_at":"2025-01-26 03:30:57","company_name":"hello","url_link":""}
+[2025-01-26 03:30:57] Checked if user exists: [{"id":9,"userid":65,"first_name":"dsa","last_name":"dsa","city":"dsa","country":"dsa","language":"","address":"dsa","number":"","created_at":"2025-01-18 21:12:59","updated_at":"2025-01-26 03:30:47","company_name":"hello","url_link":"how are u"}]
+[2025-01-26 03:30:57] User detail ID found: 9
+[2025-01-26 03:30:57] Update response: {"success":true,"message":"Data updated successfully."}
+[2025-01-26 03:30:57] Username change requested: sheroz
+[2025-01-26 03:30:57] Current username: sheroz
+[2025-01-26 03:30:57] Username remains unchanged.
+[2025-01-26 03:30:57] Details updated successfully for user ID: 65

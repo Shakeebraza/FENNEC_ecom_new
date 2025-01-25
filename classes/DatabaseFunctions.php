@@ -318,10 +318,8 @@ class DatabaseFunctions {
     }
 
     public function updateData($tableName, $data, $id) {
-
         $tableName = preg_replace('/[^a-zA-Z0-9_]/', '', $tableName);
     
-
         $sanitizedData = [];
         foreach ($data as $key => $value) {
             $value = strip_tags($value);
@@ -329,7 +327,6 @@ class DatabaseFunctions {
             $sanitizedData[$key] = $value;
         }
     
-
         $setClause = [];
         foreach ($sanitizedData as $key => $value) {
             $setClause[] = "`$key` = :$key";
@@ -337,31 +334,25 @@ class DatabaseFunctions {
         $setClause = implode(', ', $setClause);
     
         try {
-
             $stmt = $this->pdo->prepare("UPDATE `$tableName` SET $setClause WHERE id = :id");
-            
-
-            $sanitizedData['id'] = $id; 
+            $sanitizedData['id'] = $id;
     
-
             foreach ($sanitizedData as $key => $value) {
                 $stmt->bindValue(":$key", $value);
             }
     
-     
             $stmt->execute();
     
-     
             if ($stmt->rowCount() > 0) {
                 return ['success' => true, 'message' => 'Data updated successfully.'];
             } else {
                 return ['success' => false, 'message' => 'No changes made; the data was the same.'];
             }
         } catch (PDOException $e) {
- 
             return ['success' => false, 'message' => 'Database error: ' . $e->getMessage()];
         }
     }
+    
 
     function getLastIdshort($tableName) {
         try {
