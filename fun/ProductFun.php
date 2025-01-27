@@ -1321,7 +1321,38 @@ Class Productfun{
     }
     
     
+    // public function searchData($table, $query) {
+    //     $sql = "
+    //         SELECT 
+    //             p.*, 
+    //             c.category_name, 
+    //             c.slug, 
+    //             c.category_image,
+    //             MATCH(p.name, p.brand, p.description) AGAINST (:query IN NATURAL LANGUAGE MODE) AS relevance
+    //         FROM 
+    //             $table AS p
+    //         JOIN 
+    //             categories AS c 
+    //         ON 
+    //             p.category_id = c.id
+    //         WHERE 
+    //             MATCH(p.name, p.brand, p.description) AGAINST (:query IN NATURAL LANGUAGE MODE)
+    //         AND (
+    //             (p.extension = 0 AND p.created_at >= NOW() - INTERVAL 30 DAY)
+    //             OR
+    //             (p.extension = 1 AND p.created_at >= NOW() - INTERVAL 60 DAY)
+    //         )
+    //         ORDER BY relevance DESC
+    //         LIMIT 10
+    //     ";
     
+    //     $stmt = $this->pdo->prepare($sql);
+    //     $stmt->bindParam(':query', $query);
+    //     $stmt->execute();
+    
+    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // }
+        
     public function searchData($table, $query) {
         $sql = "
             SELECT 
