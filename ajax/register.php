@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $emailTemplate    = $emialTemp->getVerificationTemplate($verificationLink);
     $mailResponse     = smtp_mailer($email, 'Email Verification', $emailTemplate);
 
-    if ($mailResponse == 'Sent') {
+    if ($mailResponse == 'sent') {
         echo json_encode(['status' => 'success', 'message' => 'Registration successful! Verification email sent.']);
     } else {
         echo json_encode(['status' => 'error', 'errors' => 'Registration successful, but failed to send verification email.']);

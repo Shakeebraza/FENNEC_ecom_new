@@ -6,21 +6,22 @@ include('smtp/PHPMailerAutoload.php');
 function smtp_mailer($to, $subject, $msg, $attachments = []) {
     $mail = new PHPMailer(); 
     $mail->IsSMTP(); 
-    $mail->SMTPAuth = true; 
+    $mail->SMTPAuth   = true; 
     $mail->SMTPSecure = 'ssl';  
-    $mail->Host = "smtp.gmail.com";
-    $mail->Port = 465;  
+    $mail->Host       = "smtp.gmail.com";
+    $mail->Port       = 465;  
     $mail->IsHTML(true);
-    $mail->CharSet = 'UTF-8';
-    // $mail->SMTPDebug = 3; 
-    $mail->Username = "man411210@gmail.com";
-    $mail->Password = "dsahhfifikerwgzz";  
-    $mail->SetFrom("bilal.shehroz420@gmail.com");
-    $mail->Subject = $subject;
-    $mail->Body = $msg;
+    $mail->CharSet    = 'UTF-8';
+    // $mail->SMTPDebug = 3;
+
+    $mail->Username   = "man411210@gmail.com";
+    $mail->Password   = "dsahhfifikerwgzz";  
+    $mail->SetFrom("man411210@gmail.com");
+    $mail->Subject    = $subject;
+    $mail->Body       = $msg;
     $mail->AddAddress($to);
 
-    // Ensure $attachments is an array before processing
+    // attachments if any
     if (is_array($attachments)) {
         foreach ($attachments as $filePath) {
             if (file_exists($filePath)) {
@@ -31,19 +32,19 @@ function smtp_mailer($to, $subject, $msg, $attachments = []) {
         }
     }
 
-    $mail->SMTPOptions = array(
-        'ssl' => array(
-            'verify_peer' => false,
-            'verify_peer_name' => false,
+    $mail->SMTPOptions = [
+        'ssl' => [
+            'verify_peer'       => false,
+            'verify_peer_name'  => false,
             'allow_self_signed' => true 
-        )
-    );
+        ]
+    ];
 
     if (!$mail->Send()) {
         error_log('Mailer Error: ' . $mail->ErrorInfo);
         return $mail->ErrorInfo;
     } else {
-        return 'Sent';
+        return 'sent';  // all-lowercase
     }
 }
 
