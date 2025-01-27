@@ -30,7 +30,7 @@ if ($searchStatus !== '') {
 }
 
 $where = !empty($conditions) ? implode(' AND ', $conditions) : '';
-$filteredQuery = $dbFunctions->getDatanotenc('users', $where, '', 'id', 'DESC');
+$filteredQuery = $dbFunctions->getDatanotenc('users', $where, '', 'id', 'DESC',0,100);
 
 $data = [];
 
