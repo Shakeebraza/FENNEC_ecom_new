@@ -8,15 +8,25 @@ if (isset($_GET['lang'])) {
 $lang = $_SESSION['lang'] ?? 'en';
 $lan  = $fun->loadLanguage($lang);
 
-// -------------------------------------------------------------------
+// -----------------------------------------------------------
 // Optional: retrieve the user’s balance if the user is logged in
 $userBalance = 0; // Default
 if (isset($_SESSION['userid'])) {
+    // Convert from base64 (based on your code style)
     $decodedUserId = base64_decode($_SESSION['userid']);
-    $userBalance   = $fun->getUserBalance($decodedUserId);
-    // e.g. $userBalance = 123.45; // placeholder if needed
+
+    // If you have a method like $fun->getUserBalance($decodedUserId),
+    // use it here:
+    $userBalance = $fun->getUserBalance($decodedUserId);
+    // $userBalance = 100.00;
+    // Or if your $dbFunctions can fetch the user record:
+    //   $result      = $dbFunctions->getDatanotenc('users', "id = '$decodedUserId'");
+    //   $userBalance = $result[0]['wallet_balance'] ?? 0;
+    
+    // For demonstration, if you don’t yet have a method:
+    // $userBalance = 123.45; // example placeholder
 }
-// -------------------------------------------------------------------
+// -----------------------------------------------------------
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +37,6 @@ if (isset($_SESSION['userid'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
     <link rel="stylesheet" href="<?php echo $urlval; ?>custom/asset/styles.css" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" type="text/css"
@@ -46,8 +55,8 @@ if (isset($_SESSION['userid'])) {
     <meta http-equiv="expires" content="0">
 
     <?php
-    $googleAddScript   = $fun->getSiteSettingValue('google_add_script');
-    $google_map_script = $fun->getSiteSettingValue('google_map_script');
+    $googleAddScript     = $fun->getSiteSettingValue('google_add_script');
+    $google_map_script   = $fun->getSiteSettingValue('google_map_script');
 
     if (!empty($googleAddScript) && strpos($googleAddScript, '<script') !== false) {
         echo $googleAddScript;
@@ -58,8 +67,6 @@ if (isset($_SESSION['userid'])) {
     ?>
 
     <style>
-        /* We did NOT add new CSS changes, only minimal inline styles for badges below */
-        /* The rest is your original style code */
         #dropdownMenuButton {
             height: 47px;
             overflow-y: hidden;
@@ -172,7 +179,6 @@ if (isset($_SESSION['userid'])) {
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-        <!-- LOGO -->
         <a class="navbar-brand d-flex align-items-center" href="<?php echo $urlval; ?>" style="text-decoration: none;">
             <?php
             $logoData = $fun->getBox('box1');
@@ -183,7 +189,6 @@ if (isset($_SESSION['userid'])) {
             <img src="<?php echo $logo; ?>" alt="Fennec Logo" style="max-width: 100%; margin-right: 10px;" />
             <span style="font-size: 1.7rem; font-weight: bold; color: inherit;"><?php echo $title; ?></span>
         </a>
-
         <button id="menuToggle" class="navbar-toggler" type="button" onclick="openNav()" style="display: none">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -195,8 +200,8 @@ if (isset($_SESSION['userid'])) {
             onsubmit="return false"
         >
             <?php
-            $selectedLocation = $_GET['location'] ?? '';
-            $search           = $_GET['search']   ?? '';
+            $selectedLocation = isset($_GET['location']) ? $_GET['location'] : '';
+            $search           = isset($_GET['search']) ? $_GET['search'] : '';
             ?>
             <!-- Search Input Group -->
             <div class="input-group w-50 me-lg-1 mb-2 mb-lg-0 custom-form">
@@ -209,7 +214,7 @@ if (isset($_SESSION['userid'])) {
                     type="search"
                     placeholder="<?php echo $lan['Search_fennec']; ?>"
                     aria-label="Search"
-                    value="<?php echo htmlspecialchars($search); ?>"
+                    value="<?php echo !empty($search) ? htmlspecialchars($search) : ''; ?>"
                 />
             </div>
 
@@ -218,7 +223,10 @@ if (isset($_SESSION['userid'])) {
                 <span class="input-group-text rounded-0 bg-light border-0">
                     <i class="fa-solid fa-location-dot me-2"></i>
                 </span>
-                <select class="form-select rounded-0 location-select custom-select" id="locationSelect">
+                <select
+                    class="form-select rounded-0 location-select custom-select"
+                    id="locationSelect"
+                >
                     <option value="" selected><?php echo $lan['Select_country']; ?></option>
                     <?php
                     $countryPairs = $productFun->getCountries();
@@ -247,48 +255,48 @@ if (isset($_SESSION['userid'])) {
 
         <!-- LOGIN / REGISTER / USER MENU -->
         <div class="d-flex custom-loginRegister">
-            <a
-                href="<?php echo isset($_SESSION['userid']) ? $urlval . 'post.php' : $urlval . 'LoginRegister/'; ?>"
-                class="btn custom-btn me-2 mb-lg-0 d-flex flex-column align-items-center"
-            >
+            <a href="<?php
+            if (isset($_SESSION['userid'])) {
+                echo $urlval . 'post.php';
+            } else {
+                echo $urlval . 'LoginRegister/';
+            }
+            ?>"
+               class="btn custom-btn me-2 mb-lg-0 d-flex flex-column align-items-center">
                 <i class="fa-solid fa-dollar-sign mb-1 fa-plus-circle"></i>
                 <span class="new-btn"><?php echo $lan['sell']; ?></span>
             </a>
 
-            <?php
-            // =========================
-            // ROLE BADGE FOR 0 or 2
-            // =========================
+           <?php
+            // ==================== ADD ROLE BADGE for 0 (USER) and 2 (TRADER) =====================
             $roleBadge = '';
             if (isset($_SESSION['role'])) {
                 if ($_SESSION['role'] == 0) {
-                    // "USER" role
                     $roleBadge = '<span style="
-                        background: #17a2b8; 
-                        color: #fff; 
-                        margin-left:5px; 
-                        padding:1px 6px; 
+                        background: #17a2b8;
+                        color: #fff;
+                        margin-left:5px;
+                        padding:1px 6px;
                         border-radius:4px;
-                        font-size: 12px;">
+                        font-size:12px;">
                         USER
                     </span>';
                 } elseif ($_SESSION['role'] == 2) {
-                    // "TRADER" role
                     $roleBadge = '<span style="
-                        background: #f0ad4e; 
-                        color: #fff; 
-                        margin-left:5px; 
-                        padding:1px 6px; 
+                        background: #f0ad4e;
+                        color: #fff;
+                        margin-left:5px;
+                        padding:1px 6px;
                         border-radius:4px;
-                        font-size: 12px;">
+                        font-size:12px;">
                         TRADER
                     </span>';
                 }
             }
-            // =========================
-
+            // ====================================================================================
+            // If user is logged in, show balance + messages + dropdown
             if (isset($_SESSION['userid'])) {
-                // If user is logged in
+
                 echo '
                 <div class="d-flex">
                     <!-- Messages Button with Badge -->
@@ -303,29 +311,24 @@ if (isset($_SESSION['userid'])) {
                     
                     <!-- Dropdown Menu -->
                     <div class="dropdown" style="top:-7px;">
-                        <button
-                            class="btn btn-outline-light dropdown-toggle"
-                            type="button"
-                            id="dropdownMenuButton"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            <i class="fas fa-bars"></i>
-                            <br><p>' . $lan['menu'] . '</p>
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-bars"></i> 
+                            <br>
+                            <p>' . $lan['menu'] . '</p>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                             <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#view-products">' . $lan['view_job_ads'] . '</a></li>
                             <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#Messages">' . $lan['messages'] . '</a></li>
                             <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#favourite">' . $lan['favourites'] . '</a></li>
-                            <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#details">' . $lan['my_details'] . $roleBadge . '</a></li>
+                            <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#details">' . $lan['my_details'] .  $roleBadge .'</a></li>
                             <li><a class="dropdown-item" href="' . $urlval . 'transaction_history.php">' . $lan['transaction_history'] . '</a></li>
-                            <li><a class="dropdown-item" href="' . $urlval . 'addBalance.php">Add Balance</a></li>';
-
-                // Trader Stats if role=2
+                            <li><a class="dropdown-item" href="' . $urlval . 'addBalance.php">Add Balance</a></li>
+                            
+                            <!-- Trader Stats Link (only for role = 2) -->
+                            ';
                 if (isset($_SESSION['role']) && $_SESSION['role'] == 2) {
                     echo '<li><a class="dropdown-item" href="' . $urlval . 'trader_stats.php">Trader Stats</a></li>';
                 }
-
                 echo '
                             <li><a class="dropdown-item" href="' . $urlval . 'logout.php">' . $lan['logout'] . '</a></li>
                         </ul>
@@ -350,9 +353,7 @@ if (isset($_SESSION['userid'])) {
         <?php if (isset($_SESSION['userid'])): ?>
             <!-- Show user balance with a plus button -->
             <div class="me-2 d-flex align-items-center text-white fw-bold">
-                <span style="margin-right: 8px;">
-                    <?php echo $lan['balance'] ?? 'Balance'; ?>:
-                </span>
+                <span style="margin-right: 8px;"><?php echo $lan['balance'] ?? 'Balance'; ?>:</span>
                 <span style="color: #FFEB3B; font-size: 1rem;">
                     <?php echo $fun->getFieldData('site_currency') . number_format($userBalance, 2); ?>
                 </span>
@@ -378,17 +379,18 @@ if (isset($_SESSION['userid'])) {
             if ($languages) {
                 foreach ($languages as $language) {
                     $fileName = pathinfo(basename($language['file_path']), PATHINFO_FILENAME);
-                    echo '<option value="' . $fileName . '" '
-                        . ($lang == $fileName ? 'selected' : '') . '>'
+                    echo '<option value="' . $fileName . '" ' . ($lang == $fileName ? 'selected' : '') . '>'
                         . $language['language_name'] . '</option>';
                 }
             }
             ?>
         </select>
     </div>
+
 </nav>
 
 <!-- MOBILE SIDEBAR -->
+ <!-- MOBILE SIDEBAR -->
 <div id="mySidebar" class="sidebar">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="<?php echo $urlval; ?>"><?php echo $lan['home']; ?></a>
@@ -404,59 +406,138 @@ if (isset($_SESSION['userid'])) {
         <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 2): ?>
             <a href="<?php echo $urlval; ?>trader_stats.php">Trader Stats</a>
         <?php endif; ?>
-        <a href="<?php echo $urlval; ?>logout.php"><?php echo $lan['logout']; ?></a>
     <?php endif; ?>
+    <a href="<?php echo $urlval; ?>logout.php"><?php echo $lan['logout']; ?></a>
+    
+    <!-- Trader Stats Link (visible only for role = 2) -->
+
 </div>
 
-<!-- ... rest of your sub-menus, responsive menus, etc. ... -->
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-function changeLanguage(languageFile) {
-    window.location.href = '?lang=' + languageFile;
-}
 
-function openNav() {
-    document.getElementById("mySidebar").style.width = "70%";
-}
+<!-- NAV SUB MENU -->
+<div class="nav-sub-menu-ct">
+    <div class="nav-menu-32323">
+        <div class="nav-menu-3344343">
+            <div class="nav-sub-menu-inn1">
+                <div class="nav-men-sub-ct-inn">
+                    <ul>
+                        <?php
+                        $browse_by = $lan['browse_by'] ?? 'Browse by';
+                        $findCate  = $categoryManager->getAllCategoriesHeaderMenu();
+                        if ($findCate['status'] == 'success') {
+                            foreach ($findCate['data'] as $category) {
+                                echo '
+                                <li class="' . htmlspecialchars($category['slug']) . '">
+                                    <a href="' . $urlval . 'category/?slug=' . $category['slug'] . '">'
+                                        . htmlspecialchars($category['category_name']) . '
+                                    </a>
+                                    <div class="nav-main-dwdisnmn" style="display:none;">
+                                        <div class="nav-snm-innnn">
+                                            <h2>' . $browse_by . '</h2>
+                                            <div class="div-nv-sb-menu">
+                                                <ul>';
 
-function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
-}
+                                $duncatdata = $categoryManager->getAllSubCategoriesHeaderMenu($category['id']);
+                                foreach ($duncatdata['data'] as $val) {
+                                    echo '<li class="lihpoverset">
+                                            <a href="' . $urlval . 'category/?slug=' . $category['slug']
+                                                . '&subcategory=' . htmlspecialchars($val['id']) . '">'
+                                                . htmlspecialchars(ucwords(strtolower($val['subcategory_name'])))
+                                            . '</a>
+                                          </li>';
+                                }
 
-document.getElementById('searchButton').addEventListener('click', function() {
-    let query = document.getElementById('searchInput').value.trim();
-    let location = document.getElementById('locationSelect').value;
-    let url = '<?php echo $urlval; ?>category.php?';
-    if (location) {
-        url += 'location=' + encodeURIComponent(location) + '&';
-    }
-    if (query) {
-        url += 'search=' + encodeURIComponent(query);
-    }
-    window.location.href = url;
-});
+                                $productPremium = $productFun->PoplarProductper();
 
-// AUTOCOMPLETE SUGGESTIONS
-document.getElementById('searchInput').addEventListener('input', function() {
-    let query = this.value;
-    let location = document.getElementById('locationSelect').value;
-    if (query.length > 0) {
-        fetch('<?php echo $urlval; ?>ajax/search.php?q=' + encodeURIComponent(query) + '&location=' + encodeURIComponent(location))
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('searchResults').innerHTML = data;
-                document.getElementById('searchResults').style.display = 'block';
-            });
-    } else {
-        document.getElementById('searchResults').style.display = 'none';
-    }
-});
-document.addEventListener('click', function(e) {
-    if (!document.getElementById('searchForm').contains(e.target)) {
-        document.getElementById('searchResults').style.display = 'none';
-    }
-});
-</script>
-</body>
-</html>
+                                echo '
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="div-img-right-submenu" style="width:20%;">';
+
+                                if (!empty($productPremium)) {
+                                    echo '<a href="' . $urlval . 'detail/?slug=' . $productPremium['slug'] . '">
+                                            <img src="' . $urlval . $productPremium['image'] . '" alt="" style="width:100%">
+                                          </a>';
+                                } else {
+                                    echo '<img src="https://www.gumtree.com/assets/frontend/cars-guide.84c7d8c8754c04a88117e49a84535413.png" alt="">';
+                                }
+                                echo '
+                                        </div>
+                                    </div>
+                                </li>';
+                            }
+                        }
+                        ?>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- RESPONSIVE MENU -->
+<div class="respopnsive-menu321">
+    <div class="nav-menu-res-3344343">
+        <div class="nav-sub-menu-res-inn1">
+            <div class="nav-men-sub-res-ct-inn">
+                <ul>
+                    <?php
+                    $findCate = $categoryManager->getAllCategoriesHeaderMenu();
+                    if ($findCate['status'] == 'success') {
+                        foreach ($findCate['data'] as $category) {
+                            echo '
+                            <li class="car-vhcl-menu-res" data-id="' . htmlspecialchars($category['id']) . '">'
+                                . htmlspecialchars($category['category_name']) . '
+                            </li>';
+                        }
+                    }
+                    ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="remenu-sub">
+        <?php
+        $browse_by = $lan['browse_by'] ?? 'Browse by';
+        if ($findCate['status'] == 'success') {
+            foreach ($findCate['data'] as $category) {
+                ?>
+                <div class="remenu-main-dw" data-id="<?php echo htmlspecialchars($category['id']); ?>" style="display:none;">
+                    <div class="remenu-innnn">
+                        <div class="div-sub-321">
+                            <img class="crs-end"
+                                 src="<?php echo $urlval; ?>custom/asset/delete-button.png"
+                                 alt="Delete Button"
+                            >
+                            <h3><?php echo htmlspecialchars($category['category_name']); ?></h3>
+                        </div>
+                        <h2><?php echo $browse_by; ?></h2>
+                        <ul>
+                            <?php
+                            $duncatdata = $categoryManager->getAllSubCategoriesHeaderMenu($category['id']);
+                            if (!empty($duncatdata['data'])) {
+                                foreach ($duncatdata['data'] as $val) {
+                                    ?>
+                                    <li>
+                                        <a href="<?php echo $urlval; ?>category.php?slug=<?php echo htmlspecialchars($category['slug']); ?>&subcategory=<?php echo $val['id']; ?>">
+                                            <?php echo htmlspecialchars($val['subcategory_name']); ?>
+                                        </a>
+                                    </li>
+                                    <?php
+                                }
+                            } else {
+                                echo '<li>' . $lan['No_subcategories_found'] . '</li>';
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                </div>
+                <?php
+            }
+        }
+        ?>
+    </div>
+</div>

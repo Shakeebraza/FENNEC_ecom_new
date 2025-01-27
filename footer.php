@@ -204,23 +204,23 @@ $(document).ready(function() {
     // =============================================
 
     // 1) AUTOCOMPLETE: If user hits Enter => we do not rely on relative path
-    // $('#searchInput').on('input', function() {
-    //     let query = $(this).val();
-    //     let location = getUrlParameter('location');
+    $('#searchInput').on('input', function() {
+        let query = $(this).val();
+        let location = getUrlParameter('location');
 
-    //     if (query.length > 0) {
-    //         $.ajax({
-    //             url: '<?php echo $urlval; ?>ajax/search.php', // absolute path
-    //             type: 'GET',
-    //             data: { q: query, location: location },
-    //             success: function(data) {
-    //                 $('#searchResults').html(data).show();
-    //             }
-    //         });
-    //     } else {
-    //         $('#searchResults').hide();
-    //     }
-    // });
+        if (query.length > 0) {
+            $.ajax({
+                url: '<?php echo $urlval; ?>ajax/search.php', // absolute path
+                type: 'GET',
+                data: { q: query, location: location },
+                success: function(data) {
+                    $('#searchResults').html(data).show();
+                }
+            });
+        } else {
+            $('#searchResults').hide();
+        }
+    });
 
     // =============================================
     // 4. PRESS ENTER => REDIRECT TO FIRST SUGGESTION
@@ -248,21 +248,21 @@ $(document).ready(function() {
     // =============================================
     // 6. EXPLICIT SEARCH BUTTON
     // =============================================
-    // $('#searchButton').on('click', function() {
-    //     // Build the absolute URL for search results
-    //     var cityId      = $('#locationSelect').val();
-    //     var searchQuery = $('#searchInput').val().trim();
-    //     var url         = '<?php echo $urlval; ?>category.php?'; // <--- absolute reference
+    $('#searchButton').on('click', function() {
+        // Build the absolute URL for search results
+        var cityId      = $('#locationSelect').val();
+        var searchQuery = $('#searchInput').val().trim();
+        var url         = '<?php echo $urlval; ?>category.php?'; // <--- absolute reference
 
-    //     if (cityId) {
-    //         url += 'location=' + encodeURIComponent(cityId) + '&';
-    //     }
-    //     if (searchQuery) {
-    //         url += 'search=' + encodeURIComponent(searchQuery);
-    //     }
+        if (cityId) {
+            url += 'location=' + encodeURIComponent(cityId) + '&';
+        }
+        if (searchQuery) {
+            url += 'search=' + encodeURIComponent(searchQuery);
+        }
 
-    //     window.location.href = url;
-    // });
+        window.location.href = url;
+    });
     // =============================================
     // 7. LOCATION SELECT => AUTO REDIRECT
     //    (If you only want the Search Button to finalize,
