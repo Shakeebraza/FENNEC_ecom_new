@@ -1,21 +1,28 @@
 <?php
 require_once('../../../global.php');
+header('Content-Type: application/json');
 
-$id = $security->decrypt($_POST['id']);
-$is_show = intval($_POST['is_show']);
-$data = [
-    'is_show' => $is_show
-];
+// Only Admin or Super Admin can update
+$role = $_SESSION['role'] ?? 0;
+if (!in_array($role, [1,3])) {
+    echo json_encode(['success' => false, 'message' => 'Unauthorized.']);
+    exit;
+}
 
-$updateQuery = "UPDATE categories SET is_show = :is_show WHERE id = :id";
+$id     = $security->decrypt($_POST['id'] ?? '');
+$is_show= intval($_POST['is_show'] ?? 0);
+
+if (!$id) {
+    echo json_encode(['success' => false, 'message' => 'Invalid ID.']);
+    exit;
+}
+
+$data = [ 'is_show' => $is_show ];
 $updateData = $dbFunctions->updateData('categories', $data, $id);
-
-// header('Content-Type: application/json'); 
 
 if ($updateData['success']) {
     echo json_encode(['success' => true, 'message' => 'Data updated successfully.']);
 } else {
-    echo json_encode(['success' => false, 'message' => 'No changes made; the data was the same.']);
+    echo json_encode(['success' => false, 'message' => 'No changes made or error.']);
 }
 ?>
-

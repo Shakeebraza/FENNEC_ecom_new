@@ -2,6 +2,12 @@
 require_once("../../global.php");
 include_once('../header.php');
 
+$role = $_SESSION['role'] ?? 0;
+if (!in_array($role, [1,3])) {
+    // show "Access Denied" or redirect
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $heading = $_POST['heading'] ?? '';
     $slug = $_POST['slug'] ?? '';

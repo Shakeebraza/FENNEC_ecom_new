@@ -1,20 +1,29 @@
 <?php
 require_once('../../../global.php');
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $catId = $_POST['id'] ?? null;
+header('Content-Type: application/json');
 
-    if (!$catId) {
-        echo json_encode(['success' => false, 'message' => 'Invalid page ID.']);
+$role = $_SESSION['role'] ?? 0;
+if (!in_array($role, [1,3])) {
+    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $catIdEnc = $_POST['id'] ?? null;
+    if (!$catIdEnc) {
+        echo json_encode(['success' => false, 'message' => 'Invalid category ID.']);
         exit;
     }
 
-    $catIdcheck = $security->decrypt($catId);
-
-    $deleteResult = $dbFunctions->delData('categories',"id = '$catIdcheck'");
+    $catId = $security->decrypt($catIdEnc);
+    $deleteResult = $dbFunctions->delData('categories',"id = '$catId'");
 
     if ($deleteResult['success']) {
         echo json_encode(['success' => true]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Error deleting page.']);
+        echo json_encode(['success' => false, 'message' => 'Error deleting category.']);
     }
+} else {
+    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
 }
+?>

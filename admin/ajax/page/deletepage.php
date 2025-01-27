@@ -1,21 +1,30 @@
 <?php
 require_once('../../../global.php');
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $pageId = $_POST['id'] ?? null;
+header('Content-Type: application/json');
 
-    if (!$pageId) {
+// Check if user is Super Admin or Admin
+$role = $_SESSION['role'] ?? 0;
+if (!in_array($role, [1,3])) {
+    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $pageIdEncrypted = $_POST['id'] ?? null;
+    if (!$pageIdEncrypted) {
         echo json_encode(['success' => false, 'message' => 'Invalid page ID.']);
         exit;
     }
+    // Decrypt
+    $pageId = $security->decrypt($pageIdEncrypted);
 
-    // Decrypt if needed
-    $pageId = $security->decrypt($pageId);
-
-    $deleteResult = $dbFunctions->delData('pages',"id = '$pageId'");
-
+    $deleteResult = $dbFunctions->delData('pages', "id = '$pageId'");
     if ($deleteResult['success']) {
         echo json_encode(['success' => true]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Error deleting page.']);
     }
+} else {
+    echo json_encode(['success' => false, 'message' => 'Invalid request']);
 }
+?>

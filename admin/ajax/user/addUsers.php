@@ -7,8 +7,8 @@ header('Content-Type: application/json');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve form data
     $username = trim($_POST['username']);
-    $email = trim($_POST['email']);
-    $role = $_POST['role']==''?'0' : $_POST['role'];
+    $email    = trim($_POST['email']);
+    $role     = $_POST['role'] ?? '0'; // default to 0=Regular User if not provided
     $password = $_POST['password'];
 
     $errors = [];
@@ -34,12 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // if (empty($role) || !in_array((string) $role, ['0', '1'], true)) {
-    //     $errors[] = "Please select a valid role.";
-    // }
-
     if (strlen($password) < 6) {
         $errors[] = "Password must be at least 6 characters long.";
+    }
+
+    // Check the role is one of [0,1,2,3,4]
+    $allowedRoles = ['0','1','2','3','4'];
+    if (!in_array((string)$role, $allowedRoles, true)) {
+        $errors[] = "Please select a valid role.";
     }
 
     // If there are validation errors
@@ -54,9 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert data
     $data = [
         'username' => $username,
-        'email' => $email,
+        'email'    => $email,
         'password' => $hashedPassword,
-        'role' => $role
+        'role'     => $role // 0=User,1=Super Admin,2=Trader,3=Admin,4=Moderator
     ];
 
     $response = $dbFunctions->setData('users', $data);
@@ -70,5 +72,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
 }
-
 ?>

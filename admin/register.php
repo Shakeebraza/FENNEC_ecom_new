@@ -58,39 +58,49 @@ if ($setSession == true) {
                     <div class="login-content">
                         <div class="login-logo">
                             <a href="#">
-                            <img src="<?php echo $urlval?>admin/asset/images/icon/logo2.png" alt="CoolAdmin">
-                            <p>Fennec</p>
+                                <img src="<?php echo $urlval?>admin/asset/images/icon/logo2.png" alt="CoolAdmin">
+                                <p>Fennec</p>
                             </a>
                         </div>
                         <div class="login-form">
-                        <div id="alert-message" class="sufee-alert alert-dismissible fade show" style="display:none; position: fixed; top: 10px; right: 10px; z-index: 1000;">
-                            <span class="badge"></span>
-                            <span id="message-content"></span>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
+                            <div id="alert-message" class="sufee-alert alert-dismissible fade show"
+                                 style="display:none; position: fixed; top: 10px; right: 10px; z-index: 1000;">
+                                <span class="badge"></span>
+                                <span id="message-content"></span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
 
-                        <form id="registerForm" action="register.php" method="post">
-                            <div class="form-group">
-                                <label>Username</label>
-                                <input class="au-input au-input--full" type="text" name="username" placeholder="Username">
-                            </div>
-                            <div class="form-group">
-                                <label>Email Address</label>
-                                <input class="au-input au-input--full" type="email" name="email" placeholder="Email">
-                            </div>
-                            <div class="form-group">
-                                <label>Password</label>
-                                <input class="au-input au-input--full" type="password" name="password" placeholder="Password">
-                            </div>
-                            <div class="login-checkbox">
-                                <label>
-                                    <input type="checkbox" name="aggree">Agree the terms and policy
-                                </label>
-                            </div>
-                            <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">register</button>
-                        </form>
+                            <form id="registerForm" action="register.php" method="post">
+                                <div class="form-group">
+                                    <label>Username</label>
+                                    <input class="au-input au-input--full" type="text" name="username" placeholder="Username">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input class="au-input au-input--full" type="email" name="email" placeholder="Email">
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input class="au-input au-input--full" type="password" name="password" placeholder="Password">
+                                </div>
+                                <!-- Added Role Selection -->
+                                <div class="form-group">
+                                    <label for="role">Select Role</label>
+                                    <select class="au-input au-input--full" name="role" id="role">
+                                        <!-- <option value="1">Super Admin (Owner)</option> -->
+                                        <option value="3">Admin (Administrator)</option>
+                                        <option value="4">Moderator</option>
+                                    </select>
+                                </div>
+                                <div class="login-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="aggree">Agree the terms and policy
+                                    </label>
+                                </div>
+                                <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">Register</button>
+                            </form>
                             <div class="register-link">
                                 <p>
                                     Already have account?
@@ -105,84 +115,80 @@ if ($setSession == true) {
 
     </div>
 
+    <!-- Jquery and scripts -->
     <script src="<?php echo $urlval?>admin/asset/vendor/jquery-3.2.1.min.js"></script>
     <script src="<?php echo $urlval?>admin/asset/vendor/bootstrap-4.1/popper.min.js"></script>
     <script src="<?php echo $urlval?>admin/asset/vendor/bootstrap-4.1/bootstrap.min.js"></script>
-    <script src="<?php echo $urlval?>admin/asset/vendor/slick/slick.min.js">
-    </script>
+    <script src="<?php echo $urlval?>admin/asset/vendor/slick/slick.min.js"></script>
     <script src="<?php echo $urlval?>admin/asset/vendor/wow/wow.min.js"></script>
     <script src="<?php echo $urlval?>admin/asset/vendor/animsition/animsition.min.js"></script>
-    <script src="<?php echo $urlval?>admin/asset/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
-    </script>
+    <script src="<?php echo $urlval?>admin/asset/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
     <script src="<?php echo $urlval?>admin/asset/vendor/counter-up/jquery.waypoints.min.js"></script>
-    <script src="<?php echo $urlval?>admin/asset/vendor/counter-up/jquery.counterup.min.js">
-    </script>
+    <script src="<?php echo $urlval?>admin/asset/vendor/counter-up/jquery.counterup.min.js"></script>
     <script src="<?php echo $urlval?>admin/asset/vendor/circle-progress/circle-progress.min.js"></script>
     <script src="<?php echo $urlval?>admin/asset/vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
     <script src="<?php echo $urlval?>admin/asset/vendor/chartjs/Chart.bundle.min.js"></script>
-    <script src="<?php echo $urlval?>admin/asset/vendor/select2/select2.min.js">
-    </script>
-
+    <script src="<?php echo $urlval?>admin/asset/vendor/select2/select2.min.js"></script>
     <script src="<?php echo $urlval?>admin/asset/js/main.js"></script>
+
+    <!-- AJAX Submit -->
     <script>
-$(document).ready(function() {
-    $('#registerForm').on('submit', function(event) {
-        event.preventDefault();
-        
-        $.ajax({
-            url: '<?php echo $urlval ?>admin/ajax/register.php',
-            method: 'POST',
-            data: $(this).serialize(),
-            dataType: 'json',
-            success: function(response) {
-                var alertBox = $('#alert-message');
-                var messageContent = $('#message-content');
-                var badge = alertBox.find('.badge');
+    $(document).ready(function() {
+        $('#registerForm').on('submit', function(event) {
+            event.preventDefault();
+            
+            $.ajax({
+                url: '<?php echo $urlval ?>admin/ajax/register.php',
+                method: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    var alertBox = $('#alert-message');
+                    var messageContent = $('#message-content');
+                    var badge = alertBox.find('.badge');
 
-                if (response.status === 'success') {
-                    badge.removeClass('badge-danger').addClass('badge-primary').text('Success');
-                    messageContent.text(response.message);
-                    alertBox.removeClass('alert-danger').addClass('alert-primary').fadeIn();
-                } else if (response.status === 'error') {
-                    badge.removeClass('badge-primary').addClass('badge-danger').text('Error');
-                    if (Array.isArray(response.errors)) {
-                        messageContent.html(response.errors.join('<br>'));
-                    } else {
+                    if (response.status === 'success') {
+                        badge.removeClass('badge-danger').addClass('badge-primary').text('Success');
                         messageContent.text(response.message);
+                        alertBox.removeClass('alert-danger').addClass('alert-primary').fadeIn();
+                    } else if (response.status === 'error') {
+                        badge.removeClass('badge-primary').addClass('badge-danger').text('Error');
+                        if (Array.isArray(response.errors)) {
+                            messageContent.html(response.errors.join('<br>'));
+                        } else {
+                            messageContent.text(response.message);
+                        }
+                        alertBox.removeClass('alert-primary').addClass('alert-danger').fadeIn();
                     }
+
+                    setTimeout(function() {
+                        alertBox.fadeOut(); 
+                    }, 3000);
+                },
+                error: function(jqXHR) {
+                    var alertBox = $('#alert-message');
+                    var messageContent = $('#message-content');
+                    var badge = alertBox.find('.badge');
+                    
+                    badge.removeClass('badge-primary').addClass('badge-danger').text('Error');
+                    
+                    if (jqXHR.status === 400) {
+                        messageContent.text('Validation failed. Please check your input.');
+                    } else if (jqXHR.status === 500) {
+                        messageContent.text('Internal Server Error. Please try again later.');
+                    } else {
+                        messageContent.text('An unexpected error occurred.');
+                    }
+
                     alertBox.removeClass('alert-primary').addClass('alert-danger').fadeIn();
+
+                    setTimeout(function() {
+                        alertBox.fadeOut();
+                    }, 3000);
                 }
-
-                setTimeout(function() {
-                    alertBox.fadeOut(); 
-                }, 3000);
-            },
-            error: function(jqXHR) {
-                var alertBox = $('#alert-message');
-                var messageContent = $('#message-content');
-                var badge = alertBox.find('.badge');
-                
-                badge.removeClass('badge-primary').addClass('badge-danger').text('Error');
-                
-                if (jqXHR.status === 400) {
-                    messageContent.text('Validation failed. Please check your input.');
-                } else if (jqXHR.status === 500) {
-                    messageContent.text('Internal Server Error. Please try again later.');
-                } else {
-                    messageContent.text('An unexpected error occurred.');
-                }
-
-                alertBox.removeClass('alert-primary').addClass('alert-danger').fadeIn();
-
-                setTimeout(function() {
-                    alertBox.fadeOut();
-                }, 3000);
-            }
+            });
         });
     });
-});
-
-</script>
+    </script>
 </body>
-
 </html>

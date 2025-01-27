@@ -1,10 +1,16 @@
 <?php
 require_once("../../global.php");
 include_once('../header.php');
+
+// 1) Only let roles in [1,3,4] see this page
+$role = $_SESSION['role'] ?? 0;
+if (!in_array($role, [1,3,4])) {
+    header("Location: {$urlval}admin/logout.php");
+    exit;
+}
+$isAdmin = in_array($role, [1,3]);
 ?>
-
 <div class="page-container">
-
     <div class="main-content">
         <div class="section__content section__content--p30">
             <div class="container-fluid">
@@ -30,18 +36,24 @@ include_once('../header.php');
                                     </select>
                                     <div class="dropDownSelect2"></div>
                                 </div>
-
                             </div>
 
                             <div class="table-data__tool-right">
-                                <a href="<?= $urlval ?>admin/subcategories/add.php" class="au-btn au-btn-icon au-btn--green au-btn--small">
-                                    <i class="zmdi zmdi-plus"></i>add Categories</a>
-                                <a href="<?= $urlval ?>admin/categories/sort.php" class="au-btn au-btn-icon btn-dark au-btn--small" style="color:white;">
-                                    <i class="zmdi zmdi-sort"></i>Sort</a>
-
+                                <!-- Show "add categories" only if isAdmin -->
+                                <?php if ($isAdmin): ?>
+                                    <a href="<?= $urlval ?>admin/subcategories/add.php" 
+                                       class="au-btn au-btn-icon au-btn--green au-btn--small">
+                                        <i class="zmdi zmdi-plus"></i>Add SubCategory
+                                    </a>
+                                    <a href="<?= $urlval ?>admin/categories/sort.php" 
+                                       class="au-btn au-btn-icon btn-dark au-btn--small" style="color:white;">
+                                        <i class="zmdi zmdi-sort"></i>Sort
+                                    </a>
+                                <?php endif; ?>
                             </div>
                         </div>
-                    </div>
+                    </div><!-- col-md-12 -->
+
                     <div class="table-responsive table-responsive-data2">
                         <table id="userTable" class="table table-data2">
                             <thead>
@@ -55,25 +67,24 @@ include_once('../header.php');
                                 </tr>
                             </thead>
                             <tbody>
-
+                                <!-- DataTables will fill -->
                             </tbody>
                         </table>
-                    </div>
+                    </div><!-- .table-responsive -->
 
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
+                </div><!-- .row -->
+            </div><!-- .container-fluid -->
+        </div><!-- .section__content -->
+    </div><!-- .main-content -->
+</div><!-- .page-container -->
 
+<?php include_once('../footer.php'); ?>
 
-
-<?php
-include_once('../footer.php');
-?>
 <script>
-   $(document).ready(function() {
+$(document).ready(function() {
+    // figure out if user is admin or super admin
+    var canEdit = <?php echo $isAdmin ? 'true' : 'false'; ?>;
+
     var table = $('#userTable').DataTable({
         "processing": true,
         "serverSide": true,
@@ -88,34 +99,35 @@ include_once('../footer.php');
             { "data": "date" },
             { "data": "status" },
             { "data": "actions" }
-        ],
+        ]
     });
-    $('#userTable').on('click', '.btn-danger', function() {
-        var userId = $(this).data('id');
 
-        if (confirm('Are you sure you want to delete this user?')) {
-            $.ajax({
-                url: '<?php echo $urlval; ?>admin/ajax/subcategories/deletecat.php',
-                type: 'POST',
-                data: { id: userId },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        alert('User deleted successfully!');
-                        table.ajax.reload();
-                    } else {
-                        alert('Error deleting user: ' + response.message);
+    // If user is not admin => skip delete logic
+    if (canEdit) {
+        $('#userTable').on('click', '.btn-danger', function() {
+            var userId = $(this).data('id');
+            if (confirm('Are you sure you want to delete this subcategory?')) {
+                $.ajax({
+                    url: '<?php echo $urlval; ?>admin/ajax/subcategories/deletecat.php',
+                    type: 'POST',
+                    data: { id: userId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Subcategory deleted successfully!');
+                            table.ajax.reload();
+                        } else {
+                            alert('Error deleting subcategory: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred while deleting the subcategory.');
                     }
-                },
-                error: function() {
-                    alert('An error occurred while deleting the user.');
-                }
-            });
-        }
-    });
+                });
+            }
+        });
+    }
 });
 </script>
-
 </body>
-
 </html>

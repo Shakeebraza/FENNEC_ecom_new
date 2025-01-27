@@ -1,13 +1,21 @@
 <?php
 require_once('../../../global.php');
 
-header('Content-Type: application/json'); // Set the header for JSON response
+header('Content-Type: application/json'); // JSON response
 
-$id = isset($_POST['id']) ? $_POST['id'] : null;
+$id = $_POST['id'] ?? null;
 if ($id) {
-    // Your deletion logic here
+    // Decrypt user ID
     $userId = $security->decrypt($id);
-    // Assuming your deletion logic is correct
+
+    // (Optional) You can check if the user is Admin or Super Admin here:
+    // $role = $_SESSION['role'] ?? 0;
+    // if (!in_array($role, [1,3])) {
+    //   echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+    //   exit;
+    // }
+
+    // Proceed with deletion
     $result = $dbFunctions->delData('users', "id = " . intval($userId));
 
     if ($result) {
@@ -19,4 +27,3 @@ if ($id) {
     echo json_encode(['success' => false, 'message' => 'Invalid user ID.']);
 }
 ?>
-
