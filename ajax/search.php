@@ -25,7 +25,7 @@ function highlightMatches($text, $query) {
         if (!empty($word)) {
             // Use word boundaries to highlight whole words only, case-insensitive
             $pattern = '/(' . $word . ')/i';
-            $replacement = '<span class="highlight">$1</span>';
+            $replacement = '<span class="search-suggestions-highlight">$1</span>';
             $escapedText = preg_replace($pattern, $replacement, $escapedText);
         }
     }
@@ -72,15 +72,15 @@ if (isset($_GET['q'])) {
         exit;
     }
 
-    // Fetch search results using the searchData function
+    // Fetch search results using your searchData function
     $results = $productFun->searchData('products', $query);
 
     // Start output buffering to include CSS styles
     ob_start();
     ?>
     <style>
-        /* Suggestions Container */
-        .suggestions {
+        /* Main container for suggestions */
+        .search-suggestions-list {
             position: absolute;
             background-color: #fff;
             border: 1px solid #ccc;
@@ -93,110 +93,109 @@ if (isset($_GET['q'])) {
             margin-top: 5px;
         }
 
-        /* Individual Suggestion Item */
-        .suggestion-item {
+        /* Each suggestion item row */
+        .search-suggestions-item {
             padding: 10px 15px;
             border-bottom: 1px solid #eee;
         }
-
-        .suggestion-item:last-child {
+        .search-suggestions-item:last-child {
             border-bottom: none;
         }
 
-        /* Suggestion Link */
-        .suggestion-link {
+        /* Link container for each suggestion */
+        .search-suggestions-link {
             display: flex;
             align-items: center;
             text-decoration: none;
             color: inherit;
         }
 
-        /* Search Icon */
-        .icon-search {
+        /* Icon next to suggestion text */
+        .search-suggestions-icon {
             margin-right: 10px;
             color: #555;
             font-size: 1.2em;
         }
 
-        /* Suggestion Text */
-        .suggestion-text {
+        /* The text container */
+        .search-suggestions-text {
             display: flex;
             flex-direction: column;
         }
 
-        /* Product Name */
-        .product-name {
+        /* Product Name styling */
+        .search-product-name {
             font-weight: bold;
             font-size: 1em;
             color: #333;
         }
 
-        /* Product Description */
-        .product-description {
+        /* Product Description styling */
+        .search-product-description {
             font-size: 0.9em;
             color: #777;
             margin-top: 2px;
         }
 
-        /* Highlighted Text */
-        .highlight {
-            background-color: #ffc107; /* Amber background */
+        /* Highlighted text for search matches */
+        .search-suggestions-highlight {
+            background-color: #ffc107;
             font-weight: bold;
             color: #212529;
             border-radius: 2px;
             padding: 0 2px;
         }
 
-        /* No Results Message */
-        .no-results {
-            color: #d9534f; /* Bootstrap's danger color */
+        /* "No results" styling */
+        .search-suggestions-noresults {
+            color: #d9534f; /* e.g., Bootstrap's danger color */
             font-weight: bold;
         }
 
-        /* Hover Effect */
-        .suggestion-item:hover {
+        /* Hover effect on each item */
+        .search-suggestions-item:hover {
             background-color: #f8f9fa;
         }
     </style>
     <?php
 
     if ($results) {
-        echo '<div class="suggestions" id="suggestions">';
+        // Changed the container class/id
+        echo '<div class="search-suggestions-list" id="searchSuggestionsWrapper">';
 
         foreach ($results as $result) {
             // Build link like:
             // "http://example.com/category.php?search=Product+Name&pid=encryptedId&slug=product-slug&location=location-id"
             $productIdEncrypted = urlencode($security->encrypt($result['id']));
-            $productSlug = urlencode($result['slug']);
+            $productSlug        = urlencode($result['slug']);
             
             // Raw strings for name/description
             $productNameRaw        = $result['name'] ?? '';
             $productDescriptionRaw = $result['description'] ?? '';
 
-            // 1) First, TRUNCATE the description (plain text)
+            // 1) Truncate the raw description
             $truncatedDescriptionPlain = truncateText($productDescriptionRaw, MAX_DESCRIPTION_LENGTH);
 
-            // 2) THEN highlight the truncated text
+            // 2) Highlight the truncated text
             $productDescription = highlightMatches($truncatedDescriptionPlain, $query);
 
             // Also highlight the product name
             $productName = highlightMatches($productNameRaw, $query);
 
             // Build the search link
-            // Use raw product name for "search" param if you want to replicate their typed name,
-            // or you could use $productNameRaw. 
+            // We pass the raw product name for the 'search' param so it matches user input, but feel free to adjust
             $link = "{$urlval}category.php?search=" . urlencode($productNameRaw) 
                   . "&pid={$productIdEncrypted}&slug={$productSlug}";
             if ($location !== '') {
                 $link .= "&location=" . urlencode($location);
             }
 
-            echo '<div class="suggestion-item">';
-            echo "  <a href=\"{$link}\" class=\"suggestion-link\">";
-            echo '      <i class="fa fa-search icon-search"></i>';
-            echo '      <div class="suggestion-text">';
-            echo "          <span class=\"product-name\">{$productName}</span>";
-            echo "          <span class=\"product-description\">{$productDescription}</span>";
+            echo '<div class="search-suggestions-item">';
+            echo "  <a href=\"{$link}\" class=\"search-suggestions-link\">";
+            echo '      <i class="fa fa-search search-suggestions-icon"></i>';
+            echo '      <div class="search-suggestions-text">';
+            echo "          <span class=\"search-product-name\">{$productName}</span>";
+            echo "          <span class=\"search-product-description\">{$productDescription}</span>";
             echo '      </div>';
             echo '  </a>';
             echo '</div>';
@@ -206,10 +205,12 @@ if (isset($_GET['q'])) {
     } else {
         // No results => Link to search not found page
         $notFoundLink = "{$urlval}searchnotfound.php?search=" . urlencode($query);
-        echo '<div class="suggestion-item">';
-        echo "  <a href=\"{$notFoundLink}\" class=\"suggestion-link\">";
-        echo '      <i class="fa fa-search icon-search"></i>';
-        echo "      <span class=\"no-results\">No results found for: <strong>" . htmlspecialchars($query) . "</strong></span>";
+        echo '<div class="search-suggestions-item">';
+        echo "  <a href=\"{$notFoundLink}\" class=\"search-suggestions-link\">";
+        echo '      <i class="fa fa-search search-suggestions-icon"></i>';
+        echo "      <span class=\"search-suggestions-noresults\">No results found for: <strong>"
+                . htmlspecialchars($query) 
+                . "</strong></span>";
         echo '  </a>';
         echo '</div>';
     }
