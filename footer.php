@@ -202,13 +202,15 @@ $(document).ready(function() {
     // =============================================
     // 3. AUTOCOMPLETE SUGGESTIONS WHEN TYPING
     // =============================================
+
+    // 1) AUTOCOMPLETE: If user hits Enter => we do not rely on relative path
     $('#searchInput').on('input', function() {
         let query = $(this).val();
         let location = getUrlParameter('location');
 
         if (query.length > 0) {
             $.ajax({
-                url: '<?= $urlval ?>ajax/search.php',
+                url: '<?php echo $urlval; ?>ajax/search.php', // absolute path
                 type: 'GET',
                 data: { q: query, location: location },
                 success: function(data) {
@@ -247,38 +249,33 @@ $(document).ready(function() {
     // 6. EXPLICIT SEARCH BUTTON
     // =============================================
     $('#searchButton').on('click', function() {
-        // Build the URL using the selected location and search query
-        var cityId     = $('#locationSelect').val();
+        // Build the absolute URL for search results
+        var cityId      = $('#locationSelect').val();
         var searchQuery = $('#searchInput').val().trim();
-        var url        = 'https://fennec.digicomet.net/category.php?'; // Adjust if your "search results" page is different
+        var url         = '<?php echo $urlval; ?>category.php?'; // <--- absolute reference
 
-        // If location is selected, add to the URL
         if (cityId) {
             url += 'location=' + encodeURIComponent(cityId) + '&';
         }
-        // If user typed a search query, add to the URL
         if (searchQuery) {
             url += 'search=' + encodeURIComponent(searchQuery);
         }
 
-        // Perform the redirect
         window.location.href = url;
     });
-
     // =============================================
     // 7. LOCATION SELECT => AUTO REDIRECT
     //    (If you only want the Search Button to finalize,
     //    remove or comment out this event listener.)
     // =============================================
     document.getElementById('locationSelect').addEventListener('change', function() {
-        var cityId      = this.value;
-        var urlParams   = new URLSearchParams(window.location.search);
-        var pid         = urlParams.get('pid');
+        var cityId = this.value;
+        // ...
+        // Build absolute path
+        var url = '<?php echo $urlval; ?>category.php?location=' + cityId;
+
+        var pid = getUrlParameter('pid');
         var searchQuery = document.getElementById('searchInput').value;
-        
-        // Build your desired URL
-        var url = 'category.php?location=' + cityId;
-        
         if (pid) {
             url += '&pid=' + pid;
         }
@@ -286,11 +283,8 @@ $(document).ready(function() {
             url += '&search=' + encodeURIComponent(searchQuery);
         }
 
-        // Only redirect if a city is selected
         if (cityId) {
             window.location.href = url;
-        } else {
-            alert('Please select a country and city.');
         }
     });
 });
