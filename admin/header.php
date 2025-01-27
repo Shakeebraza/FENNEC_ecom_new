@@ -2,39 +2,34 @@
 $setSession = $fun->isSessionSet();
 $redirectUrl = $urlval . 'admin/logout.php';
 
-// 1. Verify session is set
+// Ensure session is set
 if (!$setSession) {
     echo '<script>window.location.href = "' . htmlspecialchars($redirectUrl) . '";</script>';
     exit();
 }
 
-// 2. Check that the user’s role is in [1,3,4]
+// Check role [1,3,4]
 if (!in_array($_SESSION['role'], [1, 3, 4])) {
     echo '<script>window.location.href = "' . htmlspecialchars($redirectUrl) . '";</script>';
     exit();
 }
 
-// Define enhanced role labels with associated colors and icons
+// Define role details
 $roleDetails = [
-    1 => ['label' => 'SA',  'color' => 'danger',  'icon' => 'fa-shield-alt'],  // Super Admin
-    3 => ['label' => 'ADM', 'color' => 'success', 'icon' => 'fa-user-cog'],   // Admin
-    4 => ['label' => 'MOD', 'color' => 'warning', 'icon' => 'fa-user-tie'],   // Moderator
+    1 => ['label' => 'SA',  'color' => 'danger',  'icon' => 'fa-shield-alt'], // Super Admin
+    3 => ['label' => 'ADM', 'color' => 'success', 'icon' => 'fa-user-cog'],  // Admin
+    4 => ['label' => 'MOD', 'color' => 'warning', 'icon' => 'fa-user-tie'],  // Moderator
 ];
-
 $roleInfo = $roleDetails[$_SESSION['role']] ?? ['label' => 'NA', 'color' => 'secondary', 'icon' => 'fa-user'];
 
-// We'll need the current URL to highlight the active item in the menu
+// For highlighting menu items
 $current_url = $_SERVER['REQUEST_URI'];
-
-/**
- * Return 'active' if $link is found in the current URL
- */
 function isActive($link) {
     global $current_url;
     return (strpos($current_url, $link) !== false) ? 'active' : '';
 }
 
-// Use a default profile image if none is set
+// Profile image
 $profile = empty($_SESSION['profile']) 
     ? $urlval . 'images/profile.jpg' 
     : $_SESSION['profile'];
@@ -95,99 +90,99 @@ $profile = empty($_SESSION['profile'])
 
 </head>
 <body class="animsition">
-    <div class="page-wrapper">
-        <!-- Include your sidebar here -->
-        <?php include_once('sidebar.php');?>
+<div class="page-wrapper">
+    <?php include_once('sidebar.php');?> 
 
-        <header class="header-desktop">
-            <div class="section__content section__content--p30">
-                <div class="container-fluid">
-                    <div class="header-wrap">
-                        <form class="form-header" action="" method="POST">
-                            <input class="au-input au-input--xl" type="text" name="search"
-                                   placeholder="Search for datas &amp; reports..." />
-                            <button class="au-btn--submit" type="submit">
-                                <i class="zmdi zmdi-search"></i>
-                            </button>
-                        </form>
-                        <div class="header-button">
-                            <div class="noti-wrap">
-                                <!-- Either remove "/fennec" if your path is "/admin/messange.php" only -->
-                                <a href="<?php echo htmlspecialchars($urlval) ?>admin/messange.php">
-                                    <div class="noti__item js-item-menu">
-                                        <!-- ADJUST THIS SUBSTRING IF NEEDED -->
-                                        <i class="zmdi zmdi-comment-more <?= isActive('/admin/messange.php'); ?>"></i>
-                                    </div>
-                                </a>
-                            </div>
+    <header class="header-desktop">
+        <div class="section__content section__content--p30">
+            <div class="container-fluid">
+                <div class="header-wrap">
+                    <!-- Search bar -->
+                    <form class="form-header" action="" method="POST">
+                        <input class="au-input au-input--xl" type="text" name="search"
+                               placeholder="Search for datas &amp; reports..." />
+                        <button class="au-btn--submit" type="submit">
+                            <i class="zmdi zmdi-search"></i>
+                        </button>
+                    </form>
 
-                            <div class="account-wrap">
-                                <div class="account-item clearfix js-item-menu">
-                                    <div class="image">
-                                        <img src="<?php echo htmlspecialchars($profile) ?>" alt="Profile" />
-                                    </div>
-                                    <div class="content">
-                                        <!-- Show username and an enhanced role badge -->
-                                        <a class="js-acc-btn" href="#">
-                                            <?php echo htmlspecialchars($_SESSION['username']); ?>
-                                        </a>
-                                        <span class="badge-role bg-<?php echo htmlspecialchars($roleInfo['color']); ?>">
-                                            <i class="fas <?php echo htmlspecialchars($roleInfo['icon']); ?>"></i>
-                                            <?php echo htmlspecialchars($roleInfo['label']); ?>
-                                        </span>
-                                    </div>
-                                    <div class="account-dropdown js-dropdown">
-                                        <div class="info clearfix">
-                                            <div class="image">
-                                                <a href="#">
-                                                    <img src="<?php echo htmlspecialchars($profile) ?>" alt="Profile" />
-                                                </a>
-                                            </div>
-                                            <div class="content">
-                                                <h5 class="name">
-                                                    <a href="#"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
-                                                </h5>
-                                                <span class="email"><?php echo htmlspecialchars($_SESSION['email']); ?></span>
-                                                <span class="badge-role bg-<?php echo htmlspecialchars($roleInfo['color']); ?> d-block mt-2">
+                    <div class="header-button">
+                        <div class="noti-wrap">
+                            <a href="<?php echo htmlspecialchars($urlval) ?>admin/messange.php">
+                                <div class="noti__item js-item-menu">
+                                    <i class="zmdi zmdi-comment-more <?= isActive('/admin/messange.php'); ?>"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="account-wrap">
+                            <div class="account-item clearfix js-item-menu">
+                                <div class="image">
+                                    <img src="<?php echo htmlspecialchars($profile); ?>" alt="Profile" />
+                                </div>
+                                <div class="content">
+                                    <!-- Show username & role badge inline -->
+                                    <a class="js-acc-btn" href="#">
+                                        <?php echo htmlspecialchars($_SESSION['username']); ?>
+                                    </a>
+                                    <!-- small badge next to name -->
+                                    <span class="badge-role bg-<?php echo htmlspecialchars($roleInfo['color']); ?>" 
+                                          style="padding:3px 7px; border-radius:5px; margin-left:5px;">
+                                        <i class="fas <?php echo htmlspecialchars($roleInfo['icon']); ?>"></i>
+                                        <?php echo htmlspecialchars($roleInfo['label']); ?>
+                                    </span>
+                                </div>
+                                <div class="account-dropdown js-dropdown">
+                                    <div class="info clearfix">
+                                        <div class="image">
+                                            <a href="#">
+                                                <img src="<?php echo htmlspecialchars($profile); ?>" alt="Profile"/>
+                                            </a>
+                                        </div>
+                                        <div class="content">
+                                            <h5 class="name">
+                                                <a href="#"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
+                                            </h5>
+                                            <span class="email"><?php echo htmlspecialchars($_SESSION['email']); ?></span>
+                                            <div class="mt-2">
+                                                <span class="badge-role bg-<?php echo htmlspecialchars($roleInfo['color']); ?>">
                                                     <i class="fas <?php echo htmlspecialchars($roleInfo['icon']); ?>"></i>
                                                     <?php echo htmlspecialchars($roleInfo['label']); ?>
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="account-dropdown__body">
-                                            <div class="account-dropdown__item">
-                                                <a href="<?= htmlspecialchars($urlval) ?>admin/account.php">
-                                                    <i class="zmdi zmdi-account"></i>Account
-                                                </a>
-                                            </div>
-                                            <div class="account-dropdown__item">
-                                                <a href="#">
-                                                    <i class="zmdi zmdi-settings"></i>Setting
-                                                </a>
-                                            </div>
-                                            <div class="account-dropdown__item">
-                                                <a href="#">
-                                                    <i class="zmdi zmdi-money-box"></i>Billing
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="account-dropdown__footer">
-                                            <a href="<?= htmlspecialchars($urlval) ?>admin/logout.php">
-                                                <i class="zmdi zmdi-power"></i>Logout
+                                    </div>
+                                    <div class="account-dropdown__body">
+                                        <div class="account-dropdown__item">
+                                            <a href="<?= htmlspecialchars($urlval) ?>admin/account.php">
+                                                <i class="zmdi zmdi-account"></i>Account
                                             </a>
                                         </div>
-                                    </div> <!-- .account-dropdown -->
-                                </div> <!-- .account-item -->
-                            </div> <!-- .account-wrap -->
-                        </div> <!-- .header-button -->
-                    </div> <!-- .header-wrap -->
-                </div> <!-- .container-fluid -->
-            </div> <!-- .section__content -->
-        </header>
-
-        <!-- ... rest of your page content ... -->
-    </div><!-- .page-wrapper -->
-
-    <!-- JS includes -->
+                                        <div class="account-dropdown__item">
+                                            <a href="#">
+                                                <i class="zmdi zmdi-settings"></i>Setting
+                                            </a>
+                                        </div>
+                                        <div class="account-dropdown__item">
+                                            <a href="#">
+                                                <i class="zmdi zmdi-money-box"></i>Billing
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="account-dropdown__footer">
+                                        <a href="<?= htmlspecialchars($urlval) ?>admin/logout.php">
+                                            <i class="zmdi zmdi-power"></i>Logout
+                                        </a>
+                                    </div>
+                                </div><!-- .account-dropdown -->
+                            </div><!-- .account-item -->
+                        </div><!-- .account-wrap -->
+                    </div><!-- .header-button -->
+                </div><!-- .header-wrap -->
+            </div><!-- .container-fluid -->
+        </div><!-- .section__content -->
+    </header>
+    <!-- rest of your content -->
+</div><!-- .page-wrapper -->
 </body>
 </html>
