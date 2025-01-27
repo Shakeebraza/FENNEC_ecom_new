@@ -1009,8 +1009,6 @@ $countries = $dbFunctions->getData('countries');
         });
     });
 </script>
-
 </body>
-
 </html>
 
