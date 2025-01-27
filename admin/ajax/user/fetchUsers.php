@@ -1,106 +1,70 @@
 <?php
-// fetchUsers.php
-
-// Error Handling: Log errors instead of displaying them
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
-ini_set('error_log', '/path/to/your/php-error.log'); // **IMPORTANT:** Update this path to a writable location
-
 require_once('../../../global.php');
 
-// Start session if not already started
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Ensure the user is authenticated and authorized
-$role = $_SESSION['role'] ?? 0;
-if (!in_array($role, [1,3,4])) {
-    // Unauthorized access
-    $response = [
-        "draw" => intval($_POST['draw'] ?? 1),
-        "recordsTotal" => 0,
-        "recordsFiltered" => 0,
-        "data" => [],
-        "error" => "Unauthorized access."
-    ];
-    echo json_encode($response);
-    exit();
-}
-
-header('Content-Type: application/json');
-
-// Get DataTables parameters
-$draw = isset($_POST['draw']) ? intval($_POST['draw']) : 1;
-$start = isset($_POST['start']) ? intval($_POST['start']) : 0;
+/**
+ * Handle DataTables server-side parameters for pagination
+ */
+$draw   = isset($_POST['draw'])   ? intval($_POST['draw'])   : 1;
+$start  = isset($_POST['start'])  ? intval($_POST['start'])  : 0;
 $length = isset($_POST['length']) ? intval($_POST['length']) : 10;
 
-// Gather search fields
+// Total number of records in the 'users' table (unfiltered)
+$totalRecords = $dbFunctions->getCount('users', '*', '');
+
+// 1) Check the session role of the **current logged-in user** 
+$sessionRole = $_SESSION['role'] ?? 0; 
+$canEdit     = in_array($sessionRole, [1,3]); // Only 1=Super Admin, 3=Admin can edit
+
+// Gather search fields from POST
 $searchName   = $_POST['name']   ?? '';
 $searchEmail  = $_POST['email']  ?? '';
 $searchRole   = $_POST['role']   ?? '';
 $searchStatus = $_POST['status'] ?? '';
 
-// Initialize conditions
 $conditions = [];
 
-// WHERE conditions with proper sanitization
+// Build WHERE conditions
 if (!empty($searchName)) {
-    $searchNameEscaped = $dbFunctions->escapeString($searchName);
-    $conditions[] = "username LIKE '%$searchNameEscaped%'";
+    $conditions[] = "username LIKE '%" . $searchName . "%'";
 }
 if (!empty($searchEmail)) {
-    $searchEmailEscaped = $dbFunctions->escapeString($searchEmail);
-    $conditions[] = "email LIKE '%$searchEmailEscaped%'";
+    $conditions[] = "email LIKE '%" . $searchEmail . "%'";
 }
 if ($searchRole !== '') {
-    $searchRoleEscaped = $dbFunctions->escapeString($searchRole);
-    $conditions[] = "role = '$searchRoleEscaped'";
+    $conditions[] = "role = '" . $searchRole . "'";
 }
 if ($searchStatus !== '') {
-    $searchStatusEscaped = $dbFunctions->escapeString($searchStatus);
-    $conditions[] = "status = '$searchStatusEscaped'";
+    $conditions[] = "status = '" . $searchStatus . "'";
 }
 
 $where = !empty($conditions) ? implode(' AND ', $conditions) : '';
 
-// Total records without filtering
-$totalRecords = $dbFunctions->getCount('users', '*', '');
+// Get how many rows match the filtering (without limiting)
+$filteredCount = $dbFunctions->getCount('users', '*', $where);
 
-// Total records with filtering
-$filteredRecords = ($where !== '') ? $dbFunctions->getCount('users', '*', $where) : $totalRecords;
-
-// Fetch the filtered data with pagination
-$filteredQuery = $dbFunctions->getDatanotenc('users', $where, '', 'id', 'DESC', $start, $length);
-
-// Check if getDatanotenc returned valid data
-if ($filteredQuery === false) {
-    $response = [
-        "draw" => $draw,
-        "recordsTotal" => intval($totalRecords),
-        "recordsFiltered" => intval($filteredRecords),
-        "data" => [],
-        "error" => "Failed to fetch user data."
-    ];
-    echo json_encode($response);
-    exit();
-}
+// Now fetch the data with limit/offset for pagination
+$filteredQuery = $dbFunctions->getDatanotenc(
+    'users',
+    $where,     // where clause
+    '',         // group by
+    'id',       // order by
+    'DESC',     // order direction
+    $start,     // offset
+    $length     // limit
+);
 
 $data = [];
 
 $currentUser = base64_decode($_SESSION['userid'] ?? '');
 
-// Determine if the current user can edit
-$canEdit = in_array($role, [1,3]);
-
+// Build rows
 foreach ($filteredQuery as $row) {
-    // Chat logic
+    // **Chat logic** (unchanged)
     $chat = '';
-    $conversations = $dbFunctions->getDatanotenc1(
+    $conversations = $dbFunctions->getDatanotenc(
         'conversations', 
-        "user_one = '{$row['id']}' OR user_two = '{$row['id']}'"
+        "user_one = '$row[id]' OR user_two = '$row[id]'"
     );
-
     if (!empty($conversations)) {
         // If there's a conversation, show "Chat Now" unless it's the same user
         if ($row['id'] != $currentUser) {
@@ -115,41 +79,42 @@ foreach ($filteredQuery as $row) {
         }
     }
 
-    // Map user’s role to text and badge class
+    // **Map user’s role** to text
     switch ($row['role']) {
-        case 1:  // Super Admin
-            $roleClass = 'badge-danger';  // Bootstrap's red badge
+        case 1:
+            $roleClass = 'badge-danger';
             $roleText  = 'Super Admin';
             break;
-        case 2:  // Trader
-            $roleClass = 'badge-info';     // Bootstrap's blue badge
+        case 2:
+            $roleClass = 'badge-info';
             $roleText  = 'Trader';
             break;
-        case 3:  // Admin
-            $roleClass = 'badge-success';  // Bootstrap's green badge
+        case 3:
+            $roleClass = 'badge-success';
             $roleText  = 'Admin';
             break;
-        case 4:  // Moderator
-            $roleClass = 'badge-warning';  // Bootstrap's yellow badge
+        case 4:
+            $roleClass = 'badge-warning';
             $roleText  = 'Moderator';
             break;
-        default:  // 0 or unknown => "User"
-            $roleClass = 'badge-primary'; // Bootstrap's gray badge
+        default:
+            $roleClass = 'user'; // default for regular user
             $roleText  = 'User';
             break;
     }
 
-    // Only show checkbox if user’s role != 1 (Super Admin)
+    // Only show checkbox if user’s role != 1
     $checkboxHtml = ($row['role'] == 1) ? '' : '<input type="checkbox">';
 
-    // Edit and Delete buttons based on permissions
+    // Decide Edit/Delete based on $canEdit
     $editButton   = '';
     $deleteButton = '';
 
     if ($canEdit) {
+        // The viewer is Admin/Super Admin
         if ($row['role'] == 1) {
-            // Do not allow editing Super Admin
-            $editButton   = '<span class="badge badge-danger">Super Admin</span>';
+            // We can decide no one can edit super admin
+            $editButton   = '<span class="role superadmin">Super Admin</span>';
             $deleteButton = '';
         } else {
             // Show Edit/Delete
@@ -162,11 +127,15 @@ foreach ($filteredQuery as $row) {
                                Delete
                            </button>';
         }
+    } else {
+        // If the viewer is not Admin/Super Admin, they see no edit or delete
+        $editButton   = ''; 
+        $deleteButton = '';
     }
 
-    // Status HTML
+    // For the **status** select, only Admin/Super Admin can modify, others read-only
     if ($canEdit && $row['role'] != 1) {
-        // If user is not Super Admin, allow status change
+        // If row’s user is not a super admin => show dropdown
         $statusHtml = '
             <div style="position: relative; display: inline-block; width: 100%;">
                 <select class="js-select2 user-status-select" data-id="'. $security->encrypt($row['id']). '"
@@ -176,10 +145,10 @@ foreach ($filteredQuery as $row) {
                 </select>
             </div>';
     } elseif ($row['role'] == 1) {
-        // Super Admin cannot change status
+        // This user is super admin, let’s not allow status changes
         $statusHtml = '<span class="badge badge-success">Active (Super Admin)</span>';
     } else {
-        // Read-only for others
+        // For moderators / read-only roles, just show text
         $statusHtml = $row['status'] == 1
                     ? '<span class="badge badge-info">Activated</span>'
                     : '<span class="badge badge-danger">Blocked</span>';
@@ -190,40 +159,23 @@ foreach ($filteredQuery as $row) {
         'checkbox' => $checkboxHtml, 
         'name'     => '
             <div class="table-data__info">
-               <h6>'. htmlspecialchars($row['username'], ENT_QUOTES, 'UTF-8') .'</h6>
-               <span><a href="mailto:'. htmlspecialchars($row['email'], ENT_QUOTES, 'UTF-8') .'">'. htmlspecialchars($row['email'], ENT_QUOTES, 'UTF-8') .'</a></span>
+               <h6>'. $row['username'] .'</h6>
+               <span><a href="#">'. $row['email'] .'</a></span>
             </div>',
-        'email'    => htmlspecialchars($row['email'], ENT_QUOTES, 'UTF-8'),
-        'role'     => '<span class="badge '. htmlspecialchars($roleClass, ENT_QUOTES, 'UTF-8') .'">'. htmlspecialchars($roleText, ENT_QUOTES, 'UTF-8') .'</span>',
+        'email'    => $row['email'],
+        'role'     => '<span class="role '. $roleClass .'">'. $roleText .'</span>',
         'type'     => $statusHtml,
         'chat'     => $chat,
         'actions'  => $editButton . ' ' . $deleteButton
     ];
 }
 
-// Prepare the response
+// Return JSON
 $response = [
     "draw"            => $draw,
     "recordsTotal"    => intval($totalRecords),
-    "recordsFiltered" => intval($filteredRecords),
+    "recordsFiltered" => intval($filteredCount),
     "data"            => $data
 ];
 
-// Encode response to JSON
-$json = json_encode($response);
-
-// Check for JSON encoding errors
-if ($json === false) {
-    $json = json_encode([
-        "draw" => $draw,
-        "recordsTotal" => intval($totalRecords),
-        "recordsFiltered" => intval($filteredRecords),
-        "data" => [],
-        "error" => "JSON Encoding Error: " . json_last_error_msg()
-    ]);
-}
-
-// Output JSON and terminate script
-echo $json;
-exit();
-?>
+echo json_encode($response);
