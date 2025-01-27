@@ -250,7 +250,7 @@ $(document).ready(function() {
         // Build the URL using the selected location and search query
         var cityId     = $('#locationSelect').val();
         var searchQuery = $('#searchInput').val().trim();
-        var url        = 'category.php?'; // Adjust if your "search results" page is different
+        var url        = 'http://localhost/fennec/category.php?'; // Adjust if your "search results" page is different
 
         // If location is selected, add to the URL
         if (cityId) {
