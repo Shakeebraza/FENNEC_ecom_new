@@ -99,7 +99,7 @@ if (!in_array($role, [1,3,4])) {
      aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <!-- ... etc. ... -->
+      <!-- Modal Header -->
       <div class="modal-header">
         <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
         <button type="button" class="close" data-dismiss="modal"
@@ -107,8 +107,14 @@ if (!in_array($role, [1,3,4])) {
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <!-- Modal Body -->
       <div class="modal-body">
         Are you sure you want to delete this user?
+      </div>
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
       </div>
     </div>
   </div>
@@ -122,6 +128,8 @@ $(document).ready(function() {
         "processing": true,
         "serverSide": true,
         "searching": false,
+        "pageLength": 10, // Set to 10 records per page
+        "lengthMenu": [10, 25, 50, 100], // Allow users to select different page lengths
         "ajax": {
             "url": "<?php echo $urlval ?>admin/ajax/user/fetchUsers.php",
             "type": "POST",
@@ -130,18 +138,34 @@ $(document).ready(function() {
                 d.email  = $('#email').val();
                 d.role   = $('#role').val();
                 d.status = $('#status').val();
+            },
+            "error": function(xhr, error, thrown) {
+                var errorMessage = 'An error occurred while processing your request.';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMessage = xhr.responseJSON.error;
+                } else if (xhr.responseText) {
+                    errorMessage = xhr.responseText;
+                }
+                alert('Error: ' + errorMessage);
             }
         },
         "columns": [
-        { "data": "checkbox" }, // 1
-        { "data": "name" },     // 2
-        { "data": "email" },    // 3
-        { "data": "role" },     // 4
-        { "data": "type" },     // 5
-        { "data": "chat" },     // 6
-        { "data": "actions" }   // 7
-        ]
-
+            { "data": "checkbox", "orderable": false }, // Checkbox column
+            { "data": "name" },     // Name
+            { "data": "email" },    // Email
+            { "data": "role" },     // Role
+            { "data": "type" },     // Status
+            { "data": "chat", "orderable": false },     // Chat
+            { "data": "actions", "orderable": false }   // Actions
+        ],
+        "order": [[1, 'asc']], // Default ordering by Name
+        "drawCallback": function(settings) {
+            // Optional: Initialize any plugins or add event listeners after table draw
+            $('.js-select2').select2({
+                minimumResultsForSearch: -1,
+                width: 'resolve'
+            });
+        }
     });
 
     // Trigger a fresh search
@@ -149,15 +173,21 @@ $(document).ready(function() {
         table.draw();
     });
 
-    // Delete user logic
+    // Delete user logic with modal confirmation
+    var deleteUserId = null;
+
     $('#userTable').on('click', '.btn-danger', function() {
-        var userId = $(this).data('id');
-        if (!confirm('Are you sure you want to delete this user?')) return;
+        deleteUserId = $(this).data('id');
+        $('#deleteConfirmModal').modal('show');
+    });
+
+    $('#confirmDelete').on('click', function() {
+        if (!deleteUserId) return;
 
         $.ajax({
             url: '<?php echo $urlval ?>admin/ajax/user/deleteUser.php',
             type: 'POST',
-            data: { id: userId },
+            data: { id: deleteUserId },
             success: function(response) {
                 if (response.success) {
                     alert('User deleted successfully!');
@@ -170,6 +200,10 @@ $(document).ready(function() {
                 alert('An error occurred while deleting the user.');
             }
         });
+
+        // Reset the userId and hide the modal
+        deleteUserId = null;
+        $('#deleteConfirmModal').modal('hide');
     });
 
     // Update user status
@@ -182,7 +216,11 @@ $(document).ready(function() {
             type: 'POST',
             data: { id: userId, status: status },
             success: function(response) {
-                alert('User status updated successfully!');
+                if (response.success) {
+                    alert('User status updated successfully!');
+                } else {
+                    alert('Error updating status: ' + response.message);
+                }
             },
             error: function() {
                 alert('An error occurred while updating status.');

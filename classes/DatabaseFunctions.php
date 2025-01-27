@@ -46,6 +46,39 @@ class DatabaseFunctions {
     
         return $results;
     }
+    public function getDatanotenc1($tableName, $where = '', $groupBy = '', $orderBy = '', $orderDirection = 'ASC', $start = 0, $length = 10) {
+
+        $query = "SELECT * FROM `$tableName`";
+    
+        if ($where) {
+            $query .= " WHERE $where";
+        }
+    
+        if ($groupBy) {
+            $query .= " GROUP BY $groupBy";
+        }
+    
+        if ($orderBy) {
+            $orderDirection = strtoupper($orderDirection) === 'DESC' ? 'DESC' : 'ASC';
+            $query .= " ORDER BY $orderBy $orderDirection";
+        }
+    
+        if ($length > 0) {
+            $query .= " LIMIT :start, :length";
+        }
+    
+        $stmt = $this->pdo->prepare($query);
+    
+        $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
+        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+    
+        $stmt->execute();
+    
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Removed the redundant loop
+        return $results;
+    }
     
     public function getDatanotenc($tableName, $where = '', $groupBy = '', $orderBy = '', $orderDirection = 'ASC', $start = 0, $length = 10) {
 

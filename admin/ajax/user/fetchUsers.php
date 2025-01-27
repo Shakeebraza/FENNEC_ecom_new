@@ -1,11 +1,39 @@
 <?php
+// fetchUsers.php
+
+// Error Handling: Log errors instead of displaying them
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', '/path/to/your/php-error.log'); // **IMPORTANT:** Update this path to a writable location
+
 require_once('../../../global.php');
 
-$totalRecords = $dbFunctions->getCount('users', '*', '');
+// Start session if not already started
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
-// 1) Check the session role of the **current logged-in user** 
-$sessionRole = $_SESSION['role'] ?? 0; 
-$canEdit     = in_array($sessionRole, [1,3]); // Only 1=Super Admin, 3=Admin can edit
+// Ensure the user is authenticated and authorized
+$role = $_SESSION['role'] ?? 0;
+if (!in_array($role, [1,3,4])) {
+    // Unauthorized access
+    $response = [
+        "draw" => intval($_POST['draw'] ?? 1),
+        "recordsTotal" => 0,
+        "recordsFiltered" => 0,
+        "data" => [],
+        "error" => "Unauthorized access."
+    ];
+    echo json_encode($response);
+    exit();
+}
+
+header('Content-Type: application/json');
+
+// Get DataTables parameters
+$draw = isset($_POST['draw']) ? intval($_POST['draw']) : 1;
+$start = isset($_POST['start']) ? intval($_POST['start']) : 0;
+$length = isset($_POST['length']) ? intval($_POST['length']) : 10;
 
 // Gather search fields
 $searchName   = $_POST['name']   ?? '';
@@ -13,35 +41,64 @@ $searchEmail  = $_POST['email']  ?? '';
 $searchRole   = $_POST['role']   ?? '';
 $searchStatus = $_POST['status'] ?? '';
 
+// Initialize conditions
 $conditions = [];
 
-// WHERE conditions
+// WHERE conditions with proper sanitization
 if (!empty($searchName)) {
-    $conditions[] = "username LIKE '%" . $searchName . "%'";
+    $searchNameEscaped = $dbFunctions->escapeString($searchName);
+    $conditions[] = "username LIKE '%$searchNameEscaped%'";
 }
 if (!empty($searchEmail)) {
-    $conditions[] = "email LIKE '%" . $searchEmail . "%'";
+    $searchEmailEscaped = $dbFunctions->escapeString($searchEmail);
+    $conditions[] = "email LIKE '%$searchEmailEscaped%'";
 }
 if ($searchRole !== '') {
-    $conditions[] = "role = '" . $searchRole . "'";
+    $searchRoleEscaped = $dbFunctions->escapeString($searchRole);
+    $conditions[] = "role = '$searchRoleEscaped'";
 }
 if ($searchStatus !== '') {
-    $conditions[] = "status = '" . $searchStatus . "'";
+    $searchStatusEscaped = $dbFunctions->escapeString($searchStatus);
+    $conditions[] = "status = '$searchStatusEscaped'";
 }
 
 $where = !empty($conditions) ? implode(' AND ', $conditions) : '';
-$filteredQuery = $dbFunctions->getDatanotenc('users', $where, '', 'id', 'DESC',0,100);
+
+// Total records without filtering
+$totalRecords = $dbFunctions->getCount('users', '*', '');
+
+// Total records with filtering
+$filteredRecords = ($where !== '') ? $dbFunctions->getCount('users', '*', $where) : $totalRecords;
+
+// Fetch the filtered data with pagination
+$filteredQuery = $dbFunctions->getDatanotenc('users', $where, '', 'id', 'DESC', $start, $length);
+
+// Check if getDatanotenc returned valid data
+if ($filteredQuery === false) {
+    $response = [
+        "draw" => $draw,
+        "recordsTotal" => intval($totalRecords),
+        "recordsFiltered" => intval($filteredRecords),
+        "data" => [],
+        "error" => "Failed to fetch user data."
+    ];
+    echo json_encode($response);
+    exit();
+}
 
 $data = [];
 
 $currentUser = base64_decode($_SESSION['userid'] ?? '');
 
+// Determine if the current user can edit
+$canEdit = in_array($role, [1,3]);
+
 foreach ($filteredQuery as $row) {
-    // **Chat logic** (unchanged)
+    // Chat logic
     $chat = '';
-    $conversations = $dbFunctions->getDatanotenc(
+    $conversations = $dbFunctions->getDatanotenc1(
         'conversations', 
-        "user_one = '$row[id]' OR user_two = '$row[id]'"
+        "user_one = '{$row['id']}' OR user_two = '{$row['id']}'"
     );
 
     if (!empty($conversations)) {
@@ -58,7 +115,7 @@ foreach ($filteredQuery as $row) {
         }
     }
 
-    // **Map user’s role** to text
+    // Map user’s role to text and badge class
     switch ($row['role']) {
         case 1:  // Super Admin
             $roleClass = 'badge-danger';  // Bootstrap's red badge
@@ -77,26 +134,22 @@ foreach ($filteredQuery as $row) {
             $roleText  = 'Moderator';
             break;
         default:  // 0 or unknown => "User"
-            $roleClass = 'user';// Bootstrap's gray badge
+            $roleClass = 'badge-primary'; // Bootstrap's gray badge
             $roleText  = 'User';
             break;
     }
 
-    // Only show checkbox if user’s role != 1 (just an example)
+    // Only show checkbox if user’s role != 1 (Super Admin)
     $checkboxHtml = ($row['role'] == 1) ? '' : '<input type="checkbox">';
 
-    // If you want to **always** allow editing for any user you’re listing, skip next logic.
-    // Instead, we specifically want **only** if `$canEdit` is true:
-    //   *and* we might further block editing if the row’s role=1 (superadmin).
+    // Edit and Delete buttons based on permissions
     $editButton   = '';
     $deleteButton = '';
 
     if ($canEdit) {
-        // The *viewer* is Admin/Super Admin. 
-        // Next, decide if we allow editing this particular row:
         if ($row['role'] == 1) {
-            // We can decide no one can edit super admin
-            $editButton   = '<span class="role superadmin">Super Admin</span>';
+            // Do not allow editing Super Admin
+            $editButton   = '<span class="badge badge-danger">Super Admin</span>';
             $deleteButton = '';
         } else {
             // Show Edit/Delete
@@ -109,17 +162,11 @@ foreach ($filteredQuery as $row) {
                                Delete
                            </button>';
         }
-    } else {
-        // If the viewer is not Admin or Super Admin, they see no edit or delete
-        // (Moderator => read-only)
-        $editButton   = ''; 
-        $deleteButton = '';
     }
 
-    // For the **status** select, only Admin/Super Admin can modify.
-    // Others see read-only text
+    // Status HTML
     if ($canEdit && $row['role'] != 1) {
-        // If row’s user is not a super admin => show dropdown
+        // If user is not Super Admin, allow status change
         $statusHtml = '
             <div style="position: relative; display: inline-block; width: 100%;">
                 <select class="js-select2 user-status-select" data-id="'. $security->encrypt($row['id']). '"
@@ -127,14 +174,12 @@ foreach ($filteredQuery as $row) {
                     <option value="1"'. ($row['status'] == 1 ? ' selected' : '') .'>Activate</option>
                     <option value="0"'. ($row['status'] == 0 ? ' selected' : '') .'>Block</option>
                 </select>
-                
             </div>';
     } elseif ($row['role'] == 1) {
-        // This user is super admin, let’s not allow status changes
+        // Super Admin cannot change status
         $statusHtml = '<span class="badge badge-success">Active (Super Admin)</span>';
     } else {
-        // read-only for moderators
-        // Show "Activated" or "Blocked"
+        // Read-only for others
         $statusHtml = $row['status'] == 1
                     ? '<span class="badge badge-info">Activated</span>'
                     : '<span class="badge badge-danger">Blocked</span>';
@@ -145,24 +190,40 @@ foreach ($filteredQuery as $row) {
         'checkbox' => $checkboxHtml, 
         'name'     => '
             <div class="table-data__info">
-               <h6>'. $row['username'] .'</h6>
-               <span><a href="#">'. $row['email'] .'</a></span>
+               <h6>'. htmlspecialchars($row['username'], ENT_QUOTES, 'UTF-8') .'</h6>
+               <span><a href="mailto:'. htmlspecialchars($row['email'], ENT_QUOTES, 'UTF-8') .'">'. htmlspecialchars($row['email'], ENT_QUOTES, 'UTF-8') .'</a></span>
             </div>',
-        'email'    => $row['email'],
-        'role'     => '<span class="role '. $roleClass .'">'. $roleText .'</span>',
+        'email'    => htmlspecialchars($row['email'], ENT_QUOTES, 'UTF-8'),
+        'role'     => '<span class="badge '. htmlspecialchars($roleClass, ENT_QUOTES, 'UTF-8') .'">'. htmlspecialchars($roleText, ENT_QUOTES, 'UTF-8') .'</span>',
         'type'     => $statusHtml,
         'chat'     => $chat,
         'actions'  => $editButton . ' ' . $deleteButton
     ];
 }
 
-// Return JSON
+// Prepare the response
 $response = [
-    "draw"            => intval($_POST['draw'] ?? 1),
+    "draw"            => $draw,
     "recordsTotal"    => intval($totalRecords),
-    "recordsFiltered" => count($filteredQuery),
+    "recordsFiltered" => intval($filteredRecords),
     "data"            => $data
 ];
 
-echo json_encode($response);
+// Encode response to JSON
+$json = json_encode($response);
+
+// Check for JSON encoding errors
+if ($json === false) {
+    $json = json_encode([
+        "draw" => $draw,
+        "recordsTotal" => intval($totalRecords),
+        "recordsFiltered" => intval($filteredRecords),
+        "data" => [],
+        "error" => "JSON Encoding Error: " . json_last_error_msg()
+    ]);
+}
+
+// Output JSON and terminate script
+echo $json;
+exit();
 ?>
