@@ -444,7 +444,7 @@ include_once 'footer.php';
 
         const sold = $('input[name="sold"]:checked').val();
 
-        if (sold === 'yes') {
+        // if (sold === 'yes') {
   
             $.ajax({
                 url: '<?= $urlval ?>ajax/delete_product.php',
@@ -465,7 +465,7 @@ include_once 'footer.php';
                     alert('An error occurred while deleting the product.');
                 }
             });
-        }
+        // }
 
   
         $('#confirmationModal').hide();
