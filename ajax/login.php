@@ -17,6 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($user) {
             $user = $user[0];
+            
+            // --------------------------
+            // Only allow login for roles 0 or 2
+            // --------------------------
+            if (!in_array($user['role'], [0, 2])) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Your account is not authorized to log in here.These are Admin level access.'
+                ]);
+                exit;
+            }
 
             if (is_null($user['email_verified_at'])) {
                 echo json_encode(['status' => 'error', 'message' => 'Please verify your email first.']);
