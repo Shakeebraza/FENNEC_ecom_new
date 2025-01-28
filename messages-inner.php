@@ -947,10 +947,8 @@ div#chat-list {
                                                 style="display: none;" accept="image/*">
                                         </div>
 
-                                        <!-- Image preview container -->
                                         <div id="image-preview"
                                             style="display: flex; margin-top: 10px; align-items: center;">
-                                            <!-- This is where the image preview will go -->
                                         </div>
 
                                         <div class="emoji-picker" style="position: relative; margin: 0px 9px;">
@@ -973,10 +971,6 @@ div#chat-list {
                                                 style="font-size: 20px; color: #00494f;"></i>
                                         </button>
                                     </form>
-
-
-
-
                                 </div>
 
                             </div>

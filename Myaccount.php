@@ -860,13 +860,16 @@ document.getElementById('file-upload').addEventListener('change', function(event
 document.getElementById('send-message-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    const message = document.getElementById('message-input').value;
+    const message = document.getElementById('message-input').value.trim();
     const imageFile = document.getElementById('file-upload').files[0];
     const conversationId = $('#chat-box').data('conversation-id');
     const formData = new FormData();
     formData.append('message', message);
     formData.append('conversation_id', conversationId);
-
+    if (message.length === 0) {
+        // alert('Please enter a message.');
+        return;
+    }
     if (imageFile) {
         formData.append('attachments[]', imageFile);
     }

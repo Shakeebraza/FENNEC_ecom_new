@@ -1,20 +1,20 @@
 <?php
-require_once 'global.php';
-include_once 'header.php';
-$setSession = $fun->isSessionSet();
+// require_once 'global.php';
+// include_once 'header.php';
+// $setSession = $fun->isSessionSet();
 
-if ($setSession == false) {
-    $redirectUrl = $urlval . 'index.php'; 
-    echo '
-    <script>
-        window.location.href = "' . $redirectUrl . '";
-    </script>'; 
-    exit();
-}
-$userid = intval(base64_decode($_SESSION['userid'])) ?? 0; 
-$userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
-?>
-<style>
+// if ($setSession == false) {
+//     $redirectUrl = $urlval . 'index.php'; 
+//     echo '
+//     <script>
+//         window.location.href = "' . $redirectUrl . '";
+//     </script>'; 
+//     exit();
+// }
+// $userid = intval(base64_decode($_SESSION['userid'])) ?? 0; 
+// $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
+// ?>
+<!-- <style>
 
 html,
 body,
@@ -1189,4 +1189,4 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 </body>
 
-</html>
+</html> -->
