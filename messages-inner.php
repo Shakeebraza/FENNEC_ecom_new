@@ -904,7 +904,6 @@ div#chat-list {
                         </div>
                     </div>
 
-
                     <div class="chatbox" id="chat-box">
                         <div class="modal-dialog-scrollable">
                             <div style="width:100%; height: 89%">
@@ -920,7 +919,6 @@ div#chat-list {
                                             </button>
                                         </div>
 
-
                                         <div class="msg-head-innder">
 
                                         </div>
@@ -929,8 +927,6 @@ div#chat-list {
 
                                 <div class="modal-body" style="height: 89%;overflow-y: scroll">
                                     <div class="msg-body" id="message-body">
-
-
                                     </div>
                                 </div>
 
