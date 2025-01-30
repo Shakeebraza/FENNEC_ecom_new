@@ -3,7 +3,7 @@ require_once 'global.php';
 include_once 'header.php';
 include_once 'google-login.php';
 
-$setSession = $fun->isUserSessionSet();
+$setSession = $fun->isSessionSet();
 
 if ($setSession == true) {
     $redirectUrl = $urlval . 'index.php'; 

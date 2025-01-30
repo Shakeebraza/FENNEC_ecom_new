@@ -543,7 +543,7 @@ if (!empty($banner)) {
 
                             if (!empty($productFind)) {
                                 foreach ($productFind['products'] as $product) {
-                                    $setSession = $fun->isUserSessionSet();
+                                    $setSession = $fun->isSessionSet();
                                     $fav = "";
 
                                     if ($setSession == true) {

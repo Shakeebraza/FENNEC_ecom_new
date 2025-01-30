@@ -1,5 +1,5 @@
 <?php
-$setSession = $fun->isAdminSessionSet();
+$setSession = $fun->isSessionSet();
 $redirectUrl = $urlval . 'admin/logout.php';
 
 // Ensure session is set

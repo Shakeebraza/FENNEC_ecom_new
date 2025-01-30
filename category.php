@@ -733,7 +733,7 @@ if(!empty($banner)){
 
                             $words = explode(" ", $description);
                             $description = count($words) > 3 ? implode(" ", array_slice($words, 0, 3)) . '...' : $description;
-                            $setSession = $fun->isUserSessionSet();
+                            $setSession = $fun->isSessionSet();
                             $fav = ""; 
                             
                             if ($setSession == true) {

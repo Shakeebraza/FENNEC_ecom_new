@@ -1,6 +1,6 @@
 <?php
 require_once('../global.php');
-$setSession = $fun->isUserSessionSet();
+$setSession = $fun->isSessionSet();
 
 $redirectUrl = $urlval . 'index.php'; 
 if ($setSession == false) {

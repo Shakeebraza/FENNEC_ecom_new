@@ -5,7 +5,7 @@ require_once 'dbcon/Database.php';
 include_once 'header.php';      // Renders the navbar and <body> tag
 
 // 2) Confirm user is logged in (similar to your other pages)
-$setSession = $fun->isUserSessionSet();
+$setSession = $fun->isSessionSet();
 if (!$setSession) {
     // If not logged in, redirect
     $redirectUrl = $urlval . 'index.php';
