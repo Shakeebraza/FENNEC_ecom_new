@@ -550,6 +550,29 @@ public function getUserBalance($userId)
         session_unset();
         session_destroy();
     }
+    public function isAdminSessionSet()
+    {
+        // Start the session if it's not already started
+        if (session_status() === PHP_SESSION_NONE) {
+            session_name('AdminSession');
+            session_start();
+        }
+    
+        // Define the admin roles
+        $adminRoles = [1, 3, 4];
+    
+        // Check if the necessary session variables are set and if the user's role is an admin role
+        if (
+            isset($_SESSION['userid'], $_SESSION['username'], $_SESSION['role']) &&
+            in_array($_SESSION['role'], $adminRoles, true) // Check if role is in the adminRoles array
+        ) {
+            return true;
+        }
+    
+        return false;
+    }
+    
+
     public function isSessionSet() {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -564,6 +587,29 @@ public function getUserBalance($userId)
     
         return false; 
     }
+
+    public function isUserSessionSet()
+    {
+        // If no session is active, create/start the "UserSession"
+        if (session_status() === PHP_SESSION_NONE) {
+            session_name('UserSession'); 
+            session_start();
+        }
+
+        // Check if user info is set and not empty
+        if (
+            isset($_SESSION['userid'], $_SESSION['username'], $_SESSION['email'], $_SESSION['role']) &&
+            !empty($_SESSION['userid']) &&
+            !empty($_SESSION['username']) &&
+            !empty($_SESSION['email']) &&
+            in_array($_SESSION['role'], [0, 2]) // Only allow roles 0 or 2
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
     
     function getUserRegistrationData() {
         $query = "SELECT DATE(created_at) as date, COUNT(*) as count 

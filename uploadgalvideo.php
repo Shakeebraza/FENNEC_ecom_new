@@ -2,7 +2,7 @@
 require_once 'global.php';
 include_once 'header.php';
 
-$setSession = $fun->isSessionSet();
+$setSession = $fun->isUserSessionSet();
 if ($setSession == false) {
     $redirectUrl = $urlval . 'index.php';
     echo '

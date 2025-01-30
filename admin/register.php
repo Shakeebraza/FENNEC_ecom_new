@@ -7,7 +7,7 @@ if (isset($_COOKIE['remember_token'])) {
         exit();
     }
 }
-$setSession = $fun->isSessionSet();
+$setSession = $fun->isAdminSessionSet();
 if ($setSession == true) {
     $redirectUrl = $urlval . 'admin/index.php'; 
     echo '<script>window.location.href = "' . $redirectUrl . '";</script>';

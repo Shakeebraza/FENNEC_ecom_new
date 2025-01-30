@@ -543,7 +543,7 @@ if (!empty($banner)) {
 
                             if (!empty($productFind)) {
                                 foreach ($productFind['products'] as $product) {
-                                    $setSession = $fun->isSessionSet();
+                                    $setSession = $fun->isUserSessionSet();
                                     $fav = "";
 
                                     if ($setSession == true) {
@@ -682,7 +682,7 @@ if (!empty($banner)) {
 </div>
 
 <!-- Popup Modal -->
-<div id="popupModal" class="popup-overlay">
+<!-- <div id="popupModal" class="popup-overlay">
     <div class="popup-content">
         <span class="close-btn" onclick="closePopup()">&times;</span>
 
@@ -706,7 +706,7 @@ if (!empty($banner)) {
 
         </div>
     </div>
-</div>
+</div> -->
 
 <?php
 include_once 'footer.php';
