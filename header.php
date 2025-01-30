@@ -9,16 +9,22 @@ $lang = $_SESSION['lang'] ?? 'en';
 $lan  = $fun->loadLanguage($lang);
 
 // -----------------------------------------------------------
-// Optional: retrieve the user’s balance if the user is logged in and role allowed
+// Optional: retrieve the user’s balance if the user is logged in
 $userBalance = 0; // Default
-// ADDED ROLE CHECK [0 or 2]
-if (isset($_SESSION['userid']) && in_array($_SESSION['role'], [0, 2])) {
+if (isset($_SESSION['userid'])) {
     // Convert from base64 (based on your code style)
     $decodedUserId = base64_decode($_SESSION['userid']);
 
     // If you have a method like $fun->getUserBalance($decodedUserId),
     // use it here:
     $userBalance = $fun->getUserBalance($decodedUserId);
+    // $userBalance = 100.00;
+    // Or if your $dbFunctions can fetch the user record:
+    //   $result      = $dbFunctions->getDatanotenc('users', "id = '$decodedUserId'");
+    //   $userBalance = $result[0]['wallet_balance'] ?? 0;
+    
+    // For demonstration, if you don’t yet have a method:
+    // $userBalance = 123.45; // example placeholder
 }
 // -----------------------------------------------------------
 ?>
@@ -249,26 +255,19 @@ if (isset($_SESSION['userid']) && in_array($_SESSION['role'], [0, 2])) {
 
         <!-- LOGIN / REGISTER / USER MENU -->
         <div class="d-flex custom-loginRegister">
-            <!-- 
-                'Sell' button:
-                Only go to post.php if user is logged in AND role=0 or 2;
-                otherwise, link to LoginRegister.php
-            -->
             <a href="<?php
-                // ADDED ROLE CHECK [0 or 2]
-                if (isset($_SESSION['userid']) && in_array($_SESSION['role'], [0, 2])) {
-                    echo $urlval . 'post.php';
-                } else {
-                    echo $urlval . 'LoginRegister.php';
-                }
+            if (isset($_SESSION['userid'])) {
+                echo $urlval . 'post.php';
+            } else {
+                echo $urlval . 'LoginRegister.php';
+            }
             ?>"
-               class="btn custom-btn me-2 mb-lg-0 d-flex flex-column align-items-center"
-            >
+               class="btn custom-btn me-2 mb-lg-0 d-flex flex-column align-items-center">
                 <i class="fa-solid fa-dollar-sign mb-1 fa-plus-circle"></i>
                 <span class="new-btn"><?php echo $lan['sell']; ?></span>
             </a>
 
-            <?php
+           <?php
             // ==================== ADD ROLE BADGE for 0 (USER) and 2 (TRADER) =====================
             $roleBadge = '';
             if (isset($_SESSION['role'])) {
@@ -295,9 +294,9 @@ if (isset($_SESSION['userid']) && in_array($_SESSION['role'], [0, 2])) {
                 }
             }
             // ====================================================================================
+            // If user is logged in, show balance + messages + dropdown
+            if (isset($_SESSION['userid'])) {
 
-            // If user is logged in AND has role=0 or 2, show balance + messages + dropdown
-            if (isset($_SESSION['userid']) && in_array($_SESSION['role'], [0, 2])) {
                 echo '
                 <div class="d-flex">
                     <!-- Messages Button with Badge -->
@@ -323,9 +322,10 @@ if (isset($_SESSION['userid']) && in_array($_SESSION['role'], [0, 2])) {
                             <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#favourite">' . $lan['favourites'] . '</a></li>
                             <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#details">' . $lan['my_details'] .  $roleBadge .'</a></li>
                             <li><a class="dropdown-item" href="' . $urlval . 'transaction_history.php">' . $lan['transaction_history'] . '</a></li>
-                            <li><a class="dropdown-item" href="' . $urlval . 'addBalance.php">Add Balance</a></li>';
-
-                // Trader Stats Link (only for role=2)
+                            <li><a class="dropdown-item" href="' . $urlval . 'addBalance.php">Add Balance</a></li>
+                            
+                            <!-- Trader Stats Link (only for role = 2) -->
+                            ';
                 if (isset($_SESSION['role']) && $_SESSION['role'] == 2) {
                     echo '<li><a class="dropdown-item" href="' . $urlval . 'trader_stats.php">Trader Stats</a></li>';
                 }
@@ -336,7 +336,7 @@ if (isset($_SESSION['userid']) && in_array($_SESSION['role'], [0, 2])) {
                 </div>
                 ';
             } else {
-                // If user not logged in OR role is not 0 or 2 -> show login
+                // If user not logged in
                 echo '
                 <a href="' . $urlval . 'LoginRegister.php" class="btn custom-btn d-flex flex-column align-items-center">
                     <i class="fa-solid fa-user mb-1 "></i>
@@ -350,14 +350,14 @@ if (isset($_SESSION['userid']) && in_array($_SESSION['role'], [0, 2])) {
 
     <!-- LANGUAGE SWITCHER + BALANCE SNIPPET -->
     <div class="language-switcher">
-        <?php 
-        // Show user balance only if logged in with role=0 or 2
-        if (isset($_SESSION['userid']) && in_array($_SESSION['role'], [0, 2])): ?>
+        <?php if (isset($_SESSION['userid'])): ?>
+            <!-- Show user balance with a plus button -->
             <div class="me-2 d-flex align-items-center text-white fw-bold">
                 <span style="margin-right: 8px;"><?php echo $lan['balance'] ?? 'Balance'; ?>:</span>
                 <span style="color: #FFEB3B; font-size: 1rem;">
                     <?php echo $fun->getFieldData('site_currency') . number_format($userBalance, 2); ?>
                 </span>
+                
                 <!-- Plus button linking to addBalance.php -->
                 <a 
                     href="<?php echo $urlval; ?>addBalance.php" 
@@ -386,41 +386,34 @@ if (isset($_SESSION['userid']) && in_array($_SESSION['role'], [0, 2])) {
             ?>
         </select>
     </div>
+
 </nav>
 
 <!-- MOBILE SIDEBAR -->
+ <!-- MOBILE SIDEBAR -->
 <div id="mySidebar" class="sidebar">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="<?php echo $urlval; ?>"><?php echo $lan['home']; ?></a>
-
-    <!-- Only go to post.php if logged in and role=0 or 2 -->
-    <a href="<?php 
-        if (isset($_SESSION['userid']) && in_array($_SESSION['role'], [0, 2])) {
-            echo $urlval . 'post.php';
-        } else {
-            echo $urlval . 'LoginRegister.php';
-        }
-    ?>">
+    <a href="<?php echo isset($_SESSION['userid']) ? $urlval . 'post.php' : $urlval . 'LoginRegister.php'; ?>">
         <?php echo $lan['post']; ?>
     </a>
-
-    <?php 
-    // If user is logged in with role=0 or 2, display extra menu items
-    if (isset($_SESSION['userid']) && in_array($_SESSION['role'], [0, 2])): ?>
+    <?php if (isset($_SESSION['userid'])): ?>
         <a href="<?php echo $urlval; ?>Myaccount.php#upload"><?php echo $lan['manage_ads']; ?></a>
         <a href="<?php echo $urlval; ?>msg.php"><?php echo $lan['messages']; ?></a>
         <a href="<?php echo $urlval; ?>Myaccount.php#favourite"><?php echo $lan['favourites']; ?></a>
         <a href="<?php echo $urlval; ?>Myaccount.php#details"><?php echo $lan['my_details']; ?></a>
         <a href="<?php echo $urlval; ?>Myaccount.php#view-products"><?php echo $lan['view_job_ads']; ?></a>
-        <?php if ($_SESSION['role'] == 2): ?>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 2): ?>
             <a href="<?php echo $urlval; ?>trader_stats.php">Trader Stats</a>
         <?php endif; ?>
-        <a href="<?php echo $urlval; ?>logout.php"><?php echo $lan['logout']; ?></a>
-    <?php else: ?>
-        <!-- If not logged in or role not 0 or 2 -->
-        <a href="<?php echo $urlval; ?>LoginRegister.php"><?php echo $lan['login']; ?></a>
     <?php endif; ?>
+    <a href="<?php echo $urlval; ?>logout.php"><?php echo $lan['logout']; ?></a>
+    
+    <!-- Trader Stats Link (visible only for role = 2) -->
+
 </div>
+
+
 
 <!-- NAV SUB MENU -->
 <div class="nav-sub-menu-ct">
