@@ -3,7 +3,7 @@ require_once("../../global.php");
 include_once('../header.php');
 
 // Roles: [1 => Super Admin, 3 => Admin, 4 => Moderator]
-$role    = $_SESSION['role'] ?? 0;
+$role    = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3,4])) {
     header("Location: {$urlval}admin/logout.php");
     exit;
