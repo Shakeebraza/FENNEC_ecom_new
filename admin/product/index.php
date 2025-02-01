@@ -3,7 +3,7 @@ require_once("../../global.php");
 include_once('../header.php');
 
 // 1) Retrieve user role and restrict to [1,3,4]
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3,4])) {
     header("Location: {$urlval}admin/logout.php");
     exit;
@@ -32,16 +32,16 @@ include_once('style.php');
                         <div class="row g-3">
                             <div class="col-md-3">
                                 <input type="text" name="product_name" class="form-control"
-                                       placeholder="Search by Ads Name" value="">
+                                    placeholder="Search by Ads Name" value="">
                             </div>
 
                             <div class="col-md-2">
-                                <input type="number" name="min_price" class="form-control"
-                                       placeholder="Min Price" value="">
+                                <input type="number" name="min_price" class="form-control" placeholder="Min Price"
+                                    value="">
                             </div>
                             <div class="col-md-2">
-                                <input type="number" name="max_price" class="form-control"
-                                       placeholder="Max Price" value="">
+                                <input type="number" name="max_price" class="form-control" placeholder="Max Price"
+                                    value="">
                             </div>
 
                             <div class="col-md-2">
@@ -97,9 +97,9 @@ include_once('style.php');
                                 <button type="submit" class="btn btn-warning custom-button">Filter</button>
                                 <!-- 3) Hide “Add” if not Admin/Super Admin -->
                                 <?php if ($isAdmin): ?>
-                                    <a href="<?= $urlval ?>admin/product/add.php" class="btn btn-success custom-button">
-                                        Add
-                                    </a>
+                                <a href="<?= $urlval ?>admin/product/add.php" class="btn btn-success custom-button">
+                                    Add
+                                </a>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -140,14 +140,14 @@ var canEdit = <?php echo $isAdmin ? 'true' : 'false'; ?>;
 
 // Main function to fetch products
 function fetchProducts(page) {
-    var name         = $('input[name="product_name"]').val();
-    var min_price    = $('input[name="min_price"]').val();
-    var max_price    = $('input[name="max_price"]').val();
-    var category     = $('select[name="category"]').val();
-    var subcategory  = $('select[name="subcategory"]').val();
+    var name = $('input[name="product_name"]').val();
+    var min_price = $('input[name="min_price"]').val();
+    var max_price = $('input[name="max_price"]').val();
+    var category = $('select[name="category"]').val();
+    var subcategory = $('select[name="subcategory"]').val();
     var product_type = $('select[name="product_type"]').val();
-    var country      = $('select[name="country"]').val();
-    var city         = $('select[name="city"]').val();
+    var country = $('select[name="country"]').val();
+    var city = $('select[name="city"]').val();
 
     $.ajax({
         url: '<?php echo $urlval ?>admin/ajax/product/fetchpro.php',
@@ -170,12 +170,13 @@ function fetchProducts(page) {
             if (data.products && data.products.length > 0) {
                 $.each(data.products, function(index, product) {
                     // Expired vs Active
-                    var labelClass = (product.status === 'expired') ? 'label-danger' : 'label-success';
-                    var labelText  = (product.status === 'expired') ? 'Expired' : 'Active';
+                    var labelClass = (product.status === 'expired') ? 'label-danger' :
+                        'label-success';
+                    var labelText = (product.status === 'expired') ? 'Expired' : 'Active';
 
                     // Build Edit/Delete if canEdit
-                    let deleteBtn    = '';
-                    let editBtn      = '';
+                    let deleteBtn = '';
+                    let editBtn = '';
                     let statusSelect = '';
 
                     if (canEdit) {
@@ -210,7 +211,8 @@ function fetchProducts(page) {
                     } else {
                         // Moderator => show read-only text
                         let readOnlyStatus = product.is_enable == 1 ? 'Approved' : 'Unapproved';
-                        statusSelect = `<span style="color: #444; font-weight: bold;">${readOnlyStatus}</span>`;
+                        statusSelect =
+                            `<span style="color: #444; font-weight: bold;">${readOnlyStatus}</span>`;
                     }
 
                     var productHTML = `
@@ -268,7 +270,10 @@ $(document).on('change', '.user-status-select', function() {
     $.ajax({
         url: '<?php echo $urlval ?>admin/ajax/product/update_status.php',
         type: 'POST',
-        data: { id: userId, status: status },
+        data: {
+            id: userId,
+            status: status
+        },
         success: function(response) {
             alert('Status updated successfully!');
         },
@@ -288,7 +293,9 @@ $(document).on('click', '.delete-product', function(e) {
         $.ajax({
             url: '<?php echo $urlval ?>admin/ajax/product/deleteProduct.php',
             type: 'POST',
-            data: { id: productId },
+            data: {
+                id: productId
+            },
             dataType: 'json',
             success: function(data) {
                 if (data.success) {
@@ -349,7 +356,9 @@ $('#country').on('change', function() {
         $.ajax({
             url: '<?php echo $urlval ?>admin/ajax/product/get_cities.php',
             type: 'POST',
-            data: { country_id: countryId },
+            data: {
+                country_id: countryId
+            },
             success: function(data) {
                 $('#city').html(data);
             },
@@ -369,7 +378,9 @@ $('#category').on('change', function() {
         $.ajax({
             url: '<?php echo $urlval ?>admin/ajax/product/get_subcat.php',
             type: 'POST',
-            data: { catId: catId },
+            data: {
+                catId: catId
+            },
             success: function(data) {
                 $('#subcategory').html(data);
             },
@@ -383,4 +394,5 @@ $('#category').on('change', function() {
 });
 </script>
 </body>
+
 </html>

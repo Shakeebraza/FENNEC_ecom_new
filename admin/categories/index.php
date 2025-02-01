@@ -3,7 +3,7 @@ require_once("../../global.php");
 include_once('../header.php');
 
 // 1) Only let [1,3,4] in => else redirect
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3,4])) {
     header("Location: {$urlval}admin/logout.php");
     exit;
@@ -42,14 +42,14 @@ $isAdmin = in_array($role, [1,3]);
                             <div class="table-data__tool-right">
                                 <!-- Only show "add categories" if user can edit -->
                                 <?php if ($isAdmin): ?>
-                                    <a href="<?= $urlval ?>admin/categories/addcat.php" 
-                                       class="au-btn au-btn-icon au-btn--green au-btn--small">
-                                       <i class="zmdi zmdi-plus"></i>add Categories
-                                    </a>
-                                    <a href="<?= $urlval ?>admin/categories/sort.php" 
-                                       class="au-btn au-btn-icon btn-dark au-btn--small" style="color:white;">
-                                       <i class="zmdi zmdi-sort"></i>Sort
-                                    </a>
+                                <a href="<?= $urlval ?>admin/categories/addcat.php"
+                                    class="au-btn au-btn-icon au-btn--green au-btn--small">
+                                    <i class="zmdi zmdi-plus"></i>add Categories
+                                </a>
+                                <a href="<?= $urlval ?>admin/categories/sort.php"
+                                    class="au-btn au-btn-icon btn-dark au-btn--small" style="color:white;">
+                                    <i class="zmdi zmdi-sort"></i>Sort
+                                </a>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -93,13 +93,24 @@ $(document).ready(function() {
             "url": "<?php echo $urlval; ?>admin/ajax/categories/fetchcat.php",
             "type": "POST"
         },
-        "columns": [
-            { "data": "checkbox" },
-            { "data": "name" },
-            { "data": "date" },
-            { "data": "status" },
-            { "data": "showhome" },
-            { "data": "actions" }
+        "columns": [{
+                "data": "checkbox"
+            },
+            {
+                "data": "name"
+            },
+            {
+                "data": "date"
+            },
+            {
+                "data": "status"
+            },
+            {
+                "data": "showhome"
+            },
+            {
+                "data": "actions"
+            }
         ]
     });
 
@@ -112,7 +123,9 @@ $(document).ready(function() {
                 $.ajax({
                     url: '<?php echo $urlval; ?>admin/ajax/categories/deletecat.php',
                     type: 'POST',
-                    data: { id: userId },
+                    data: {
+                        id: userId
+                    },
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
@@ -131,13 +144,16 @@ $(document).ready(function() {
 
         // Show-home toggle
         $('#userTable').on('change', '.show-home-toggle', function() {
-            var catId   = $(this).data('id');
+            var catId = $(this).data('id');
             var isChecked = $(this).is(':checked') ? 1 : 0;
 
             $.ajax({
                 url: '<?php echo $urlval; ?>admin/ajax/categories/update_showhome.php',
                 type: 'POST',
-                data: { id: catId, is_show: isChecked },
+                data: {
+                    id: catId,
+                    is_show: isChecked
+                },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
@@ -155,4 +171,5 @@ $(document).ready(function() {
 });
 </script>
 </body>
+
 </html>

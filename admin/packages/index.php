@@ -3,7 +3,7 @@ require_once("../../global.php");
 include_once('../header.php');
 
 /** Check roles in [1,3,4] **/
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3,4])) {
     header("Location: {$urlval}admin/logout.php");
     exit;
@@ -54,7 +54,7 @@ $isAdmin = in_array($role, [1,3]);
                                     <th>Status</th>
                                     <!-- Show "Action" column only if isAdmin -->
                                     <?php if ($isAdmin): ?>
-                                        <th>Action</th>
+                                    <th>Action</th>
                                     <?php endif; ?>
                                 </tr>
                             </thead>
@@ -70,7 +70,7 @@ $isAdmin = in_array($role, [1,3]);
 <?php include_once('../footer.php'); ?>
 
 <script>
-$(document).ready(function () {
+$(document).ready(function() {
     var table = $('#userTable').DataTable({
         "processing": true,
         "serverSide": true,
@@ -78,19 +78,33 @@ $(document).ready(function () {
             "url": "<?php echo $urlval; ?>admin/ajax/packages/fetchpac.php",
             "type": "POST"
         },
-        "columns": [
-            { "data": "checkboost" },
-            { "data": "name" },
-            { "data": "heading" },
-            { "data": "duration" },
-            { "data": "price" },
-            { "data": "status" },
+        "columns": [{
+                "data": "checkboost"
+            },
+            {
+                "data": "name"
+            },
+            {
+                "data": "heading"
+            },
+            {
+                "data": "duration"
+            },
+            {
+                "data": "price"
+            },
+            {
+                "data": "status"
+            },
             // Only define "actions" if isAdmin
-            <?php if ($isAdmin): ?>
-            { "data": "actions" }
+            <?php if ($isAdmin): ?> {
+                "data": "actions"
+            }
             <?php endif; ?>
         ],
-        "order": [[3, "desc"]] 
+        "order": [
+            [3, "desc"]
+        ]
     });
 
     <?php if ($isAdmin): ?>
@@ -101,7 +115,9 @@ $(document).ready(function () {
             $.ajax({
                 url: '<?php echo $urlval; ?>admin/ajax/packages/deletepac.php',
                 type: 'POST',
-                data: { id: packageId },
+                data: {
+                    id: packageId
+                },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
@@ -122,4 +138,5 @@ $(document).ready(function () {
 </script>
 
 </body>
+
 </html>

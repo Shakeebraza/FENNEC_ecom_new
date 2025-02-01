@@ -1,6 +1,7 @@
 <?php
 require_once("../global.php");
 include_once('header.php');
+
 $userData = $fun->getUserRegistrationData();
 $datesJS = json_encode($userData['dates']);
 $userCountsJS = json_encode($userData['userCounts']);
@@ -27,6 +28,7 @@ $userVerificationCounts = $fun->getUserVerificationCounts();
 $verifiedCount = $userVerificationCounts['verified_count'];
 $notVerifiedCount = $userVerificationCounts['not_verified_count'];
 $verificationData = json_encode([$verifiedCount, $notVerifiedCount]);
+
 ?>
 
 
@@ -186,23 +188,23 @@ $verificationData = json_encode([$verifiedCount, $notVerifiedCount]);
                 </div>
                 <div class="col-lg-12">
 
-                <div class="top-campaign">
-                    <h3 class="title-3 m-b-30">Site Statistics</h3>
-                    <div class="table-responsive">
-                        <table class="table table-top-campaign">
-                            <tbody>
-                                <?php
+                    <div class="top-campaign">
+                        <h3 class="title-3 m-b-30">Site Statistics</h3>
+                        <div class="table-responsive">
+                            <table class="table table-top-campaign">
+                                <tbody>
+                                    <?php
                                 $statistics = $fun->getSiteStatistics(); 
                                 foreach ($statistics as $key => $value) {
                                     echo "<tr><td>{$key}</td><td>{$value}</td></tr>";
                                 }
                                 ?>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
 
-            </div>
+                </div>
 
             </div>
         </div>
@@ -214,6 +216,8 @@ $verificationData = json_encode([$verifiedCount, $notVerifiedCount]);
 <?php
 include_once('footer.php');
 include_once('chats.php');
+
+
 ?>
 
 </body>

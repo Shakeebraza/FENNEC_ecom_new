@@ -6,7 +6,7 @@ include_once('../header.php');
  * 1) Confirm user’s role is in [1,3,4].
  *    If not, redirect or show an error.
  */
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3,4])) {
     header("Location: {$urlval}admin/logout.php");
     exit;
@@ -49,9 +49,8 @@ $isAdmin = in_array($role, [1,3]);
                                         <option value="0">Unactivated</option>
                                     </select>
                                 </div>
-                                <button type="button" class="btn btn-success"
-                                        id="searchMenu"
-                                        style="height: 37px; margin-top: 30px;">
+                                <button type="button" class="btn btn-success" id="searchMenu"
+                                    style="height: 37px; margin-top: 30px;">
                                     Search
                                 </button>
                             </div>
@@ -67,7 +66,7 @@ $isAdmin = in_array($role, [1,3]);
                                         <th>status</th>
                                         <!-- Show "Action" column only if isAdmin -->
                                         <?php if ($isAdmin): ?>
-                                            <th>Action</th>
+                                        <th>Action</th>
                                         <?php endif; ?>
                                     </tr>
                                 </thead>
@@ -94,18 +93,26 @@ $(document).ready(function() {
             "url": "<?php echo $urlval; ?>admin/ajax/menu/fetchmenu.php",
             "type": "POST",
             "data": function(d) {
-                d.name = $('#name').val();  
-                d.status = $('#status').val();  
+                d.name = $('#name').val();
+                d.status = $('#status').val();
             }
         },
-        "columns": [
-            { "data": "checkbox" },
-            { "data": "name" },
-            { "data": "date" },
-            { "data": "status" },
+        "columns": [{
+                "data": "checkbox"
+            },
+            {
+                "data": "name"
+            },
+            {
+                "data": "date"
+            },
+            {
+                "data": "status"
+            },
             // Only define "actions" column if isAdmin
-            <?php if ($isAdmin): ?>
-            { "data": "actions" }
+            <?php if ($isAdmin): ?> {
+                "data": "actions"
+            }
             <?php endif; ?>
         ]
     });
@@ -124,7 +131,9 @@ $(document).ready(function() {
             $.ajax({
                 url: '<?php echo $urlval; ?>admin/ajax/menu/deletemenu.php',
                 type: 'POST',
-                data: { id: menuId },
+                data: {
+                    id: menuId
+                },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
@@ -145,4 +154,5 @@ $(document).ready(function() {
 </script>
 
 </body>
+
 </html>

@@ -3,7 +3,7 @@ require_once("../../global.php");
 include_once('../header.php');
 
 /** Check roles in [1,3,4] **/
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3,4])) {
     header("Location: {$urlval}admin/logout.php");
     exit;
@@ -53,7 +53,7 @@ $isAdmin = in_array($role, [1,3]);
                                     <th>status</th>
                                     <!-- Show "Action" column only if isAdmin -->
                                     <?php if ($isAdmin): ?>
-                                        <th>Action</th>
+                                    <th>Action</th>
                                     <?php endif; ?>
                                 </tr>
                             </thead>
@@ -77,16 +77,26 @@ $(document).ready(function() {
             "url": "<?php echo $urlval; ?>admin/ajax/box/fetchbox.php",
             "type": "POST"
         },
-        "columns": [
-            { "data": "checkbox" },
-            { "data": "name" },
-            { "data": "heading" },
-            { "data": "date" },
-            { "data": "status" },
+        "columns": [{
+                "data": "checkbox"
+            },
+            {
+                "data": "name"
+            },
+            {
+                "data": "heading"
+            },
+            {
+                "data": "date"
+            },
+            {
+                "data": "status"
+            },
 
             // Only define "actions" if isAdmin
-            <?php if ($isAdmin): ?>
-            { "data": "actions" }
+            <?php if ($isAdmin): ?> {
+                "data": "actions"
+            }
             <?php endif; ?>
         ]
     });
@@ -99,7 +109,9 @@ $(document).ready(function() {
             $.ajax({
                 url: '<?php echo $urlval; ?>admin/ajax/box/deletebox.php',
                 type: 'POST',
-                data: { id: boxId },
+                data: {
+                    id: boxId
+                },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
@@ -120,4 +132,5 @@ $(document).ready(function() {
 </script>
 
 </body>
+
 </html>

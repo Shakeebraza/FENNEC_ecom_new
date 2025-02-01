@@ -6,7 +6,7 @@ include_once('../header.php');
  * Role check: only allow roles in [1,3,4].
  * If not in those roles, redirect to logout.
  */
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3,4])) {
     header("Location: {$urlval}admin/logout.php");
     exit;
@@ -26,18 +26,15 @@ $isAdmin = in_array($role, [1,3]);
                             <div class="table-data__tool-right">
                                 <!-- Show "Add Languages" button only if $isAdmin -->
                                 <?php if ($isAdmin): ?>
-                                    <a href="<?= $urlval ?>admin/lan/add.php"
-                                       class="au-btn au-btn-icon au-btn--small"
-                                       style="background-color: #333; color: white;">
-                                        <i class="zmdi zmdi-plus"></i> Add Languages
-                                    </a>
+                                <a href="<?= $urlval ?>admin/lan/add.php" class="au-btn au-btn-icon au-btn--small"
+                                    style="background-color: #333; color: white;">
+                                    <i class="zmdi zmdi-plus"></i> Add Languages
+                                </a>
                                 <?php endif; ?>
 
                                 <!-- Download template is harmless, so we can show to everyone -->
-                                <a href="<?= $urlval ?>languages/en.php"
-                                   class="au-btn au-btn-icon au-btn--small"
-                                   style="background-color: #28a745; color: white;"
-                                   download>
+                                <a href="<?= $urlval ?>languages/en.php" class="au-btn au-btn-icon au-btn--small"
+                                    style="background-color: #28a745; color: white;" download>
                                     <i class="zmdi zmdi-download"></i> Download Template
                                 </a>
                             </div>
@@ -53,7 +50,7 @@ $isAdmin = in_array($role, [1,3]);
                                     <th>Path</th>
                                     <!-- Show Action column only if $isAdmin -->
                                     <?php if ($isAdmin): ?>
-                                        <th>Action</th>
+                                    <th>Action</th>
                                     <?php endif; ?>
                                 </tr>
                             </thead>
@@ -79,15 +76,23 @@ $(document).ready(function() {
             "url": "<?php echo $urlval; ?>admin/ajax/lan/fetchlan.php",
             "type": "POST"
         },
-        "columns": [
-            { "data": "checkbox" },
-            { "data": "name" },
-            { "data": "Code" },
-            { "data": "Path" },
+        "columns": [{
+                "data": "checkbox"
+            },
+            {
+                "data": "name"
+            },
+            {
+                "data": "Code"
+            },
+            {
+                "data": "Path"
+            },
 
             // Only define "actions" column if isAdmin
-            <?php if ($isAdmin): ?>
-            { "data": "actions" }
+            <?php if ($isAdmin): ?> {
+                "data": "actions"
+            }
             <?php endif; ?>
         ],
     });
@@ -100,7 +105,9 @@ $(document).ready(function() {
             $.ajax({
                 url: '<?php echo $urlval; ?>admin/ajax/lan/deleteLan.php',
                 type: 'POST',
-                data: { id: lanId },
+                data: {
+                    id: lanId
+                },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
@@ -121,4 +128,5 @@ $(document).ready(function() {
 </script>
 
 </body>
+
 </html>

@@ -3,7 +3,7 @@ require_once('../../../global.php');
 header('Content-Type: application/json');
 
 // 1) Check role
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3])) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;

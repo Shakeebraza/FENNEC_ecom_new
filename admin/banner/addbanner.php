@@ -3,7 +3,7 @@ require_once("../../global.php");
 include_once('../header.php');
 
 // 1) Check the logged-in user’s role
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 // 2) Decide if this user can add banners
 $isAdmin = in_array($role, [1,3]); // 1=Super Admin, 3=Admin
 
@@ -11,19 +11,20 @@ $isAdmin = in_array($role, [1,3]); // 1=Super Admin, 3=Admin
 ?>
 
 <?php if (!$isAdmin): ?>
-    <!-- If NOT Admin/Super Admin => show a read-only or error message -->
-    <div class="page-container">
-        <div class="main-content">
-            <div class="container-fluid">
-                <h1>Access Denied</h1>
-                <p>You do not have permission to add banners.</p>
-            </div>
+<!-- If NOT Admin/Super Admin => show a read-only or error message -->
+<div class="page-container">
+    <div class="main-content">
+        <div class="container-fluid">
+            <h1>Access Denied</h1>
+            <p>You do not have permission to add banners.</p>
         </div>
     </div>
-    <?php include_once('../footer.php'); ?>
-    </body>
-    </html>
-    <?php
+</div>
+<?php include_once('../footer.php'); ?>
+</body>
+
+</html>
+<?php
     exit;
 endif;
 ?>
@@ -91,18 +92,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <style>
-    .error { color: red; }
-    .form-container { background-color: #f9f9f9; padding: 20px; border-radius: 8px; }
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; margin-bottom: 5px; }
-    .form-group input, .form-group select, .form-group textarea {
-        width: 100%; padding: 10px; border: 1px solid #ccc;
-    }
-    .btn {
-        background-color: #28a745; color: white; padding: 10px 15px;
-        border: none; cursor: pointer;
-    }
-    .btn:hover { background-color: #218838; }
+.error {
+    color: red;
+}
+
+.form-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #218838;
+}
 </style>
 
 <div class="page-container">

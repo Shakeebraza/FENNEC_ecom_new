@@ -493,6 +493,31 @@ public function getUserBalance($userId)
         
         return false;
     }
+    public function sessionSetAdmin($email = NULL) {
+        if (isset($email) && !empty($email)) {
+            $userData = $this->dbfun->getDatanotenc('admins', "email = '$email'");
+            
+            if ($userData) {
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                }
+                
+                $_SESSION['auserid'] = base64_encode($userData[0]['id']);
+                $_SESSION['ausername'] = $userData[0]['username'];
+                $_SESSION['aemail'] = $userData[0]['email'];
+                $_SESSION['aemail_verified_at'] = $userData[0]['email_verified_at'];
+                $_SESSION['arole'] = $userData[0]['role'];
+                $_SESSION['aprofile'] = $this->urlval.$userData[0]['profile'];
+                $_SESSION['aremember'] = $userData[0]['remember_token'];
+                
+        
+                return true;
+            }
+        }
+        
+        
+        return false;
+    }
     public function RequestSessioncheck(){
         if(isset($_SESSION['userid']) && isset($_SESSION['remember'])){
             $id= base64_decode($_SESSION['userid']);
@@ -582,6 +607,20 @@ public function getUserBalance($userId)
             !empty($_SESSION['userid']) &&
             !empty($_SESSION['username']) &&
             !empty($_SESSION['email'])) {
+            return true; 
+        }
+    
+        return false; 
+    }
+    public function isSessionSetAdmin() {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+    
+        if (isset($_SESSION['auserid'], $_SESSION['ausername'], $_SESSION['aemail']) &&
+            !empty($_SESSION['auserid']) &&
+            !empty($_SESSION['ausername']) &&
+            !empty($_SESSION['aemail'])) {
             return true; 
         }
     

@@ -4,7 +4,7 @@ include_once('header.php');
 
 // 1) Confirm the user’s session is valid, role is in [1,3,4]. 
 //    (If your header.php already does that, you can skip this.)
-$role = $_SESSION['role'] ?? 0; 
+$role = $_SESSION['arole'] ?? 0; 
 if (!in_array($role, [1,3,4])) {
     // If the role is invalid, redirect or show error
     header("Location: {$urlval}admin/logout.php");
@@ -49,13 +49,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $isAdmin) {
                         <h3>Site Setting</h3>
                         <!-- Hide the backup button if user is NOT admin/super-admin -->
                         <?php if ($isAdmin): ?>
-                            <button id="backupBtn" class="au-btn au-btn-icon au-btn--small"
-                                    style="background-color: #28a745; color: white;" download>
-                                <i class="zmdi zmdi-download"></i> Take Database Backup
-                            </button>
+                        <button id="backupBtn" class="au-btn au-btn-icon au-btn--small"
+                            style="background-color: #28a745; color: white;" download>
+                            <i class="zmdi zmdi-download"></i> Take Database Backup
+                        </button>
                         <?php endif; ?>
                     </div>
-                    
+
                     <?php
                     // If moderator, we might want to disable the form fields entirely.
                     // The generateSettingsForm() presumably creates an HTML form. 
@@ -94,16 +94,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $isAdmin) {
 <script>
 document.getElementById('backupBtn')?.addEventListener('click', function() {
     if (confirm('Are you sure you want to take a backup of the database?')) {
-        fetch('<?=$urlval?>admin/ajax/backup.php', { method: 'GET' })
-            .then(response => response.blob())  // Receive the response as a blob
+        fetch('<?=$urlval?>admin/ajax/backup.php', {
+                method: 'GET'
+            })
+            .then(response => response.blob()) // Receive the response as a blob
             .then(blob => {
                 const link = document.createElement('a');
                 const url = window.URL.createObjectURL(blob);
-                link.href = url;    // Create a URL for the blob
+                link.href = url; // Create a URL for the blob
                 link.download = 'database_backup.sql'; // Name the file
                 document.body.appendChild(link);
-                link.click();       // Simulate a click to trigger the download
-                link.remove();      // Clean up
+                link.click(); // Simulate a click to trigger the download
+                link.remove(); // Clean up
             })
             .catch(error => alert('Error: ' + error));
     }

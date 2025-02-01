@@ -3,7 +3,7 @@ require_once("../../global.php");
 include_once('../header.php');
 
 // Restrict page to roles [1,3,4]
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3,4])) {
     header("Location: {$urlval}admin/logout.php");
     exit;
@@ -36,7 +36,7 @@ $isAdmin = in_array($role, [1,3]); // only role=1 or 3 can delete
                                     <th>Message</th>
                                     <!-- Show Action column only if Admin or Super Admin -->
                                     <?php if ($isAdmin): ?>
-                                        <th>Action</th>
+                                    <th>Action</th>
                                     <?php endif; ?>
                                 </tr>
                             </thead>
@@ -62,14 +62,20 @@ $(document).ready(function() {
             "url": "<?php echo $urlval; ?>admin/ajax/contact/fetchcontact.php",
             "type": "POST"
         },
-        "columns": [
-            { "data": "checkbox" },
-            { "data": "name" },
-            { "data": "Code" },
-            { "data": "Path" },
-            // Only define the actions column if $isAdmin
-            <?php if ($isAdmin): ?>
+        "columns": [{
+                "data": "checkbox"
+            },
             {
+                "data": "name"
+            },
+            {
+                "data": "Code"
+            },
+            {
+                "data": "Path"
+            },
+            // Only define the actions column if $isAdmin
+            <?php if ($isAdmin): ?> {
                 "data": "actions"
             }
             <?php endif; ?>
@@ -84,7 +90,9 @@ $(document).ready(function() {
             $.ajax({
                 url: '<?php echo $urlval; ?>admin/ajax/contact/deletecon.php',
                 type: 'POST',
-                data: { id: contactId },
+                data: {
+                    id: contactId
+                },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
@@ -104,4 +112,5 @@ $(document).ready(function() {
 });
 </script>
 </body>
+
 </html>

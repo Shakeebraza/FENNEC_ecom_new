@@ -2,7 +2,7 @@
 require_once('../../../global.php');
 
 // 1) Check the viewer's role
-$sessionRole = $_SESSION['role'] ?? 0;
+$sessionRole = $_SESSION['arole'] ?? 0;
 $isAdmin     = in_array($sessionRole, [1,3]);
 
 $draw   = intval($_POST['draw']);

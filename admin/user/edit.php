@@ -17,7 +17,7 @@ if (!$user) {
 /** 
  * Optional role check: e.g. only Admin or Super Admin can edit
  */
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3])) {
     die("Unauthorized");
 }
@@ -35,37 +35,33 @@ if (!in_array($role, [1,3])) {
                             <div class="card-body card-block">
                                 <form id="editUserForm">
                                     <!-- Hidden user ID, base64-encoded -->
-                                    <input type="hidden" name="id"
-                                           value="<?php echo base64_encode($user[0]['id']); ?>">
+                                    <input type="hidden" name="id" value="<?php echo base64_encode($user[0]['id']); ?>">
 
                                     <div class="form-group">
                                         <label for="username">Name</label>
-                                        <input type="text"
-                                               class="form-control"
-                                               id="username"
-                                               name="username"
-                                               value="<?php echo htmlspecialchars($user[0]['username']); ?>"
-                                               required>
+                                        <input type="text" class="form-control" id="username" name="username"
+                                            value="<?php echo htmlspecialchars($user[0]['username']); ?>" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="email">Email</label>
-                                        <input type="email"
-                                               class="form-control"
-                                               id="email"
-                                               name="email"
-                                               value="<?php echo htmlspecialchars($user[0]['email']); ?>"
-                                               required>
+                                        <input type="email" class="form-control" id="email" name="email"
+                                            value="<?php echo htmlspecialchars($user[0]['email']); ?>" required>
                                     </div>
 
                                     <!-- Updated role dropdown for new roles -->
                                     <div class="form-group">
                                         <label for="role">Role</label>
                                         <select class="form-control" id="role" name="role">
-                                            <option value="0" <?php echo ($user[0]['role'] == 0) ? 'selected' : ''; ?>>Regular User</option>
-                                            <option value="1" <?php echo ($user[0]['role'] == 1) ? 'selected' : ''; ?>>Super Admin</option>
-                                            <option value="2" <?php echo ($user[0]['role'] == 2) ? 'selected' : ''; ?>>Trader</option>
-                                            <option value="3" <?php echo ($user[0]['role'] == 3) ? 'selected' : ''; ?>>Admin</option>
-                                            <option value="4" <?php echo ($user[0]['role'] == 4) ? 'selected' : ''; ?>>Moderator</option>
+                                            <option value="0" <?php echo ($user[0]['role'] == 0) ? 'selected' : ''; ?>>
+                                                Regular User</option>
+                                            <option value="1" <?php echo ($user[0]['role'] == 1) ? 'selected' : ''; ?>>
+                                                Super Admin</option>
+                                            <option value="2" <?php echo ($user[0]['role'] == 2) ? 'selected' : ''; ?>>
+                                                Trader</option>
+                                            <option value="3" <?php echo ($user[0]['role'] == 3) ? 'selected' : ''; ?>>
+                                                Admin</option>
+                                            <option value="4" <?php echo ($user[0]['role'] == 4) ? 'selected' : ''; ?>>
+                                                Moderator</option>
                                         </select>
                                     </div>
 
@@ -73,29 +69,33 @@ if (!in_array($role, [1,3])) {
                                     <div class="form-group">
                                         <label for="status">Status</label>
                                         <select class="form-control" id="status" name="status">
-                                            <option value="1" <?php echo ($user[0]['status'] == 1) ? 'selected' : ''; ?>>Activated</option>
-                                            <option value="0" <?php echo ($user[0]['status'] == 0) ? 'selected' : ''; ?>>Blocked</option>
+                                            <option value="1"
+                                                <?php echo ($user[0]['status'] == 1) ? 'selected' : ''; ?>>Activated
+                                            </option>
+                                            <option value="0"
+                                                <?php echo ($user[0]['status'] == 0) ? 'selected' : ''; ?>>Blocked
+                                            </option>
                                         </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="password">Password</label>
-                                        <input type="password"
-                                               class="form-control"
-                                               id="password"
-                                               name="password"
-                                               placeholder="Enter new password (leave blank to keep current)">
+                                        <input type="password" class="form-control" id="password" name="password"
+                                            placeholder="Enter new password (leave blank to keep current)">
                                     </div>
 
                                     <div class="form-group">
                                         <label for="premium">Premium User</label>
                                         <select class="form-control" id="premium" name="premium">
-                                            <option value="1" <?php echo ($user[0]['premium'] == 1) ? 'selected' : ''; ?>>Yes</option>
-                                            <option value="0" <?php echo ($user[0]['premium'] == 0) ? 'selected' : ''; ?>>No</option>
+                                            <option value="1"
+                                                <?php echo ($user[0]['premium'] == 1) ? 'selected' : ''; ?>>Yes</option>
+                                            <option value="0"
+                                                <?php echo ($user[0]['premium'] == 0) ? 'selected' : ''; ?>>No</option>
                                         </select>
                                     </div>
 
-                                    <button type="button" id="updateUserBtn" class="btn btn-primary">Update User</button>
+                                    <button type="button" id="updateUserBtn" class="btn btn-primary">Update
+                                        User</button>
                                     <a href="index.php" class="btn btn-secondary">Cancel</a>
                                 </form>
                             </div><!-- card-body -->
@@ -142,4 +142,5 @@ $(document).ready(function() {
 });
 </script>
 </body>
+
 </html>

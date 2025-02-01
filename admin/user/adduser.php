@@ -5,7 +5,7 @@ include_once('../header.php');
  
 //   Optional role check: If you only want Admin/Super Admin to add new users:
  
-  $role = $_SESSION['role'] ?? 0;
+  $role = $_SESSION['arole'] ?? 0;
   if (!in_array($role, [1,3])) { // 1=Super Admin, 3=Admin
       header("Location: {$urlval}admin/logout.php");
       exit;
@@ -18,7 +18,7 @@ include_once('../header.php');
             <div class="container-fluid d-flex justify-content-center" style="min-height: 100vh;">
                 <div class="row" style="width:80%;">
                     <div id="alert-message" class="sufee-alert alert-dismissible fade show"
-                         style="display:none; width: 250px; position: fixed; top: 113px; right: 10px; z-index: 1000; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        style="display:none; width: 250px; position: fixed; top: 113px; right: 10px; z-index: 1000; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
                         <span class="badge"></span>
                         <span id="message-content" style="margin-right: 10px;"></span>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -36,9 +36,8 @@ include_once('../header.php');
                                             <div class="input-group-addon">
                                                 <i class="fa fa-user"></i>
                                             </div>
-                                            <input type="text" id="username" name="username"
-                                                   placeholder="Username"
-                                                   class="form-control" required>
+                                            <input type="text" id="username" name="username" placeholder="Username"
+                                                class="form-control" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -46,9 +45,8 @@ include_once('../header.php');
                                             <div class="input-group-addon">
                                                 <i class="fa fa-envelope"></i>
                                             </div>
-                                            <input type="email" id="email" name="email"
-                                                   placeholder="Email"
-                                                   class="form-control" required>
+                                            <input type="email" id="email" name="email" placeholder="Email"
+                                                class="form-control" required>
                                         </div>
                                     </div>
                                     <!-- Updated role options with new mapping -->
@@ -72,9 +70,8 @@ include_once('../header.php');
                                             <div class="input-group-addon">
                                                 <i class="fa fa-asterisk"></i>
                                             </div>
-                                            <input type="password" id="password" name="password"
-                                                   placeholder="Password"
-                                                   class="form-control" required>
+                                            <input type="password" id="password" name="password" placeholder="Password"
+                                                class="form-control" required>
                                         </div>
                                     </div>
                                     <div class="form-actions form-group">
@@ -117,9 +114,9 @@ $(document).ready(function() {
                         .fadeIn().delay(3000).fadeOut();
                 } else {
                     // If multiple errors, join them, otherwise show single
-                    var errMsg = Array.isArray(response.messages)
-                                 ? response.messages.join('\n')
-                                 : response.message;
+                    var errMsg = Array.isArray(response.messages) ?
+                        response.messages.join('\n') :
+                        response.message;
                     $('#message-content').text(errMsg);
                     $('#alert-message')
                         .addClass('alert-danger')
@@ -138,4 +135,5 @@ $(document).ready(function() {
 });
 </script>
 </body>
+
 </html>

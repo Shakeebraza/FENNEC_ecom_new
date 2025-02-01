@@ -3,7 +3,7 @@ require_once("../../global.php");
 include_once('../header.php');
 
 // 1) Only let [1,3,4] in => else redirect
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3,4])) {
     header("Location: {$urlval}admin/logout.php");
     exit;
@@ -18,33 +18,33 @@ $isAdmin = in_array($role, [1,3]); // for editing
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12">
- 
+
                         <h3 class="title-5 m-b-35">Pages Table</h3>
 
                         <!-- If you want to hide the form from moderators (role=4) -->
                         <?php if (!$isAdmin): ?>
-                            <p>You have read-only access to pages.</p>
+                        <p>You have read-only access to pages.</p>
                         <?php else: ?>
-                            <form id="userSearchForm">
-                                <div class="form-row searchfromwhite">
-                                    <div class="form-group col-md-3">
-                                        <label for="name">Page Name</label>
-                                        <input type="text" class="form-control" id="name" placeholder="Enter name">
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="status">Status</label>
-                                        <select class="form-control" id="status">
-                                            <option value="" selected>All Statuses</option>
-                                            <option value="1">Activated</option>
-                                            <option value="0">Unactivated</option>
-                                        </select>
-                                    </div>
-                                    <button type="button" class="btn btn-success" 
-                                            id="searchPage" style="height:37px; margin-top:30px;">
-                                        Search
-                                    </button>
+                        <form id="userSearchForm">
+                            <div class="form-row searchfromwhite">
+                                <div class="form-group col-md-3">
+                                    <label for="name">Page Name</label>
+                                    <input type="text" class="form-control" id="name" placeholder="Enter name">
                                 </div>
-                            </form>
+                                <div class="form-group col-md-3">
+                                    <label for="status">Status</label>
+                                    <select class="form-control" id="status">
+                                        <option value="" selected>All Statuses</option>
+                                        <option value="1">Activated</option>
+                                        <option value="0">Unactivated</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn btn-success" id="searchPage"
+                                    style="height:37px; margin-top:30px;">
+                                    Search
+                                </button>
+                            </div>
+                        </form>
                         <?php endif; ?>
 
                         <div class="table-responsive table-responsive-data2">
@@ -86,16 +86,25 @@ $(document).ready(function() {
             "url": "<?php echo $urlval; ?>admin/ajax/page/fetchpages.php",
             "type": "POST",
             "data": function(d) {
-                d.name   = $('#name').val();
+                d.name = $('#name').val();
                 d.status = $('#status').val();
             }
         },
-        "columns": [
-            {"data": "checkbox"},
-            {"data": "name"},
-            {"data": "date"},
-            {"data": "status"},
-            {"data": "actions"}
+        "columns": [{
+                "data": "checkbox"
+            },
+            {
+                "data": "name"
+            },
+            {
+                "data": "date"
+            },
+            {
+                "data": "status"
+            },
+            {
+                "data": "actions"
+            }
         ],
     });
 
@@ -111,7 +120,9 @@ $(document).ready(function() {
                 $.ajax({
                     url: '<?php echo $urlval; ?>admin/ajax/page/deletepage.php',
                     type: 'POST',
-                    data: { id: userId },
+                    data: {
+                        id: userId
+                    },
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
@@ -131,4 +142,5 @@ $(document).ready(function() {
 });
 </script>
 </body>
+
 </html>

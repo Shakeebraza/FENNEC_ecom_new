@@ -1,6 +1,6 @@
 <?php
 // FIRST: role checks
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 // If user not in [1,3,4], redirect out. 
 if (!in_array($role, [1,3,4])) {
     header("Location: {$urlval}admin/logout.php");
@@ -14,7 +14,8 @@ $isAdmin = in_array($role, [1,3]);
 <nav>
     <div class="container-fluid mobileview">
         <a class="navbar-brand" href="#">
-            <img src="<?= $urlval?>/custom/asset/Capture-removebg-preview.png" alt="Cool Admin Logo" width="40" height="40">
+            <img src="<?= $urlval?>/custom/asset/Capture-removebg-preview.png" alt="Cool Admin Logo" width="40"
+                height="40">
             <span>Fennec</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#coolAdminOffcanvas"
@@ -38,7 +39,8 @@ $isAdmin = in_array($role, [1,3]);
                     </li>
 
                     <!-- USERS SECTION -->
-                    <li class="nav-item has-sub <?= isActive('/fennec/admin/user/index.php'); ?> <?= isActive('/fennec/admin/user/adduser.php'); ?>">
+                    <li
+                        class="nav-item has-sub <?= isActive('/fennec/admin/user/index.php'); ?> <?= isActive('/fennec/admin/user/adduser.php'); ?>">
                         <a class="nav-link js-arrow" href="#">
                             <i class="fas fa-users"></i> Users
                         </a>
@@ -56,7 +58,8 @@ $isAdmin = in_array($role, [1,3]);
                     </li>
 
                     <!-- BANNERS -->
-                    <li class="nav-item has-sub <?= isActive('/fennec/admin/banner/index.php'); ?> <?= isActive('/fennec/admin/banner/addbanner.php'); ?>">
+                    <li
+                        class="nav-item has-sub <?= isActive('/fennec/admin/banner/index.php'); ?> <?= isActive('/fennec/admin/banner/addbanner.php'); ?>">
                         <a class="nav-link js-arrow" href="#">
                             <i class="fas fa-sliders"></i> Banners
                         </a>
@@ -80,7 +83,8 @@ $isAdmin = in_array($role, [1,3]);
                     </li>
 
                     <!-- PAGES -->
-                    <li class="nav-item has-sub <?= isActive('/fennec/admin/page/index.php'); ?> <?= isActive('/fennec/admin/page/addpage.php'); ?>">
+                    <li
+                        class="nav-item has-sub <?= isActive('/fennec/admin/page/index.php'); ?> <?= isActive('/fennec/admin/page/addpage.php'); ?>">
                         <a class="nav-link js-arrow" href="#">
                             <i class="fas fa-copy"></i> Pages
                         </a>
@@ -98,7 +102,8 @@ $isAdmin = in_array($role, [1,3]);
                     </li>
 
                     <!-- ADS SECTION -->
-                    <li class="nav-item has-sub <?= isActive('/fennec/admin/subcategories/index.php'); ?> <?= isActive('/fennec/admin/categories/index.php'); ?>">
+                    <li
+                        class="nav-item has-sub <?= isActive('/fennec/admin/subcategories/index.php'); ?> <?= isActive('/fennec/admin/categories/index.php'); ?>">
                         <a class="nav-link js-arrow" href="#">
                             <i class="fa fa-folder"></i> Ads
                         </a>
@@ -132,14 +137,16 @@ $isAdmin = in_array($role, [1,3]);
                     </li>
 
                     <!-- LANGUAGES -->
-                    <li class="<?= isActive('/fennec/admin/lan/index.php'); ?> <?= isActive('/fennec/admin/lan/add.php'); ?> <?= isActive('/fennec/admin/lan/edit.php'); ?>">
+                    <li
+                        class="<?= isActive('/fennec/admin/lan/index.php'); ?> <?= isActive('/fennec/admin/lan/add.php'); ?> <?= isActive('/fennec/admin/lan/edit.php'); ?>">
                         <a href="<?php echo $urlval?>admin/lan/index.php">
                             <i class="fas fa-language"></i> Languages
                         </a>
                     </li>
 
                     <!-- LOCATION -->
-                    <li class="<?= isActive('/fennec/admin/location/index.php'); ?> <?= isActive('/fennec/admin/location/add.php'); ?> <?= isActive('/fennec/admin/location/edit.php'); ?>">
+                    <li
+                        class="<?= isActive('/fennec/admin/location/index.php'); ?> <?= isActive('/fennec/admin/location/add.php'); ?> <?= isActive('/fennec/admin/location/edit.php'); ?>">
                         <a href="<?php echo $urlval?>admin/location/index.php">
                             <i class="fa-solid fa-location-dot"></i> Location
                         </a>
@@ -194,7 +201,8 @@ $isAdmin = in_array($role, [1,3]);
                 </li>
 
                 <!-- USERS -->
-                <li class="has-sub <?= isActive('/fennec/admin/user/index.php'); ?> <?= isActive('/fennec/admin/user/adduser.php'); ?>">
+                <li
+                    class="has-sub <?= isActive('/fennec/admin/user/index.php'); ?> <?= isActive('/fennec/admin/user/adduser.php'); ?>">
                     <a class="js-arrow" href="#">
                         <i class="fas fa-users"></i>Users
                     </a>
@@ -211,7 +219,8 @@ $isAdmin = in_array($role, [1,3]);
                 </li>
 
                 <!-- BANNERS -->
-                <li class="has-sub <?= isActive('/fennec/admin/banner/index.php'); ?> <?= isActive('/fennec/admin/banner/addbanner.php'); ?>">
+                <li
+                    class="has-sub <?= isActive('/fennec/admin/banner/index.php'); ?> <?= isActive('/fennec/admin/banner/addbanner.php'); ?>">
                     <a class="js-arrow" href="#">
                         <i class="fas fa-sliders"></i>Banners
                     </a>
@@ -234,7 +243,8 @@ $isAdmin = in_array($role, [1,3]);
                 </li>
 
                 <!-- PAGES -->
-                <li class="has-sub <?= isActive('/fennec/admin/page/index.php'); ?> <?= isActive('/fennec/admin/page/addpage.php'); ?>">
+                <li
+                    class="has-sub <?= isActive('/fennec/admin/page/index.php'); ?> <?= isActive('/fennec/admin/page/addpage.php'); ?>">
                     <a class="js-arrow" href="#">
                         <i class="fas fa-copy"></i>Pages
                     </a>
@@ -251,7 +261,8 @@ $isAdmin = in_array($role, [1,3]);
                 </li>
 
                 <!-- ADS (Categories, Sub-Categories, All Ads) -->
-                <li class="has-sub <?= isActive('/fennec/admin/categories/index.php'); ?> <?= isActive('/fennec/admin/subcategories/index.php'); ?> <?= isActive('/fennec/admin/product/index.php'); ?>">
+                <li
+                    class="has-sub <?= isActive('/fennec/admin/categories/index.php'); ?> <?= isActive('/fennec/admin/subcategories/index.php'); ?> <?= isActive('/fennec/admin/product/index.php'); ?>">
                     <a class="js-arrow " href="#">
                         <i class="fa fa-folder"></i>Ads
                     </a>
@@ -287,14 +298,16 @@ $isAdmin = in_array($role, [1,3]);
                 </li>
 
                 <!-- LANGUAGES -->
-                <li class="<?= isActive('/fennec/admin/lan/index.php'); ?> <?= isActive('/fennec/admin/lan/add.php'); ?> <?= isActive('/fennec/admin/lan/edit.php'); ?>">
+                <li
+                    class="<?= isActive('/fennec/admin/lan/index.php'); ?> <?= isActive('/fennec/admin/lan/add.php'); ?> <?= isActive('/fennec/admin/lan/edit.php'); ?>">
                     <a href="<?php echo $urlval?>admin/lan/index.php">
                         <i class="fas fa-language"></i>Languages
                     </a>
                 </li>
 
                 <!-- LOCATION -->
-                <li class="<?= isActive('/fennec/admin/location/index.php'); ?> <?= isActive('/fennec/admin/location/add.php'); ?> <?= isActive('/fennec/admin/location/edit.php'); ?>">
+                <li
+                    class="<?= isActive('/fennec/admin/location/index.php'); ?> <?= isActive('/fennec/admin/location/add.php'); ?> <?= isActive('/fennec/admin/location/edit.php'); ?>">
                     <a href="<?php echo $urlval?>admin/location/index.php">
                         <i class="fa-solid fa-location-dot"></i>Location
                     </a>

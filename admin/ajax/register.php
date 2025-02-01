@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (strlen($username) > $maxUsernameLength) {
         $errors[] = "Username must be less than $maxUsernameLength characters long.";
     } else {
-        $usernameCount = $dbFunctions->getCount('users', 'username', "username = '$username'");
+        $usernameCount = $dbFunctions->getCount('admins', 'username', "username = '$username'");
         if ($usernameCount > 0) {
             $errors[] = 'Username is already taken.';
         }
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = 'Invalid email format.';
     } else {
-        $emailCount = $dbFunctions->getCount('users', 'email', "email = '$email'");
+        $emailCount = $dbFunctions->getCount('admins', 'email', "email = '$email'");
         if ($emailCount > 0) {
             $errors[] = 'Email is already registered.';
         }
@@ -71,14 +71,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'verification_token' => $verificationToken
     ];
 
-    $response = $dbFunctions->setData('users', $data);
+    $response = $dbFunctions->setData('admins', $data);
 
     // Logging
     $logMsg = sprintf(
         "New Registration: username=%s, email=%s, role=%s, time=%s\n",
         $username, $email, $role, date('Y-m-d H:i:s')
     );
-    error_log($logMsg, 3, __DIR__ . '/registration.log'); // logs to "admin/ajax/registration.log"
+    error_log($logMsg, 3, __DIR__ . '/registration.log'); // logs to "admins/ajax/registration.log"
 
     if ($response['success']) {
         // Construct email verification link

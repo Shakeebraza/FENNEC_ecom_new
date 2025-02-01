@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $where = "email = '" . $email . "'";
-        $user  = $dbFunctions->getDatanotenc('users', $where);
+        $user  = $dbFunctions->getDatanotenc('admins', $where);
 
         if ($user) {
             $user = $user[0];
@@ -31,21 +31,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo json_encode(['status' => 'error', 'message' => 'Invalid role or insufficient privileges.']);
                 exit;
             }
-
+          
             // Check password
             if (password_verify($password, $user['password'])) {
                 // "Remember me" logic
                 if ($remember) {
                     $token       = bin2hex(random_bytes(16));
                     $expiryTime  = time() + (86400 * 30); // 30 days
-                    $dbFunctions->updateData('users', ['remember_token' => $token], $user['id']);
+                    $dbFunctions->updateData('admins', ['remember_token' => $token], $user['id']);
                     // Set a secure, HTTP-only cookie
                     setcookie("remember_token", $token, $expiryTime, "/", "", true, true);
                 }
 
                 // Set user session
                 $email      = $user['email'];
-                $sessionSet = $fun->sessionSet($email);
+                $sessionSet = $fun->sessionSetAdmin($email);
 
                 // Return success with user’s role
                 echo json_encode(['status' => 'success', 'role' => $user['role']]);

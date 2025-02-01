@@ -12,7 +12,7 @@ $length = isset($_POST['length']) ? intval($_POST['length']) : 10;
 $totalRecords = $dbFunctions->getCount('users', '*', '');
 
 // 1) Check the session role of the **current logged-in user** 
-$sessionRole = $_SESSION['role'] ?? 0; 
+$sessionRole = $_SESSION['arole'] ?? 0; 
 $canEdit     = in_array($sessionRole, [1,3]); // Only 1=Super Admin, 3=Admin can edit
 
 // Gather search fields from POST

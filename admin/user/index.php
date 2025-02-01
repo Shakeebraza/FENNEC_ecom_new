@@ -5,7 +5,7 @@ include_once('../header.php');
 /** 
  * Optional role check to restrict who sees the user list
  */
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3,4])) {
     header("Location: {$urlval}admin/logout.php");
     exit;
@@ -26,13 +26,12 @@ if (!in_array($role, [1,3,4])) {
                                     <div class="form-row searchfrom">
                                         <div class="form-group col-md-3">
                                             <label for="name">Name</label>
-                                            <input type="text" class="form-control"
-                                                   id="name" placeholder="Enter name">
+                                            <input type="text" class="form-control" id="name" placeholder="Enter name">
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label for="email">Email</label>
-                                            <input type="email" class="form-control"
-                                                   id="email" placeholder="Enter email">
+                                            <input type="email" class="form-control" id="email"
+                                                placeholder="Enter email">
                                         </div>
                                         <!-- Updated role filter to match new roles -->
                                         <div class="form-group col-md-3">
@@ -54,9 +53,8 @@ if (!in_array($role, [1,3,4])) {
                                                 <option value="0">Blocked</option>
                                             </select>
                                         </div>
-                                        <button type="button" class="btn btn-success"
-                                                id="searchUsers"
-                                                style="height: 38px; margin-top: 25px;">
+                                        <button type="button" class="btn btn-success" id="searchUsers"
+                                            style="height: 38px; margin-top: 25px;">
                                             Search
                                         </button>
                                     </div>
@@ -95,23 +93,22 @@ if (!in_array($role, [1,3,4])) {
 </div><!-- page-container -->
 
 <!-- Optional: Delete confirm modal if you want a popup -->
-<div id="deleteConfirmModal" class="modal fade" tabindex="-1" role="dialog"
-     aria-labelledby="deleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <!-- ... etc. ... -->
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
-        <button type="button" class="close" data-dismiss="modal"
-                aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to delete this user?
-      </div>
+<div id="deleteConfirmModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- ... etc. ... -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this user?
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <?php include_once('../footer.php'); ?>
@@ -126,20 +123,33 @@ $(document).ready(function() {
             "url": "<?php echo $urlval ?>admin/ajax/user/fetchUsers.php",
             "type": "POST",
             "data": function(d) {
-                d.name   = $('#name').val();
-                d.email  = $('#email').val();
-                d.role   = $('#role').val();
+                d.name = $('#name').val();
+                d.email = $('#email').val();
+                d.role = $('#role').val();
                 d.status = $('#status').val();
             }
         },
-        "columns": [
-            { "data": "checkbox" },
-            { "data": "name" },
-            { "data": "email" },
-            { "data": "role" },
-            { "data": "type" },
-            { "data": "chat" },
-            { "data": "actions" }
+        "columns": [{
+                "data": "checkbox"
+            },
+            {
+                "data": "name"
+            },
+            {
+                "data": "email"
+            },
+            {
+                "data": "role"
+            },
+            {
+                "data": "type"
+            },
+            {
+                "data": "chat"
+            },
+            {
+                "data": "actions"
+            }
         ]
     });
 
@@ -156,7 +166,9 @@ $(document).ready(function() {
         $.ajax({
             url: '<?php echo $urlval ?>admin/ajax/user/deleteUser.php',
             type: 'POST',
-            data: { id: userId },
+            data: {
+                id: userId
+            },
             success: function(response) {
                 if (response.success) {
                     alert('User deleted successfully!');
@@ -179,7 +191,10 @@ $(document).ready(function() {
         $.ajax({
             url: '<?php echo $urlval ?>admin/ajax/user/update_status.php',
             type: 'POST',
-            data: { id: userId, status: status },
+            data: {
+                id: userId,
+                status: status
+            },
             success: function(response) {
                 alert('User status updated successfully!');
             },
@@ -195,7 +210,9 @@ $(document).ready(function() {
         $.ajax({
             url: '<?php echo $urlval ?>admin/ajax/user/create_chat.php',
             type: 'POST',
-            data: { chatId: chatId },
+            data: {
+                chatId: chatId
+            },
             success: function(response) {
                 if (response.success) {
                     alert('Chat created successfully!');
@@ -212,4 +229,5 @@ $(document).ready(function() {
 });
 </script>
 </body>
+
 </html>

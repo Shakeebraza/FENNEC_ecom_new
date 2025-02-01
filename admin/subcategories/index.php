@@ -3,7 +3,7 @@ require_once("../../global.php");
 include_once('../header.php');
 
 // 1) Only let roles in [1,3,4] see this page
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3,4])) {
     header("Location: {$urlval}admin/logout.php");
     exit;
@@ -41,14 +41,14 @@ $isAdmin = in_array($role, [1,3]);
                             <div class="table-data__tool-right">
                                 <!-- Show "add categories" only if isAdmin -->
                                 <?php if ($isAdmin): ?>
-                                    <a href="<?= $urlval ?>admin/subcategories/add.php" 
-                                       class="au-btn au-btn-icon au-btn--green au-btn--small">
-                                        <i class="zmdi zmdi-plus"></i>Add SubCategory
-                                    </a>
-                                    <a href="<?= $urlval ?>admin/categories/sort.php" 
-                                       class="au-btn au-btn-icon btn-dark au-btn--small" style="color:white;">
-                                        <i class="zmdi zmdi-sort"></i>Sort
-                                    </a>
+                                <a href="<?= $urlval ?>admin/subcategories/add.php"
+                                    class="au-btn au-btn-icon au-btn--green au-btn--small">
+                                    <i class="zmdi zmdi-plus"></i>Add SubCategory
+                                </a>
+                                <a href="<?= $urlval ?>admin/categories/sort.php"
+                                    class="au-btn au-btn-icon btn-dark au-btn--small" style="color:white;">
+                                    <i class="zmdi zmdi-sort"></i>Sort
+                                </a>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -92,13 +92,24 @@ $(document).ready(function() {
             "url": "<?php echo $urlval; ?>admin/ajax/subcategories/fetchsubcat.php",
             "type": "POST"
         },
-        "columns": [
-            { "data": "checkbox" },
-            { "data": "name" },
-            { "data": "catname" },
-            { "data": "date" },
-            { "data": "status" },
-            { "data": "actions" }
+        "columns": [{
+                "data": "checkbox"
+            },
+            {
+                "data": "name"
+            },
+            {
+                "data": "catname"
+            },
+            {
+                "data": "date"
+            },
+            {
+                "data": "status"
+            },
+            {
+                "data": "actions"
+            }
         ]
     });
 
@@ -110,7 +121,9 @@ $(document).ready(function() {
                 $.ajax({
                     url: '<?php echo $urlval; ?>admin/ajax/subcategories/deletecat.php',
                     type: 'POST',
-                    data: { id: userId },
+                    data: {
+                        id: userId
+                    },
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
@@ -130,4 +143,5 @@ $(document).ready(function() {
 });
 </script>
 </body>
+
 </html>

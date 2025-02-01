@@ -3,7 +3,7 @@ require_once("../../global.php");
 include_once('../header.php');
 
 /** Check roles in [1,3,4] **/
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3,4])) {
     header("Location: {$urlval}admin/logout.php");
     exit;
@@ -46,7 +46,7 @@ $isAdmin = in_array($role, [1,3]);
                         <table id="userTable" class="table table-data2">
                             <thead>
                                 <tr>
-                                    <th>#</th> 
+                                    <th>#</th>
                                     <th>Transaction ID</th>
                                     <th>Username</th>
                                     <th>Email</th>
@@ -70,7 +70,7 @@ $isAdmin = in_array($role, [1,3]);
 <?php include_once('../footer.php'); ?>
 
 <script>
-$(document).ready(function () {
+$(document).ready(function() {
     var table = $('#userTable').DataTable({
         "processing": true,
         "serverSide": true,
@@ -78,19 +78,39 @@ $(document).ready(function () {
             "url": "<?php echo $urlval; ?>admin/ajax/packages/payment.php",
             "type": "POST"
         },
-        "columns": [
-            { data: 'checkPayment', orderable: false },
-            { data: 'txn_id' },
-            { data: 'username' },
-            { data: 'email' },
-            { data: 'product' },
-            { data: 'plan' },
-            { data: 'amount' },
-            { data: 'created_at' },
-            { data: 'status' }
+        "columns": [{
+                data: 'checkPayment',
+                orderable: false
+            },
+            {
+                data: 'txn_id'
+            },
+            {
+                data: 'username'
+            },
+            {
+                data: 'email'
+            },
+            {
+                data: 'product'
+            },
+            {
+                data: 'plan'
+            },
+            {
+                data: 'amount'
+            },
+            {
+                data: 'created_at'
+            },
+            {
+                data: 'status'
+            }
             // If you want an actions column, only define it if isAdmin
         ],
-        "order": [[3, "desc"]] // Example sort
+        "order": [
+            [3, "desc"]
+        ] // Example sort
     });
 
     // If there's a delete button or other admin action, you'd do:
@@ -106,4 +126,5 @@ $(document).ready(function () {
 </script>
 
 </body>
+
 </html>

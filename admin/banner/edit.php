@@ -3,7 +3,7 @@ require_once("../../global.php");
 include_once('../header.php');
 
 // 1) Check role
-$role = $_SESSION['role'] ?? 0;
+$role = $_SESSION['arole'] ?? 0;
 if (!in_array($role, [1,3])) {
     echo "<script>
         alert('Access Denied. You do not have permission to edit banners.');
@@ -109,17 +109,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <style>
-.form-container { background-color:#f9f9f9; padding:20px; border-radius:8px; }
-.form-group { margin-bottom:15px; }
-.form-group label { display:block; margin-bottom:5px; }
-.form-group input, .form-group select, .form-group textarea {
-    width:100%; padding:10px; border:1px solid #ccc;
+.form-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
 }
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
 .btn {
-    background-color:#28a745; color:white; padding:10px 15px;
-    border:none; cursor:pointer;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
 }
-.btn:hover { background-color:#218838; }
+
+.btn:hover {
+    background-color: #218838;
+}
 </style>
 
 <div class="page-container">
@@ -133,53 +156,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="form-group">
                                 <label for="title">Title <span style="color:red;">*</span></label>
                                 <input type="text" id="title" name="title"
-                                       value="<?= htmlspecialchars($decryptedTitle) ?>" required>
+                                    value="<?= htmlspecialchars($decryptedTitle) ?>" required>
                             </div>
                             <div class="form-group">
                                 <label for="description">Description <span style="color:red;">*</span></label>
-                                <textarea id="description" name="description" rows="4" required><?= htmlspecialchars($decryptedDescription) ?></textarea>
+                                <textarea id="description" name="description" rows="4"
+                                    required><?= htmlspecialchars($decryptedDescription) ?></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="image">Banner Image</label>
                                 <input type="file" id="image" name="image" accept="image/*">
                                 <?php if (!empty($decryptedImage)): ?>
-                                    <div class="image-preview" style="margin-top:10px;">
-                                        <img src="<?= $urlval . $decryptedImage ?>" alt="Current Image" width="100">
-                                    </div>
+                                <div class="image-preview" style="margin-top:10px;">
+                                    <img src="<?= $urlval . $decryptedImage ?>" alt="Current Image" width="100">
+                                </div>
                                 <?php endif; ?>
                             </div>
                             <div class="form-group">
                                 <label for="btn_text">Button Text</label>
                                 <input type="text" id="btn_text" name="btn_text"
-                                       value="<?= htmlspecialchars($decryptedBtnText) ?>">
+                                    value="<?= htmlspecialchars($decryptedBtnText) ?>">
                             </div>
                             <div class="form-group">
                                 <label for="btn_url">Button URL</label>
                                 <input type="url" id="btn_url" name="btn_url"
-                                       value="<?= htmlspecialchars($decryptedBtnUrl) ?>">
+                                    value="<?= htmlspecialchars($decryptedBtnUrl) ?>">
                             </div>
                             <div class="form-group">
                                 <label for="text_color">Text Color</label>
                                 <input type="color" id="text_color" name="text_color"
-                                       value="<?= htmlspecialchars($decryptedTextColor) ?>">
+                                    value="<?= htmlspecialchars($decryptedTextColor) ?>">
                             </div>
                             <div class="form-group">
                                 <label for="btn_color">Button Color</label>
                                 <input type="color" id="btn_color" name="btn_color"
-                                       value="<?= htmlspecialchars($decryptedBtnColor) ?>">
+                                    value="<?= htmlspecialchars($decryptedBtnColor) ?>">
                             </div>
                             <div class="form-group">
                                 <label for="bg_color">Background Color</label>
                                 <input type="color" id="bg_color" name="bg_color"
-                                       value="<?= htmlspecialchars($decryptedBgColor) ?>">
+                                    value="<?= htmlspecialchars($decryptedBgColor) ?>">
                             </div>
                             <div class="form-group">
                                 <label for="placement">Placement <span style="color:red;">*</span></label>
                                 <select id="placement" name="placement" required>
-                                    <option value="home_header"     <?= $decryptedPlacement=='home_header'     ? 'selected' : '' ?>>Home Header</option>
-                                    <option value="home_sidebar"    <?= $decryptedPlacement=='home_sidebar'    ? 'selected' : '' ?>>Home Sidebar</option>
-                                    <option value="category_header" <?= $decryptedPlacement=='category_header' ? 'selected' : '' ?>>Category Header</option>
-                                    <option value="category_sidebar"<?= $decryptedPlacement=='category_sidebar'? 'selected' : '' ?>>Category Sidebar</option>
+                                    <option value="home_header"
+                                        <?= $decryptedPlacement=='home_header'     ? 'selected' : '' ?>>Home Header
+                                    </option>
+                                    <option value="home_sidebar"
+                                        <?= $decryptedPlacement=='home_sidebar'    ? 'selected' : '' ?>>Home Sidebar
+                                    </option>
+                                    <option value="category_header"
+                                        <?= $decryptedPlacement=='category_header' ? 'selected' : '' ?>>Category Header
+                                    </option>
+                                    <option value="category_sidebar"
+                                        <?= $decryptedPlacement=='category_sidebar'? 'selected' : '' ?>>Category Sidebar
+                                    </option>
                                 </select>
                             </div>
                             <div class="form-group">
