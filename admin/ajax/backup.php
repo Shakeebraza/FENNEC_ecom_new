@@ -2,7 +2,7 @@
 require_once("../../global.php");
 
 
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 1) {
+if (!isset($_SESSION['arole']) || $_SESSION['arole'] !== 1) {
     die('Unauthorized access. Only admins can perform this action.');
 }
 

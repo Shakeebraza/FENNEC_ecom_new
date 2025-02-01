@@ -68,7 +68,7 @@ try {
         'discount_price' => $_POST['discountPrice'],
         'country_id' => $_POST['country'],
         'city_id' => $_POST['city'],
-        'user_id' => base64_decode($_SESSION['userid']),
+        'user_id' => base64_decode($_SESSION['auserid']),
     ];
 
     $result = setData('products', $productData);
