@@ -6,7 +6,7 @@ $username = $_SESSION['ausername'] ?? '';
 $formemail = $_SESSION['aemail'] ?? ''; 
 $userid = intval(base64_decode($_SESSION['auserid'])) ?? 0; 
 $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
-$profileImage = $_SESSION['aprofile'] === '' ? $urlval . 'images/profile.jpg' : $_SESSION['profile'];
+$profileImage = $_SESSION['aprofile'] === '' ? $urlval . 'images/profile.jpg' : $_SESSION['aprofile'];
 $csrfError = '';
 $successMessage = '';
 
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         
         if ($newUsername != '') {
-            $checkUsername = $dbFunctions->getDatanotenc('users', "username = '$newUsername'AND id != '$userid'");
+            $checkUsername = $dbFunctions->getDatanotenc('admins', "username = '$newUsername'AND id != '$userid'");
             if ($checkUsername) {
                 $csrfError = "This username is already taken. Please choose another.";
             } else {
@@ -46,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             'profile'=>$databaseProfilePath
 
                         ];
-                        $chnggg=$dbFunctions->updateData('users', $userData, $userid);
-                        var_dump($chnggg);
+                        $chnggg=$dbFunctions->updateData('admins', $userData, $userid);
+                        // var_dump($chnggg);
                         $_SESSION['aprofile'] = $urlval.$databaseProfilePath;
                         $_SESSION['ausername'] = $newUsername;
                     } else {
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         'username'=>$newUsername,
 
                     ];
-                    $dbFunctions->updateData('users', $userData, $userid);
+                    $dbFunctions->updateData('admins', $userData, $userid);
                     $_SESSION['ausername'] = $newUsername;
                 }
                 if (empty($newNumber) || empty($newAddress) || empty($newCountry) || empty($newCity)) {
