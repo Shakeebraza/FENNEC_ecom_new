@@ -27,7 +27,11 @@ if (isset($_SESSION['userid'])) {
     // $userBalance = 123.45; // example placeholder
 }
 // -----------------------------------------------------------
+// $profile = empty($_SESSION['profile']) 
+//     ? $urlval . 'images/profile.jpg' 
+//     : $_SESSION['profile'];
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -296,6 +300,7 @@ if (isset($_SESSION['userid'])) {
             // ====================================================================================
             // If user is logged in, show balance + messages + dropdown
             if (isset($_SESSION['userid'])) {
+                
 
                 echo '
                 <div class="d-flex">
