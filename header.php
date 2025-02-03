@@ -27,9 +27,10 @@ if (isset($_SESSION['userid'])) {
     // $userBalance = 123.45; // example placeholder
 }
 // -----------------------------------------------------------
-// $profile = empty($_SESSION['profile']) 
-//     ? $urlval . 'images/profile.jpg' 
-//     : $_SESSION['profile'];
+// Set the profile image (if not set, use a default image)
+$profile = empty($_SESSION['profile']) 
+    ? $urlval . 'images/profile.jpg' 
+    : $_SESSION['profile'];
 ?>
 
 <!DOCTYPE html>
@@ -298,53 +299,99 @@ if (isset($_SESSION['userid'])) {
                 }
             }
             // ====================================================================================
-            // If user is logged in, show balance + messages + dropdown
+            // If user is logged in, show profile image, messages, and the dropdown menu
             if (isset($_SESSION['userid'])) {
-                
-
                 echo '
-                <div class="d-flex">
-                    <!-- Messages Button with Badge -->
-                    <a class="btn btn-outline-light me-2 position-relative" href="' . $urlval . 'Myaccount.php#Messages">
-                        <i class="fas fa-envelope"></i> ' . $lan['messages'] . '
-                        <span id="unread-count" 
-                              class="position-absolute badge rounded-pill bg-danger" 
-                              style="top: 3%; left: 57%; display: none;">
-                              0
-                        </span>
-                    </a>
+                <div class="d-flex align-items-center">
                     
+                    <!-- Messages Button with Badge -->
+                        <a class="btn btn-outline-light me-2 position-relative" href="' . $urlval . 'Myaccount.php#Messages">
+                            <i class="fas fa-envelope"></i> ' . $lan['messages'] . '
+                            <span id="unread-count" 
+                                  class="position-absolute badge rounded-pill bg-danger" 
+                                  style="top: 3%; left: 57%; display: none;">
+                                  0
+                            </span>
+                        </a>
+            
+                    <!-- Profile Image -->
+                    <img 
+                        src="' . $profile . '" 
+                        alt="Profile Image" 
+                        class="rounded-circle border me-2"
+                        style="width: 40px; height: 40px; margin-left: 40px;"
+                    >
+            
                     <!-- Dropdown Menu -->
-                    <div class="dropdown" style="top:-7px;">
-                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-bars"></i> 
-                            <br>
-                            <p>' . $lan['menu'] . '</p>
+                    <div class="dropdown">
+                        <button 
+                            class="btn btn-outline-light dropdown-toggle d-flex align-items-center gap-1" 
+                            type="button" 
+                            id="dropdownMenuButton" 
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false"
+                        >
+                            <i class="fas fa-bars"></i>
+                            <span>' . $lan['menu'] . '</span>
                         </button>
+            
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                            <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#view-products">' . $lan['view_job_ads'] . '</a></li>
-                            <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#Messages">' . $lan['messages'] . '</a></li>
-                            <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#favourite">' . $lan['favourites'] . '</a></li>
-                            <li><a class="dropdown-item" href="' . $urlval . 'Myaccount.php#details">' . $lan['my_details'] .  $roleBadge .'</a></li>
-                            <li><a class="dropdown-item" href="' . $urlval . 'transaction_history.php">' . $lan['transaction_history'] . '</a></li>
-                            <li><a class="dropdown-item" href="' . $urlval . 'addBalance.php">Add Balance</a></li>
-                            
-                            <!-- Trader Stats Link (only for role = 2) -->
-                            ';
+                            <li>
+                                <a class="dropdown-item" href="' . $urlval . 'Myaccount.php#view-products">
+                                    ' . $lan['view_job_ads'] . '
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="' . $urlval . 'Myaccount.php#Messages">
+                                    ' . $lan['messages'] . '
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="' . $urlval . 'Myaccount.php#favourite">
+                                    ' . $lan['favourites'] . '
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="' . $urlval . 'Myaccount.php#details">
+                                    ' . $lan['my_details'] . $roleBadge . '
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="' . $urlval . 'transaction_history.php">
+                                    ' . $lan['transaction_history'] . '
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="' . $urlval . 'addBalance.php">Add Balance</a>
+                            </li>';
+                
+                // Example: if user has a certain role
                 if (isset($_SESSION['role']) && $_SESSION['role'] == 2) {
-                    echo '<li><a class="dropdown-item" href="' . $urlval . 'trader_stats.php">Trader Stats</a></li>';
+                    echo '
+                            <li>
+                                <a class="dropdown-item" href="' . $urlval . 'trader_stats.php">Trader Stats</a>
+                            </li>';
                 }
+            
                 echo '
-                            <li><a class="dropdown-item" href="' . $urlval . 'logout.php">' . $lan['logout'] . '</a></li>
+                            <li>
+                                <a class="dropdown-item" href="' . $urlval . 'logout.php">
+                                    ' . $lan['logout'] . '
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
                 ';
             } else {
-                // If user not logged in
+                // If user is not logged in
                 echo '
-                <a href="' . $urlval . 'LoginRegister.php" class="btn custom-btn d-flex flex-column align-items-center">
-                    <i class="fa-solid fa-user mb-1 "></i>
+                <a 
+                    href="' . $urlval . 'LoginRegister.php" 
+                    class="btn custom-btn d-flex flex-column align-items-center"
+                    style="gap: 3px;"
+                >
+                    <i class="fa-solid fa-user mb-1"></i>
                     <span class="new-btn">' . $lan['login'] . '</span>
                 </a>
                 ';
@@ -395,7 +442,6 @@ if (isset($_SESSION['userid'])) {
 </nav>
 
 <!-- MOBILE SIDEBAR -->
- <!-- MOBILE SIDEBAR -->
 <div id="mySidebar" class="sidebar">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="<?php echo $urlval; ?>"><?php echo $lan['home']; ?></a>
@@ -413,12 +459,7 @@ if (isset($_SESSION['userid'])) {
         <?php endif; ?>
     <?php endif; ?>
     <a href="<?php echo $urlval; ?>logout.php"><?php echo $lan['logout']; ?></a>
-    
-    <!-- Trader Stats Link (visible only for role = 2) -->
-
 </div>
-
-
 
 <!-- NAV SUB MENU -->
 <div class="nav-sub-menu-ct">
@@ -546,3 +587,5 @@ if (isset($_SESSION['userid'])) {
         ?>
     </div>
 </div>
+</body>
+</html>
