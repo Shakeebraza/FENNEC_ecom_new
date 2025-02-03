@@ -8,12 +8,10 @@ $draw   = isset($_POST['draw'])   ? intval($_POST['draw'])   : 1;
 $start  = isset($_POST['start'])  ? intval($_POST['start'])  : 0;
 $length = isset($_POST['length']) ? intval($_POST['length']) : 10;
 
-// Total number of records in the 'users' table (unfiltered)
-$totalRecords = $dbFunctions->getCount('users', '*', '');
-
-// 1) Check the session role of the **current logged-in user** 
+// 1) Check the session role of the current logged-in user 
+//    (assuming you store it in $_SESSION['arole'])
 $sessionRole = $_SESSION['arole'] ?? 0; 
-$canEdit     = in_array($sessionRole, [1,3]); // Only 1=Super Admin, 3=Admin can edit
+$canEdit     = in_array($sessionRole, [1, 3]); // e.g. 1=Super Admin, 3=Admin can edit
 
 // Gather search fields from POST
 $searchName   = $_POST['name']   ?? '';
@@ -21,9 +19,10 @@ $searchEmail  = $_POST['email']  ?? '';
 $searchRole   = $_POST['role']   ?? '';
 $searchStatus = $_POST['status'] ?? '';
 
+//--------------------------------------
+// Build WHERE conditions as a string
+//--------------------------------------
 $conditions = [];
-
-// Build WHERE conditions
 if (!empty($searchName)) {
     $conditions[] = "username LIKE '%" . $searchName . "%'";
 }
@@ -36,42 +35,87 @@ if ($searchRole !== '') {
 if ($searchStatus !== '') {
     $conditions[] = "status = '" . $searchStatus . "'";
 }
-
 $where = !empty($conditions) ? implode(' AND ', $conditions) : '';
 
-// Get how many rows match the filtering (without limiting)
-$filteredCount = $dbFunctions->getCount('users', '*', $where);
+//--------------------------------------
+// 2) Get total counts from BOTH tables
+//--------------------------------------
+$totalUsers  = $dbFunctions->getCount('users', '*', '');
+$totalAdmins = $dbFunctions->getCount('admins', '*', '');
+$totalRecords = $totalUsers + $totalAdmins;
 
-// Now fetch the data with limit/offset for pagination
-$filteredQuery = $dbFunctions->getDatanotenc(
+//--------------------------------------
+// 3) Get filtered counts from BOTH tables
+//--------------------------------------
+$filteredCountUsers  = $dbFunctions->getCount('users', '*', $where);
+$filteredCountAdmins = $dbFunctions->getCount('admins', '*', $where);
+$filteredCount       = $filteredCountUsers + $filteredCountAdmins;
+
+/**
+ * 4) Fetch raw data from both tables (unlimited), then merge
+ *    We'll do the sorting + pagination in PHP after merging.
+ *
+ *    Note: We pass a very large limit to get all matching results,
+ *    or you can fetch in two passes. But simplest is to fetch all,
+ *    then do array_slice().
+ */
+$usersRows = $dbFunctions->getDatanotenc(
     'users',
-    $where,     // where clause
-    '',         // group by
-    'id',       // order by
-    'DESC',     // order direction
-    $start,     // offset
-    $length     // limit
+    $where,    // where
+    '',        // group by
+    'id',      // order by
+    'DESC',    // order direction
+    0,         // offset
+    999999999  // very large limit
 );
 
-$data = [];
+$adminsRows = $dbFunctions->getDatanotenc(
+    'admins',
+    $where,
+    '',
+    'id',
+    'DESC',
+    0,
+    999999999
+);
 
+// 5) Merge them and label each row with a 'source'
+$mergedRows = [];
+foreach ($usersRows as $uRow) {
+    // you might add a key to track which table
+    $uRow['source_table'] = 'users'; 
+    $mergedRows[] = $uRow;
+}
+foreach ($adminsRows as $aRow) {
+    $aRow['source_table'] = 'admins';
+    $mergedRows[] = $aRow;
+}
+
+// 6) Sort merged array by id DESC
+usort($mergedRows, function($a, $b) {
+    // we want descending, so compare b - a
+    return ($b['id'] - $a['id']);
+});
+
+// 7) Slice out the portion for DataTables pagination
+$paginatedRows = array_slice($mergedRows, $start, $length);
+
+// Now build the $data array
+$data = [];
 $currentUser = base64_decode($_SESSION['userid'] ?? '');
 
-// Build rows
-foreach ($filteredQuery as $row) {
-    // **Chat logic** (unchanged)
+foreach ($paginatedRows as $row) {
+    // ---- Chat logic (same as before) ---
     $chat = '';
     $conversations = $dbFunctions->getDatanotenc(
         'conversations', 
         "user_one = '$row[id]' OR user_two = '$row[id]'"
     );
     if (!empty($conversations)) {
-        // If there's a conversation, show "Chat Now" unless it's the same user
         if ($row['id'] != $currentUser) {
             $chat = '<a class="btn btn-success" href="'.$urlval.'admin/messange.php">Chat Now</a>';
         }
     } else {
-        // Otherwise, show "Create Chat" if it's not the same user
         if ($row['id'] != $currentUser) {
             $chat = '<a class="btn btn-warning create-chat-btn" data-chatid="'. $security->encrypt($row['id']). '">
                         Create Chat
@@ -79,7 +123,7 @@ foreach ($filteredQuery as $row) {
         }
     }
 
-    // **Map user’s role** to text
+    // ---- Map role to text/badge (same approach) ----
     switch ($row['role']) {
         case 1:
             $roleClass = 'badge-danger';
@@ -98,7 +142,7 @@ foreach ($filteredQuery as $row) {
             $roleText  = 'Moderator';
             break;
         default:
-            $roleClass = 'user'; // default for regular user
+            $roleClass = 'user';
             $roleText  = 'User';
             break;
     }
@@ -109,11 +153,9 @@ foreach ($filteredQuery as $row) {
     // Decide Edit/Delete based on $canEdit
     $editButton   = '';
     $deleteButton = '';
-
     if ($canEdit) {
-        // The viewer is Admin/Super Admin
         if ($row['role'] == 1) {
-            // We can decide no one can edit super admin
+            // No one can edit super admin
             $editButton   = '<span class="role superadmin">Super Admin</span>';
             $deleteButton = '';
         } else {
@@ -127,15 +169,10 @@ foreach ($filteredQuery as $row) {
                                Delete
                            </button>';
         }
-    } else {
-        // If the viewer is not Admin/Super Admin, they see no edit or delete
-        $editButton   = ''; 
-        $deleteButton = '';
     }
 
-    // For the **status** select, only Admin/Super Admin can modify, others read-only
+    // Build the status select
     if ($canEdit && $row['role'] != 1) {
-        // If row’s user is not a super admin => show dropdown
         $statusHtml = '
             <div style="position: relative; display: inline-block; width: 100%;">
                 <select class="js-select2 user-status-select" data-id="'. $security->encrypt($row['id']). '"
@@ -145,16 +182,14 @@ foreach ($filteredQuery as $row) {
                 </select>
             </div>';
     } elseif ($row['role'] == 1) {
-        // This user is super admin, let’s not allow status changes
         $statusHtml = '<span class="badge badge-success">Active (Super Admin)</span>';
     } else {
-        // For moderators / read-only roles, just show text
         $statusHtml = $row['status'] == 1
                     ? '<span class="badge badge-info">Activated</span>'
                     : '<span class="badge badge-danger">Blocked</span>';
     }
 
-    // Final array in the same order as DataTables columns
+    // Build the row in the same columns as your DataTable
     $data[] = [
         'checkbox' => $checkboxHtml, 
         'name'     => '
@@ -170,7 +205,7 @@ foreach ($filteredQuery as $row) {
     ];
 }
 
-// Return JSON
+// Finally, return JSON
 $response = [
     "draw"            => $draw,
     "recordsTotal"    => intval($totalRecords),
