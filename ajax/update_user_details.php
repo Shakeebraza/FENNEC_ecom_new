@@ -4,11 +4,6 @@ require_once("../global.php");
 // Define log file path
 define('LOG_FILE', __DIR__ . '/debug.log');
 
-/**
- * Logs messages to a specified log file with a timestamp.
- *
- * @param string $message The message to log.
- */
 function logMessage($message) {
     $timestamp = date('Y-m-d H:i:s');
     $formattedMessage = "[$timestamp] $message" . PHP_EOL;
@@ -23,21 +18,20 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-// Define and retrieve POST variables
-$firstName    = $_POST['first-name']    ?? '';
-$lastName     = $_POST['last-name']     ?? '';
-$country      = $_POST['country']       ?? '';
-$city         = $_POST['city']          ?? '';
-$contactNumber= $_POST['contactNumber'] ?? '';
-$address      = $_POST['address']       ?? '';
-$language     = $_POST['language']      ?? '';
-$username     = $_POST['username']      ?? '';
+// Retrieve POST variables
+$firstName     = $_POST['first-name']     ?? '';
+$lastName      = $_POST['last-name']      ?? '';
+$country       = $_POST['country']        ?? '';
+$city          = $_POST['city']           ?? '';
+$contactNumber = $_POST['contactNumber']  ?? '';
+$address       = $_POST['address']        ?? '';
+$language      = $_POST['language']       ?? '';
+$username      = $_POST['username']       ?? '';
 
 // For traders only
-$companyName  = $_POST['companyName']   ?? '';
+$companyName   = $_POST['companyName']    ?? '';
 $urlLink       = $_POST['urlLink']        ?? '';
 
-// Log POST data (be cautious with sensitive information)
 logMessage("POST data received: " . json_encode($_POST));
 
 if (!$fun->RequestSessioncheck()) {
@@ -46,7 +40,6 @@ if (!$fun->RequestSessioncheck()) {
     exit();
 }
 
-// Decode user ID and log
 $userId = base64_decode($_SESSION['userid']);
 if ($userId === false) {
     logMessage("Invalid user ID in session.");
@@ -55,7 +48,7 @@ if ($userId === false) {
 }
 logMessage("Decoded user ID: $userId");
 
-// Prepare data array
+// Prepare data for updating/inserting user details (stored in the user_detail table)
 $data = [
     'first_name' => $firstName,
     'last_name'  => $lastName,
@@ -67,45 +60,85 @@ $data = [
     'updated_at' => date('Y-m-d H:i:s')
 ];
 
-// Only assign company_name and url_link if user is a trader
+// *** Handle Profile Image Upload ***
+// Since the profile image belongs in the users table, we handle it separately.
+$profileImagePath = null;
+if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
+    $fileTmpPath   = $_FILES['profile_image']['tmp_name'];
+    $fileName      = $_FILES['profile_image']['name'];
+    $fileNameCmps  = explode(".", $fileName);
+    $fileExtension = strtolower(end($fileNameCmps));
+
+    $allowedfileExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+    if (in_array($fileExtension, $allowedfileExtensions)) {
+        // Create a unique file name
+        $newFileName   = md5(time() . $fileName) . '.' . $fileExtension;
+        // Define the target directory (adjust relative path as needed)
+        $uploadFileDir = '../upload/';
+        if (!is_dir($uploadFileDir)) {
+            mkdir($uploadFileDir, 0777, true);
+        }
+        $dest_path = $uploadFileDir . $newFileName;
+        if (move_uploaded_file($fileTmpPath, $dest_path)) {
+            $profileImagePath = 'upload/' . $newFileName;
+            logMessage("Profile image uploaded successfully: " . $dest_path);
+        } else {
+            logMessage("Error moving the uploaded file to: " . $dest_path);
+        }
+    } else {
+        logMessage("File extension not allowed: " . $fileExtension);
+    }
+}
+
+// Only assign trader-specific details for the user_detail table
 if (isset($_SESSION['role']) && $_SESSION['role'] == 2) {
     $data['company_name'] = $companyName;
-    $data['url_link']      = $urlLink; // Corrected variable
+    $data['url_link']     = $urlLink;
     logMessage("User is a trader. Added company_name and url_link to data.");
 }
 
-// Log data to be updated or inserted
-logMessage("Data to be updated/inserted: " . json_encode($data));
+logMessage("Data to be updated/inserted into user_detail: " . json_encode($data));
 
 try {
+    // Update or insert into the user_detail table
     $checkUserExists = $dbFunctions->getDatanotenc('user_detail', "userid = $userId");
-    logMessage("Checked if user exists: " . json_encode($checkUserExists));
+    logMessage("Checked if user exists in user_detail: " . json_encode($checkUserExists));
 
     if ($checkUserExists) {
         $userDetailId = $checkUserExists[0]['id'];
         logMessage("User detail ID found: $userDetailId");
         $response = $dbFunctions->updateData('user_detail', $data, $userDetailId);
-        logMessage("Update response: " . json_encode($response));
+        logMessage("Update response for user_detail: " . json_encode($response));
 
         if (!$response['success']) {
-            throw new Exception('Failed to update details');
+            throw new Exception('Failed to update details in user_detail');
         }
     } else {
         $data['userid']     = $userId;
         $data['created_at'] = date('Y-m-d H:i:s');
-        logMessage("Inserting new user details: " . json_encode($data));
+        logMessage("Inserting new user details into user_detail: " . json_encode($data));
         $insertResponse = $dbFunctions->setData('user_detail', $data);
-        logMessage("Insert response: " . json_encode($insertResponse));
+        logMessage("Insert response for user_detail: " . json_encode($insertResponse));
 
         if (!$insertResponse['success']) {
-            throw new Exception('Failed to insert details');
+            throw new Exception('Failed to insert details into user_detail');
         }
     }
 
-    // Check for username changes
+    // If a new profile image was uploaded, update the 'profile' column in the users table
+    if ($profileImagePath !== null) {
+        $profileData = ['profile' => $profileImagePath];
+        $profileUpdateResponse = $dbFunctions->updateData('users', $profileData, $userId);
+        logMessage("Profile image update response in users table: " . json_encode($profileUpdateResponse));
+        $_SESSION['profile'] = $urlval.$profileImagePath;
+        if (!$profileUpdateResponse['success']) {
+            throw new Exception('Failed to update profile image');
+        }
+    }
+
+    // Check for username changes in the users table
     if ($username) {
         logMessage("Username change requested: $username");
-        // Fetch current username
         $currentUsernameQuery = "SELECT username FROM users WHERE id = :user_id";
         $stmt = $pdo->prepare($currentUsernameQuery);
         $stmt->bindParam(':user_id', $userId);
@@ -115,7 +148,6 @@ try {
 
         if ($currentUsername !== $username) {
             logMessage("Username has changed from $currentUsername to $username");
-            // Check if username already exists for another user
             $usernameCheckQuery = "SELECT COUNT(*) FROM users WHERE username = :username AND id != :user_id";
             $stmt = $pdo->prepare($usernameCheckQuery);
             $stmt->bindParam(':username', $username);
@@ -130,10 +162,9 @@ try {
                 exit();
             }
 
-            // Update username
             $updateUsernameData = ['username' => $username];
             $updateUserResponse = $dbFunctions->updateData('users', $updateUsernameData, $userId);
-            logMessage("Update username response: " . json_encode($updateUserResponse));
+            logMessage("Update username response in users table: " . json_encode($updateUserResponse));
 
             if (!$updateUserResponse['success']) {
                 throw new Exception('Failed to update username');
@@ -154,3 +185,4 @@ try {
     logMessage("Exception caught: " . $e->getMessage());
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }
+?>

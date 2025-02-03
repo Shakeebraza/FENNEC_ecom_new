@@ -28,9 +28,13 @@ if (isset($_SESSION['userid'])) {
 }
 // -----------------------------------------------------------
 // Set the profile image (if not set, use a default image)
-$profile = empty($_SESSION['profile']) 
-    ? $urlval . 'images/profile.jpg' 
-    : $_SESSION['profile'];
+$defaultProfile = $urlval . 'images/profile.png';
+
+if (!empty($_SESSION['profile'])) {
+    $profile = $_SESSION['profile'];
+} else {
+    $profile = $defaultProfile;
+}
 ?>
 
 <!DOCTYPE html>
@@ -318,7 +322,7 @@ $profile = empty($_SESSION['profile'])
                     <img 
                         src="' . $profile . '" 
                         alt="Profile Image" 
-                        class="rounded-circle border me-2"
+                        class="rounded-circle  me-2"
                         style="width: 40px; height: 40px; margin-left: 40px;"
                     >
             

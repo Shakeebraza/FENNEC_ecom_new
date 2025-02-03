@@ -318,6 +318,19 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
                                            value="<?php echo $userData[0]['language'] ?? '' ?>" />
                                 </div>
                                 <div class="mb-3">
+                                    <label for="profileImage" class="form-label">Profile Image</label>
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <img id="profilePreview" src="<?php echo $_SESSION['profile'] ?? 'default-profile.png'; ?>" 
+                                                alt="Profile Image" class="rounded-circle border" 
+                                                style="width: 80px; height: 80px; object-fit: cover;">
+                                        </div>
+                                        <div>
+                                            <input type="file" class="form-control" id="profileImage" name="profile_image" accept="image/*" onchange="previewImage(event)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
                                     <label for="address" class="form-label"><?= $lan['address']?></label>
                                     <textarea class="form-control" id="address" rows="3"><?php echo $userData[0]['address'] ?? '' ?></textarea>
                                 </div>
@@ -496,10 +509,17 @@ function submitForm(event) {
     formData.append('username',      document.getElementById('username').value);
     formData.append('token',         document.getElementById('csrf_token_update_info').value);
 
+    // For traders only
     <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 2): ?>
         formData.append('companyName', document.getElementById('companyName').value);
         formData.append('urlLink',     document.getElementById('urlLink').value);
     <?php endif; ?>
+
+    // *** Add the profile image (if selected) ***
+    const profileImageInput = document.getElementById('profileImage');
+    if (profileImageInput.files.length > 0) {
+        formData.append('profile_image', profileImageInput.files[0]);
+    }
 
     const responseMessageDiv = document.getElementById('responseMessage');
     responseMessageDiv.style.display = 'none';
@@ -526,6 +546,7 @@ function submitForm(event) {
         responseMessageDiv.style.display = 'block';
     });
 }
+
 
 /* ----------------------------------------------------------------
     PASSWORD UPDATE
@@ -607,7 +628,18 @@ function openTransactionHistory() {
 function closeModal() {
     document.getElementById('transactionHistoryModal').style.display = 'none';
 }
+function previewImage(event) {
+    const preview = document.getElementById('profilePreview');
+    const file = event.target.files[0];
 
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+}
 /* ----------------------------------------------------------------
     HASH-TAB ACTIVATION
 ------------------------------------------------------------------*/

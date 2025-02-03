@@ -30,10 +30,13 @@ function isActive($link) {
     return (strpos($current_url, $link) !== false) ? 'active' : '';
 }
 
-// Profile image
-$profile = empty($_SESSION['aprofile']) 
-    ? $urlval . 'images/profile.jpg' 
-    : $_SESSION['aprofile'];
+$defaultProfile = $urlval . 'images/admin.jpg';
+
+if (!empty($_SESSION['aprofile'])) {
+    $profile = $_SESSION['profile'];
+} else {
+    $profile = $defaultProfile;
+}
 ?>
 
 <!DOCTYPE html>
