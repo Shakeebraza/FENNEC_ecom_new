@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $username = trim($_POST['username'] ?? '');
         $amount = (float)($_POST['amount'] ?? 0);
+        $description = trim($_POST['description'] ?? '');
         
         // Validation
         if (empty($username)) {
@@ -43,19 +44,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (!$user) {
                     $error = "User not found!";
                 } else {
-                    // Update wallet balance
+                    // Update wallet balance and wallet_deposited field
                     $sql = "UPDATE users 
-                            SET wallet_balance = wallet_balance + ?
+                            SET wallet_balance = wallet_balance + ?, 
+                                wallet_deposited = wallet_deposited + ?
                             WHERE username = ?";
                     $stmt = $pdo->prepare($sql);
-                    $stmt->execute([$amount, $username]);
+                    $stmt->execute([$amount, $amount, $username]);
 
                     if ($stmt->rowCount() > 0) {
-                        $success = "Successfully added ₹" . number_format($amount, 2) . " to $username's wallet!";
-                        
-                        // Optional: Add transaction record to a transactions table
-                        // $stmt = $pdo->prepare("INSERT INTO transactions (...) VALUES (...)");
-                        // $stmt->execute([...]);
+                        // Record the transaction in the transactions table
+                        $stmtTrans = $pdo->prepare("INSERT INTO transactions (user_id, amount, description, transaction_date) VALUES (?, ?, ?, NOW())");
+                        $stmtTrans->execute([$user['id'], $amount, $description]);
+
+                        $success = "Successfully added " . $fun->getFieldData('site_currency') . number_format($amount, 2) . " to $username's wallet!";
                     } else {
                         $error = "No changes made. Please verify the username and amount.";
                     }
@@ -73,7 +75,7 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 ?>
 
 <!-- Main container -->
-<div class="container-fluid vh-100 d-flex align-items-center justify-content-center ">
+<div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
     <div class="col-md-6 col-lg-4">
         <div class="card shadow-sm">
             <div class="card-body">
@@ -103,7 +105,7 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                     <div class="mb-3">
                         <label for="amount" class="form-label">Amount</label>
                         <div class="input-group">
-                            <span class="input-group-text"><?php echo  $fun->getFieldData('site_currency') ?></span>
+                            <span class="input-group-text"><?= $fun->getFieldData('site_currency') ?></span>
                             <input type="number" 
                                    class="form-control" 
                                    id="amount" 
@@ -114,15 +116,14 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                                    value="<?= isset($_POST['amount']) ? htmlspecialchars($_POST['amount']) : '' ?>">
                         </div>
                     </div>
-
+                    
                     <div class="mb-3">
-                        <label for="username" class="form-label">Description</label>
+                        <label for="description" class="form-label">Description</label>
                         <input type="text" 
                                class="form-control" 
                                id="description" 
-                               name="description" 
-                      
-                               >
+                               name="description"
+                               value="<?= isset($_POST['description']) ? htmlspecialchars($_POST['description']) : '' ?>">
                     </div>
                     
                     <button type="submit" class="btn btn-primary w-100">Submit</button>

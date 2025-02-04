@@ -71,6 +71,16 @@ if ($user) {
 
 if ($user) {
     logMessage("User found in $sourceTable: ID $userId, Username: " . $user['username']);
+    
+    // Calculate wallet balance details.
+    // Assumes your record now has two fields:
+    // - wallet_deposit: the total amount deposited.
+    // - wallet_balance: the current balance.
+    // The spent amount is calculated as: deposit - balance.
+    $walletDeposit = isset($user['wallet_deposit']) ? floatval($user['wallet_deposit']) : 0;
+    $walletBalance = isset($user['wallet_balance']) ? floatval($user['wallet_balance']) : 0;
+    $walletSpent   = $walletDeposit - $walletBalance;
+    
     ob_start();
     ?>
     <div class="user-details">
@@ -78,6 +88,10 @@ if ($user) {
         <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
         <p><strong>Role:</strong> <?php echo htmlspecialchars($roleText); ?></p>
         <p><strong>Status:</strong> <?php echo ($user['status'] == 1 ? 'Activated' : 'Blocked'); ?></p>
+        <hr />
+        <p><strong>Wallet Balance:</strong> <?php echo number_format($walletBalance, 2); ?></p>
+        <p><strong>Deposited:</strong> <?php echo number_format($walletDeposit, 2); ?></p>
+        <p><strong>Spent:</strong> <?php echo number_format($walletSpent, 2); ?></p>
         <!-- Add more fields as necessary -->
     </div>
     <?php
