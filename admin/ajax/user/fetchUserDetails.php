@@ -1,7 +1,7 @@
 <?php
-require_once("../../global.php");
+require_once("../../../global.php");
 
-// Enable error reporting for debugging (remove in production)
+// Enable error reporting for debugging (remove or comment out in production)
 // error_reporting(E_ALL);
 // ini_set('display_errors', 1);
 
@@ -35,6 +35,28 @@ $stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
 $stmt->execute([':id' => $userId]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Map role value to descriptive text.
+$roleText = 'User'; // default value
+if ($user) {
+    switch ($user['role']) {
+        case 1:
+            $roleText = 'Super Admin';
+            break;
+        case 2:
+            $roleText = 'Trader';
+            break;
+        case 3:
+            $roleText = 'Admin';
+            break;
+        case 4:
+            $roleText = 'Moderator';
+            break;
+        default:
+            $roleText = 'User';
+            break;
+    }
+}
+
 if ($user) {
     logMessage("User found: ID $userId, Username: " . $user['username']);
     ob_start();
@@ -42,7 +64,7 @@ if ($user) {
     <div class="user-details">
         <p><strong>Name:</strong> <?php echo htmlspecialchars($user['username']); ?></p>
         <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-        <p><strong>Role:</strong> <?php echo htmlspecialchars($user['role']); ?></p>
+        <p><strong>Role:</strong> <?php echo htmlspecialchars($roleText); ?></p>
         <p><strong>Status:</strong> <?php echo ($user['status'] == 1 ? 'Activated' : 'Blocked'); ?></p>
         <!-- Add more fields as necessary -->
     </div>
