@@ -2,12 +2,13 @@
 require_once("../global.php");
 include_once('header.php');
 
-$username = $_SESSION['ausername'] ?? ''; 
-$formemail = $_SESSION['aemail'] ?? ''; 
-$userid = intval(base64_decode($_SESSION['auserid'])) ?? 0; 
-$userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
+$username   = $_SESSION['ausername'] ?? ''; 
+$formemail  = $_SESSION['aemail'] ?? ''; 
+$userid     = intval(base64_decode($_SESSION['auserid'])) ?? 0; 
+// Fetch admin detail from the admin_detail table.
+$userData   = $dbFunctions->getDatanotenc('admin_detail', "userid = '$userid'");
 $profileImage = $_SESSION['aprofile'] === '' ? $urlval . 'images/profile.jpg' : $_SESSION['aprofile'];
-$csrfError = '';
+$csrfError  = '';
 $successMessage = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -17,48 +18,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
       
         $newUsername = $_POST['username'] ?? '';
-        $newNumber = $_POST['number'] ?? '';
-        $newAddress = $_POST['address'] ?? '';
-        $newCountry = $_POST['country'] ?? '';
-        $newCity = $_POST['city'] ?? '';
+        $newNumber   = $_POST['number'] ?? '';
+        $newAddress  = $_POST['address'] ?? '';
+        $newCountry  = $_POST['country'] ?? '';
+        $newCity     = $_POST['city'] ?? '';
         $profileImagePath = ''; 
 
-        
         if ($newUsername != '') {
-            $checkUsername = $dbFunctions->getDatanotenc('admins', "username = '$newUsername'AND id != '$userid'");
+            // Check if the new username is already taken by another admin.
+            $checkUsername = $dbFunctions->getDatanotenc('admins', "username = '$newUsername' AND id != '$userid'");
             if ($checkUsername) {
                 $csrfError = "This username is already taken. Please choose another.";
             } else {
                 if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
                     $targetDir = "../upload/";
                     
-                    
                     $originalFilename = pathinfo($_FILES['profile_image']['name'], PATHINFO_FILENAME);
                     $fileExtension = pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION);
                     $randomString = bin2hex(random_bytes(8));
                     $newFilename = $originalFilename . '_' . $randomString . '.' . $fileExtension;
                     $profileImagePath = $targetDir . $newFilename;
-                    $databaseProfilePath='upload/'.$newFilename;
+                    $databaseProfilePath = 'upload/' . $newFilename;
 
                     if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $profileImagePath)) {
-                        $userData=[
-                            'username'=>$newUsername,
-                            'profile'=>$databaseProfilePath
-
+                        $userDataArray = [
+                            'username' => $newUsername,
+                            'profile'  => $databaseProfilePath
                         ];
-                        $chnggg=$dbFunctions->updateData('admins', $userData, $userid);
-                        // var_dump($chnggg);
-                        $_SESSION['aprofile'] = $urlval.$databaseProfilePath;
+                        $dbFunctions->updateData('admins', $userDataArray, $userid);
+                        $_SESSION['aprofile'] = $urlval . $databaseProfilePath;
                         $_SESSION['ausername'] = $newUsername;
                     } else {
                         $csrfError = "Failed to upload profile image.";
                     }
-                }else{
-                    $userData=[
-                        'username'=>$newUsername,
-
+                } else {
+                    $userDataArray = [
+                        'username' => $newUsername,
                     ];
-                    $dbFunctions->updateData('admins', $userData, $userid);
+                    $dbFunctions->updateData('admins', $userDataArray, $userid);
                     $_SESSION['ausername'] = $newUsername;
                 }
                 if (empty($newNumber) || empty($newAddress) || empty($newCountry) || empty($newCity)) {
@@ -66,21 +63,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 } else {
 
                     $data_userDetails = [
-                        'number' => $newNumber,
+                        'number'  => $newNumber,
                         'address' => $newAddress,
                         'country' => $newCountry,
-                        'city' => $newCity,
-                        'userid'=>$userid,
+                        'city'    => $newCity,
+                        'userid'  => $userid,
                     ];
 
-
-                    $existingUserData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
+                    $existingUserData = $dbFunctions->getDatanotenc('admin_detail', "userid = '$userid'");
               
                     if ($existingUserData) {
-                        $dbFunctions->updateData('user_detail', $data_userDetails, $existingUserData[0]['id']);
+                        $dbFunctions->updateData('admin_detail', $data_userDetails, $existingUserData[0]['id']);
                         $successMessage = "Account information updated successfully!";
                     } else {
-                        $newUserId = $dbFunctions->setData('user_detail', $data_userDetails);
+                        $newUserId = $dbFunctions->setData('admin_detail', $data_userDetails);
                         $successMessage = "Account information inserted successfully!";
                     }
 
@@ -123,8 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <div class="custom-file mb-3">
                                                 <input type="file" class="custom-file-input" id="profile-image"
                                                     name="profile_image">
-                                                <label class="custom-file-label" for="profile-image">Choose Profile
-                                                    Image</label>
+                                                <label class="custom-file-label" for="profile-image">Choose Profile Image</label>
                                             </div>
                                         </div>
                                     </div>
@@ -134,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <label for="username" class="form-label">Username</label>
                                             <input type="text" id="username" name="username"
                                                 value="<?php echo htmlspecialchars($username); ?>"
-                                                class="form-control form-control-lg " placeholder="Enter your username">
+                                                class="form-control form-control-lg" placeholder="Enter your username">
                                         </div>
                                     </div>
 
@@ -143,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <label for="email" class="form-label">Email</label>
                                             <input type="email" id="email" name="email"
                                                 value="<?php echo htmlspecialchars($formemail); ?>"
-                                                class="form-control form-control-lg " readonly>
+                                                class="form-control form-control-lg" readonly>
                                         </div>
                                     </div>
 
@@ -152,8 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <label for="number" class="form-label">Phone Number</label>
                                             <input type="text" id="number" name="number"
                                                 value="<?php echo isset($userData[0]['number']) ? htmlspecialchars($userData[0]['number']) : ''; ?>"
-                                                class="form-control form-control-lg "
-                                                placeholder="Enter your phone number">
+                                                class="form-control form-control-lg" placeholder="Enter your phone number">
                                         </div>
                                     </div>
 
@@ -162,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <label for="address" class="form-label">Address</label>
                                             <input type="text" id="address" name="address"
                                                 value="<?php echo isset($userData[0]['address']) ? htmlspecialchars($userData[0]['address']) : ''; ?>"
-                                                class="form-control form-control-lg " placeholder="Enter your address">
+                                                class="form-control form-control-lg" placeholder="Enter your address">
                                         </div>
                                     </div>
                                     <div class="row form-group">
@@ -170,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <label for="country" class="form-label">Country</label>
                                             <input type="text" id="country" name="country"
                                                 value="<?php echo isset($userData[0]['country']) ? htmlspecialchars($userData[0]['country']) : ''; ?>"
-                                                class="form-control form-control-lg " placeholder="Enter your country">
+                                                class="form-control form-control-lg" placeholder="Enter your country">
                                         </div>
                                     </div>
                                     <div class="row form-group">
@@ -178,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <label for="city" class="form-label">City</label>
                                             <input type="text" id="city" name="city"
                                                 value="<?php echo isset($userData[0]['city']) ? htmlspecialchars($userData[0]['city']) : ''; ?>"
-                                                class="form-control form-control-lg " placeholder="Enter your city">
+                                                class="form-control form-control-lg" placeholder="Enter your city">
                                         </div>
                                     </div>
                                     <input type="hidden" name="csrf_token" id="csrf_token"
@@ -199,9 +193,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 
 <?php include_once('footer.php'); ?>
-
-
-
-</body>
-
-</html>

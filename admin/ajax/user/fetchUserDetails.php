@@ -1,7 +1,7 @@
 <?php
 require_once("../../../global.php");
 
-// Enable error reporting for debugging (remove or comment out in production)
+// Enable error reporting for debugging (remove in production)
 // error_reporting(E_ALL);
 // ini_set('display_errors', 1);
 
@@ -23,82 +23,164 @@ logMessage("Request received for encryptedId: $encryptedId");
 
 // Decrypt the ID.
 $userId = $security->decrypt($encryptedId);
-
 if (!$userId) {
     logMessage("Invalid user identifier. Decryption failed for encryptedId: $encryptedId");
     echo json_encode(['success' => false, 'message' => 'Invalid user identifier.']);
     exit;
 }
 
-$user = false;
+$accountData = false;
 $sourceTable = '';
 
 // First, try to fetch from the users table.
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
 $stmt->execute([':id' => $userId]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-$sourceTable = 'users';
-
-if (!$user) {
+$accountData = $stmt->fetch(PDO::FETCH_ASSOC);
+if ($accountData) {
+    $sourceTable = 'users';
+} else {
     // If not found in users, try the admins table.
     $stmt = $pdo->prepare("SELECT * FROM admins WHERE id = :id");
     $stmt->execute([':id' => $userId]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $accountData = $stmt->fetch(PDO::FETCH_ASSOC);
     $sourceTable = 'admins';
 }
 
-// Map role value to descriptive text.
-$roleText = 'User'; // default value
-if ($user) {
-    switch ($user['role']) {
-        case 1:
-            $roleText = 'Super Admin';
-            break;
-        case 2:
-            $roleText = 'Trader';
-            break;
-        case 3:
-            $roleText = 'Admin';
-            break;
-        case 4:
-            $roleText = 'Moderator';
-            break;
-        default:
-            $roleText = 'User';
-            break;
-    }
+if (!$accountData) {
+    logMessage("Account not found for user ID: $userId in both tables");
+    echo json_encode(['success' => false, 'message' => 'User not found.']);
+    exit;
 }
 
-if ($user) {
-    logMessage("User found in $sourceTable: ID $userId, Username: " . $user['username']);
-    
-    // Calculate wallet balance details.
-    // Assumes your record now has two fields:
-    // - wallet_deposit: the total amount deposited.
-    // - wallet_balance: the current balance.
-    // The spent amount is calculated as: deposit - balance.
-    $walletDeposit = isset($user['wallet_deposit']) ? floatval($user['wallet_deposit']) : 0;
-    $walletBalance = isset($user['wallet_balance']) ? floatval($user['wallet_balance']) : 0;
-    $walletSpent   = $walletDeposit - $walletBalance;
-    
-    ob_start();
-    ?>
-    <div class="user-details">
-        <p><strong>Name:</strong> <?php echo htmlspecialchars($user['username']); ?></p>
-        <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-        <p><strong>Role:</strong> <?php echo htmlspecialchars($roleText); ?></p>
-        <p><strong>Status:</strong> <?php echo ($user['status'] == 1 ? 'Activated' : 'Blocked'); ?></p>
-        <hr />
-        <p><strong>Wallet Balance:</strong> <?php echo number_format($walletBalance, 2); ?></p>
-        <p><strong>Deposited:</strong> <?php echo number_format($walletDeposit, 2); ?></p>
-        <p><strong>Spent:</strong> <?php echo number_format($walletSpent, 2); ?></p>
-        <!-- Add more fields as necessary -->
-    </div>
-    <?php
-    $html = ob_get_clean();
-    echo json_encode(['success' => true, 'html' => $html]);
-    logMessage("Successfully returned details for user ID $userId");
-} else {
-    logMessage("User not found for user ID: $userId in both tables");
-    echo json_encode(['success' => false, 'message' => 'User not found.']);
+// Map role value to descriptive text.
+$roleValue = isset($accountData['role']) ? intval($accountData['role']) : 0;
+$roleText = 'User';
+switch ($roleValue) {
+    case 1:
+        $roleText = 'Super Admin';
+        break;
+    case 2:
+        $roleText = 'Trader';
+        break;
+    case 3:
+        $roleText = 'Admin';
+        break;
+    case 4:
+        $roleText = 'Moderator';
+        break;
+    default:
+        $roleText = 'User';
+        break;
 }
+
+logMessage("Account found in $sourceTable: ID $userId, Username: " . $accountData['username']);
+
+// Determine if wallet and extra statistics should be shown.
+// They should be displayed only if the account is from "users" table and the role is 0 or 2.
+$showExtra = ($sourceTable === 'users' && in_array($roleValue, [0, 2]));
+
+// Fetch extra details from the appropriate detail table.
+$detailData = [];
+if ($sourceTable === 'users') {
+    $detailDataArr = $dbFunctions->getDatanotenc('user_detail', "userid = '$userId'");
+} else {
+    $detailDataArr = $dbFunctions->getDatanotenc('admin_detail', "userid = '$userId'");
+}
+if ($detailDataArr && is_array($detailDataArr)) {
+    $detailData = $detailDataArr[0];
+}
+
+// Calculate wallet balance details only if applicable.
+$walletDeposit = $walletBalance = $walletSpent = 0;
+if ($showExtra) {
+    $walletDeposit = isset($accountData['wallet_deposit']) ? floatval($accountData['wallet_deposit']) : 0;
+    $walletBalance = isset($accountData['wallet_balance']) ? floatval($accountData['wallet_balance']) : 0;
+    $walletSpent   = $walletDeposit - $walletBalance;
+}
+
+// Initialize extra counts only if applicable.
+$transactionCount = $reviewsCount = $reportsCount = $classifiedCount = $favoritesCount = 0;
+if ($showExtra) {
+    $transactionCount = $dbFunctions->getCount('transactions', '*', "user_id = " . intval($userId));
+    $reviewsCount     = $dbFunctions->getCount('reviews', '*', "user_id = " . intval($userId));
+    $reportsCount     = $dbFunctions->getCount('reports', '*', "user_id = " . intval($userId));
+    $classifiedCount  = $dbFunctions->getCount('products', '*', "user_id = " . intval($userId));
+    $favoritesCount   = $dbFunctions->getCount('favorites', '*', "user_id = " . intval($userId));
+}
+
+ob_start();
+?>
+<!-- Enhanced UI using Bootstrap card -->
+<div class="card shadow my-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Account Information</h4>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-4 text-center">
+                <img src="<?php echo htmlspecialchars($accountData['profile'] ?? $urlval . 'images/profile.jpg'); ?>" alt="Profile Image" class="img-fluid rounded-circle" style="max-width: 150px;">
+            </div>
+            <div class="col-md-8">
+                <p><strong>Name:</strong> <?php echo htmlspecialchars($accountData['username']); ?></p>
+                <p><strong>Email:</strong> <?php echo htmlspecialchars($accountData['email']); ?></p>
+                <p><strong>Role:</strong> <?php echo htmlspecialchars($roleText); ?></p>
+                <p><strong>Status:</strong> <?php echo (isset($accountData['status']) && $accountData['status'] == 1) ? 'Activated' : 'Blocked'; ?></p>
+                <p><strong>Account Type:</strong> <?php echo ucfirst($sourceTable); ?></p>
+            </div>
+        </div>
+        <?php if ($showExtra): ?>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <h6>Wallet Info</h6>
+                <p><strong>Wallet Balance:</strong> <?php echo number_format($walletBalance, 2); ?></p>
+                <p><strong>Deposited:</strong> <?php echo number_format($walletDeposit, 2); ?></p>
+                <p><strong>Spent:</strong> <?php echo number_format($walletSpent, 2); ?></p>
+            </div>
+            <div class="col-md-8">
+                <h6>Extra Details</h6>
+                <?php if (!empty($detailData)): ?>
+                    <?php if (isset($detailData['number'])): ?>
+                        <p><strong>Phone Number:</strong> <?php echo htmlspecialchars($detailData['number']); ?></p>
+                    <?php endif; ?>
+                    <?php if (isset($detailData['address'])): ?>
+                        <p><strong>Address:</strong> <?php echo htmlspecialchars($detailData['address']); ?></p>
+                    <?php endif; ?>
+                    <?php if (isset($detailData['country'])): ?>
+                        <p><strong>Country:</strong> <?php echo htmlspecialchars($detailData['country']); ?></p>
+                    <?php endif; ?>
+                    <?php if (isset($detailData['city'])): ?>
+                        <p><strong>City:</strong> <?php echo htmlspecialchars($detailData['city']); ?></p>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <p>No additional detail information available.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <p><strong>Total Transactions:</strong> <?php echo intval($transactionCount); ?></p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Total Reviews:</strong> <?php echo intval($reviewsCount); ?></p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Total Reports:</strong> <?php echo intval($reportsCount); ?></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Total Classifieds:</strong> <?php echo intval($classifiedCount); ?></p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Total Favorites:</strong> <?php echo intval($favoritesCount); ?></p>
+            </div>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>
+<?php
+$html = ob_get_clean();
+echo json_encode(['success' => true, 'html' => $html]);
+logMessage("Successfully returned details for user ID $userId");
