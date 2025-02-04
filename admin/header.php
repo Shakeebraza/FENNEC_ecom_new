@@ -171,6 +171,11 @@ if (!empty($_SESSION['aprofile']) && file_exists($_SESSION['aprofile'])) {
                                                 </a>
                                             </div>
                                             <div class="account-dropdown__item">
+                                                <a href="<?= htmlspecialchars($urlval) ?>admin/changepassword.php">
+                                                    <i class="zmdi zmdi-settings"></i>Change Password
+                                                </a>
+                                            </div>
+                                            <!-- <div class="account-dropdown__item">
                                                 <a href="#">
                                                     <i class="zmdi zmdi-settings"></i>Setting
                                                 </a>
@@ -179,7 +184,7 @@ if (!empty($_SESSION['aprofile']) && file_exists($_SESSION['aprofile'])) {
                                                 <a href="#">
                                                     <i class="zmdi zmdi-money-box"></i>Billing
                                                 </a>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <div class="account-dropdown__footer">
                                             <a href="<?= htmlspecialchars($urlval) ?>admin/logout.php">

@@ -2,7 +2,7 @@
 require_once("../global.php");
 include_once('header.php');
 
-$userId = base64_decode($_SESSION['userid']);
+$userId = base64_decode($_SESSION['auserid']);
 $conversations = $dbFunctions->getDatanotenc('conversations', "user_one = '$userId' OR user_two = '$userId'");
 
 

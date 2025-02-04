@@ -493,31 +493,50 @@ public function getUserBalance($userId)
         
         return false;
     }
-    public function sessionSetAdmin($email = NULL) {
-        if (isset($email) && !empty($email)) {
-            $userData = $this->dbfun->getDatanotenc('admins', "email = '$email'");
-            
-            if ($userData) {
-                if (session_status() == PHP_SESSION_NONE) {
-                    session_start();
-                }
-                
-                $_SESSION['auserid'] = base64_encode($userData[0]['id']);
-                $_SESSION['ausername'] = $userData[0]['username'];
-                $_SESSION['aemail'] = $userData[0]['email'];
-                $_SESSION['aemail_verified_at'] = $userData[0]['email_verified_at'];
-                $_SESSION['arole'] = $userData[0]['role'];
-                $_SESSION['aprofile'] = $this->urlval.$userData[0]['profile'];
-                $_SESSION['aremember'] = $userData[0]['remember_token'];
-                
-        
-                return true;
-            }
+
+    
+        // Helper function to write logs to a custom file
+        protected function writeLog($message) {
+            // Define the path to the log file; you can change this path as necessary.
+            $logFile = __DIR__ . '/admin_session.log';
+            $date = date('Y-m-d H:i:s');
+            // Append the message to the log file with a newline
+            file_put_contents($logFile, "$date - $message" . PHP_EOL, FILE_APPEND);
         }
         
-        
-        return false;
-    }
+        public function sessionSetAdmin($email = NULL) {
+            if (isset($email) && !empty($email)) {
+                $this->writeLog("sessionSetAdmin: Attempting to set admin session for email: $email");
+                
+                $userData = $this->dbfun->getDatanotenc('admins', "email = '$email'");
+                
+                if ($userData) {
+                    if (session_status() == PHP_SESSION_NONE) {
+                        session_start();
+                        $this->writeLog("sessionSetAdmin: PHP session started.");
+                    }
+                    
+                    $_SESSION['auserid'] = base64_encode($userData[0]['id']);
+                    $_SESSION['ausername'] = $userData[0]['username'];
+                    $_SESSION['aemail'] = $userData[0]['email'];
+                    $_SESSION['aemail_verified_at'] = $userData[0]['email_verified_at'];
+                    $_SESSION['arole'] = $userData[0]['role'];
+                    $_SESSION['aprofile'] = $this->urlval . $userData[0]['profile'];
+                    $_SESSION['aremember'] = $userData[0]['remember_token'];
+                    
+                    $this->writeLog("sessionSetAdmin: Admin session successfully set for user id: " . $userData[0]['id']);
+                    
+                    return true;
+                } else {
+                    $this->writeLog("sessionSetAdmin: No admin found with email: $email");
+                }
+            } else {
+                $this->writeLog("sessionSetAdmin: Email parameter is empty or not set.");
+            }
+            
+            return false;
+        }
+    
     public function RequestSessioncheck(){
         if(isset($_SESSION['userid']) && isset($_SESSION['remember'])){
             $id= base64_decode($_SESSION['userid']);

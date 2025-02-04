@@ -3,7 +3,7 @@ require_once("../global.php");
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($CsrfProtection->validateToken($_POST['token'])) {
         if ($fun->RequestSessioncheck()) {
-            $userId = base64_decode($_SESSION['userid']);
+            $userId = intval(base64_decode($_SESSION['userid']));
             if ($userId === false) {
                 echo json_encode(['status' => 'error', 'message' => 'Invalid user ID']);
                 exit;
