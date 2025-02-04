@@ -73,7 +73,7 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 ?>
 
 <!-- Main container -->
-<div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+<div class="container-fluid vh-100 d-flex align-items-center justify-content-center ">
     <div class="col-md-6 col-lg-4">
         <div class="card shadow-sm">
             <div class="card-body">

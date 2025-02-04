@@ -2,25 +2,24 @@
 require_once('../../../global.php');
 
 /**
- * Handle DataTables server-side parameters for pagination
+ * Handle DataTables server-side parameters for pagination.
  */
 $draw   = isset($_POST['draw'])   ? intval($_POST['draw'])   : 1;
 $start  = isset($_POST['start'])  ? intval($_POST['start'])  : 0;
 $length = isset($_POST['length']) ? intval($_POST['length']) : 10;
 
-// 1) Check the session role of the current logged-in user 
-//    (assuming you store it in $_SESSION['arole'])
-$sessionRole = $_SESSION['arole'] ?? 0; 
+// 1) Check the session role of the current logged-in user.
+$sessionRole = $_SESSION['arole'] ?? 0;
 $canEdit     = in_array($sessionRole, [1, 3]); // e.g. 1=Super Admin, 3=Admin can edit
 
-// Gather search fields from POST
+// Gather search fields from POST.
 $searchName   = $_POST['name']   ?? '';
 $searchEmail  = $_POST['email']  ?? '';
 $searchRole   = $_POST['role']   ?? '';
 $searchStatus = $_POST['status'] ?? '';
 
 //--------------------------------------
-// Build WHERE conditions as a string
+// Build WHERE conditions as a string.
 //--------------------------------------
 $conditions = [];
 if (!empty($searchName)) {
@@ -38,30 +37,25 @@ if ($searchStatus !== '') {
 $where = !empty($conditions) ? implode(' AND ', $conditions) : '';
 
 //--------------------------------------
-// 2) Get total counts from BOTH tables
+// 2) Get total counts from BOTH tables.
 //--------------------------------------
 $totalUsers  = $dbFunctions->getCount('users', '*', '');
 $totalAdmins = $dbFunctions->getCount('admins', '*', '');
 $totalRecords = $totalUsers + $totalAdmins;
 
 //--------------------------------------
-// 3) Get filtered counts from BOTH tables
+// 3) Get filtered counts from BOTH tables.
 //--------------------------------------
 $filteredCountUsers  = $dbFunctions->getCount('users', '*', $where);
 $filteredCountAdmins = $dbFunctions->getCount('admins', '*', $where);
 $filteredCount       = $filteredCountUsers + $filteredCountAdmins;
 
 /**
- * 4) Fetch raw data from both tables (unlimited), then merge
- *    We'll do the sorting + pagination in PHP after merging.
- *
- *    Note: We pass a very large limit to get all matching results,
- *    or you can fetch in two passes. But simplest is to fetch all,
- *    then do array_slice().
+ * 4) Fetch raw data from both tables (unlimited), then merge.
  */
 $usersRows = $dbFunctions->getDatanotenc(
     'users',
-    $where,    // where
+    $where,    // where clause
     '',        // group by
     'id',      // order by
     'DESC',    // order direction
@@ -79,11 +73,10 @@ $adminsRows = $dbFunctions->getDatanotenc(
     999999999
 );
 
-// 5) Merge them and label each row with a 'source'
+// 5) Merge rows from both tables and mark the source.
 $mergedRows = [];
 foreach ($usersRows as $uRow) {
-    // you might add a key to track which table
-    $uRow['source_table'] = 'users'; 
+    $uRow['source_table'] = 'users';
     $mergedRows[] = $uRow;
 }
 foreach ($adminsRows as $aRow) {
@@ -91,21 +84,20 @@ foreach ($adminsRows as $aRow) {
     $mergedRows[] = $aRow;
 }
 
-// 6) Sort merged array by id DESC
+// 6) Sort merged array by id in descending order.
 usort($mergedRows, function($a, $b) {
-    // we want descending, so compare b - a
     return ($b['id'] - $a['id']);
 });
 
-// 7) Slice out the portion for DataTables pagination
+// 7) Slice out the portion for DataTables pagination.
 $paginatedRows = array_slice($mergedRows, $start, $length);
 
-// Now build the $data array
+// Build the $data array.
 $data = [];
 $currentUser = base64_decode($_SESSION['userid'] ?? '');
 
 foreach ($paginatedRows as $row) {
-    // ---- Chat logic (same as before) ---
+    // ---- Chat logic ----
     $chat = '';
     $conversations = $dbFunctions->getDatanotenc(
         'conversations', 
@@ -117,13 +109,13 @@ foreach ($paginatedRows as $row) {
         }
     } else {
         if ($row['id'] != $currentUser) {
-            $chat = '<a class="btn btn-warning create-chat-btn" data-chatid="'. $security->encrypt($row['id']). '">
+            $chat = '<a class="btn btn-warning create-chat-btn" data-chatid="'. htmlspecialchars($security->encrypt($row['id'])) .'">
                         Create Chat
                      </a>';
         }
     }
 
-    // ---- Map role to text/badge (same approach) ----
+    // ---- Map role to text and badge ----
     switch ($row['role']) {
         case 1:
             $roleClass = 'badge-danger';
@@ -147,35 +139,34 @@ foreach ($paginatedRows as $row) {
             break;
     }
 
-    // Only show checkbox if user’s role != 1
+    // Only show checkbox if user's role is not Super Admin.
     $checkboxHtml = ($row['role'] == 1) ? '' : '<input type="checkbox">';
 
-    // Decide Edit/Delete based on $canEdit
+    // Decide Edit/Delete buttons based on permissions.
     $editButton   = '';
     $deleteButton = '';
     if ($canEdit) {
         if ($row['role'] == 1) {
-            // No one can edit super admin
             $editButton   = '<span class="role superadmin">Super Admin</span>';
             $deleteButton = '';
         } else {
-            // Show Edit/Delete
-            $editButton = '<a class="btn btn-warning btn-sm"
-                             href="'. $urlval .'admin/user/edit.php?id='. base64_encode($row['id']) .'">
+            $editButton = '<a class="btn btn-warning btn-sm" href="'. $urlval .'admin/user/edit.php?id='. base64_encode($row['id']) .'">
                                Edit
                            </a>';
-            $deleteButton = '<button class="btn btn-danger btn-sm"
-                               data-id="'. $security->encrypt($row['id']). '">
+            $deleteButton = '<button class="btn btn-danger btn-sm" data-id="'. htmlspecialchars($security->encrypt($row['id'])) .'">
                                Delete
                            </button>';
         }
     }
 
-    // Build the status select
+    // ---- Add Detail Button (always available) ----
+    $detailButton = '<button class="btn btn-info btn-sm view-user-details" data-id="' . htmlspecialchars($security->encrypt($row['id'])) . '">View Details</button>';
+
+    // Build the status select or text.
     if ($canEdit && $row['role'] != 1) {
         $statusHtml = '
             <div style="position: relative; display: inline-block; width: 100%;">
-                <select class="js-select2 user-status-select" data-id="'. $security->encrypt($row['id']). '"
+                <select class="js-select2 user-status-select" data-id="'. htmlspecialchars($security->encrypt($row['id'])) .'"
                     style="width:100%; background-color:#f5f5f5; border:1px solid #ddd;">
                     <option value="1"'. ($row['status'] == 1 ? ' selected' : '') .'>Activate</option>
                     <option value="0"'. ($row['status'] == 0 ? ' selected' : '') .'>Block</option>
@@ -189,7 +180,7 @@ foreach ($paginatedRows as $row) {
                     : '<span class="badge badge-danger">Blocked</span>';
     }
 
-    // Build the row in the same columns as your DataTable
+    // Build the row.
     $data[] = [
         'checkbox' => $checkboxHtml, 
         'name'     => '
@@ -201,11 +192,11 @@ foreach ($paginatedRows as $row) {
         'role'     => '<span class="role '. $roleClass .'">'. $roleText .'</span>',
         'type'     => $statusHtml,
         'chat'     => $chat,
-        'actions'  => $editButton . ' ' . $deleteButton
+        'actions'  => $editButton . ' ' . $deleteButton . ' ' . $detailButton
     ];
 }
 
-// Finally, return JSON
+// Build and return the JSON response.
 $response = [
     "draw"            => $draw,
     "recordsTotal"    => intval($totalRecords),

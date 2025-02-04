@@ -6,7 +6,7 @@ include_once('../header.php');
  * Optional role check to restrict who sees the user list
  */
 $role = $_SESSION['arole'] ?? 0;
-if (!in_array($role, [1,3,4])) {
+if (!in_array($role, [1, 3, 4])) {
     header("Location: {$urlval}admin/logout.php");
     exit;
 }
@@ -30,10 +30,9 @@ if (!in_array($role, [1,3,4])) {
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label for="email">Email</label>
-                                            <input type="email" class="form-control" id="email"
-                                                placeholder="Enter email">
+                                            <input type="email" class="form-control" id="email" placeholder="Enter email">
                                         </div>
-                                        <!-- Updated role filter to match new roles -->
+                                        <!-- Updated role filter -->
                                         <div class="form-group col-md-3">
                                             <label for="role">Role</label>
                                             <select class="form-control" id="role">
@@ -53,8 +52,7 @@ if (!in_array($role, [1,3,4])) {
                                                 <option value="0">Blocked</option>
                                             </select>
                                         </div>
-                                        <button type="button" class="btn btn-success" id="searchUsers"
-                                            style="height: 38px; margin-top: 25px;">
+                                        <button type="button" class="btn btn-success" id="searchUsers" style="height: 38px; margin-top: 25px;">
                                             Search
                                         </button>
                                     </div>
@@ -80,7 +78,7 @@ if (!in_array($role, [1,3,4])) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Filled by DataTables -->
+                                        <!-- DataTables will populate this -->
                                     </tbody>
                                 </table>
                             </div><!-- table-responsive -->
@@ -92,12 +90,11 @@ if (!in_array($role, [1,3,4])) {
     </div><!-- main-content -->
 </div><!-- page-container -->
 
-<!-- Optional: Delete confirm modal if you want a popup -->
-<div id="deleteConfirmModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
-    aria-hidden="true">
+<!-- Delete Confirm Modal (Optional) -->
+<div id="deleteConfirmModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <!-- ... etc. ... -->
+            <!-- Customize your delete confirmation modal as needed -->
             <div class="modal-header">
                 <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -106,6 +103,23 @@ if (!in_array($role, [1,3,4])) {
             </div>
             <div class="modal-body">
                 Are you sure you want to delete this user?
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Details Modal -->
+<div id="userDetailsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="userDetailsModalLabel" class="modal-title">User Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="user-details-content">
+                <!-- Details loaded via AJAX -->
             </div>
         </div>
     </div>
@@ -129,47 +143,34 @@ $(document).ready(function() {
                 d.status = $('#status').val();
             }
         },
-        "columns": [{
-                "data": "checkbox"
-            },
-            {
-                "data": "name"
-            },
-            {
-                "data": "email"
-            },
-            {
-                "data": "role"
-            },
-            {
-                "data": "type"
-            },
-            {
-                "data": "chat"
-            },
-            {
-                "data": "actions"
-            }
+        "columns": [
+            { "data": "checkbox" },
+            { "data": "name" },
+            { "data": "email" },
+            { "data": "role" },
+            { "data": "type" },
+            { "data": "chat" },
+            { "data": "actions" }
         ]
     });
 
-    // Trigger a fresh search
+    // Trigger a fresh search.
     $('#searchUsers').on('click', function() {
         table.draw();
     });
 
-    // Delete user logic
+    // Delete user logic.
     $('#userTable').on('click', '.btn-danger', function() {
+        console.log('Delete button clicked');
         var userId = $(this).data('id');
+        console.log('User ID for deletion:', userId);
         if (!confirm('Are you sure you want to delete this user?')) return;
-
         $.ajax({
             url: '<?php echo $urlval ?>admin/ajax/user/deleteUser.php',
             type: 'POST',
-            data: {
-                id: userId
-            },
+            data: { id: userId },
             success: function(response) {
+                console.log('Delete response:', response);
                 if (response.success) {
                     alert('User deleted successfully!');
                     table.ajax.reload();
@@ -177,24 +178,21 @@ $(document).ready(function() {
                     alert('Error deleting user: ' + response.message);
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error('Delete error:', status, error);
                 alert('An error occurred while deleting the user.');
             }
         });
     });
 
-    // Update user status
+    // Update user status.
     $(document).on('change', '.user-status-select', function() {
         var userId = $(this).data('id');
         var status = $(this).val();
-
         $.ajax({
             url: '<?php echo $urlval ?>admin/ajax/user/update_status.php',
             type: 'POST',
-            data: {
-                id: userId,
-                status: status
-            },
+            data: { id: userId, status: status },
             success: function(response) {
                 alert('User status updated successfully!');
             },
@@ -204,15 +202,13 @@ $(document).ready(function() {
         });
     });
 
-    // Create chat logic
+    // Create chat logic.
     $('#userTable').on('click', '.create-chat-btn', function() {
         var chatId = $(this).data('chatid');
         $.ajax({
             url: '<?php echo $urlval ?>admin/ajax/user/create_chat.php',
             type: 'POST',
-            data: {
-                chatId: chatId
-            },
+            data: { chatId: chatId },
             success: function(response) {
                 if (response.success) {
                     alert('Chat created successfully!');
@@ -226,8 +222,33 @@ $(document).ready(function() {
             }
         });
     });
+
+    // View Details logic: Open modal on clicking "View Details".
+    $('#userTable').on('click', '.view-user-details', function() {
+        console.log('View Details button clicked');
+        var encryptedId = $(this).data('id');
+        console.log('Encrypted ID:', encryptedId);
+        $.ajax({
+            url: '<?php echo $urlval ?>admin/ajax/user/fetchUserDetails.php',
+            type: 'POST',
+            data: { id: encryptedId },
+            dataType: 'json',
+            success: function(response) {
+                console.log('Fetch details response:', response);
+                if (response.success) {
+                    $('#user-details-content').html(response.html);
+                    $('#userDetailsModal').modal('show');
+                } else {
+                    alert('Error: ' + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching details:', status, error);
+                alert('An error occurred while fetching user details.');
+            }
+        });
+    });
 });
 </script>
 </body>
-
 </html>

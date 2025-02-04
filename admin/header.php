@@ -32,8 +32,8 @@ function isActive($link) {
 
 $defaultProfile = $urlval . 'images/admin.jpg';
 
-if (!empty($_SESSION['aprofile'])) {
-    $profile = $_SESSION['profile'];
+if (!empty($_SESSION['aprofile']) && file_exists($_SESSION['aprofile'])) {
+    $profile = $_SESSION['aprofile'];
 } else {
     $profile = $defaultProfile;
 }
