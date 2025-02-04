@@ -166,6 +166,7 @@ $isAdmin = in_array($role, [1,3]);
                         </a>
                     </li>
 
+
                     <!-- SETTINGS -->
                     <li class="<?= isActive('/fennec/admin/setting.php'); ?>">
                         <a href="<?php echo $urlval?>admin/setting.php">
@@ -217,6 +218,15 @@ $isAdmin = in_array($role, [1,3]);
                         <?php endif; ?>
                     </ul>
                 </li>
+
+                <!-- Add this code where you want the menu item to appear in both mobile and desktop sidebars -->
+                <?php if ($isAdmin): ?>
+                <li class="<?= isActive('/fennec/admin/addtransaction.php'); ?>">
+                    <a href="<?php echo $urlval?>admin/addtransaction.php">
+                        <i class="fas fa-money-bill-wave"></i> Add Transaction
+                    </a>
+                </li>
+                <?php endif; ?>
 
                 <!-- BANNERS -->
                 <li
