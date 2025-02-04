@@ -114,9 +114,9 @@ if (!in_array($role, [1, 3, 4])) {
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="userDetailsModalLabel" class="modal-title">User Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button>
+                </button> -->
             </div>
             <div class="modal-body" id="user-details-content">
                 <!-- Details loaded via AJAX -->

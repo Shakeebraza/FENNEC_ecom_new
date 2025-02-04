@@ -75,8 +75,8 @@ switch ($roleValue) {
 
 logMessage("Account found in $sourceTable: ID $userId, Username: " . $accountData['username']);
 
-// Determine if wallet and extra statistics should be shown.
-// They should be displayed only if the account is from "users" table and the role is 0 or 2.
+// Determine if wallet info and extra statistics should be shown.
+// These should be displayed only if the account is from the "users" table and the role is 0 or 2.
 $showExtra = ($sourceTable === 'users' && in_array($roleValue, [0, 2]));
 
 // Fetch extra details from the appropriate detail table.
@@ -90,7 +90,7 @@ if ($detailDataArr && is_array($detailDataArr)) {
     $detailData = $detailDataArr[0];
 }
 
-// Calculate wallet balance details only if applicable.
+// Calculate wallet balance details (only for users meeting criteria).
 $walletDeposit = $walletBalance = $walletSpent = 0;
 if ($showExtra) {
     $walletDeposit = isset($accountData['wallet_deposit']) ? floatval($accountData['wallet_deposit']) : 0;
@@ -98,7 +98,7 @@ if ($showExtra) {
     $walletSpent   = $walletDeposit - $walletBalance;
 }
 
-// Initialize extra counts only if applicable.
+// Initialize extra counts (only for users meeting criteria).
 $transactionCount = $reviewsCount = $reportsCount = $classifiedCount = $favoritesCount = 0;
 if ($showExtra) {
     $transactionCount = $dbFunctions->getCount('transactions', '*', "user_id = " . intval($userId));
@@ -110,7 +110,7 @@ if ($showExtra) {
 
 ob_start();
 ?>
-<!-- Enhanced UI using Bootstrap card -->
+<!-- Enhanced UI using Bootstrap card layout -->
 <div class="card shadow my-4">
     <div class="card-header bg-primary text-white">
         <h4 class="mb-0">Account Information</h4>
@@ -118,7 +118,11 @@ ob_start();
     <div class="card-body">
         <div class="row mb-3">
             <div class="col-md-4 text-center">
-                <img src="<?php echo htmlspecialchars($accountData['profile'] ?? $urlval . 'images/profile.jpg'); ?>" alt="Profile Image" class="img-fluid rounded-circle" style="max-width: 150px;">
+                <?php if (!empty($accountData['profile'])): ?>
+                    <img src="<?php echo htmlspecialchars($urlval . $accountData['profile']); ?>" alt="Profile Image" class="img-fluid rounded-circle" style="max-width: 150px;">
+                <?php else: ?>
+                    <p>No image available</p>
+                <?php endif; ?>
             </div>
             <div class="col-md-8">
                 <p><strong>Name:</strong> <?php echo htmlspecialchars($accountData['username']); ?></p>
@@ -158,23 +162,41 @@ ob_start();
             </div>
         </div>
         <hr>
-        <div class="row">
-            <div class="col-md-4">
-                <p><strong>Total Transactions:</strong> <?php echo intval($transactionCount); ?></p>
+        <!-- Enhanced statistics layout -->
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-4 col-6">
+                    <div class="stat-box p-2">
+                        <h6 class="mb-1">Total Transactions</h6>
+                        <p class="mb-0"><?php echo intval($transactionCount); ?></p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-6">
+                    <div class="stat-box p-2">
+                        <h6 class="mb-1">Total Reviews</h6>
+                        <p class="mb-0"><?php echo intval($reviewsCount); ?></p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="stat-box p-2">
+                        <h6 class="mb-1">Total Reports</h6>
+                        <p class="mb-0"><?php echo intval($reportsCount); ?></p>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4">
-                <p><strong>Total Reviews:</strong> <?php echo intval($reviewsCount); ?></p>
-            </div>
-            <div class="col-md-4">
-                <p><strong>Total Reports:</strong> <?php echo intval($reportsCount); ?></p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <p><strong>Total Classifieds:</strong> <?php echo intval($classifiedCount); ?></p>
-            </div>
-            <div class="col-md-6">
-                <p><strong>Total Favorites:</strong> <?php echo intval($favoritesCount); ?></p>
+            <div class="row text-center mt-3">
+                <div class="col-md-6 col-6">
+                    <div class="stat-box p-2">
+                        <h6 class="mb-1">Total Classifieds</h6>
+                        <p class="mb-0"><?php echo intval($classifiedCount); ?></p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-6">
+                    <div class="stat-box p-2">
+                        <h6 class="mb-1">Total Favorites</h6>
+                        <p class="mb-0"><?php echo intval($favoritesCount); ?></p>
+                    </div>
+                </div>
             </div>
         </div>
         <?php endif; ?>
