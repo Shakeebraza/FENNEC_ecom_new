@@ -95,7 +95,7 @@ $walletDeposit = $walletBalance = $walletSpent = 0;
 if ($showExtra) {
     $walletDeposit = isset($accountData['wallet_deposit']) ? floatval($accountData['wallet_deposit']) : 0;
     $walletBalance = isset($accountData['wallet_balance']) ? floatval($accountData['wallet_balance']) : 0;
-    $walletSpent   = $walletBalance-$walletDeposit ;
+    $walletSpent   = $walletDeposit - $walletBalance;
 }
 
 // Initialize extra counts (only for users meeting criteria).
