@@ -30,10 +30,22 @@ if (!$userId) {
     exit;
 }
 
-// Prepare and execute the query.
+$user = false;
+$sourceTable = '';
+
+// First, try to fetch from the users table.
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
 $stmt->execute([':id' => $userId]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
+$sourceTable = 'users';
+
+if (!$user) {
+    // If not found in users, try the admins table.
+    $stmt = $pdo->prepare("SELECT * FROM admins WHERE id = :id");
+    $stmt->execute([':id' => $userId]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $sourceTable = 'admins';
+}
 
 // Map role value to descriptive text.
 $roleText = 'User'; // default value
@@ -58,7 +70,7 @@ if ($user) {
 }
 
 if ($user) {
-    logMessage("User found: ID $userId, Username: " . $user['username']);
+    logMessage("User found in $sourceTable: ID $userId, Username: " . $user['username']);
     ob_start();
     ?>
     <div class="user-details">
@@ -73,6 +85,6 @@ if ($user) {
     echo json_encode(['success' => true, 'html' => $html]);
     logMessage("Successfully returned details for user ID $userId");
 } else {
-    logMessage("User not found for user ID: $userId");
+    logMessage("User not found for user ID: $userId in both tables");
     echo json_encode(['success' => false, 'message' => 'User not found.']);
 }

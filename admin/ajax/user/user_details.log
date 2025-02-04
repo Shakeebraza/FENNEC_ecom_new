@@ -13,3 +13,18 @@
 [2025-02-05 00:05:37] Request received for encryptedId: VFZSblBRPT0=
 [2025-02-05 00:05:37] User found: ID 18, Username: juniadawan
 [2025-02-05 00:05:37] Successfully returned details for user ID 18
+[2025-02-05 00:10:07] Request received for encryptedId: VFhjOVBRPT0=
+[2025-02-05 00:10:07] User found in admins: ID 3, Username: shez
+[2025-02-05 00:10:07] Successfully returned details for user ID 3
+[2025-02-05 00:12:34] Request received for encryptedId: VFdjOVBRPT0=
+[2025-02-05 00:12:34] User found in admins: ID 2, Username: test
+[2025-02-05 00:12:34] Successfully returned details for user ID 2
+[2025-02-05 00:13:47] Request received for encryptedId: VFdjOVBRPT0=
+[2025-02-05 00:13:47] User found in admins: ID 2, Username: test
+[2025-02-05 00:13:47] Successfully returned details for user ID 2
+[2025-02-05 00:14:26] Request received for encryptedId: VFdjOVBRPT0=
+[2025-02-05 00:14:26] User found in admins: ID 2, Username: test
+[2025-02-05 00:14:26] Successfully returned details for user ID 2
+[2025-02-05 00:14:29] Request received for encryptedId: VFhjOVBRPT0=
+[2025-02-05 00:14:29] User found in admins: ID 3, Username: shez
+[2025-02-05 00:14:29] Successfully returned details for user ID 3
