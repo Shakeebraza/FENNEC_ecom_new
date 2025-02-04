@@ -100,11 +100,17 @@ if ($showExtra) {
 
 // Initialize extra counts (only for users meeting criteria).
 $transactionCount = $reviewsCount = $reportsCount = $classifiedCount = $favoritesCount = 0;
+$approvedClassifiedCount = $disapprovedClassifiedCount = 0;
 if ($showExtra) {
     $transactionCount = $dbFunctions->getCount('transactions', '*', "user_id = " . intval($userId));
     $reviewsCount     = $dbFunctions->getCount('reviews', '*', "user_id = " . intval($userId));
     $reportsCount     = $dbFunctions->getCount('reports', '*', "user_id = " . intval($userId));
+    // Total classifieds count (all products belonging to the user)
     $classifiedCount  = $dbFunctions->getCount('products', '*', "user_id = " . intval($userId));
+    // Approved classifieds: is_enable = 1
+    $approvedClassifiedCount = $dbFunctions->getCount('products', '*', "user_id = " . intval($userId) . " AND is_enable = 1");
+    // Disapproved classifieds: is_enable = 0
+    $disapprovedClassifiedCount = $dbFunctions->getCount('products', '*', "user_id = " . intval($userId) . " AND is_enable = 0");
     $favoritesCount   = $dbFunctions->getCount('favorites', '*', "user_id = " . intval($userId));
 }
 
@@ -195,6 +201,20 @@ ob_start();
                     <div class="stat-box p-2">
                         <h6 class="mb-1">Total Favorites</h6>
                         <p class="mb-0"><?php echo intval($favoritesCount); ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center mt-3">
+                <div class="col-md-6 col-6">
+                    <div class="stat-box p-2">
+                        <h6 class="mb-1">Approved Classifieds</h6>
+                        <p class="mb-0"><?php echo intval($approvedClassifiedCount); ?></p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-6">
+                    <div class="stat-box p-2">
+                        <h6 class="mb-1">Disapproved Classifieds</h6>
+                        <p class="mb-0"><?php echo intval($disapprovedClassifiedCount); ?></p>
                     </div>
                 </div>
             </div>
