@@ -2,7 +2,7 @@
 require_once('../../../global.php');
 
 $chatId = $security->decrypt($_POST['chatId']);
-$currentUser = base64_decode($_SESSION['userid']);
+$currentUser = base64_decode($_SESSION['auserid']);
 
 if (!empty($chatId) && !empty($currentUser)) {
     $existingChat = $dbFunctions->getDatanotenc('conversations', "user_one = '$currentUser' AND user_two = '$chatId' OR user_one = '$chatId' AND user_two = '$currentUser'");

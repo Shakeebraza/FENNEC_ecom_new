@@ -1,4 +1,4 @@
-<!-- <?php
+<?php
 require_once("../global.php");
 include_once('header.php');
 
@@ -439,4 +439,4 @@ $conversations = $dbFunctions->getDatanotenc('conversations', "user_one = '$user
 
 </body>
 
-</html> -->
+</html>
