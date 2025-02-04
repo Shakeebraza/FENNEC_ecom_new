@@ -93,7 +93,7 @@ if ($detailDataArr && is_array($detailDataArr)) {
 // Calculate wallet balance details (only for users meeting criteria).
 $walletDeposit = $walletBalance = $walletSpent = 0;
 if ($showExtra) {
-    $walletDeposit = isset($accountData['wallet_deposit']) ? floatval($accountData['wallet_deposit']) : 0;
+    $walletDeposit = isset($accountData['wallet_deposited']) ? floatval($accountData['wallet_deposited']) : 0;
     $walletBalance = isset($accountData['wallet_balance']) ? floatval($accountData['wallet_balance']) : 0;
     $walletSpent   = $walletDeposit - $walletBalance;
 }
