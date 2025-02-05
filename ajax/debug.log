@@ -157,3 +157,53 @@
 [2025-02-05 01:38:42] Current username: ssssdddd
 [2025-02-05 01:38:42] Username remains unchanged.
 [2025-02-05 01:38:42] Details updated successfully for user ID: 82
+[2025-02-05 04:52:44] Script accessed via POST request.
+[2025-02-05 04:52:44] POST data received: {"country":"","first-name":"","last-name":"","city":"","contactNumber":"","address":"","language":"","username":"dfffssdfsd","token":"ec6fc937fc04b33c1aa4d3766b37078de143afed52b7d5f9bc10af29a5010ca8"}
+[2025-02-05 04:52:44] Decoded user ID: 84
+[2025-02-05 04:52:44] File extension not allowed: webp
+[2025-02-05 04:52:44] Data to be updated/inserted into user_detail: {"first_name":"","last_name":"","country":"","city":"","number":"","address":"","language":"","updated_at":"2025-02-05 04:52:44"}
+[2025-02-05 04:52:44] Checked if user exists in user_detail: []
+[2025-02-05 04:52:44] Inserting new user details into user_detail: {"first_name":"","last_name":"","country":"","city":"","number":"","address":"","language":"","updated_at":"2025-02-05 04:52:44","userid":"84","created_at":"2025-02-05 04:52:44"}
+[2025-02-05 04:52:44] Insert response for user_detail: {"success":true,"message":"Data saved successfully."}
+[2025-02-05 04:52:44] Username change requested: dfffssdfsd
+[2025-02-05 04:52:44] Current username: dfffssdfsd
+[2025-02-05 04:52:44] Username remains unchanged.
+[2025-02-05 04:52:44] Details updated successfully for user ID: 84
+[2025-02-05 04:55:50] Script accessed via POST request.
+[2025-02-05 04:55:50] POST data received: {"country":"","first-name":"","last-name":"","city":"","contactNumber":"","address":"","language":"","username":"dfffssdfsd","token":"d72b3b24037e5c228fa36cbfd876bd24369b83edea40591f999500c5c05474e8"}
+[2025-02-05 04:55:50] Decoded user ID: 84
+[2025-02-05 04:55:50] File extension not allowed: webp
+[2025-02-05 04:55:50] Data to be updated/inserted into user_detail: {"first_name":"","last_name":"","country":"","city":"","number":"","address":"","language":"","updated_at":"2025-02-05 04:55:50"}
+[2025-02-05 04:55:50] Checked if user exists in user_detail: [{"id":14,"userid":84,"first_name":"","last_name":"","city":"","country":"","language":"","address":"","number":"","created_at":"2025-02-05 04:52:44","updated_at":"2025-02-05 04:52:44","company_name":null,"url_link":null}]
+[2025-02-05 04:55:50] User detail ID found: 14
+[2025-02-05 04:55:50] Update response for user_detail: {"success":true,"message":"Data updated successfully."}
+[2025-02-05 04:55:50] Username change requested: dfffssdfsd
+[2025-02-05 04:55:50] Current username: dfffssdfsd
+[2025-02-05 04:55:50] Username remains unchanged.
+[2025-02-05 04:55:50] Details updated successfully for user ID: 84
+[2025-02-05 04:55:59] Script accessed via POST request.
+[2025-02-05 04:55:59] POST data received: {"country":"","first-name":"","last-name":"","city":"","contactNumber":"","address":"","language":"","username":"dfffssdfsd","token":"5708fd66c7b8ee8e2fbdabdceac436ab45905b80173ffaa05b7de00f77e26b37"}
+[2025-02-05 04:55:59] Decoded user ID: 84
+[2025-02-05 04:55:59] Profile image uploaded successfully: ../upload/4e9d583114846e72d610222e045edc76.png
+[2025-02-05 04:55:59] Data to be updated/inserted into user_detail: {"first_name":"","last_name":"","country":"","city":"","number":"","address":"","language":"","updated_at":"2025-02-05 04:55:59"}
+[2025-02-05 04:55:59] Checked if user exists in user_detail: [{"id":14,"userid":84,"first_name":"","last_name":"","city":"","country":"","language":"","address":"","number":"","created_at":"2025-02-05 04:52:44","updated_at":"2025-02-05 04:55:50","company_name":null,"url_link":null}]
+[2025-02-05 04:55:59] User detail ID found: 14
+[2025-02-05 04:55:59] Update response for user_detail: {"success":true,"message":"Data updated successfully."}
+[2025-02-05 04:55:59] Profile image update response in users table: {"success":true,"message":"Data updated successfully."}
+[2025-02-05 04:55:59] Username change requested: dfffssdfsd
+[2025-02-05 04:55:59] Current username: dfffssdfsd
+[2025-02-05 04:55:59] Username remains unchanged.
+[2025-02-05 04:55:59] Details updated successfully for user ID: 84
+[2025-02-05 04:59:26] Script accessed via POST request.
+[2025-02-05 04:59:26] POST data received: {"country":"","first-name":"","last-name":"","city":"","contactNumber":"","address":"","language":"","username":"dfffssdfsd","token":"2933aa2b7ca098d00b7e2dd008279574d58ddf296529bdda9a21b10adcd805b4"}
+[2025-02-05 04:59:26] Decoded user ID: 84
+[2025-02-05 04:59:26] Profile image uploaded successfully: ../upload/f3c7fd86b3664d2c1936ff5590dab31a.png
+[2025-02-05 04:59:26] Data to be updated/inserted into user_detail: {"first_name":"","last_name":"","country":"","city":"","number":"","address":"","language":"","updated_at":"2025-02-05 04:59:26"}
+[2025-02-05 04:59:26] Checked if user exists in user_detail: [{"id":14,"userid":84,"first_name":"","last_name":"","city":"","country":"","language":"","address":"","number":"","created_at":"2025-02-05 04:52:44","updated_at":"2025-02-05 04:55:59","company_name":null,"url_link":null}]
+[2025-02-05 04:59:26] User detail ID found: 14
+[2025-02-05 04:59:26] Update response for user_detail: {"success":true,"message":"Data updated successfully."}
+[2025-02-05 04:59:26] Profile image update response in users table: {"success":true,"message":"Data updated successfully."}
+[2025-02-05 04:59:26] Username change requested: dfffssdfsd
+[2025-02-05 04:59:26] Current username: dfffssdfsd
+[2025-02-05 04:59:26] Username remains unchanged.
+[2025-02-05 04:59:26] Details updated successfully for user ID: 84

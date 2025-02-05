@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // --- Send Verification Email ---
-    $verificationLink = $urlval . "verify_email.php?token=$verificationToken&email=$email";
+    $verificationLink = $urlval . "verify_email.php?token=$verificationToken&email=$email&role=none";
     $emailTemplate    = $emialTemp->getVerificationTemplate($verificationLink);
     $mailResponse     = smtp_mailer($email, 'Email Verification', $emailTemplate);
 

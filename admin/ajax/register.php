@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($response['success']) {
         // Construct email verification link
-        $verificationLink = $urlval . "verify_email.php?token=$verificationToken&email=$email";
+        $verificationLink = $urlval . "verify_email.php?token=$verificationToken&email=$email&role=admin";
         $mailSubject = 'Email Verification';
         $mailBody    = "Please click the link below to verify your email address:\n$verificationLink";
 

@@ -326,8 +326,9 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
                                                 style="width: 80px; height: 80px; object-fit: cover;">
                                         </div>
                                         <div>
-                                            <input type="file" class="form-control" id="profileImage" name="profile_image" accept="image/*" onchange="previewImage(event)">
+                                            <input type="file" class="form-control" id="profileImage" name="profile_image" accept=".png, .jpg, .jpeg" onchange="previewImage(event)">
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="mb-3">
