@@ -23,13 +23,28 @@ $message = '';
 
 // Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate CSRF token
+    // Validate CSRF token.
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         $csrfError = "Invalid CSRF token!";
         logMessage("CSRF token validation failed.");
     } else {
-        // Check if this is a delete request
-        if (isset($_POST['delete_record'])) {
+        // Process "Make Active" button (sets a record as active).
+        if (isset($_POST['set_active'])) {
+            $setActiveId = $_POST['set_active'];
+            // First, update all records to inactive.
+            $pdo->query("UPDATE sharing_code SET active = 0");
+            // Then, mark the selected record as active.
+            $stmt = $pdo->prepare("UPDATE sharing_code SET active = 1, updated_at = ? WHERE id = ?");
+            if ($stmt->execute([date("Y-m-d H:i:s"), $setActiveId])) {
+                $message = "Sharing code record (ID: $setActiveId) set as active.";
+                logMessage("Sharing code record (ID: $setActiveId) set as active.");
+            } else {
+                $csrfError = "Failed to set sharing code as active.";
+                logMessage("Error setting sharing code (ID: $setActiveId) as active.");
+            }
+        }
+        // Process deletion.
+        else if (isset($_POST['delete_record'])) {
             if ($isAdmin) {
                 $deleteId = $_POST['delete_record'];
                 $deleteStmt = $pdo->prepare("DELETE FROM sharing_code WHERE id = ?");
@@ -45,17 +60,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $csrfError = "You are not authorized to delete records.";
                 logMessage("Unauthorized deletion attempt by role " . $role);
             }
-        } else {
-            // Process add or update request
-            // Get the raw code input (do not trim, to preserve formatting)
+        }
+        // Process add or update request.
+        else {
+            // Get the raw code input (preserving formatting).
             $code = $_POST['code'] ?? '';
-            // Optionally get record id if we are updating an existing record
+            // Optionally get record id if we are updating an existing record.
             $recordId = $_POST['record_id'] ?? '';
-
+            // Determine if this record should be active (checkbox).
+            $active = isset($_POST['active']) ? 1 : 0;
+            
+            // If this record is to be active, unset the active flag on all others.
+            if ($active == 1) {
+                $pdo->query("UPDATE sharing_code SET active = 0");
+            }
+            
             if (!empty($recordId)) {
-                // Update the existing record with the given record ID
-                $updateStmt = $pdo->prepare("UPDATE sharing_code SET code = ?, updated_at = ? WHERE id = ?");
-                $result = $updateStmt->execute([$code, date("Y-m-d H:i:s"), $recordId]);
+                // Update the existing record.
+                $updateStmt = $pdo->prepare("UPDATE sharing_code SET code = ?, active = ?, updated_at = ? WHERE id = ?");
+                $result = $updateStmt->execute([$code, $active, date("Y-m-d H:i:s"), $recordId]);
                 if ($result) {
                     $message = "Sharing code updated successfully.";
                     logMessage("Sharing code updated for record ID " . $recordId);
@@ -65,8 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             } else {
                 // Insert a new record.
-                $insertStmt = $pdo->prepare("INSERT INTO sharing_code (code, created_at, updated_at) VALUES (?, ?, ?)");
-                $result = $insertStmt->execute([$code, date("Y-m-d H:i:s"), date("Y-m-d H:i:s")]);
+                $insertStmt = $pdo->prepare("INSERT INTO sharing_code (code, active, created_at, updated_at) VALUES (?, ?, ?, ?)");
+                $result = $insertStmt->execute([$code, $active, date("Y-m-d H:i:s"), date("Y-m-d H:i:s")]);
                 if ($result) {
                     $message = "Sharing code saved successfully.";
                     logMessage("New sharing code record inserted.");
@@ -82,40 +105,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Generate a new CSRF token for the form.
 $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
-// Retrieve all sharing code records using $dbFunctions or fallback to direct PDO query if needed.
-if (isset($dbFunctions) && method_exists($dbFunctions, 'getDatanotenc')) {
-    $sharingRecords = $dbFunctions->getDatanotenc("sharing_code", "1"); // "1" as condition returns all rows
-} else {
-    // Fallback: retrieve all records directly using PDO
-    $stmt = $pdo->prepare("SELECT * FROM sharing_code ORDER BY created_at DESC");
-    $stmt->execute();
-    $sharingRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-// Retrieve a list of dummy code snippets
-$dummyCodes = [
-    [
-        'title' => 'AddThis Button',
-        'code'  => '<!-- AddThis Button BEGIN -->
-<div class="addthis_toolbox addthis_default_style">
-    <a href="http://www.addthis.com/bookmark.php?v=250&username=xa-4c93064b1efbb8be" class="addthis_button_compact">Share</a>
-    <span class="addthis_separator">|</span>
-    <a class="addthis_button_preferred_1"></a>
-    <a class="addthis_button_preferred_2"></a>
-    <a class="addthis_button_preferred_3"></a>
-    <a class="addthis_button_preferred_4"></a>
-</div>
-<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4c93064b1efbb8be"></script>
-<!-- AddThis Button END -->'
-    ],
-    [
-        'title' => 'Simple Share Button',
-        'code'  => '<button class="share-btn">Share Now</button>'
-    ]
-];
+// Retrieve all sharing code records.
+$stmt = $pdo->prepare("SELECT * FROM sharing_code ORDER BY created_at DESC");
+$stmt->execute();
+$sharingRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!-- Display Existing Sharing Codes -->
 <div class="container mt-5">
   <div class="row">
     <div class="col">
@@ -127,8 +122,10 @@ $dummyCodes = [
             <th>ID</th>
             <th>Created At</th>
             <th>Code Snippet</th>
+            <th>Active</th>
             <th>Action</th>
             <?php if ($isAdmin): ?>
+            <th>Set Active</th>
             <th>Delete</th>
             <?php endif; ?>
           </tr>
@@ -140,10 +137,32 @@ $dummyCodes = [
             <td><?php echo htmlspecialchars($record['created_at']); ?></td>
             <td><?php echo nl2br(htmlspecialchars(substr($record['code'], 0, 50))) . (strlen($record['code']) > 50 ? '...' : ''); ?></td>
             <td>
+              <?php if ($record['active']): ?>
+                <span class="badge bg-success">Active</span>
+              <?php else: ?>
+                <span class="badge bg-secondary">Inactive</span>
+              <?php endif; ?>
+            </td>
+            <td>
               <!-- Edit button: when clicked, it populates the form below -->
-              <button class="btn btn-sm btn-primary edit-btn" data-record-id="<?php echo $record['id']; ?>" data-code="<?php echo htmlspecialchars($record['code'], ENT_QUOTES); ?>">Edit</button>
+              <button class="btn btn-sm btn-primary edit-btn" 
+                      data-record-id="<?php echo $record['id']; ?>" 
+                      data-code="<?php echo htmlspecialchars($record['code'], ENT_QUOTES); ?>" 
+                      data-active="<?php echo $record['active']; ?>">
+                Edit
+              </button>
             </td>
             <?php if ($isAdmin): ?>
+            <td>
+              <?php if (!$record['active']): ?>
+              <form method="post" action="">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                <button type="submit" name="set_active" value="<?php echo $record['id']; ?>" class="btn btn-sm btn-warning">Make Active</button>
+              </form>
+              <?php else: ?>
+              <span class="text-success">Active</span>
+              <?php endif; ?>
+            </td>
             <td>
               <!-- Delete button in a form for CSRF protection -->
               <form method="post" action="" onsubmit="return confirm('Are you sure you want to delete this record?');">
@@ -187,7 +206,11 @@ $dummyCodes = [
                  <label for="code">Enter Button Code to be Displayed on the User Site:</label>
                  <textarea class="form-control" id="code" name="code" rows="10" placeholder="Paste your HTML/JavaScript code here"><?php echo isset($currentCode) ? htmlspecialchars($currentCode) : ''; ?></textarea>
              </div>
-             <div class="form-group d-flex justify-content-between">
+             <div class="form-group form-check mt-3">
+                <input type="checkbox" class="form-check-input" id="active" name="active" value="1">
+                <label class="form-check-label" for="active">Set as Active Sharing Code</label>
+             </div>
+             <div class="form-group d-flex justify-content-between mt-3">
                <button type="submit" class="btn btn-primary">Save Code</button>
                <button type="button" class="btn btn-secondary" id="clear-form-btn">Clear Form</button>
              </div>
@@ -198,62 +221,35 @@ $dummyCodes = [
   </div>
 </div>
 
-<!-- Dummy Codes Section -->
-<!-- <div class="container mt-5">
-  <div class="row">
-    <div class="col">
-      <h3>Dummy Codes</h3>
-      <div class="list-group">
-        <?php foreach ($dummyCodes as $dummy): ?>
-          <button type="button" class="list-group-item list-group-item-action dummy-code-btn" data-code="<?php echo htmlspecialchars($dummy['code'], ENT_QUOTES); ?>">
-            <?php echo htmlspecialchars($dummy['title']); ?>
-          </button>
-        <?php endforeach; ?>
-      </div>
-    </div>
-  </div>
-</div> -->
-
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // When an edit button is clicked, populate the form with that record's code and set the record_id
+    // When an edit button is clicked, populate the form with that record's code, record_id, and active status.
     const editButtons = document.querySelectorAll('.edit-btn');
     editButtons.forEach(btn => {
         btn.addEventListener('click', function() {
             const recordId = this.getAttribute('data-record-id');
             const code = this.getAttribute('data-code');
+            const active = this.getAttribute('data-active');
             document.getElementById('record_id').value = recordId;
             document.getElementById('code').value = code;
-            // Update form header to indicate editing mode
+            // Set the checkbox based on active status.
+            document.getElementById('active').checked = (active === '1');
+            // Update form header to indicate editing mode.
             document.getElementById('form-header').textContent = "Edit Sharing Code (ID: " + recordId + ")";
-            // Scroll to the form
+            // Scroll to the form.
             document.getElementById('code').scrollIntoView({ behavior: 'smooth' });
         });
     });
 
-    // When a dummy code button is clicked, populate the form with that dummy code
-    const dummyButtons = document.querySelectorAll('.dummy-code-btn');
-    dummyButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const code = this.getAttribute('data-code');
-            document.getElementById('code').value = code;
-            // Clear any record_id to treat as a new entry
-            document.getElementById('record_id').value = '';
-            // Update form header to indicate adding new code
-            document.getElementById('form-header').textContent = "Add Sharing Code";
-            // Scroll to the form
-            document.getElementById('code').scrollIntoView({ behavior: 'smooth' });
-        });
-    });
-
-    // Clear Form button functionality
+    // Clear Form button functionality.
     document.getElementById('clear-form-btn').addEventListener('click', function() {
         document.getElementById('record_id').value = '';
         document.getElementById('code').value = '';
+        document.getElementById('active').checked = false;
         document.getElementById('form-header').textContent = "Add Sharing Code";
     });
 
-    // Auto-hide alert messages after 5 seconds
+    // Auto-hide alert messages after 5 seconds.
     const alertMessage = document.getElementById('alert-message');
     if (alertMessage) {
         setTimeout(() => {

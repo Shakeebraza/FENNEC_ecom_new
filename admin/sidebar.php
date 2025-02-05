@@ -119,7 +119,7 @@ $isAdmin = in_array($role, [1,3]);
                         </a>
                     </li>
                     <?php endif; ?>
-                    
+
                     <!-- ADS SECTION -->
                     <li class="nav-item has-sub <?= isActive('/fennec/admin/categories/index.php'); ?> <?= isActive('/fennec/admin/subcategories/index.php'); ?>">
                         <a class="nav-link js-arrow" href="#">
@@ -198,6 +198,32 @@ $isAdmin = in_array($role, [1,3]);
                             <i class="fas fa-cog"></i> Website Setting
                         </a>
                     </li>
+                    <!-- Cleanup -->
+                    <?php if ($isAdmin): ?>
+                    <li class="<?= isActive('/fennec/admin/cleanup/index.php'); ?>">
+                        <a class="nav-link" href="<?php echo $urlval ?>admin/cleanup/index.php">
+                            <i class="fas fa-credit-card"></i> Clean Up
+                        </a>
+                    </li>
+                    <?php endif; ?>
+
+                    <!-- NEW: APPROVAL PARAMETERS -->
+                    <?php if ($isAdmin): ?>
+                    <li class="<?= isActive('/fennec/admin/approval_parameters/index.php'); ?>">
+                        <a class="nav-link" href="<?php echo $urlval ?>admin/approval_parameters/index.php">
+                            <i class="fas fa-cogs"></i> Approval Parameters
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    <!-- Email_template -->
+                    <?php if ($isAdmin): ?>
+                    <li class="<?= isActive('/fennec/admin/email_templates/index.php'); ?>">
+                        <a class="nav-link" href="<?php echo $urlval ?>admin/email_templates/index.php">
+                            <i class="fas fa-cogs"></i> Email Templates
+                        </a>
+                    </li>
+                    <?php endif; ?>
+
                 </ul>
             </div>
         </div>
@@ -377,6 +403,32 @@ $isAdmin = in_array($role, [1,3]);
                         <i class="fas fa-cog"></i>Website Setting
                     </a>
                 </li>
+                <!-- Cleanup -->
+                <?php if ($isAdmin): ?>
+                <li class="<?= isActive('/fennec/admin/cleanup/index.php'); ?>">
+                    <a class="nav-link" href="<?php echo $urlval ?>admin/cleanup/index.php">
+                        <i class="fas fa-credit-card"></i> Clean Up
+                    </a>
+                </li>
+                <?php endif; ?>
+                <!-- NEW: APPROVAL PARAMETERS -->
+                <?php if ($isAdmin): ?>
+                <li class="<?= isActive('/fennec/admin/approval_parameters/index.php'); ?>">
+                    <a class="nav-link" href="<?php echo $urlval ?>admin/approval_parameters/index.php">
+                        <i class="fas fa-cogs"></i> Approval Parameters
+                    </a>
+                </li>
+                <?php endif; ?>
+
+                <!-- Email_template -->
+                <?php if ($isAdmin): ?>
+                <li class="<?= isActive('/fennec/admin/email_templates/index.php'); ?>">
+                    <a class="nav-link" href="<?php echo $urlval ?>admin/email_templates/index.php">
+                        <i class="fas fa-cogs"></i> Email Templates
+                    </a>
+                </li>
+                <?php endif; ?>
+
             </ul>
         </nav>
     </div>
