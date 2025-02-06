@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin) {
     $freeImages        = $_POST['freeImages'];
     $imageSize         = $_POST['imageSize'];
     $videosAllowed     = $_POST['videosAllowed'];
-    $paidImagesPrice   = $_POST['paidImagesPrice'];
-    $paidVideosPrice   = $_POST['paidVideosPrice'];
+    $paidImagesPrice   = $_POST['paidImagesPrice'] ?? 0;
+    $paidVideosPrice   = $_POST['paidVideosPrice'] ?? 0;
     $duration          = $_POST['duration'];
     $extensionDuration = $_POST['extensionDuration'];
 
@@ -165,14 +165,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin) {
                                             name="imageSize" <?= $disabled ?> placeholder="Maximum size in bytes"
                                             value="<?= htmlspecialchars($settings['image_size'] ?? '') ?>">
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <!-- <div class="col-md-6 mb-3">
                                         <label for="paidImagesPrice" class="form-label">Price for Paid Images
                                             ($)</label>
                                         <input type="number" step="0.01" class="form-control border-secondary"
                                             id="paidImagesPrice" name="paidImagesPrice" <?= $disabled ?>
                                             placeholder="Price for each additional image"
                                             value="<?= htmlspecialchars($settings['paid_images_price'] ?? '') ?>">
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
 
@@ -188,14 +188,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin) {
                                             name="videosAllowed" <?= $disabled ?> placeholder="Maximum videos allowed"
                                             value="<?= htmlspecialchars($settings['videos_allowed'] ?? '') ?>">
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <!-- <div class="col-md-6 mb-3">
                                         <label for="paidVideosPrice" class="form-label">Price for Paid Videos
                                             ($)</label>
                                         <input type="number" step="0.01" class="form-control border-secondary"
                                             id="paidVideosPrice" name="paidVideosPrice" <?= $disabled ?>
                                             placeholder="Price for each additional video"
                                             value="<?= htmlspecialchars($settings['paid_videos_price'] ?? '') ?>">
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
 

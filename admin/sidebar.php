@@ -189,6 +189,15 @@ $isAdmin = in_array($role, [1,3]);
                         </a>
                     </li>
 
+                    <!-- NEW: SELECT SCHEME (Add/Edit Icon Scheme) -->
+                    <?php if ($isAdmin): ?>
+                    <li class="<?= isActive('/fennec/admin/scheme/index.php'); ?>">
+                        <a class="nav-link" href="<?php echo $urlval ?>admin/scheme/index.php">
+                            <i class="fas fa-palette"></i> Select Scheme
+                        </a>
+                    </li>
+                    <?php endif; ?>
+
                     <!-- SETTINGS & CONFIGURATION -->
                     <li class="nav-item has-sub 
                         <?= isActive('/fennec/admin/setting.php'); ?> 
@@ -403,6 +412,15 @@ $isAdmin = in_array($role, [1,3]);
                         <i class="fa-solid fa-bug"></i> Report
                     </a>
                 </li>
+
+                <!-- NEW: SELECT SCHEME (Add/Edit Icon Scheme) -->
+                <?php if ($isAdmin): ?>
+                <li class="<?= isActive('/fennec/admin/scheme/index.php'); ?>">
+                    <a class="nav-link" href="<?php echo $urlval ?>admin/scheme/index.php">
+                        <i class="fas fa-palette"></i> Select Scheme
+                    </a>
+                </li>
+                <?php endif; ?>
 
                 <!-- SETTINGS & CONFIGURATION -->
                 <li class="has-sub 
