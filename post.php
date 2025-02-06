@@ -21,10 +21,10 @@ $countries = $dbFunctions->getData('countries');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?= $urlval ?>custom/css/poststyle.css">
-    
+
     <!-- Include SortableJS from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-    
+
     <style>
         .custom-file-upload {
             display: flex;
@@ -369,7 +369,7 @@ $countries = $dbFunctions->getData('countries');
                         foreach ($findCate['data'] as $category) {
                             echo '
                             <div class="col-md-2 ct-mtb-mn category-item" data-name="' . strtolower($category['category_name']) . '">
-                                <div class="category-btn w-100" onclick="selectCategory(`' . $category['category_name'] . '`, `' . $category['id'] . '`)">
+                                <div class="category-btn w-100" onclick="selectCategory(\''. $category['category_name'] .'\', \''. $category['id'] .'\')">
                                     <i class="fas ' . $category['icon'] . '"></i><br>' . $category['category_name'] . '
                                 </div>
                             </div>
@@ -382,11 +382,11 @@ $countries = $dbFunctions->getData('countries');
         <div class="container">
             <div id="step2" class="hidden">
                 <h2 class=" mb-4">Choose a Subcategory for <span id="selectedCategory"></span></h2>
-                <div class="row d-block  sb-cytr-opt " id="subcategoryOptions"></div>
+                <div class="row d-block sb-cytr-opt " id="subcategoryOptions"></div>
             </div>
         </div>
         <div id="step3" class="hidden">
-            <h2 class="text-center mb-4">Post an ad </h2>
+            <h2 class="text-center mb-4">Post an ad</h2>
             <form id="productForm" enctype="multipart/form-data">
                 <div style="font-family: Arial, sans-serif; max-width: 100%; margin: 0 auto; padding: 20px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
                     <div class="mb-3">
@@ -418,8 +418,8 @@ $countries = $dbFunctions->getData('countries');
                         <a href="#" id="youtube-link">Click to open YouTube video input</a>
                     </p>
                     <div class="mb-3 hidden321" id="input-container">
-                        <label for="youtube_url" class="form-label">Enter youtube URL:</label>
-                        <input type="utl" class="form-control" id="youtube_url" name="youtube_url">
+                        <label for="youtube_url" class="form-label">Enter Youtube URL:</label>
+                        <input type="url" class="form-control" id="youtube_url" name="youtube_url">
                     </div>
                     <div class="mb-3">
                         <label for="brand" class="form-label">Brand<span style="color: red;">*</span></label>
@@ -432,19 +432,23 @@ $countries = $dbFunctions->getData('countries');
                             <option value="new">New</option>
                             <option value="used">Used</option>
                         </select>
-                        <div class="text-danger" id="conditionError"></div> 
+                        <div class="text-danger" id="conditionError"></div>
                     </div>
                     <div class="mb-3">
                         <label for="adTitle" class="form-label">Ad Title<span style="color: red;">*</span></label>
                         <input type="text" class="form-control" id="adTitle" name="productName" required>
                     </div>
+
+                    <!-- Updated Description Box with Bootstrap form-control + a fixed height -->
                     <div class="mb-3">
                         <label for="description" class="form-label">Description<span style="color: red;">*</span></label>
-                        <textarea id="description" name="description"></textarea>
-                        <div id="wordCounter" style="margin-top: 5px; font-size: 0.9em; color: #555;">
+                        <textarea id="description" name="description" class="form-control" style="height: 200px;"></textarea>
+                        <!-- <div id="wordCounter" style="margin-top: 5px; font-size: 0.9em; color: #555;">
                             0 / 200 words
-                        </div>
+                        </div> -->
                     </div>
+                    <!-- End of Updated Description Box -->
+
                     <div class="mb-3">
                         <label for="country" class="form-label">Country<span style="color: red;">*</span></label>
                         <select class="form-select" id="country" name="country" required>
@@ -476,6 +480,7 @@ $countries = $dbFunctions->getData('countries');
                             required>
                     </div>
 
+                    <!-- Boost Plans (example) -->
                     <div class="boost-container">
                         <h3 class="boost-title">Boost Your Ad</h3>
                         <?php
@@ -501,14 +506,17 @@ $countries = $dbFunctions->getData('countries');
                             <p>No packages available.</p>
                         <?php endif; ?>
                     </div>
+
+                    <!-- Image Packages -->
                     <div style="margin-top:30px;max-width: 100%;">
-                        <!-- Image Packages -->
-                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; 
+                        <!-- Only show "Image Gallery Featured" if fee_image_gallery_featured_enabled == 1 -->
+                        <?php if($fun->getbilling_feesData('fee_image_gallery_featured_enabled') == 1): ?>
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px;
                                     border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">
                                 Image Packages
                             </h5>
-                            <div style="margin-bottom: 10px;">
+                            <!-- <div style="margin-bottom: 10px;">
                                 <input style="margin-right: 10px;" type="checkbox" id="freeImages" value="free" disabled checked>
                                 <label style="color: #555; font-size: 16px;" for="freeImages">
                                     Free Images Allowed: <?= $fun->getFieldData('free_images'); ?>
@@ -517,43 +525,51 @@ $countries = $dbFunctions->getData('countries');
                             <div style="margin-bottom: 10px;">
                                 <input style="margin-right: 10px;" type="checkbox" name="extraImages" id="extraImages" value="6">
                                 <label style="color: #555; font-size: 16px;" for="extraImages">
-                                    Add <?= $fun->getFieldData('images_allowed'); ?> More Images for 
+                                    Add <?= $fun->getFieldData('images_allowed'); ?> More Images for
                                     <?= $fun->getFieldData('paid_images_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
                                 </label>
-                            </div>
+                            </div> -->
+
+                            
                             <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" type="checkbox" id="imageGallery" name="imageGallery" 
-                                    value="<?= $fun->getFieldData('image_gallery_fee'); ?>">
+                                <input style="margin-right: 10px;" type="checkbox" id="imageGallery" name="imageGallery"
+                                    value="<?= $fun->getbilling_feesData('fee_image_gallery_featured'); ?>">
                                 <label style="color: #555; font-size: 16px;" for="imageGallery">
-                                    Image Gallery Featured – Fee 
-                                    <?= $fun->getFieldData('image_gallery_fee'); ?> <?= $fun->getFieldData('site_currency'); ?> <br />
+                                    Image Gallery Featured – Fee
+                                    <?= $fun->getbilling_feesData('fee_image_gallery_featured'); ?> <?= $fun->getFieldData('site_currency'); ?><br />
                                     <small>
                                         Classified will appear in the Image Gallery Featured Classifieds section on the main page.
                                         At least one image must be uploaded with the classified.
                                     </small>
                                 </label>
                             </div>
+                            
                         </div>
+                        <?php endif; ?>
 
                         <!-- Video Packages -->
-                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; 
+                        <!-- Only show "Video Gallery Featured" if fee_video_gallery_featured_enabled == 1 -->
+                        <?php if($fun->getbilling_feesData('fee_video_gallery_featured_enabled') == 1): ?>
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px;
                                     border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">
                                 Video Packages
                             </h5>
-                            <div style="margin-bottom: 10px;">
+                            <!-- <div style="margin-bottom: 10px;">
                                 <input style="margin-right: 10px;" type="checkbox" name="extraVideos" id="extraVideos" value="1">
                                 <label style="color: #555; font-size: 16px;" for="extraVideos">
-                                    Add <?= $fun->getFieldData('videos_allowed'); ?> Video for 
+                                    Add <?= $fun->getFieldData('videos_allowed'); ?> Video for
                                     <?= $fun->getFieldData('paid_videos_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
                                 </label>
-                            </div>
+                            </div> -->
+
+                            
                             <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" type="checkbox" id="videoGallery" name="videoGallery" 
-                                    value="<?= $fun->getFieldData('video_gallery_fee'); ?>">
+                                <input style="margin-right: 10px;" type="checkbox" id="videoGallery" name="videoGallery"
+                                    value="<?= $fun->getbilling_feesData('fee_video_gallery_featured'); ?>">
                                 <label style="color: #555; font-size: 16px;" for="videoGallery">
-                                    Video Gallery Featured – Fee 
-                                    <?= $fun->getFieldData('video_gallery_fee'); ?> <?= $fun->getFieldData('site_currency'); ?> <br />
+                                    Video Gallery Featured – Fee
+                                    <?= $fun->getbilling_feesData('fee_video_gallery_featured'); ?> <?= $fun->getFieldData('site_currency'); ?><br />
                                     <small>
                                         Classified will appear in the Video Gallery Featured Classifieds section on the main page.
                                         At least one video must be uploaded with the classified.
@@ -561,18 +577,19 @@ $countries = $dbFunctions->getData('countries');
                                 </label>
                             </div>
                         </div>
+                        <?php endif; ?>
 
                         <!-- Website Redirect -->
-                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; 
+                        <!-- <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px;
                                     border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">
                                 Website Redirect
                             </h5>
                             <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" class="website-redict" 
+                                <input style="margin-right: 10px;" class="website-redict"
                                     type="checkbox" name="websiteRedirect" id="websiteRedirect" value="1">
                                 <label style="color: #555; font-size: 16px;" for="websiteRedirect">
-                                    Add Website URL for <?= $fun->getFieldData('paid_videos_price'); ?> 
+                                    Add Website URL for <?= $fun->getFieldData('paid_videos_price'); ?>
                                     <?= $fun->getFieldData('site_currency'); ?>
                                 </label>
                             </div>
@@ -580,140 +597,94 @@ $countries = $dbFunctions->getData('countries');
                                 <label style="display: block; margin-bottom: 5px; color: #555;" for="redirectUrl">
                                     Enter Redirect URL:
                                 </label>
-                                <input style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; 
-                                            font-size: 16px;" 
+                                <input style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
+                                            font-size: 16px;"
                                     type="url" id="redirectUrl" name="redirectUrl" placeholder="https://example.com">
                             </div>
-                        </div>
+                        </div> -->
 
-                        <!-- Bold Option -->
-                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; 
+                        <!-- Bold Option (only if fee_bold_enabled == 1) -->
+                        <?php if($fun->getbilling_feesData('fee_bold_enabled') == 1): ?>
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px;
                                     border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">
                                 Bold Option
                             </h5>
                             <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" type="checkbox" id="bold" name="bold" 
-                                    value="<?= $fun->getFieldData('bold_fee'); ?>">
+                                <input style="margin-right: 10px;" type="checkbox" id="bold" name="bold"
+                                    value="<?= $fun->getbilling_feesData('fee_bold'); ?>">
                                 <label style="color: #555; font-size: 16px;" for="bold">
-                                    Bold – Fee <?= $fun->getFieldData('bold_fee'); ?> <?= $fun->getFieldData('site_currency'); ?> <br />
+                                    Bold – Fee <?= $fun->getbilling_feesData('fee_bold'); ?> <?= $fun->getFieldData('site_currency'); ?><br />
                                     <small>
                                         Classified will appear in bold font.
                                     </small>
                                 </label>
                             </div>
                         </div>
+                        <?php endif; ?>
 
-                        <!-- Featured Option -->
-                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; 
+                        <!-- Featured Option (only if fee_featured_enabled == 1) -->
+                        <?php if($fun->getbilling_feesData('fee_featured_enabled') == 1): ?>
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px;
                                     border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">
                                 Featured Option
                             </h5>
                             <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" type="checkbox" id="featured" name="featured" 
-                                    value="<?= $fun->getFieldData('featured_fee'); ?>">
+                                <input style="margin-right: 10px;" type="checkbox" id="featured" name="featured"
+                                    value="<?= $fun->getbilling_feesData('fee_featured'); ?>">
                                 <label style="color: #555; font-size: 16px;" for="featured">
-                                    Featured – Fee <?= $fun->getFieldData('featured_fee'); ?> <?= $fun->getFieldData('site_currency'); ?> <br />
+                                    Featured – Fee <?= $fun->getbilling_feesData('fee_featured'); ?> <?= $fun->getFieldData('site_currency'); ?><br />
                                     <small>
-                                        Classified will appear as featured, e.g., in search results pages.
+                                        Classified will appear as featured (for example in search results).
                                     </small>
                                 </label>
                             </div>
                         </div>
+                        <?php endif; ?>
 
-                        <!-- Highlighted Option -->
-                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; 
+                        <!-- Front Page Featured Option (only if fee_front_featured_enabled == 1) -->
+                        <?php if($fun->getbilling_feesData('fee_front_featured_enabled') == 1): ?>
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px;
+                                    border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">
+                                Front Page Featured
+                            </h5>
+                            <div style="margin-bottom: 10px;">
+                                <input style="margin-right: 10px;" type="checkbox" id="frontFeatured" name="frontFeatured"
+                                    value="<?= $fun->getbilling_feesData('fee_front_featured'); ?>">
+                                <label style="color: #555; font-size: 16px;" for="frontFeatured">
+                                    Front Page Featured – Fee
+                                    <?= $fun->getbilling_feesData('fee_front_featured'); ?> <?= $fun->getFieldData('site_currency'); ?><br/>
+                                    <small>
+                                        Classified will appear on the front page featured section.
+                                    </small>
+                                </label>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+
+                        <!-- Highlighted Option (only if fee_highlight_enabled == 1) -->
+                        <?php if($fun->getbilling_feesData('fee_highlight_enabled') == 1): ?>
+                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px;
                                     border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">
                                 Highlighted Option
                             </h5>
                             <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" type="checkbox" id="highlighted" name="highlighted" 
-                                    value="<?= $fun->getFieldData('highlighted_fee'); ?>">
+                                <input style="margin-right: 10px;" type="checkbox" id="highlighted" name="highlighted"
+                                    value="<?= $fun->getbilling_feesData('fee_highlight'); ?>">
                                 <label style="color: #555; font-size: 16px;" for="highlighted">
-                                    Highlighted – Fee <?= $fun->getFieldData('highlighted_fee'); ?> <?= $fun->getFieldData('site_currency'); ?> <br />
+                                    Highlighted – Fee <?= $fun->getbilling_feesData('fee_highlight'); ?> <?= $fun->getFieldData('site_currency'); ?><br />
                                     <small>
-                                        Classified will appear highlighted with a different color, e.g., in search results.
+                                        Classified will appear highlighted (for example with a different background color in search results).
                                     </small>
                                 </label>
                             </div>
                         </div>
+                        <?php endif; ?>
                     </div>
 
-
-                    <!-- <div style="margin-top:30px;max-width: 100%;">
-                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                            <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Image Packages</h5>
-                            <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" type="checkbox" id="freeImages" value="free" disabled checked>
-                                <label style="color: #555; font-size: 16px;" for="freeImages">
-                                    Free Images Allowed: <?= $fun->getFieldData('free_images'); ?>
-                                </label>
-                            </div>
-                            <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" type="checkbox" name="extraImages" id="extraImages" value="6">
-                                <label style="color: #555; font-size: 16px;" for="extraImages">
-                                    Add <?= $fun->getFieldData('images_allowed'); ?> More Images for <?= $fun->getFieldData('paid_images_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                            <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Video Packages</h5>
-                            <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" type="checkbox" name="extraVideos" id="extraVideos" value="1">
-                                <label style="color: #555; font-size: 16px;" for="extraVideos">
-                                    Add <?= $fun->getFieldData('videos_allowed'); ?> Video for <?= $fun->getFieldData('paid_videos_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                            <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Website Redirect</h5>
-                            <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" class="website-redict" type="checkbox" name="website-redict" id="websiteRedict" value="1">
-                                <label style="color: #555; font-size: 16px;" for="websiteRedict">
-                                    Add Website url for <?= $fun->getFieldData('paid_videos_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
-                                </label>
-                            </div>
-                            <div id="urlInputField" style="display: none; margin-top: 15px;">
-                                <label style="display: block; margin-bottom: 5px; color: #555;" for="redirectUrl">Enter Redirect URL:</label>
-                                <input style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;" type="url" id="redirectUrl" name="redirectUrl" placeholder="https://example.com">
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                            <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Bold - Fee</h5>
-                            <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" class="website-redict" type="checkbox" name="website-redict" id="websiteRedict" value="1">
-                                <label style="color: #555; font-size: 16px;" for="websiteRedict">
-                                     for <?= $fun->getFieldData('paid_videos_price'); ?> <?= $fun->getFieldData('site_currency'); ?>
-                                </label>
-                            </div>
-                            <div id="urlInputField" style="display: none; margin-top: 15px;">
-                                <label style="display: block; margin-bottom: 5px; color: #555;" for="redirectUrl">Enter Redirect URL:</label>
-                                <input style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;" type="url" id="redirectUrl" name="redirectUrl" placeholder="https://example.com">
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom: 25px; background-color: #ffffff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                            <h5 style="color: #333; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Payment Options</h5>
-                            <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" type="radio" name="paymentOption" id="paypal" value="paypal">
-                                <label style="color: #555; font-size: 16px;" for="paypal">PayPal</label>
-                            </div>
-                            <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" type="radio" name="paymentOption" id="bitcoin" value="bitcoin">
-                                <label style="color: #555; font-size: 16px;" for="bitcoin">Bitcoin</label>
-                            </div>
-                            <div style="margin-bottom: 10px;">
-                                <input style="margin-right: 10px;" type="radio" name="paymentOption" id="onlinePayment" value="online">
-                                <label style="color: #555; font-size: 16px;" for="onlinePayment">Online Transfer</label>
-                            </div>
-                        </div>
-                    </div> -->
-                    
                     <div class="btn-main-div" style="display: flex;justify-content: space-between;">
                         <button type="submit" class="btn btn-primary post-btn">Post Ad</button>
                         <button type="button" class="btn btn-secondary" onclick="goBackToSubcategory()">Back</button>
@@ -728,8 +699,8 @@ $countries = $dbFunctions->getData('countries');
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?= $urlval ?>admin/asset/vendor/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="<?= $urlval?>admin/asset/vendor/tinymce/tinymce.min.js"></script>
-    
-<script>
+
+    <script>
     // Manage selected files with unique IDs
     let selectedFiles = [];
     let fileIdCounter = 0; // To assign unique IDs to each file
@@ -740,40 +711,40 @@ $countries = $dbFunctions->getData('countries');
         document.getElementById('selectedCategory').innerText = categoryName;
         document.getElementById('finalCategory').value = categoryName;
         document.getElementById('finalCategoryId').value = categoryId;
+
         const subcategoryOptions = document.getElementById('subcategoryOptions');
         subcategoryOptions.innerHTML = '';
+
         if (categoryId) {
             fetch('<?= $urlval ?>admin/ajax/product/get_catjson.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: 'catId=' + encodeURIComponent(categoryId)
-                })
-                .then(response => {
-                    if (!response.ok) { throw new Error('Network response was not ok'); }
-                    return response.text();
-                })
-                .then(data => {
-                    try {
-                        const parsedData = JSON.parse(data);
-                        if (parsedData.status === 'success') {
-                            parsedData.data.forEach(subcategory => {
-                                const colDiv = document.createElement('div');
-                                colDiv.className = 'col-md-3';
-                                colDiv.innerHTML = `
-                                    <div class="sbrct-prere w-100" 
-                                         onclick="selectSubcategory('${subcategory.name}', '${subcategory.id}')">
-                                         ${subcategory.name}
-                                    </div>`;
-                                subcategoryOptions.appendChild(colDiv);
-                            });
-                        } else {
-                            alert(parsedData.message);
-                        }
-                    } catch (error) {
-                        alert('Error parsing JSON: ' + error.message);
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'catId=' + encodeURIComponent(categoryId)
+            })
+            .then(response => response.text())
+            .then(data => {
+                try {
+                    const parsedData = JSON.parse(data);
+                    if (parsedData.status === 'success') {
+                        parsedData.data.forEach(subcategory => {
+                            const colDiv = document.createElement('div');
+                            colDiv.className = 'col-md-3';
+                            colDiv.innerHTML =
+                                `<div class="sbrct-prere w-100" onclick="selectSubcategory('${subcategory.name}', '${subcategory.id}')">
+                                    ${subcategory.name}
+                                </div>`;
+                            subcategoryOptions.appendChild(colDiv);
+                        });
+                    } else {
+                        alert(parsedData.message);
                     }
-                })
-                .catch(error => { alert('Error fetching subcategories: ' + error.message); });
+                } catch (error) {
+                    alert('Error parsing JSON: ' + error.message);
+                }
+            })
+            .catch(error => {
+                alert('Error fetching subcategories: ' + error.message);
+            });
         } else {
             subcategoryOptions.innerHTML = '<p class="text-danger">No subcategories available.</p>';
         }
@@ -785,12 +756,6 @@ $countries = $dbFunctions->getData('countries');
         document.getElementById('step3').classList.remove('hidden');
         document.getElementById('finalSubcategory').value = subcategoryName;
         document.getElementById('finalSubcategoryId').value = subcategoryId;
-    }
-
-    function goBackToCategory() {
-        document.getElementById('step2').classList.add('hidden');
-        document.getElementById('step3').classList.add('hidden');
-        document.getElementById('step1').classList.remove('hidden');
     }
 
     function goBackToSubcategory() {
@@ -805,21 +770,19 @@ $countries = $dbFunctions->getData('countries');
         const imageCounter = document.getElementById('imageCounter');
         imagePreview.innerHTML = '';
 
-        selectedFiles.forEach((fileObj, index) => {
+        selectedFiles.forEach(fileObj => {
             const reader = new FileReader();
             reader.onload = function(e) {
                 const imgContainer = document.createElement('div');
                 imgContainer.className = 'image-item';
-                // Use unique ID instead of index
                 imgContainer.setAttribute('data-file-id', fileObj.id);
 
                 const img = document.createElement('img');
                 img.src = e.target.result;
-                
+
                 const removeButton = document.createElement('button');
                 removeButton.innerText = 'X';
                 removeButton.onclick = function() {
-                    // Remove the file with the specific ID
                     selectedFiles = selectedFiles.filter(f => f.id !== fileObj.id);
                     updateImagePreview();
                 };
@@ -830,13 +793,13 @@ $countries = $dbFunctions->getData('countries');
             };
             reader.readAsDataURL(fileObj.file);
         });
+
         imageCounter.innerText = `Selected Images: ${selectedFiles.length}`;
     }
 
-    // Handle file input changes
     document.getElementById('gallery').addEventListener('change', function(event) {
         const filesArray = Array.from(event.target.files);
-        // Limit to 8 files (example)
+        // Example limit: 8 files
         const filesToAdd = filesArray.slice(0, 8 - selectedFiles.length).map(file => {
             return { id: fileIdCounter++, file: file };
         });
@@ -846,23 +809,20 @@ $countries = $dbFunctions->getData('countries');
         event.target.value = '';
     });
 
-    // Initialize Sortable on #imagePreview
     document.addEventListener('DOMContentLoaded', function() {
         new Sortable(document.getElementById('imagePreview'), {
             animation: 150,
             onEnd: function (evt) {
-                // Rebuild selectedFiles based on the new DOM order
+                // Rebuild selectedFiles based on new DOM order
                 const updatedFiles = [];
                 const previewItems = document.querySelectorAll('#imagePreview .image-item');
-                
-                previewItems.forEach((item) => {
+                previewItems.forEach(item => {
                     const fileId = parseInt(item.getAttribute('data-file-id'), 10);
                     const fileObj = selectedFiles.find(f => f.id === fileId);
                     if (fileObj) {
                         updatedFiles.push(fileObj);
                     }
                 });
-                
                 selectedFiles = updatedFiles;
             }
         });
@@ -870,37 +830,8 @@ $countries = $dbFunctions->getData('countries');
 
     // ========== City and Area AJAX ==========
     $(document).ready(function() {
-        // $('#country').on('change', function() {
-        //     var countryId = $(this).val();
-        //     if (countryId) {
-        //         $.ajax({
-        //             url: '<?= $urlval ?>admin/ajax/product/get_cities.php',
-        //             type: 'POST',
-        //             data: { country_id: countryId },
-        //             success: function(data) { $('#city').html(data); },
-        //             error: function() { alert('Error fetching cities. Please try again.'); }
-        //         });
-        //     } else {
-        //         $('#city').html('<option value="" disabled>Select City</option>');
-        //     }
-        // });
-    
-        // $('#city').on('change', function() {
-        //     var cityId = $(this).val();
-        //     if (cityId) {
-        //         $.ajax({
-        //             url: '<?= $urlval ?>admin/ajax/product/get_areas.php',
-        //             type: 'POST',
-        //             data: { city_id: cityId },
-        //             success: function(data) { $('#aera').html(data); },
-        //             error: function() { alert('Error fetching areas. Please try again.'); }
-        //         });
-        //     } else {
-        //         $('#aera').html('<option value="" disabled selected>Select an area</option>');
-        //     }
-        // });
         $('#country').on('change', function() {
-            var countryId = $(this).val();
+            let countryId = $(this).val();
             if (countryId) {
                 $.ajax({
                     url: '<?= $urlval ?>admin/ajax/product/get_cities.php',
@@ -917,10 +848,9 @@ $countries = $dbFunctions->getData('countries');
                 $('#city').html('<option value="" disabled>Select City</option>');
             }
         });
-        
-        // Fetch Areas when City is changed
+
         $('#city').on('change', function() {
-            var cityId = $(this).val();
+            let cityId = $(this).val();
             if (cityId) {
                 $.ajax({
                     url: '<?= $urlval ?>admin/ajax/product/get_areas.php',
@@ -937,16 +867,17 @@ $countries = $dbFunctions->getData('countries');
                 $('#aera').html('<option value="" disabled selected>Select an area</option>');
             }
         });
-    
+
         // ========== Form Submission ==========
         $('#productForm').on('submit', function(e) {
             e.preventDefault();
-            
-            // Example: Decide URL based on any selected "boostPlan" radio
-            let selectedPackage = $('input[name="boostPlan"]:checked').val();
-            let url = (selectedPackage === 'standard') 
-                        ? '<?= $urlval ?>ajax/addproduct.php' 
-                        : '<?= $urlval ?>ajax/addproductpackige.php';
+
+            // Decide which endpoint to use (example logic)
+            // If there's a certain radio or condition, pick 'addproductpackige.php', else 'addproduct.php'
+            // For demonstration, we assume standard:
+            let url = '<?= $urlval ?>ajax/addproduct.php'; 
+            // Or if we detect a package:
+            // let url = '<?= $urlval ?>ajax/addproductpackige.php';
 
             let formData = new FormData(this);
             // Remove the original 'gallery[]' files from the form
@@ -964,16 +895,25 @@ $countries = $dbFunctions->getData('countries');
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    let parsedResponse = JSON.parse(response);
+                    let parsedResponse;
+                    try {
+                        parsedResponse = JSON.parse(response);
+                    } catch (e) {
+                        console.error('Could not parse JSON:', response);
+                        return;
+                    }
+
                     if (parsedResponse.success) {
                         console.log(parsedResponse);
                         $('.success-message').text(parsedResponse.message).fadeIn();
                         $('.post-btn').hide();
                         setTimeout(function() {
                             window.location.href = '<?= $urlval ?>success_page.php';
-                        }, 5000);
+                        }, 3000);
                     } else if (parsedResponse.errors) {
                         handleErrors(parsedResponse.errors);
+                    } else {
+                        console.log(parsedResponse);
                     }
                 },
                 error: function() {
@@ -981,26 +921,20 @@ $countries = $dbFunctions->getData('countries');
                 }
             });
         });
-    
-        function showMessage(type, message) {
-            $('.form-message').remove();
-            let messageBox = `<div class="form-message alert alert-${type}" style="margin-top: 10px;">${message}</div>`;
-            $('.btn-main-div').after(messageBox);
-        }
-    
+
         function handleErrors(errors) {
             $('.text-danger').text('');
             for (let field in errors) {
-                $(`#${field}Error`).text(errors[field]);
+                $('#' + field + 'Error').text(errors[field]);
             }
         }
     });
-    
+
     function toggleCheckmark(element) {
         document.querySelectorAll('.sbrct-prere').forEach(el => { el.classList.remove('active'); });
         element.classList.add('active');
     }
-    
+
     function filterCategories() {
         let searchTerm = document.getElementById('categorySearch').value.toLowerCase();
         let categories = document.querySelectorAll('.category-item');
@@ -1009,19 +943,19 @@ $countries = $dbFunctions->getData('countries');
             category.style.display = categoryName.includes(searchTerm) ? 'block' : 'none';
         });
     }
-    
+
     const link = document.getElementById('youtube-link');
     const inputContainer = document.getElementById('input-container');
     link.addEventListener('click', (event) => {
         event.preventDefault();
         inputContainer.classList.toggle('hidden321');
     });
-    
-    document.querySelector('.website-redict').addEventListener('change', function() {
+
+    document.getElementById('websiteRedirect').addEventListener('change', function() {
         var urlInputField = document.getElementById('urlInputField');
         urlInputField.style.display = this.checked ? 'block' : 'none';
     });
-    
+
     // ========== TinyMCE + Word Counting ==========
     document.addEventListener('DOMContentLoaded', function() {
         const wordLimit = 200;
@@ -1035,6 +969,7 @@ $countries = $dbFunctions->getData('countries');
                     const words = content.trim().split(/\s+/).filter(word => word.length > 0);
                     const wordCount = words.length;
                     const wordCounter = document.getElementById('wordCounter');
+
                     if (wordCount > wordLimit) {
                         const truncatedContent = words.slice(0, wordLimit).join(' ');
                         editor.setContent(truncatedContent);
@@ -1046,7 +981,6 @@ $countries = $dbFunctions->getData('countries');
             }
         });
     });
-</script>
+    </script>
 </body>
 </html>
-

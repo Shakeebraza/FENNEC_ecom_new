@@ -1140,6 +1140,20 @@ function getFieldData($fieldName, $id = 1) {
         return "Error: " . $e->getMessage();
     }
 }
+function getbilling_feesData($fieldName, $id = 1) {
+    try {
+     
+       $stmt = $this->pdo->prepare("SELECT $fieldName FROM billing_fees WHERE id = :id");
+       $stmt->execute(['id' => $id]);
+
+       $result = $stmt->fetch(PDO::FETCH_ASSOC);
+       return $result[$fieldName] ?? null; 
+   } catch (Exception $e) {
+ 
+       return "Error: " . $e->getMessage();
+   }
+}
+
 // function getRandomBannerByPlacement($placement) {
 //     $query = "SELECT id, image, title, description, btn_text, btn_url, text_color, btn_color, bg_color, placement, is_active, created_at, updated_at
 //               FROM banners
