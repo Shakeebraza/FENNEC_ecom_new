@@ -870,6 +870,35 @@ $countries = $dbFunctions->getData('countries');
 
     // ========== City and Area AJAX ==========
     $(document).ready(function() {
+        // $('#country').on('change', function() {
+        //     var countryId = $(this).val();
+        //     if (countryId) {
+        //         $.ajax({
+        //             url: '<?= $urlval ?>admin/ajax/product/get_cities.php',
+        //             type: 'POST',
+        //             data: { country_id: countryId },
+        //             success: function(data) { $('#city').html(data); },
+        //             error: function() { alert('Error fetching cities. Please try again.'); }
+        //         });
+        //     } else {
+        //         $('#city').html('<option value="" disabled>Select City</option>');
+        //     }
+        // });
+    
+        // $('#city').on('change', function() {
+        //     var cityId = $(this).val();
+        //     if (cityId) {
+        //         $.ajax({
+        //             url: '<?= $urlval ?>admin/ajax/product/get_areas.php',
+        //             type: 'POST',
+        //             data: { city_id: cityId },
+        //             success: function(data) { $('#aera').html(data); },
+        //             error: function() { alert('Error fetching areas. Please try again.'); }
+        //         });
+        //     } else {
+        //         $('#aera').html('<option value="" disabled selected>Select an area</option>');
+        //     }
+        // });
         $('#country').on('change', function() {
             var countryId = $(this).val();
             if (countryId) {
@@ -877,14 +906,19 @@ $countries = $dbFunctions->getData('countries');
                     url: '<?= $urlval ?>admin/ajax/product/get_cities.php',
                     type: 'POST',
                     data: { country_id: countryId },
-                    success: function(data) { $('#city').html(data); },
-                    error: function() { alert('Error fetching cities. Please try again.'); }
+                    success: function(data) {
+                        $('#city').html(data);
+                    },
+                    error: function() {
+                        alert('Error fetching cities. Please try again.');
+                    }
                 });
             } else {
                 $('#city').html('<option value="" disabled>Select City</option>');
             }
         });
-    
+        
+        // Fetch Areas when City is changed
         $('#city').on('change', function() {
             var cityId = $(this).val();
             if (cityId) {
@@ -892,8 +926,12 @@ $countries = $dbFunctions->getData('countries');
                     url: '<?= $urlval ?>admin/ajax/product/get_areas.php',
                     type: 'POST',
                     data: { city_id: cityId },
-                    success: function(data) { $('#aera').html(data); },
-                    error: function() { alert('Error fetching areas. Please try again.'); }
+                    success: function(data) {
+                        $('#aera').html(data);
+                    },
+                    error: function() {
+                        alert('Error fetching areas. Please try again.');
+                    }
                 });
             } else {
                 $('#aera').html('<option value="" disabled selected>Select an area</option>');

@@ -204,9 +204,9 @@ class DatabaseFunctions {
             return ['success' => true, 'message' => 'Data saved successfully.'];
     
         } catch (PDOException $e) {
-            if ($e->getCode() == 23000) {
-                return ['success' => false, 'message' => 'Duplicate entry error: The email or field you are trying to use already exists.'];
-            }
+            // if ($e->getCode() == 23000) {
+            //     return ['success' => false, 'message' => 'Duplicate entry error: The email or field you are trying to use already exists.'];
+            // }
             return ['success' => false, 'message' => 'Database error: ' . $e->getMessage()];
         }
     }

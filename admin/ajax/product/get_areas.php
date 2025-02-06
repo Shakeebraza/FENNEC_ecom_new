@@ -3,15 +3,14 @@ require_once('../../../global.php');
 
 if (isset($_POST['city_id'])) {
     $city_id = $_POST['city_id'];
-    $aeras = $dbFunctions->getDatanotenc('areas',"city_id = '$city_id'",'', $orderBy = 'id', $orderDirection = 'ASC',0, 500);
-    if (!empty($aeras)) {
-        foreach ($aeras as $aera) {
-            echo '<option value="'.$aera['id'].'">'.$aera['name'].'</option>';
+    // Fetch areas where city_id matches
+    $areas = $dbFunctions->getDatanotenc('areas', "city_id = '$city_id'", '', $orderBy = 'id', $orderDirection = 'ASC', 0, 500);
+    if (!empty($areas)) {
+        foreach ($areas as $area) {
+            echo '<option value="' . $area['id'] . '">' . $area['name'] . '</option>';
         }
     } else {
-        echo '<option value="" disabled>No cities available</option>';
+        echo '<option value="" disabled>No areas available</option>';
     }
-
 }
-
 ?>
