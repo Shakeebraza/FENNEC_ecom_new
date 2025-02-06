@@ -46,7 +46,7 @@ $isAdmin = in_array($role, [1,3]);
                             </li>
                             <?php if ($isAdmin): ?>
                             <li>
-                                <a href="<?php echo $urlval ?>admin/user/adduser.php">Add Users</a>
+                                <a href="<?php echo $urlval ?>admin/user/adduser.php">Add User</a>
                             </li>
                             <?php endif; ?>
                         </ul>
@@ -92,7 +92,7 @@ $isAdmin = in_array($role, [1,3]);
                         </a>
                         <ul class="list-unstyled navbar__sub-list js-sub-list">
                             <li>
-                                <a href="<?php echo $urlval ?>admin/page/index.php">All Page</a>
+                                <a href="<?php echo $urlval ?>admin/page/index.php">All Pages</a>
                             </li>
                             <?php if ($isAdmin): ?>
                             <li>
@@ -102,21 +102,20 @@ $isAdmin = in_array($role, [1,3]);
                         </ul>
                     </li>
 
-                    <!-- NEW: SHARING CODE PAGE -->
+                    <!-- EMAIL (Separate Category) -->
                     <?php if ($isAdmin): ?>
-                    <li class="<?= isActive('/fennec/admin/sharingcode/index.php'); ?>">
-                        <a class="nav-link" href="<?php echo $urlval ?>admin/sharingcode/index.php">
-                            <i class="fas fa-share-alt"></i> Sharing Code
+                    <li class="nav-item has-sub <?= isActive('/fennec/admin/email_templates/index.php'); ?> <?= isActive('/fennec/admin/send_emails/index.php'); ?>">
+                        <a class="nav-link js-arrow" href="#">
+                            <i class="fas fa-envelope"></i> Email
                         </a>
-                    </li>
-                    <?php endif; ?>
-
-                    <!-- NEW: SELECT SCHEME (Add/Edit Icon Scheme) -->
-                    <?php if ($isAdmin): ?>
-                    <li class="<?= isActive('/fennec/admin/scheme/index.php'); ?>">
-                        <a class="nav-link" href="<?php echo $urlval ?>admin/scheme/index.php">
-                            <i class="fas fa-palette"></i> Select Scheme
-                        </a>
+                        <ul class="list-unstyled navbar__sub-list js-sub-list">
+                            <li>
+                                <a href="<?php echo $urlval ?>admin/email_templates/index.php">Email Templates</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo $urlval ?>admin/send_emails/index.php">Send Email</a>
+                            </li>
+                        </ul>
                     </li>
                     <?php endif; ?>
 
@@ -134,6 +133,9 @@ $isAdmin = in_array($role, [1,3]);
                             </li>
                             <li>
                                 <a href="<?php echo $urlval ?>admin/product/index.php">All Ads</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo $urlval ?>admin/delete_closed_classifieds/index.php">Delete Expired Ads</a>
                             </li>
                         </ul>
                     </li>
@@ -187,43 +189,43 @@ $isAdmin = in_array($role, [1,3]);
                         </a>
                     </li>
 
-                    <!-- SETTINGS -->
-                    <li class="<?= isActive('/fennec/admin/setting.php'); ?>">
-                        <a class="nav-link" href="<?php echo $urlval ?>admin/setting.php">
-                            <i class="fas fa-cog"></i> Site Setting
+                    <!-- SETTINGS & CONFIGURATION -->
+                    <li class="nav-item has-sub 
+                        <?= isActive('/fennec/admin/setting.php'); ?> 
+                        <?= isActive('/fennec/admin/setting/web_setting.php'); ?>
+                        <?php if ($isAdmin): ?>
+                            <?= isActive('/fennec/admin/cleanup/index.php'); ?>
+                            <?= isActive('/fennec/admin/approval_parameters/index.php'); ?>
+                            <?= isActive('/fennec/admin/billing_settings/index.php'); ?>
+                            <?= isActive('/fennec/admin/configure_billing_fees/index.php'); ?>
+                        <?php endif; ?>
+                    ">
+                        <a class="nav-link js-arrow" href="#">
+                            <i class="fas fa-cogs"></i> Settings &amp; Configuration
                         </a>
+                        <ul class="list-unstyled navbar__sub-list js-sub-list">
+                            <li>
+                                <a href="<?php echo $urlval ?>admin/setting.php">Site Settings</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo $urlval ?>admin/setting/web_setting.php">Website Settings</a>
+                            </li>
+                            <?php if ($isAdmin): ?>
+                            <li>
+                                <a href="<?php echo $urlval ?>admin/cleanup/index.php">Clean Up</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo $urlval ?>admin/approval_parameters/index.php">Approval Parameters</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo $urlval ?>admin/billing_settings/index.php">Billing Settings</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo $urlval ?>admin/configure_billing_fees/index.php">Billing Fees for Featured Ads</a>
+                            </li>
+                            <?php endif; ?>
+                        </ul>
                     </li>
-                    <li class="<?= isActive('/fennec/admin/setting/web_setting.php'); ?>">
-                        <a class="nav-link" href="<?php echo $urlval ?>admin/setting/web_setting.php">
-                            <i class="fas fa-cog"></i> Website Setting
-                        </a>
-                    </li>
-                    <!-- Cleanup -->
-                    <?php if ($isAdmin): ?>
-                    <li class="<?= isActive('/fennec/admin/cleanup/index.php'); ?>">
-                        <a class="nav-link" href="<?php echo $urlval ?>admin/cleanup/index.php">
-                            <i class="fas fa-credit-card"></i> Clean Up
-                        </a>
-                    </li>
-                    <?php endif; ?>
-
-                    <!-- NEW: APPROVAL PARAMETERS -->
-                    <?php if ($isAdmin): ?>
-                    <li class="<?= isActive('/fennec/admin/approval_parameters/index.php'); ?>">
-                        <a class="nav-link" href="<?php echo $urlval ?>admin/approval_parameters/index.php">
-                            <i class="fas fa-cogs"></i> Approval Parameters
-                        </a>
-                    </li>
-                    <?php endif; ?>
-                    <!-- Email_template -->
-                    <?php if ($isAdmin): ?>
-                    <li class="<?= isActive('/fennec/admin/email_templates/index.php'); ?>">
-                        <a class="nav-link" href="<?php echo $urlval ?>admin/email_templates/index.php">
-                            <i class="fas fa-cogs"></i> Email Templates
-                        </a>
-                    </li>
-                    <?php endif; ?>
-
                 </ul>
             </div>
         </div>
@@ -241,16 +243,17 @@ $isAdmin = in_array($role, [1,3]);
     <div class="menu-sidebar__content js-scrollbar1">
         <nav class="navbar-sidebar">
             <ul class="list-unstyled navbar__list">
+                <!-- Dashboard -->
                 <li class="<?= isActive('/fennec/admin/index.php'); ?>">
                     <a href="<?php echo $urlval ?>admin/index.php">
-                        <i class="fas fa-tachometer-alt"></i>Dashboard
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
                     </a>
                 </li>
 
                 <!-- USERS -->
                 <li class="has-sub <?= isActive('/fennec/admin/user/index.php'); ?> <?= isActive('/fennec/admin/user/adduser.php'); ?>">
                     <a class="js-arrow" href="#">
-                        <i class="fas fa-users"></i>Users
+                        <i class="fas fa-users"></i> Users
                     </a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
@@ -258,12 +261,11 @@ $isAdmin = in_array($role, [1,3]);
                         </li>
                         <?php if ($isAdmin): ?>
                         <li>
-                            <a href="<?php echo $urlval ?>admin/user/adduser.php">Add Users</a>
+                            <a href="<?php echo $urlval ?>admin/user/adduser.php">Add User</a>
                         </li>
                         <?php endif; ?>
                     </ul>
                 </li>
-
 
                 <!-- TRANSACTIONS -->
                 <?php if ($isAdmin): ?>
@@ -277,7 +279,7 @@ $isAdmin = in_array($role, [1,3]);
                 <!-- BANNERS -->
                 <li class="has-sub <?= isActive('/fennec/admin/banner/index.php'); ?> <?= isActive('/fennec/admin/banner/addbanner.php'); ?>">
                     <a class="js-arrow" href="#">
-                        <i class="fas fa-sliders"></i>Banners
+                        <i class="fas fa-sliders"></i> Banners
                     </a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
@@ -291,49 +293,51 @@ $isAdmin = in_array($role, [1,3]);
                     </ul>
                 </li>
 
+                <!-- MENUS -->
                 <li class="<?= isActive('/fennec/admin/menu/index.php'); ?>">
                     <a href="<?php echo $urlval ?>admin/menu/index.php">
-                        <i class="fas fa-bars"></i>Menus
+                        <i class="fas fa-bars"></i> Menus
                     </a>
                 </li>
 
                 <!-- PAGES -->
                 <li class="has-sub <?= isActive('/fennec/admin/page/index.php'); ?> <?= isActive('/fennec/admin/page/addpage.php'); ?>">
                     <a class="js-arrow" href="#">
-                        <i class="fas fa-copy"></i>Pages
+                        <i class="fas fa-copy"></i> Pages
                     </a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
-                            <a href="<?php echo $urlval ?>admin/page/index.php">All Page</a>
+                            <a href="<?php echo $urlval ?>admin/page/index.php">All Pages</a>
                         </li>
                         <?php if ($isAdmin): ?>
                         <li>
-                            <a href="<?php echo $urlval ?>admin/page/addpage.php">Add Pages</a>
+                            <a href="<?php echo $urlval ?>admin/page/addpage.php">Add Page</a>
                         </li>
                         <?php endif; ?>
                     </ul>
                 </li>
 
-                <!-- NEW: SHARING CODE PAGE -->
+                <!-- EMAIL (Separate Category) -->
                 <?php if ($isAdmin): ?>
-                <li class="<?= isActive('/fennec/admin/sharingcode/index.php'); ?>">
-                    <a href="<?php echo $urlval ?>admin/sharingcode/index.php">
-                        <i class="fas fa-share-alt"></i> Sharing Code
+                <li class="has-sub <?= isActive('/fennec/admin/email_templates/index.php'); ?> <?= isActive('/fennec/admin/send_emails/index.php'); ?>">
+                    <a class="js-arrow" href="#">
+                        <i class="fas fa-envelope"></i> Email
                     </a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                        <li>
+                            <a href="<?php echo $urlval ?>admin/email_templates/index.php">Email Templates</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo $urlval ?>admin/send_emails/index.php">Send Email</a>
+                        </li>
+                    </ul>
                 </li>
                 <?php endif; ?>
-                <!-- NEW: SELECT SCHEME (Add/Edit Icon Scheme) -->
-                <?php if ($isAdmin): ?>
-                <li class="<?= isActive('/fennec/admin/scheme/index.php'); ?>">
-                    <a class="nav-link" href="<?php echo $urlval ?>admin/scheme/index.php">
-                        <i class="fas fa-palette"></i> Select Scheme
-                    </a>
-                </li>
-                <?php endif; ?>
-                <!-- ADS SECTION -->
+
+                <!-- ADS -->
                 <li class="has-sub <?= isActive('/fennec/admin/categories/index.php'); ?> <?= isActive('/fennec/admin/subcategories/index.php'); ?>">
                     <a class="js-arrow" href="#">
-                        <i class="fa fa-folder"></i>Ads
+                        <i class="fa fa-folder"></i> Ads
                     </a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
@@ -345,90 +349,98 @@ $isAdmin = in_array($role, [1,3]);
                         <li>
                             <a href="<?php echo $urlval ?>admin/product/index.php">All Ads</a>
                         </li>
+                        <li>
+                            <a href="<?php echo $urlval ?>admin/delete_closed_classifieds/index.php">Delete Expired Ads</a>
+                        </li>
                     </ul>
                 </li>
 
+                <!-- BOX -->
                 <li class="<?= isActive('/fennec/admin/box/index.php'); ?>">
                     <a href="<?php echo $urlval ?>admin/box/index.php">
-                        <i class="fas fa-desktop"></i>Box
+                        <i class="fas fa-desktop"></i> Box
                     </a>
                 </li>
+
+                <!-- PACKAGES -->
                 <li class="<?= isActive('/fennec/admin/packages/index.php'); ?>">
                     <a href="<?php echo $urlval ?>admin/packages/index.php">
-                        <i class="fas fa-shopping-cart"></i>Packages
+                        <i class="fas fa-shopping-cart"></i> Packages
                     </a>
                 </li>
+
+                <!-- PAYMENT -->
                 <li class="<?= isActive('/fennec/admin/packages/payment.php'); ?>">
                     <a href="<?php echo $urlval ?>admin/packages/payment.php">
-                        <i class="fas fa-credit-card"></i>Payment
+                        <i class="fas fa-credit-card"></i> Payment
                     </a>
                 </li>
 
                 <!-- LANGUAGES -->
                 <li class="<?= isActive('/fennec/admin/lan/index.php'); ?> <?= isActive('/fennec/admin/lan/add.php'); ?> <?= isActive('/fennec/admin/lan/edit.php'); ?>">
                     <a href="<?php echo $urlval ?>admin/lan/index.php">
-                        <i class="fas fa-language"></i>Languages
+                        <i class="fas fa-language"></i> Languages
                     </a>
                 </li>
 
                 <!-- LOCATION -->
                 <li class="<?= isActive('/fennec/admin/location/index.php'); ?> <?= isActive('/fennec/admin/location/add.php'); ?> <?= isActive('/fennec/admin/location/edit.php'); ?>">
                     <a href="<?php echo $urlval ?>admin/location/index.php">
-                        <i class="fa-solid fa-location-dot"></i>Location
+                        <i class="fa-solid fa-location-dot"></i> Location
                     </a>
                 </li>
 
                 <!-- CONTACT -->
                 <li class="<?= isActive('/fennec/admin/contact/index.php'); ?>">
                     <a href="<?php echo $urlval ?>admin/contact/index.php">
-                        <i class="fa-solid fa-address-book"></i>Contact
+                        <i class="fa-solid fa-address-book"></i> Contact
                     </a>
                 </li>
 
                 <!-- REPORT -->
                 <li class="<?= isActive('/fennec/admin/report/index.php'); ?>">
                     <a href="<?php echo $urlval ?>admin/report/index.php">
-                        <i class="fa-solid fa-bug"></i>Report
+                        <i class="fa-solid fa-bug"></i> Report
                     </a>
                 </li>
 
-                <!-- SETTINGS -->
-                <li class="<?= isActive('/fennec/admin/setting.php'); ?>">
-                    <a href="<?php echo $urlval ?>admin/setting.php">
-                        <i class="fas fa-cog"></i>Site Setting
+                <!-- SETTINGS & CONFIGURATION -->
+                <li class="has-sub 
+                    <?= isActive('/fennec/admin/setting.php'); ?> 
+                    <?= isActive('/fennec/admin/setting/web_setting.php'); ?>
+                    <?php if ($isAdmin): ?>
+                        <?= isActive('/fennec/admin/cleanup/index.php'); ?>
+                        <?= isActive('/fennec/admin/approval_parameters/index.php'); ?>
+                        <?= isActive('/fennec/admin/billing_settings/index.php'); ?>
+                        <?= isActive('/fennec/admin/configure_billing_fees/index.php'); ?>
+                    <?php endif; ?>
+                ">
+                    <a class="js-arrow" href="#">
+                        <i class="fas fa-cogs"></i> Settings &amp; Configuration
                     </a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                        <li>
+                            <a href="<?php echo $urlval ?>admin/setting.php">Site Settings</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo $urlval ?>admin/setting/web_setting.php">Website Settings</a>
+                        </li>
+                        <?php if ($isAdmin): ?>
+                        <li>
+                            <a href="<?php echo $urlval ?>admin/cleanup/index.php">Clean Up</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo $urlval ?>admin/approval_parameters/index.php">Approval Parameters</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo $urlval ?>admin/billing_settings/index.php">Billing Settings</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo $urlval ?>admin/configure_billing_fees/index.php">Billing Fees for Featured Ads</a>
+                        </li>
+                        <?php endif; ?>
+                    </ul>
                 </li>
-                <li class="<?= isActive('/fennec/admin/setting/web_setting.php'); ?>">
-                    <a href="<?php echo $urlval ?>admin/setting/web_setting.php">
-                        <i class="fas fa-cog"></i>Website Setting
-                    </a>
-                </li>
-                <!-- Cleanup -->
-                <?php if ($isAdmin): ?>
-                <li class="<?= isActive('/fennec/admin/cleanup/index.php'); ?>">
-                    <a class="nav-link" href="<?php echo $urlval ?>admin/cleanup/index.php">
-                        <i class="fas fa-credit-card"></i> Clean Up
-                    </a>
-                </li>
-                <?php endif; ?>
-                <!-- NEW: APPROVAL PARAMETERS -->
-                <?php if ($isAdmin): ?>
-                <li class="<?= isActive('/fennec/admin/approval_parameters/index.php'); ?>">
-                    <a class="nav-link" href="<?php echo $urlval ?>admin/approval_parameters/index.php">
-                        <i class="fas fa-cogs"></i> Approval Parameters
-                    </a>
-                </li>
-                <?php endif; ?>
-
-                <!-- Email_template -->
-                <?php if ($isAdmin): ?>
-                <li class="<?= isActive('/fennec/admin/email_templates/index.php'); ?>">
-                    <a class="nav-link" href="<?php echo $urlval ?>admin/email_templates/index.php">
-                        <i class="fas fa-cogs"></i> Email Templates
-                    </a>
-                </li>
-                <?php endif; ?>
-
             </ul>
         </nav>
     </div>

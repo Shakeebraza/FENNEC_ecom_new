@@ -123,137 +123,170 @@ $emailTemplates = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <div class="container mt-5">
-    <h3>Email Templates Management</h3>
-    <?php if (!empty($csrfError)): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($csrfError) ?></div>
-    <?php elseif (!empty($message)): ?>
-        <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
-    <?php endif; ?>
-
-    <!-- Template List -->
-    <h4>Existing Templates</h4>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Key</th>
-                <th>Title</th>
-                <th>Subject</th>
-                <th>Format</th>
-                <th>Enabled</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if ($emailTemplates): ?>
-                <?php foreach ($emailTemplates as $tpl): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($tpl['id']) ?></td>
-                        <td><?= htmlspecialchars($tpl['template_key']) ?></td>
-                        <td><?= htmlspecialchars($tpl['title']) ?></td>
-                        <td><?= htmlspecialchars($tpl['subject']) ?></td>
-                        <td><?= htmlspecialchars(strtoupper($tpl['format'])) ?></td>
-                        <td><?= $tpl['enabled'] ? 'Yes' : 'No' ?></td>
-                        <td>
-                            <button class="btn btn-sm btn-primary edit-btn"
-                                    data-id="<?= $tpl['id'] ?>"
-                                    data-key="<?= htmlspecialchars($tpl['template_key'], ENT_QUOTES) ?>"
-                                    data-title="<?= htmlspecialchars($tpl['title'], ENT_QUOTES) ?>"
-                                    data-subject="<?= htmlspecialchars($tpl['subject'], ENT_QUOTES) ?>"
-                                    data-body="<?= htmlspecialchars($tpl['body'], ENT_QUOTES) ?>"
-                                    data-format="<?= $tpl['format'] ?>"
-                                    data-enabled="<?= $tpl['enabled'] ?>">
-                                Edit
-                            </button>
-                            <form method="post" action="" style="display:inline;" onsubmit="return confirm('Delete this template?');">
-                                <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-                                <input type="hidden" name="template_id" value="<?= $tpl['id'] ?>">
-                                <input type="hidden" name="action" value="delete_template">
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                            <form method="post" action="" style="display:inline;">
-                                <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-                                <input type="hidden" name="template_id" value="<?= $tpl['id'] ?>">
-                                <input type="hidden" name="action" value="toggle_enabled">
-                                <button type="submit" class="btn btn-sm btn-warning">
-                                    <?= $tpl['enabled'] ? 'Disable' : 'Enable' ?>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr><td colspan="7">No templates found.</td></tr>
+    <div class="card shadow mb-4">
+        <div class="card-header bg-info text-white">
+            <h3 class="mb-0">Email Templates Management</h3>
+            <p class="mb-0">Manage and test the email templates sent to users.</p>
+        </div>
+        <div class="card-body">
+            <?php if (!empty($csrfError)): ?>
+                <div class="alert alert-danger" id="alert-message"><?= htmlspecialchars($csrfError) ?></div>
+            <?php elseif (!empty($message)): ?>
+                <div class="alert alert-success" id="alert-message"><?= htmlspecialchars($message) ?></div>
             <?php endif; ?>
-        </tbody>
-    </table>
 
-    <!-- Add/Edit Template Form -->
-    <h4 id="form-header">Add New Email Template</h4>
-    <form method="post" action="" id="template-form">
-        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-        <input type="hidden" name="template_id" id="template_id" value="">
-        <div class="mb-3">
-            <label class="form-label">Template Key:</label>
-            <input type="text" name="template_key" id="template_key" class="form-control" placeholder="Unique key identifier" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Title:</label>
-            <input type="text" name="title" id="title" class="form-control" placeholder="Template title" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Subject:</label>
-            <input type="text" name="subject" id="subject" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Body:</label>
-            <textarea name="body" id="body" class="form-control" rows="6" required></textarea>
-            <div class="form-text">Use placeholders such as {name}, {verification_link}, {reset_link}, etc.</div>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Email Format:</label>
-            <select name="format" id="format" class="form-control">
-                <option value="html">HTML</option>
-                <option value="text">Plain Text</option>
-            </select>
-        </div>
-        <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="enabled" name="enabled" value="1">
-            <label class="form-check-label" for="enabled">Enabled (Send this email to users)</label>
-        </div>
-        <input type="hidden" name="action" value="save_template">
-        <button type="submit" class="btn btn-primary">Save Template</button>
-        <button type="button" class="btn btn-secondary" id="clear-form-btn">Clear Form</button>
-    </form>
+            <!-- Template List -->
+            <div class="mb-4">
+                <h4>Existing Templates</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Key</th>
+                                <th>Title</th>
+                                <th>Subject</th>
+                                <th>Format</th>
+                                <th>Enabled</th>
+                                <th style="width: 25%;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($emailTemplates): ?>
+                                <?php foreach ($emailTemplates as $tpl): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($tpl['id']) ?></td>
+                                        <td><?= htmlspecialchars($tpl['template_key']) ?></td>
+                                        <td><?= htmlspecialchars($tpl['title']) ?></td>
+                                        <td><?= htmlspecialchars($tpl['subject']) ?></td>
+                                        <td><?= htmlspecialchars(strtoupper($tpl['format'])) ?></td>
+                                        <td><?= $tpl['enabled'] ? 'Yes' : 'No' ?></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary edit-btn mb-1"
+                                                data-id="<?= $tpl['id'] ?>"
+                                                data-key="<?= htmlspecialchars($tpl['template_key'], ENT_QUOTES) ?>"
+                                                data-title="<?= htmlspecialchars($tpl['title'], ENT_QUOTES) ?>"
+                                                data-subject="<?= htmlspecialchars($tpl['subject'], ENT_QUOTES) ?>"
+                                                data-body="<?= htmlspecialchars($tpl['body'], ENT_QUOTES) ?>"
+                                                data-format="<?= $tpl['format'] ?>"
+                                                data-enabled="<?= $tpl['enabled'] ?>">
+                                                Edit
+                                            </button>
+                                            <form method="post" action="" class="d-inline" onsubmit="return confirm('Delete this template?');">
+                                                <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                                                <input type="hidden" name="template_id" value="<?= $tpl['id'] ?>">
+                                                <input type="hidden" name="action" value="delete_template">
+                                                <button type="submit" class="btn btn-sm btn-danger mb-1">Delete</button>
+                                            </form>
+                                            <form method="post" action="" class="d-inline">
+                                                <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                                                <input type="hidden" name="template_id" value="<?= $tpl['id'] ?>">
+                                                <input type="hidden" name="action" value="toggle_enabled">
+                                                <button type="submit" class="btn btn-sm btn-warning mb-1">
+                                                    <?= $tpl['enabled'] ? 'Disable' : 'Enable' ?>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr><td colspan="7" class="text-center">No templates found.</td></tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-    <!-- Test Email Sending Section -->
-    <h4 class="mt-5">Send Test Email</h4>
-    <form method="post" action="">
-        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-        <input type="hidden" name="action" value="send_test_email">
-        <div class="mb-3">
-            <label for="test_template_id" class="form-label">Select Email Template:</label>
-            <select name="test_template_id" id="test_template_id" class="form-control" required>
-                <option value="">Select an email template</option>
-                <!-- Optionally, add separators in the select if needed -->
-                <option value="">--------------------------------</option>
-                <?php foreach ($emailTemplates as $tpl): ?>
-                    <option value="<?= $tpl['id'] ?>">
-                        <?= htmlspecialchars($tpl['title']) ?> (ID: <?= $tpl['id'] ?>)
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <!-- Add/Edit Template Form -->
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h4 id="form-header" class="mb-0">Add New Email Template</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="" id="template-form">
+                        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                        <input type="hidden" name="template_id" id="template_id" value="">
+                        <div class="form-group mb-3">
+                            <label class="form-label">Template Key:</label>
+                            <input type="text" name="template_key" id="template_key" class="form-control" placeholder="Unique key identifier" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Title:</label>
+                            <input type="text" name="title" id="title" class="form-control" placeholder="Template title" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Subject:</label>
+                            <input type="text" name="subject" id="subject" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Body:</label>
+                            <textarea name="body" id="body" class="form-control" rows="6" required></textarea>
+                            <small class="form-text text-muted">
+                                Use placeholders such as {name}, {verification_link}, {reset_link}, etc.
+                            </small>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Email Format:</label>
+                            <select name="format" id="format" class="form-control">
+                                <option value="html">HTML</option>
+                                <option value="text">Plain Text</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="enabled" name="enabled" value="1">
+                            <label class="form-check-label" for="enabled">Enabled (Send this email to users)</label>
+                        </div>
+                        <input type="hidden" name="action" value="save_template">
+                        <button type="submit" class="btn btn-primary">Save Template</button>
+                        <button type="button" class="btn btn-secondary" id="clear-form-btn">Clear Form</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Test Email Sending Section -->
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0">Send Test Email</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="">
+                        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                        <input type="hidden" name="action" value="send_test_email">
+                        <div class="form-group mb-3">
+                            <label for="test_template_id" class="form-label">Select Email Template:</label>
+                            <select name="test_template_id" id="test_template_id" class="form-control" required>
+                                <option value="">Select an email template</option>
+                                <option value="">--------------------------------</option>
+                                <?php foreach ($emailTemplates as $tpl): ?>
+                                    <option value="<?= $tpl['id'] ?>">
+                                        <?= htmlspecialchars($tpl['title']) ?> (ID: <?= $tpl['id'] ?>)
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="recipient" class="form-label">Recipient Email:</label>
+                            <input type="email" name="recipient" id="recipient" class="form-control" placeholder="test@example.com" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Test Email</button>
+                    </form>
+                </div>
+            </div>
+
         </div>
-        <div class="mb-3">
-            <label for="recipient" class="form-label">Recipient Email:</label>
-            <input type="email" name="recipient" id="recipient" class="form-control" placeholder="test@example.com" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Send Test Email</button>
-    </form>
+    </div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function(){
+    // Auto-hide alert messages after 5 seconds.
+    const alertMessage = document.getElementById('alert-message');
+    if (alertMessage) {
+        setTimeout(() => {
+            alertMessage.style.display = 'none';
+        }, 5000);
+    }
+    
     // Populate the Add/Edit form when clicking an edit button.
     const editButtons = document.querySelectorAll('.edit-btn');
     editButtons.forEach(function(btn){

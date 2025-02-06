@@ -20,9 +20,9 @@ $goldCount = $productCounts['gold'];
 $totalProducts = $standardCount + $premiumCount + $goldCount;
 
 // Compute percentages
-$standardPercentage = ($standardCount / $totalProducts) * 100;
-$premiumPercentage = ($premiumCount / $totalProducts) * 100;
-$goldPercentage = ($goldCount / $totalProducts) * 100;
+// $standardPercentage = ($standardCount / $totalProducts) * 100;
+// $premiumPercentage = ($premiumCount / $totalProducts) * 100;
+// $goldPercentage = ($goldCount / $totalProducts) * 100;
 
 $userVerificationCounts = $fun->getUserVerificationCounts();
 $verifiedCount = $userVerificationCounts['verified_count'];

@@ -116,7 +116,7 @@ try {
         'discount_price'=> "", // or whatever your logic is
         'country_id'    => $_POST['country'],
         'city_id'       => $_POST['city'],
-        'is_enable'    => 2,
+        // 'is_enable'    => 2,
         'aera_id'       => $_POST['aera'] ?? 0,
         'user_id'       => base64_decode($_SESSION['userid']),
     ];
