@@ -10,7 +10,7 @@ if (isset($_POST['city_id'])) {
             echo '<option value="' . $area['id'] . '">' . $area['name'] . '</option>';
         }
     } else {
-        echo '<option value="" disabled>No areas available</option>';
+        echo '<option value="0" disabled>No areas available</option>';
     }
 }
 ?>
