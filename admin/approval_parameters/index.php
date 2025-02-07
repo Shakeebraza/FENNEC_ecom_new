@@ -253,7 +253,7 @@ if (!$settings) {
                 </div>
                 
                 <!-- Image Options -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label fw-bold">Image Options:</label>
                     <div class="ms-3">
                         <label>Direct Upload:</label><br>
@@ -291,7 +291,7 @@ if (!$settings) {
                         </div>
                         <div class="form-text">Sets whether to water mark the images using <code>images/watermark.gif</code> under the website root folder.</div>
                     </div>
-                </div>
+                </div> -->
                 
                 <!-- SEO Mode -->
                 <div class="mb-3">

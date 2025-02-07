@@ -192,15 +192,7 @@ p {
 
  
 </style>
-<?php
-// Retrieve the video option setting from approval_parameters (assuming id = 1)
-$videoOption = $fun->getData('approval_parameters', 'video_option_home', 1);
-if (strtolower($videoOption) === 'enabled') :
-include_once 'video_listing_animation.php';
-?>  
-<?php
-endif;
-?> 
+
 
 <?php
 $banner = $fun->getRandomBannerByPlacement('home_header');
@@ -248,6 +240,15 @@ if (!empty($banner)) {
 <?php
 }
 ?>
+<?php
+// Retrieve the video option setting from approval_parameters (assuming id = 1)
+$videoOption = $fun->getData('approval_parameters', 'video_option_home', 1);
+if (strtolower($videoOption) === 'enabled') :
+include_once 'video_listing_animation.php';
+?>  
+<?php
+endif;
+?> 
 <div class="custom-slider-container">
 
     <div class="custom-slide custom-fade">
