@@ -530,9 +530,6 @@ $countries = $dbFunctions->getData('countries');
                     <div class="mb-3">
                         <label for="description" class="form-label">Description<span style="color: red;">*</span></label>
                         <textarea id="description" name="description" class="form-control" style="height: 200px;"></textarea>
-                        <!-- <div id="wordCounter" style="margin-top: 5px; font-size: 0.9em; color: #555;">
-                            0 / 200 words
-                        </div> -->
                     </div>
 
                     <!-- Location dropdowns -->
@@ -748,7 +745,6 @@ $countries = $dbFunctions->getData('countries');
                         <div class="total-fee-label">Total Fee</div>
                         <div class="total-fee-amount">
                             <input type="hidden" id="totalFeeInput" name="totalFee" value="0.00">
-
                             <span id="totalFee">0.00</span> <?= $fun->getFieldData('site_currency'); ?>
                         </div>
                     </div>
@@ -777,13 +773,55 @@ $countries = $dbFunctions->getData('countries');
     <script type="text/javascript" src="<?= $urlval ?>admin/asset/vendor/tinymce/tinymce.min.js"></script>
 
     <script>
-    // ========== GLOBALE Vars ==========
+    // ========================
+    // =  A) Watermark Helper =
+    // ========================
+    /**
+     * Watermark an image (File) with text "FENNEC" using a canvas in the browser.
+     * Returns a Promise that resolves to the new watermarked Blob.
+     */
+    function watermarkImage(file, watermarkText = "FENNEC") {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    // Create canvas
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
 
-    // Manage selected files with unique IDs
+                    // Draw original image
+                    ctx.drawImage(img, 0, 0);
+
+                    // Add text watermark near bottom-left
+                    ctx.font = "30px Arial";
+                    ctx.fillStyle = "white";
+                    ctx.fillText(watermarkText, 20, img.height - 40);
+
+                    // Convert canvas to Blob (JPEG, 90% quality)
+                    canvas.toBlob((blob) => {
+                        if (blob) {
+                            resolve(blob);
+                        } else {
+                            reject("Canvas toBlob failed or empty");
+                        }
+                    }, 'image/jpeg', 0.9);
+                };
+                img.onerror = () => reject("Image failed to load");
+                img.src = e.target.result;
+            };
+            reader.onerror = err => reject(err);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Manage selected watermarked files with unique IDs
     let selectedFiles = [];
-    let fileIdCounter = 0; // unique IDs for each file
+    let fileIdCounter = 0; // unique IDs for each
 
-    // ========== CATEGORY & SUBCATEGORY ==========
+    // ========== B) Category & Subcategory ==========
     function selectCategory(categoryName, categoryId) {
         document.getElementById('step2').classList.remove('hidden');
         document.getElementById('selectedCategory').innerText = categoryName;
@@ -804,12 +842,12 @@ $countries = $dbFunctions->getData('countries');
                 try {
                     const parsedData = JSON.parse(data);
                     if (parsedData.status === 'success') {
-                        parsedData.data.forEach(subcategory => {
+                        parsedData.data.forEach(subcat => {
                             const colDiv = document.createElement('div');
                             colDiv.className = 'col-md-3';
                             colDiv.innerHTML =
-                                `<div class="sbrct-prere w-100" onclick="selectSubcategory('${subcategory.name}', '${subcategory.id}')">
-                                    ${subcategory.name}
+                                `<div class="sbrct-prere w-100" onclick="selectSubcategory('${subcat.name}', '${subcat.id}')">
+                                    ${subcat.name}
                                 </div>`;
                             subcategoryOptions.appendChild(colDiv);
                         });
@@ -842,7 +880,7 @@ $countries = $dbFunctions->getData('countries');
         document.getElementById('step1').classList.remove('hidden');
     }
 
-    // ========== FILTER CATEGORIES ==========
+    // ========== C) Filter Categories ==========
     function filterCategories() {
         let searchTerm = document.getElementById('categorySearch').value.toLowerCase();
         let categories = document.querySelectorAll('.category-item');
@@ -859,7 +897,9 @@ $countries = $dbFunctions->getData('countries');
         document.getElementById('noResults').style.display = foundAny ? 'none' : 'block';
     }
 
-    // ========== IMAGE PREVIEW & SORTABLE ==========
+    // ========== D) Image Preview & Sortable ==========
+
+    // We'll update the preview from our selectedFiles array
     function updateImagePreview() {
         const imagePreview = document.getElementById('imagePreview');
         const imageCounter = document.getElementById('imageCounter');
@@ -886,42 +926,60 @@ $countries = $dbFunctions->getData('countries');
                 imgContainer.appendChild(removeButton);
                 imagePreview.appendChild(imgContainer);
             };
+            // read the watermarked blob as dataURL
             reader.readAsDataURL(fileObj.file);
         });
 
         imageCounter.innerText = `Selected Images: ${selectedFiles.length}`;
     }
 
-    document.getElementById('gallery').addEventListener('change', function(event) {
-        const filesArray = Array.from(event.target.files);
+    // When user picks new files
+    document.getElementById('gallery').addEventListener('change', async function(event) {
+        const rawFilesArray = Array.from(event.target.files);
         // Example limit: 8 files max
         const maxAllowed = 8 - selectedFiles.length;
-        const filesToAdd = filesArray.slice(0, maxAllowed).map(file => {
-            return { id: fileIdCounter++, file: file };
-        });
-        selectedFiles = selectedFiles.concat(filesToAdd);
+        const filesToProcess = rawFilesArray.slice(0, maxAllowed);
+
+        for (let file of filesToProcess) {
+            try {
+                // Watermark each image with "FENNEC"
+                const watermarkedBlob = await watermarkImage(file, "FENNEC");
+                // Add the watermarked blob to selectedFiles
+                selectedFiles.push({
+                    id: fileIdCounter++,
+                    file: watermarkedBlob
+                });
+            } catch (err) {
+                console.error("Error watermarking file:", file.name, err);
+            }
+        }
+
+        // Update preview
         updateImagePreview();
-        // Reset the file input
+        // Reset the file input so user can pick again
         event.target.value = '';
     });
 
+    // Enable sortable for the preview container
     document.addEventListener('DOMContentLoaded', function() {
         new Sortable(document.getElementById('imagePreview'), {
             animation: 150,
             onEnd: function () {
                 const previewItems = document.querySelectorAll('#imagePreview .image-item');
-                const updatedFiles = [];
+                const newArr = [];
                 previewItems.forEach(item => {
                     const fileId = parseInt(item.getAttribute('data-file-id'), 10);
-                    const fileObj = selectedFiles.find(f => f.id === fileId);
-                    if (fileObj) updatedFiles.push(fileObj);
+                    const fObj = selectedFiles.find(x => x.id === fileId);
+                    if (fObj) {
+                        newArr.push(fObj);
+                    }
                 });
-                selectedFiles = updatedFiles;
+                selectedFiles = newArr;
             }
         });
     });
 
-    // ========== TINY MCE + WORD COUNTING ==========
+    // ========== E) TinyMCE + Word Counting ==========
     document.addEventListener('DOMContentLoaded', function() {
         const wordLimit = 200;
         tinymce.init({
@@ -934,7 +992,6 @@ $countries = $dbFunctions->getData('countries');
                     const words = content.trim().split(/\s+/).filter(word => word.length > 0);
                     const wordCount = words.length;
                     const wordCounter = document.getElementById('wordCounter');
-
                     if (wordCounter) {
                         if (wordCount > wordLimit) {
                             const truncated = words.slice(0, wordLimit).join(' ');
@@ -949,7 +1006,8 @@ $countries = $dbFunctions->getData('countries');
         });
     });
 
-    // ========== UPDATE TOTAL FEE ==========
+    // ========== F) Update Total Fee ==========
+
     function updateTotalFee() {
         let total = 0;
 
@@ -977,13 +1035,8 @@ $countries = $dbFunctions->getData('countries');
             }
         });
 
-        // 3) (Optional) If you want to add the item price to the total fee, uncomment:
-        // const itemPrice = parseFloat($('#price').val()) || 0;
-        // total += itemPrice;
-
         // 4) Update display
         $('#totalFee').text(total.toFixed(2));
-            // 5) Dynamically update the hidden input value
         $('#totalFeeInput').val(total.toFixed(2));
     }
 
@@ -991,7 +1044,8 @@ $countries = $dbFunctions->getData('countries');
     $(document).on('change', 'input[name="product_type"]', updateTotalFee);
     $(document).on('change', '#imageGallery, #videoGallery, #bold, #featured, #frontFeatured, #highlighted', updateTotalFee);
 
-    // ========== CITY + AREA AJAX ==========
+    // ========== G) City + Area AJAX ==========
+
     $(document).ready(function() {
 
         // On page load, call updateTotalFee once
@@ -1035,23 +1089,20 @@ $countries = $dbFunctions->getData('countries');
             }
         });
 
-        // ========== FORM SUBMISSION WITH SWEETALERT CONFIRMATION ==========
+        // ========== H) Form Submission with SweetAlert Confirmation ==========
+
         $('#productForm').on('submit', function(e) {
             e.preventDefault();
 
-            // A) Gather totalFee from the displayed text
             let totalFee = parseFloat($('#totalFee').text()) || 0;
-
-            // B) Get user wallet balance from hidden input
             let userWallet = parseFloat($('#userWalletBalance').val()) || 0;
 
-            // If totalFee == 0, no charges => just go
             if (totalFee <= 0) {
-                submitAd(); // skip the popup
+                // No fee => just submit
+                submitAd();
                 return;
             }
 
-            // If user doesn't have enough balance
             if (userWallet < totalFee) {
                 Swal.fire({
                     icon: 'error',
@@ -1062,7 +1113,6 @@ Please top up your wallet or uncheck some options.`
                 return;
             }
 
-            // Otherwise, confirm
             Swal.fire({
                 title: 'Confirm Payment',
                 text: `You will be charged $${totalFee.toFixed(2)} from your wallet. Continue?`,
@@ -1074,26 +1124,21 @@ Please top up your wallet or uncheck some options.`
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Proceed with submission
                     submitAd();
                 }
             });
         });
 
-        // This function does the actual AJAX submission
         function submitAd() {
-            // Decide which endpoint to use
-            let url = '<?= $urlval ?>ajax/addproduct.php';
-            // e.g. if you have logic to switch to addproductpackige.php if there's a package
-
+            let url = '<?= $urlval ?>ajax/addproduct.php'; 
             let formData = new FormData(document.getElementById('productForm'));
 
-            // Remove the original 'gallery[]' (HTML default) from the form
+            // Remove the original 'gallery[]'
             formData.delete('gallery[]');
 
-            // Append each file from selectedFiles
+            // Append each watermarked blob from selectedFiles
             selectedFiles.forEach(fileObj => {
-                formData.append('gallery[]', fileObj.file);
+                formData.append('gallery[]', fileObj.file, `image_${fileObj.id}.jpg`);
             });
 
             $.ajax({
@@ -1139,7 +1184,7 @@ Please top up your wallet or uncheck some options.`
         }
     });
 
-    // ========== YOUTUBE LINK TOGGLE ==========
+    // ========== I) YouTube Link Toggle ==========
     const link = document.getElementById('youtube-link');
     const inputContainer = document.getElementById('input-container');
     link.addEventListener('click', (event) => {

@@ -1,3 +1,7 @@
 2025-02-08 03:52:05 Attempting wallet deduction: fee = 0, userId = 89
 2025-02-08 04:10:48 Attempting wallet deduction: fee = 17.99, userId = 89
 2025-02-08 04:10:48 Wallet deduction successful. Rows affected: 1
+2025-02-08 04:26:04 Attempting wallet deduction: fee = 18.99, userId = 89
+2025-02-08 04:26:04 Wallet deduction successful. Rows affected: 1
+2025-02-08 04:41:29 Attempting wallet deduction: fee = 6, userId = 89
+2025-02-08 04:41:29 Wallet deduction successful. Rows affected: 1
