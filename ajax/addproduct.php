@@ -62,7 +62,10 @@ if (empty($_POST['price'])) {
 
 // If there are errors, return them
 if (!empty($errors)) {
-    echo json_encode(['success' => false, 'errors' => $errors]);
+    echo json_encode([
+        'success' => false, 
+        'message' => $errors
+    ]);
     exit;
 }
 
@@ -159,6 +162,25 @@ try {
 
     // Last inserted product id
     $productId = $pdo->lastInsertId();
+
+    // ***** WALLET DEDUCTION ***** //
+    // Assume the total fee to be deducted is passed via a hidden input named "totalFee"
+    $totalFee = isset($_POST['totalFee']) ? floatval($_POST['totalFee']) : 0;
+    // Log wallet deduction attempt
+    file_put_contents("./wallet_deduction.log", date("Y-m-d H:i:s") . " Attempting wallet deduction: fee = $totalFee, userId = " . base64_decode($_SESSION['userid']) . PHP_EOL, FILE_APPEND);
+    if ($totalFee > 0) {
+        $stmt2 = $pdo->prepare("UPDATE users SET wallet_balance = wallet_balance - :fee WHERE id = :id");
+        $stmt2->execute([
+            ':fee' => $totalFee,
+            ':id'  => base64_decode($_SESSION['userid'])
+        ]);
+        $rowsAffected = $stmt2->rowCount();
+        if ($rowsAffected > 0) {
+            file_put_contents("./wallet_deduction.log", date("Y-m-d H:i:s") . " Wallet deduction successful. Rows affected: $rowsAffected" . PHP_EOL, FILE_APPEND);
+        } else {
+            file_put_contents("./wallet_deduction.log", date("Y-m-d H:i:s") . " Wallet deduction failed. No rows affected." . PHP_EOL, FILE_APPEND);
+        }
+    }
 
     // 4) Insert gallery images if directUploadEnabled
     if ($directUploadEnabled && !empty($uploadedGalleryPaths)) {
