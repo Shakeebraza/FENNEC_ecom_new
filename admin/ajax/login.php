@@ -25,6 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
 
+            if ($user['admin_verified'] != 1) {
+                echo json_encode(['status' => 'error', 'message' => 'Your account is pending admin approval.']);
+                exit;
+            }
+
             // Ensure the user has a valid role
             // If you only allow roles 1,2,3 to log in:
             if (!in_array($user['role'], [1,3,4])) {

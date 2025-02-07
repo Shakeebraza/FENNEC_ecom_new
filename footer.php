@@ -1,4 +1,12 @@
-<div id="premium-video-section" class="premium-container" style="margin-bottom: 40px;">
+<?php
+// Retrieve the video option setting from approval_parameters (assuming id = 1)
+$videoOption = $fun->getData('approval_parameters', 'video_option_throughout', 1);
+
+// Check if the video option is enabled (case-insensitive comparison)
+if (strtolower($videoOption) === 'enabled') :
+include 'video_listing_animation.php';
+?>
+<!-- <div id="premium-video-section" class="premium-container" style="margin-bottom: 40px;">
     <h2 class="premium-title"><?= $lan['premium_video_listing'] ?></h2>
     <div class="premium-grid">
         <?php
@@ -16,7 +24,7 @@
                                 Your browser does not support the video tag.
                             </video>
                         </div>
-                        <a href="detail.php?slug=<?= $product['slug'] ?>" class="premium-product-link">
+                        <a href="detail.php?slug=<?= htmlspecialchars($product['slug']) ?>" class="premium-product-link">
                             <?= htmlspecialchars($product['name']) ?>
                         </a>
                     </div>
@@ -28,7 +36,11 @@
         }
         ?>
     </div>
-</div>
+</div> -->
+<?php
+endif;
+?>
+
 
 
 

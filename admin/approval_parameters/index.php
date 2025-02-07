@@ -418,7 +418,7 @@ if (!$settings) {
                 </div>
                 
                 <!-- Google Map Parameters -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label fw-bold">Google Map Parameters:</label>
                     <div class="ms-3">
                         <label>Status:</label><br>
@@ -450,7 +450,7 @@ if (!$settings) {
                         </div>
                     </div>
                     <div class="form-text">Sets the google map's center when no values are available.</div>
-                </div>
+                </div> -->
                 
                 <!-- Contact Information -->
                 <div class="mb-3">

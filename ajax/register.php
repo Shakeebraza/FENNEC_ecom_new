@@ -2,6 +2,13 @@
 require_once("../global.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Retrieve approval parameters from the DB using your getData() function
+    $memberApproval = $fun->getData('approval_parameters', 'member_approval', 1);
+    $emailVerification = $fun->getData('approval_parameters', 'email_verification', 1);
+    // Convert them to lowercase for easy comparison
+    $memberApproval = strtolower($memberApproval);
+    $emailVerification = strtolower($emailVerification);
+
     // Retrieve and trim input values
     $username = trim($_POST['username'] ?? '');
     $email    = trim($_POST['email'] ?? '');
@@ -64,34 +71,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // --- Prepare Data for Insertion ---
-    $hashedPassword    = password_hash($password, PASSWORD_DEFAULT);
-    $verificationToken = bin2hex(random_bytes(16)); 
+    // --- Decide admin_verified based on member_approval ---
+    // If member_approval == 'auto', admin_verified = 1, else 0
+    $adminVerified = ($memberApproval === 'auto') ? 1 : 0;
 
-    $data = [
-        'username'           => $username,
-        'email'              => $email,
-        'password'           => $hashedPassword,
-        'role'               => $role,  // Use the selected role from the form
-        'verification_token' => $verificationToken
+    // --- Prepare Data for Insertion ---
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    // Build user data array
+    $userData = [
+        'username'       => $username,
+        'email'          => $email,
+        'password'       => $hashedPassword,
+        'role'           => $role,
+        'admin_verified' => $adminVerified
     ];
 
-    $response = $dbFunctions->setData('users', $data);
+    // --- Email Verification Flow ---
+    if ($emailVerification === 'enabled') {
+        // Normal token-based verification
+        $verificationToken = bin2hex(random_bytes(16)); 
+        $userData['verification_token'] = $verificationToken;
+        // 'email_verified_at' remains NULL until user verifies
+    } else {
+        // email_verification is disabled => skip emailing, auto-verify
+        $userData['verification_token'] = '0';
+        $userData['email_verified_at'] = date('Y-m-d H:i:s');
+    }
 
+    // --- Insert the User ---
+    $response = $dbFunctions->setData('users', $userData);
     if (!$response['success']) {
         echo json_encode(['status' => 'error', 'errors' => $response['message']]);
         exit();
     }
 
-    // --- Send Verification Email ---
-    $verificationLink = $urlval . "verify_email.php?token=$verificationToken&email=$email&role=none";
-    $emailTemplate    = $emialTemp->getVerificationTemplate($verificationLink);
-    $mailResponse     = smtp_mailer($email, 'Email Verification', $emailTemplate);
+    // If email verification is enabled, send the verification email
+    if ($emailVerification === 'enabled') {
+        $verificationLink = $urlval . "verify_email.php?token=" . $userData['verification_token'] . "&email=$email&role=none";
+        $emailTemplate    = $emialTemp->getVerificationTemplate($verificationLink);
+        $mailResponse     = smtp_mailer($email, 'Email Verification', $emailTemplate);
 
-    if ($mailResponse == 'sent') {
-        echo json_encode(['status' => 'success', 'message' => 'Registration successful! Verification email sent.']);
+        if ($mailResponse == 'sent') {
+            echo json_encode(['status' => 'success', 'message' => 'Registration successful! Verification email sent.']);
+        } else {
+            echo json_encode(['status' => 'error', 'errors' => 'Registration successful, but failed to send verification email.']);
+        }
     } else {
-        echo json_encode(['status' => 'error', 'errors' => 'Registration successful, but failed to send verification email.']);
+        // Email verification is disabled, so user is fully registered instantly
+        echo json_encode(['status' => 'success', 'message' => 'Registration successful! No email verification needed.']);
     }
     exit();
 }

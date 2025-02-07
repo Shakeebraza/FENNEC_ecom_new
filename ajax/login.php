@@ -18,14 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user) {
             $user = $user[0];
             
-            // --------------------------
             // Only allow login for roles 0 or 2
-            // --------------------------
             if (!in_array($user['role'], [0, 2])) {
                 echo json_encode([
                     'status' => 'error',
                     'message' => 'Your account is not authorized to log in here.These are Admin level access.'
                 ]);
+                exit;
+            }
+            if ($user['admin_verified'] != 1) {
+                echo json_encode(['status' => 'error', 'message' => 'Your account is pending admin approval.']);
                 exit;
             }
 

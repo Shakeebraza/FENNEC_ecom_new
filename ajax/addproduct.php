@@ -61,6 +61,10 @@ try {
     $image_gallery_featured_enabled = !empty($_POST['imageGallery']) ? 1 : 0;
     $video_gallery_featured_enabled = !empty($_POST['videoGallery']) ? 1 : 0;
 
+    // new: read product_type from the radio
+    // fallback to 'standard' if not specified
+    $productType = $_POST['product_type'] ?? 'standard';
+
     $productImagePath = null;
 
     // 1. Process GALLERY images
@@ -116,13 +120,16 @@ try {
         'aera_id'                       => $_POST['aera'] ?? 0,
         'user_id'                       => base64_decode($_SESSION['userid']),
 
-        // New TINYINT(1) fields
+        // Boost/fetures fields
         'bold_enabled'                  => $bold_enabled,
         'featured_enabled'              => $featured_enabled,
         'front_featured_enabled'        => $front_featured_enabled,
         'highlight_enabled'             => $highlight_enabled,
         'image_gallery_featured_enabled'=> $image_gallery_featured_enabled,
-        'video_gallery_featured_enabled'=> $video_gallery_featured_enabled
+        'video_gallery_featured_enabled'=> $video_gallery_featured_enabled,
+
+        // product_type (standard / premium / gold, etc.)
+        'product_type'                  => $productType
     ];
 
     $result = $dbFunctions->setData('products', $productData);

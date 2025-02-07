@@ -26,6 +26,22 @@ $countries = $dbFunctions->getData('countries');
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
     <style>
+        #step1 {
+            padding: 20px;
+        }
+        .category-item {
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .category-item:hover .category-btn {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .category-btn.selected {
+            border-color: #007bff;
+            background-color: #e9f5ff;
+        }
+
         .custom-file-upload {
             display: flex;
             padding: 20px;
@@ -355,30 +371,99 @@ $countries = $dbFunctions->getData('countries');
             }
         ?>
         <div id="step1">
-            <h2 class=" mb-4">Choose a Category</h2>
-            <h6>Tell us what category you are posting in</h6>
-            <div class="row g-4 justify-content-center">
-                <div class="pst-inpt-serc">
-                    <input type="text" id="categorySearch" placeholder="e.g. Cars, Sofas, Bikes, Laptops" oninput="filterCategories()">
+            <h2 class="mb-4">Choose a Category</h2>
+            <h6 class="mb-3">Tell us what category you are posting in</h6>
+
+            <!-- Search Input -->
+            <div class="row justify-content-center mb-4">
+                <div class="col-md-6">
+                    <input
+                        type="text"
+                        id="categorySearch"
+                        class="form-control"
+                        placeholder="e.g. Cars, Sofas, Bikes, Laptops"
+                        oninput="filterCategories()"
+                    >
                 </div>
             </div>
+
+            <!-- Category Cards Container -->
             <div class="row g-4 justify-content-center" id="categoryContainer">
                 <?php
                     $findCate = $categoryManager->getAllCategoriesHeaderMenu();
                     if ($findCate['status'] == 'success') {
                         foreach ($findCate['data'] as $category) {
+                            // Old style: onclick="selectCategory('categoryName','categoryId')"
                             echo '
-                            <div class="col-md-2 ct-mtb-mn category-item" data-name="' . strtolower($category['category_name']) . '">
-                                <div class="category-btn w-100" onclick="selectCategory(\''. $category['category_name'] .'\', \''. $category['id'] .'\')">
-                                    <i class="fas ' . $category['icon'] . '"></i><br>' . $category['category_name'] . '
+                            <div class="col-md-2 col-6 category-item" data-name="' . strtolower($category['category_name']) . '">
+                                <div
+                                    class="category-btn text-center p-3 border rounded"
+                                    onclick="selectCategory(\'' . $category['category_name'] . '\', \'' . $category['id'] . '\')"
+                                >
+                                    <i class="fas ' . $category['icon'] . ' fa-2x mb-2"></i>
+                                    <div>' . $category['category_name'] . '</div>
                                 </div>
                             </div>
                             ';
                         }
+                    } else {
+                        echo '<div class="col-12 text-center text-muted">No categories available</div>';
                     }
                 ?>
             </div>
+
+            <!-- No Results Message -->
+            <div id="noResults" class="text-center mt-3 text-muted" style="display: none;">
+                No matching categories found.
+            </div>
         </div>
+
+
+
+        <!-- JavaScript for Filtering and Selection -->
+        <script>
+            // 1) Filter categories as the user types in the search input
+            function filterCategories() {
+                const input = document.getElementById('categorySearch');
+                const filter = input.value.toLowerCase();
+                const categoryItems = document.querySelectorAll('#categoryContainer .category-item');
+                let foundMatch = false;
+
+                categoryItems.forEach(function(item) {
+                    const name = item.getAttribute('data-name');
+                    if (name.indexOf(filter) > -1) {
+                        item.style.display = '';
+                        foundMatch = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                document.getElementById('noResults').style.display = foundMatch ? 'none' : 'block';
+            }
+
+            // 2) Called when user clicks a category
+            //    The old code passes only (categoryName, categoryId).
+            //    We'll grab the clicked element via event.currentTarget.
+            function selectCategory(categoryName, categoryId) {
+                // The clicked .category-btn element
+                const el = event.currentTarget;
+
+                // Remove 'selected' class from all category buttons
+                const allBtns = document.querySelectorAll('#categoryContainer .category-btn');
+                allBtns.forEach(function(btn) {
+                    btn.classList.remove('selected');
+                });
+
+                // Add 'selected' class to the clicked button
+                el.classList.add('selected');
+
+                // Do whatever you need with categoryName/categoryId
+                console.log('Selected Category:', categoryName, 'ID:', categoryId);
+                // e.g. store in hidden fields, or proceed to next step
+            }
+        </script>
+
         <div class="container">
             <div id="step2" class="hidden">
                 <h2 class=" mb-4">Choose a Subcategory for <span id="selectedCategory"></span></h2>
@@ -694,6 +779,16 @@ $countries = $dbFunctions->getData('countries');
             </form>
         </div>
     </div>
+ 
+    <?php
+    // Retrieve the video option setting from approval_parameters (assuming id = 1)
+    $videoOption = $fun->getData('approval_parameters', 'video_option_posting', 1);
+    if (strtolower($videoOption) === 'enabled') :
+    include_once 'video_listing_animation.php';
+    ?>  
+    <?php
+    endif;
+    ?>
 
     <!-- Include jQuery and Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

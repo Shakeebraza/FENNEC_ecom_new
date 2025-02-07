@@ -1154,6 +1154,29 @@ function getbilling_feesData($fieldName, $id = 1) {
    }
 }
 
+function getData($tableName, $fieldName, $id = 1) {
+    try {
+        // IMPORTANT: Validate or whitelist $tableName and $fieldName to prevent SQL injection.
+        // For example:
+        // $allowedTables = ['billing_fees', 'users', 'products', ...];
+        // $allowedFields = ['id', 'name', 'amount', ...];
+        // if (!in_array($tableName, $allowedTables) || !in_array($fieldName, $allowedFields)) {
+        //     throw new Exception("Invalid table or field name");
+        // }
+
+        // Build the query using backticks for identifiers.
+        $query = "SELECT `{$fieldName}` FROM `{$tableName}` WHERE `id` = :id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id' => $id]);
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result[$fieldName] ?? null;
+    } catch (Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+}
+
+
 // function getRandomBannerByPlacement($placement) {
 //     $query = "SELECT id, image, title, description, btn_text, btn_url, text_color, btn_color, bg_color, placement, is_active, created_at, updated_at
 //               FROM banners
