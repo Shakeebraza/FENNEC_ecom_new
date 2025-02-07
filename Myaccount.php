@@ -195,6 +195,7 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
 
     <div class="tab-content mt-4" id="myTabContent">
         <div class="tab-content mt-4" id="myTabContent">
+            
         </div>
         
         <!-- VIEW PRODUCTS TAB -->

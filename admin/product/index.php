@@ -201,6 +201,7 @@ function fetchProducts(page) {
                                            transition: all 0.3s ease; cursor: pointer;">
                                     <option value="1" ${product.is_enable == 1 ? 'selected' : ''}>Approved</option>
                                     <option value="0" ${product.is_enable == 0 ? 'selected' : ''}>Unapproved</option>
+                                    <option value="2" ${product.is_enable == 2 ? 'selected' : ''}>Pending</option>
                                 </select>
                                 <span style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%);
                                             pointer-events: none; color: #007bff; font-size: 12px;">

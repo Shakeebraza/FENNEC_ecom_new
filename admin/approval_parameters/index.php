@@ -158,7 +158,7 @@ if (!$settings) {
     <div class="card shadow mb-4">
         <div class="card-header bg-primary text-white">
             <h3 class="mb-0">Approval Parameters</h3>
-            <p class="mb-0">These parameters control various aspects of user signups, classifieds posting, video and image options, SEO, CAPTCHA, Google Map settings, and more.</p>
+            <p class="mb-0">These parameters control various aspects of user signups, classifieds posting, video and image options, and more.</p>
         </div>
         <div class="card-body">
             <?php if (!empty($csrfError)): ?>
@@ -267,7 +267,7 @@ if (!$settings) {
                         </div>
                         <div class="form-text">Sets whether images can be uploaded directly from the post classified page or not.</div>
                     </div>
-                    <div class="ms-3 mt-2">
+                    <!-- <div class="ms-3 mt-2">
                         <label>Image Magick:</label><br>
                         <div class="form-check form-check-inline">
                             <input type="radio" class="form-check-input" name="image_option_imagemagick" value="Enabled" <?= ($settings['image_option_imagemagick'] === 'Enabled') ? 'checked' : '' ?>>
@@ -278,7 +278,7 @@ if (!$settings) {
                             <label class="form-check-label">Disabled</label>
                         </div>
                         <div class="form-text">Automatically resize images using Image Magick (requires Image Magick on the server).</div>
-                    </div>
+                    </div> -->
                     <div class="ms-3 mt-2">
                         <label>Water Marking:</label><br>
                         <div class="form-check form-check-inline">

@@ -273,11 +273,11 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                             Cleanup Unused Files
                         </button>
                     </div>
-                    <div class="col-md-6">
+                    <!-- <div class="col-md-6">
                         <button type="submit" name="action" value="cleanup_classifieds" class="btn btn-danger btn-block">
                             Cleanup Expired Classifieds
                         </button>
-                    </div>
+                    </div> -->
                 </div>
             </form>
         </div>

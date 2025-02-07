@@ -123,6 +123,7 @@ $isAdmin = in_array($role, [1,3]);
                     <li class="nav-item has-sub <?= isActive('/fennec/admin/categories/index.php'); ?> <?= isActive('/fennec/admin/subcategories/index.php'); ?>">
                         <a class="nav-link js-arrow" href="#">
                             <i class="fa fa-folder"></i> Ads
+                            <!-- <span id="pending-count-badge" class="badge badge-danger" style="display:none;"></span> -->
                         </a>
                         <ul class="list-unstyled navbar__sub-list js-sub-list">
                             <li>
@@ -347,6 +348,7 @@ $isAdmin = in_array($role, [1,3]);
                 <li class="has-sub <?= isActive('/fennec/admin/categories/index.php'); ?> <?= isActive('/fennec/admin/subcategories/index.php'); ?>">
                     <a class="js-arrow" href="#">
                         <i class="fa fa-folder"></i> Ads
+                        <span id="pending-count-badge" class="badge badge-danger" style="display:none;"></span>
                     </a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
@@ -463,3 +465,35 @@ $isAdmin = in_array($role, [1,3]);
         </nav>
     </div>
 </aside>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM fully loaded. Attempting to fetch pending count...");
+    fetchPendingCount();
+});
+
+function fetchPendingCount() {
+    // Ensure $urlval is set correctly (e.g. includes a trailing slash if needed)
+    const endpoint = "<?= $urlval ?>admin/ajax/pending_count.php";
+    console.log("Fetching endpoint:", endpoint);
+
+    fetch(endpoint)
+        .then(response => {
+            console.log("Response received:", response);
+            if (!response.ok) {
+                throw new Error("Network response was not ok: " + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Data received:", data);
+            if (data.pending_count > 0) {
+                const badge = document.getElementById('pending-count-badge');
+                badge.innerText = data.pending_count;   // e.g. "5"
+                badge.style.display = "inline-block";   // or "block", your call
+            }
+        })
+        .catch(error => console.error('Error fetching pending ads count:', error));
+}
+</script>
+
+
