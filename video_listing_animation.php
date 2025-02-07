@@ -93,7 +93,7 @@
 
 <section id="unoqyw-slider-section" class="unoqyw-slider-section">
   <header class="unoqyw-slider-header">
-    <h2>Premium ADs</h2>
+    <h2>Premium ADs Video Listing</h2>
   </header>
   <!-- Swiper Slider -->
   <div class="swiper-container unoqyw-slider">

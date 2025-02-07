@@ -253,7 +253,7 @@ if (!$settings) {
                 </div>
                 
                 <!-- Image Options -->
-                <!-- <div class="mb-3">
+                <div class="mb-3">
                     <label class="form-label fw-bold">Image Options:</label>
                     <div class="ms-3">
                         <label>Direct Upload:</label><br>
@@ -291,10 +291,10 @@ if (!$settings) {
                         </div>
                         <div class="form-text">Sets whether to water mark the images using <code>images/watermark.gif</code> under the website root folder.</div>
                     </div>
-                </div> -->
+                </div>
                 
                 <!-- SEO Mode -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label fw-bold">SEO Mode:</label><br>
                     <div class="form-check form-check-inline">
                         <input type="radio" class="form-check-input" name="seo_mode" value="Enabled" <?= ($settings['seo_mode'] === 'Enabled') ? 'checked' : '' ?>>
@@ -305,7 +305,7 @@ if (!$settings) {
                         <label class="form-check-label">Disabled</label>
                     </div>
                     <div class="form-text">Sets whether to use URL rewriting for SEO via the .htaccess file.</div>
-                </div>
+                </div> -->
                 
                 <!-- SEO Parameters -->
                 <div class="mb-3">
@@ -343,7 +343,7 @@ if (!$settings) {
                             <label class="form-check-label">Disabled</label>
                         </div>
                     </div>
-                    <div class="ms-3 mt-2">
+                    <!-- <div class="ms-3 mt-2">
                         <label>URL:</label><br>
                         <div class="form-check form-check-inline">
                             <input type="radio" class="form-check-input" name="seo_param_url" value="Enabled" <?= ($settings['seo_param_url'] === 'Enabled') ? 'checked' : '' ?>>
@@ -353,12 +353,12 @@ if (!$settings) {
                             <input type="radio" class="form-check-input" name="seo_param_url" value="Disabled" <?= ($settings['seo_param_url'] === 'Disabled') ? 'checked' : '' ?>>
                             <label class="form-check-label">Disabled</label>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="form-text">Enabling these forces members to input these parameters for SEO purposes.</div>
                 </div>
                 
                 <!-- CAPTCHA Options -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label fw-bold">CAPTCHA Options:</label>
                     <div class="ms-3">
                         <label>Signup:</label><br>
@@ -415,7 +415,7 @@ if (!$settings) {
                             <label class="form-check-label">Disabled</label>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 
                 <!-- Google Map Parameters -->
                 <!-- <div class="mb-3">
@@ -467,7 +467,7 @@ if (!$settings) {
                 </div>
                 
                 <!-- Extra Shipping Option -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label fw-bold">Extra Shipping Option:</label><br>
                     <div class="form-check form-check-inline">
                         <input type="radio" class="form-check-input" name="extra_shipping_option" value="Enabled" <?= ($settings['extra_shipping_option'] === 'Enabled') ? 'checked' : '' ?>>
@@ -478,7 +478,7 @@ if (!$settings) {
                         <label class="form-check-label">Disabled</label>
                     </div>
                     <div class="form-text">Sets whether to show extra shipping cost option on posting, editing and classified description pages.</div>
-                </div>
+                </div> -->
                 
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary btn-lg">Save Settings</button>

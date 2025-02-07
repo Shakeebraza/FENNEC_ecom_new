@@ -26,6 +26,26 @@ $countries = $dbFunctions->getData('countries');
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
     <style>
+        .total-fee-container {
+            background: linear-gradient(135deg, #fdfbfb, #ebedee);
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            margin: 20px auto; /* Centers the container */
+        }
+        .total-fee-label {
+            font-size: 1.8rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .total-fee-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+        }
         #step1 {
             padding: 20px;
         }
@@ -565,29 +585,39 @@ $countries = $dbFunctions->getData('countries');
                             required>
                     </div>
 
-                    <!-- Boost Plans (example) -->
+                    <!-- Boost Plans: single radio choice among standard/premium/gold, etc. -->
                     <div class="boost-container">
                         <h3 class="boost-title">Boost Your Ad</h3>
                         <?php
-                        $boostPlans = $fun->getBoostPlans();
+                        $boostPlans = $fun->getBoostPlans(); 
+                        // e.g. each $plan has [ 'id'=>X, 'name'=>'Gold', 'price'=>50, 'product_type'=>'gold', 'description'=>'...' ]
                         if (!empty($boostPlans)) :
-                            foreach ($boostPlans as $plan) : ?>
-                                <div class="boost-package">
-                                    <div class="boost-header">
-                                        <span><?= $plan['name']; ?></span>
-                                        <select class="form-select" style="width: auto;">
-                                            <option value="" disabled selected>Select Option</option>
-                                            <option value="basic">Basic</option>
-                                            <option value="premium">Premium</option>
-                                            <option value="ultimate">Ultimate</option>
-                                        </select>
-                                    </div>
-                                    <p class="boost-description">
-                                        <?= $plan['description'] ?? 'Short text explaining what this Boost Pack is all about.'; ?>
-                                    </p>
-                                </div>
-                        <?php endforeach;
-                        else : ?>
+                            foreach ($boostPlans as $plan) : 
+                                $planId   = $plan['id'];
+                                $planName = $plan['name'];
+                                $planDesc = $plan['description'] ?? '';
+                                $planPrice= $plan['price'];
+                                $planType = $plan['slug']; // 'standard', 'premium', 'gold', etc.
+                        ?>
+                            <div class="boost-package">
+                                <input
+                                  type="radio"
+                                  name="product_type"
+                                  class="boostPlanRadio"
+                                  id="plan-<?= $planId ?>"
+                                  value="<?= htmlspecialchars($planType) ?>"
+                                  data-price="<?= htmlspecialchars($planPrice) ?>"
+                                  style="margin-right: 10px;"
+                                />
+                                <label for="plan-<?= $planId ?>" style="margin: 0;">
+                                    <strong><?= htmlspecialchars($planName) ?></strong>
+                                    (<?= htmlspecialchars($planPrice) ?> <?= $fun->getFieldData('site_currency'); ?>)
+                                    <br>
+                                    <small><?= htmlspecialchars($planDesc) ?></small>
+                                </label>
+                            </div>
+                        <?php endforeach; ?>
+                        <?php else : ?>
                             <p>No packages available.</p>
                         <?php endif; ?>
                     </div>
@@ -769,6 +799,14 @@ $countries = $dbFunctions->getData('countries');
                         </div>
                         <?php endif; ?>
                     </div>
+                    
+                    <!-- Total Fee Display -->
+                    <div class="total-fee-container mt-3">
+                    <div class="total-fee-label">Total Fee</div>
+                    <div class="total-fee-amount">
+                        <span id="totalFee">0.00</span> <?= $fun->getFieldData('site_currency'); ?>
+                    </div>
+                    </div>
 
                     <div class="btn-main-div" style="display: flex;justify-content: space-between;">
                         <button type="submit" class="btn btn-primary post-btn">Post Ad</button>
@@ -779,7 +817,8 @@ $countries = $dbFunctions->getData('countries');
             </form>
         </div>
     </div>
- 
+
+    
     <?php
     // Retrieve the video option setting from approval_parameters (assuming id = 1)
     $videoOption = $fun->getData('approval_parameters', 'video_option_posting', 1);
@@ -796,6 +835,56 @@ $countries = $dbFunctions->getData('countries');
     <script type="text/javascript" src="<?= $urlval?>admin/asset/vendor/tinymce/tinymce.min.js"></script>
 
     <script>
+
+    $(document).ready(function () {
+
+    // 1) Create a function to update the total whenever something changes
+    function updateTotalFee() {
+        let total = 0;
+
+        // A) Add the plan price (if a plan is selected)
+        const selectedPlan = $('input[name="product_type"]:checked');
+        if (selectedPlan.length > 0) {
+            let planPrice = parseFloat(selectedPlan.data('price')) || 0;
+            total += planPrice;
+        }
+
+        // B) Check each feature checkbox and add its value if checked
+        //    Adjust these IDs to match your actual element IDs
+        const featureCheckboxes = [
+            '#imageGallery',
+            '#videoGallery',
+            '#bold',
+            '#featured',
+            '#frontFeatured',
+            '#highlighted'
+        ];
+
+        featureCheckboxes.forEach(function(selector) {
+            let checkbox = $(selector);
+            if (checkbox.is(':checked')) {
+                let feeValue = parseFloat(checkbox.val()) || 0;
+                total += feeValue;
+            }
+        });
+
+        // (Optional) If you also want to include the item’s “Price” field 
+        // in the total fees, just uncomment below:
+        // const itemPrice = parseFloat($('#price').val()) || 0;
+        // total += itemPrice;
+
+        // C) Update the “Total Fee” display
+        $('#totalFee').text(total.toFixed(2));
+    }
+
+    // 2) Attach the update function to each plan radio and each checkbox
+    $('input[name="product_type"]').on('change', updateTotalFee);
+    $('#imageGallery, #videoGallery, #bold, #featured, #frontFeatured, #highlighted')
+    .on('change', updateTotalFee);
+
+    // 3) Call once at page load, in case any defaults are set
+    updateTotalFee();
+    });
     // Manage selected files with unique IDs
     let selectedFiles = [];
     let fileIdCounter = 0; // To assign unique IDs to each file
