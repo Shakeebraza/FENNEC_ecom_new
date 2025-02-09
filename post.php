@@ -14,13 +14,39 @@ $userWalletBalance = $stmt->fetchColumn() ?? 0;
 
 // 2) Get list of countries
 $countries = $dbFunctions->getData('countries');
+
+$watermarkSetting = $fun->getData('approval_parameters', 'image_option_watermark', 1);
+$watermarkEnabled = (strtolower($watermarkSetting) === 'enabled') ? 'true' : 'false';
+
+$seoTitle             = $fun->getData('site_settings', 'value', 11);
+$seoTitleEnabled      = $fun->getData('approval_parameters', 'seo_param_title', 1);
+
+$seoDescription       = $fun->getData('site_settings', 'value', 12);
+$seoDescriptionEnabled= $fun->getData('approval_parameters', 'seo_param_description', 1);
+
+$seoKeywords          = $fun->getData('site_settings', 'value', 13);
+$seoKeywordsEnabled   = $fun->getData('approval_parameters', 'seo_param_keyword', 1);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Your Ad</title>
+    <!-- <title>Post Your Ad</title> -->
+    <!-- SEO Meta Tags -->
+    <?php if (strtolower($seoTitleEnabled) === 'enabled'): ?>
+    <title><?= htmlspecialchars($seoTitle) ?></title>
+    <?php else: ?>
+        <title>Fennec</title>
+    <?php endif; ?>
+
+    <?php if (strtolower($seoDescriptionEnabled) === 'enabled'): ?>
+        <meta name="description" content="<?= htmlspecialchars($seoDescription) ?>">
+    <?php endif; ?>
+
+    <?php if (strtolower($seoKeywordsEnabled) === 'enabled'): ?>
+        <meta name="keywords" content="<?= htmlspecialchars($seoKeywords) ?>">
+    <?php endif; ?>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -761,11 +787,12 @@ $countries = $dbFunctions->getData('countries');
 
     <?php
     // Retrieve the video option setting from approval_parameters (assuming id = 1)
-    $videoOption = $fun->getData('approval_parameters', 'video_option_posting', 1);
-    if (strtolower($videoOption) === 'enabled') {
-        include_once 'video_listing_animation.php';
-    }
+    // $videoOption = $fun->getData('approval_parameters', 'video_option_posting', 1);
+    // if (strtolower($videoOption) === 'enabled') {
+    //     include_once 'video_listing_animation.php';
+    // }
     ?>
+    
 
     <!-- Include jQuery and Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -780,6 +807,8 @@ $countries = $dbFunctions->getData('countries');
      * Watermark an image (File) with text "FENNEC" using a canvas in the browser.
      * Returns a Promise that resolves to the new watermarked Blob.
      */
+    
+
     function watermarkImage(file, watermarkText = "FENNEC") {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -934,31 +963,62 @@ $countries = $dbFunctions->getData('countries');
     }
 
     // When user picks new files
-    document.getElementById('gallery').addEventListener('change', async function(event) {
-        const rawFilesArray = Array.from(event.target.files);
-        // Example limit: 8 files max
-        const maxAllowed = 8 - selectedFiles.length;
-        const filesToProcess = rawFilesArray.slice(0, maxAllowed);
+    // document.getElementById('gallery').addEventListener('change', async function(event) {
+    //     const rawFilesArray = Array.from(event.target.files);
+    //     // Example limit: 8 files max
+    //     const maxAllowed = 8 - selectedFiles.length;
+    //     const filesToProcess = rawFilesArray.slice(0, maxAllowed);
 
-        for (let file of filesToProcess) {
-            try {
-                // Watermark each image with "FENNEC"
+    //     for (let file of filesToProcess) {
+    //         try {
+    //             // Watermark each image with "FENNEC"
+    //             const watermarkedBlob = await watermarkImage(file, "FENNEC");
+    //             // Add the watermarked blob to selectedFiles
+    //             selectedFiles.push({
+    //                 id: fileIdCounter++,
+    //                 file: watermarkedBlob
+    //             });
+    //         } catch (err) {
+    //             console.error("Error watermarking file:", file.name, err);
+    //         }
+    //     }
+
+    //     // Update preview
+    //     updateImagePreview();
+    //     // Reset the file input so user can pick again
+    //     event.target.value = '';
+    // });
+    document.getElementById('gallery').addEventListener('change', async function(event) {
+    const rawFilesArray = Array.from(event.target.files);
+    const maxAllowed = 8 - selectedFiles.length;
+    const filesToProcess = rawFilesArray.slice(0, maxAllowed);
+    const watermarkEnabled = <?= $watermarkEnabled ?>;
+    for (let file of filesToProcess) {
+        try {
+            console.log(watermarkEnabled);
+            
+            if (watermarkEnabled === true || watermarkEnabled === "true") {
+                // If watermarking is enabled, process the image through the watermarkImage function
                 const watermarkedBlob = await watermarkImage(file, "FENNEC");
-                // Add the watermarked blob to selectedFiles
                 selectedFiles.push({
                     id: fileIdCounter++,
                     file: watermarkedBlob
                 });
-            } catch (err) {
-                console.error("Error watermarking file:", file.name, err);
+            } else {
+                // Otherwise, use the original file directly
+                selectedFiles.push({
+                    id: fileIdCounter++,
+                    file: file
+                });
             }
+        } catch (err) {
+            console.error("Error processing file:", file.name, err);
         }
+    }
+    updateImagePreview();
+    event.target.value = '';
+});
 
-        // Update preview
-        updateImagePreview();
-        // Reset the file input so user can pick again
-        event.target.value = '';
-    });
 
     // Enable sortable for the preview container
     document.addEventListener('DOMContentLoaded', function() {

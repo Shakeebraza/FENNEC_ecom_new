@@ -2,12 +2,9 @@
 require_once("../global.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve approval parameters from the DB using your getData() function
-    $memberApproval = $fun->getData('approval_parameters', 'member_approval', 1);
-    $emailVerification = $fun->getData('approval_parameters', 'email_verification', 1);
-    // Convert them to lowercase for easy comparison
-    $memberApproval = strtolower($memberApproval);
-    $emailVerification = strtolower($emailVerification);
+    // Retrieve approval parameters from the DB
+    $memberApproval    = strtolower($fun->getData('approval_parameters', 'member_approval', 1));
+    $emailVerification = strtolower($fun->getData('approval_parameters', 'email_verification', 1));
 
     // Retrieve and trim input values
     $username = trim($_POST['username'] ?? '');
@@ -17,10 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $role     = isset($_POST['role']) && $_POST['role'] !== '' ? (int)$_POST['role'] : 0;
 
     // Configuration for username and password length
-    $minUsernameLength = $fun->getFieldData('username_length'); 
-    $maxUsernameLength = 50; 
-    $minPasswordLength = $fun->getFieldData('password_length'); 
-    $maxPasswordLength = 128; 
+    $minUsernameLength = $fun->getFieldData('username_length');
+    $maxUsernameLength = 50;
+    $minPasswordLength = $fun->getFieldData('password_length');
+    $maxPasswordLength = 128;
 
     // --- Username Validation ---
     if (empty($username)) {
@@ -72,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // --- Decide admin_verified based on member_approval ---
-    // If member_approval == 'auto', admin_verified = 1, else 0
+    // If member_approval == 'auto', then admin_verified = 1, else 0.
     $adminVerified = ($memberApproval === 'auto') ? 1 : 0;
 
     // --- Prepare Data for Insertion ---
@@ -89,12 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // --- Email Verification Flow ---
     if ($emailVerification === 'enabled') {
-        // Normal token-based verification
+        // Generate token-based verification if enabled
         $verificationToken = bin2hex(random_bytes(16)); 
         $userData['verification_token'] = $verificationToken;
         // 'email_verified_at' remains NULL until user verifies
     } else {
-        // email_verification is disabled => skip emailing, auto-verify
+        // Email verification is disabled => auto-verify
         $userData['verification_token'] = '0';
         $userData['email_verified_at'] = date('Y-m-d H:i:s');
     }
@@ -106,21 +103,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // If email verification is enabled, send the verification email
+    // --- Sending Verification Email (if enabled) ---
     if ($emailVerification === 'enabled') {
-        $verificationLink = $urlval . "verify_email.php?token=" . $userData['verification_token'] . "&email=$email&role=none";
-        $emailTemplate    = $emialTemp->getVerificationTemplate($verificationLink);
-        $mailResponse     = smtp_mailer($email, 'Email Verification', $emailTemplate);
+        // Create the verification link
+        $verificationLink = $urlval . "verify_email.php?token=" . $userData['verification_token'] . "&email=" . urlencode($email) . "&role=none";
+
+        // Retrieve the dynamic email template from the database using the template key.
+        // You should have a function (e.g., $fun->getTemplate($template_key)) that queries the email_templates table.
+        $templateData = $fun->getTemplate('registration_verification');
+
+        if (!$templateData) {
+            // Fallback default if the template is not found
+            $subject = 'Email Verification';
+            $body    = "<p>Hello {$username},</p>
+                        <p>Please verify your email by clicking the link below:</p>
+                        <p><a href='{$verificationLink}'>Verify Email</a></p>
+                        <p>Thank you!</p>";
+        } else {
+            // Use the template from the DB. Assume it returns an array with keys 'subject' and 'body'.
+            $subject = $templateData['subject'];
+            $body    = $templateData['body'];
+
+            // Replace the placeholders with dynamic content.
+            $subject = str_replace(['{{username}}', '{{verification_link}}'], [$username, $verificationLink], $subject);
+            $body    = str_replace(['{{username}}', '{{verification_link}}'], [$username, $verificationLink], $body);
+        }
+
+        // Send the email using your smtp_mailer() function
+        $mailResponse = smtp_mailer($email, $subject, $body);
 
         if ($mailResponse == 'sent') {
             echo json_encode(['status' => 'success', 'message' => 'Registration successful! Verification email sent.']);
         } else {
             echo json_encode(['status' => 'error', 'errors' => 'Registration successful, but failed to send verification email.']);
         }
-    } else {
-        // Email verification is disabled, so user is fully registered instantly
-        echo json_encode(['status' => 'success', 'message' => 'Registration successful! No email verification needed.']);
+    } 
+    
+    if ($memberApproval === 'admin') {
+        $approvalToken = bin2hex(random_bytes(16));
+        $dbFunctions->updateData('users', ['approval_token' => $approvalToken], $userId);
+
+        $approvalLink = $urlval . "approve_user.php?token=$approvalToken&user_id=$userId";
+
+        $templateData = $fun->getTemplate('signup_awaiting_approval');
+
+        if (!$templateData) {
+            $subject = 'New User Signup: Approval Needed';
+            $body = "<p>A new user has signed up and requires your approval:</p>
+                    <p>Username: {$username}</p>
+                    <p>Email: {$email}</p>
+                    <p><a href='{$approvalLink}'>Approve User</a></p>";
+        } else {
+            $subject = str_replace(['{{username}}', '{{email}}'], [$username, $email], $templateData['subject']);
+            $body = str_replace(
+                ['{{username}}', '{{email}}', '{{approval_link}}'],
+                [$username, $email, $approvalLink],
+                $templateData['body']
+            );
+        }
+
+        $adminEmail = $fun->getData('site_settings', 'value', 4); // Assuming the admin email is stored in settings
+        smtp_mailer($adminEmail, $subject, $body);
     }
+    echo json_encode(['status' => 'success', 'message' => 'Registration successful! No email verification needed.']);
     exit();
 }
 ?>

@@ -1,20 +1,18 @@
 <?php
 require_once("../../global.php");
 
-// Only process POST
+// Only process POST requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve the email verification setting from approval_parameters
-    $emailVerification = $fun->getData('approval_parameters', 'email_verification', 1);
-    $memberApproval = $fun->getData('approval_parameters', 'member_approval', 1);
-    // Convert to lowercase for easy comparison
-    $emailVerification = strtolower($emailVerification);
-    $memberApproval = strtolower($memberApproval);
 
-    // Basic data
-    $username = $_POST['username'] ?? '';
-    $email    = $_POST['email']    ?? '';
+    // Retrieve the email verification and member approval settings from approval_parameters
+    $emailVerification = strtolower($fun->getData('approval_parameters', 'email_verification', 1));
+    $memberApproval    = strtolower($fun->getData('approval_parameters', 'member_approval', 1));
+
+    // Basic data from POST
+    $username = trim($_POST['username'] ?? '');
+    $email    = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
-    $role     = $_POST['role']     ?? '3'; // default to '3' if not set
+    $role     = $_POST['role'] ?? '3'; // default to '3' if not set
 
     $errors = [];
     $minUsernameLength = $fun->getFieldData('username_length'); // e.g. 3
@@ -55,79 +53,98 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Password must be less than 125 characters long.';
     }
 
-    // Validate role => allowed are [1,3,4]
-    if (!in_array($role, ['1','3','4'])) {
+    // Validate role => allowed values are [1, 3, 4]
+    if (!in_array($role, ['1', '3', '4'])) {
         $role = '4'; // fallback to '4' (Moderator)
     }
 
-    // If errors, return them
+    // If there are errors, return them as JSON and exit
     if (!empty($errors)) {
         echo json_encode(['status' => 'error', 'errors' => $errors]);
         exit;
     }
 
     // --- Decide admin_verified based on member_approval ---
-    // If member_approval == 'auto', admin_verified = 1, else 0
+    // If member_approval is 'auto', then admin_verified = 1, else 0.
     $adminVerified = ($memberApproval === 'auto') ? 1 : 0;
-    // No errors => proceed
+
+    // Hash the password
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Build initial data array
+    // Build the data array for insertion
     $data = [
-        'username' => $username,
-        'email'    => $email,
-        'password' => $hashedPassword,
-        'role'     => $role,
+        'username'       => $username,
+        'email'          => $email,
+        'password'       => $hashedPassword,
+        'role'           => $role,
         'admin_verified' => $adminVerified
     ];
 
-    // Decide if email verification is enabled
+    // --- Email Verification Flow ---
     if ($emailVerification === 'enabled') {
-        // Normal token approach
+        // Generate a token for email verification
         $verificationToken = bin2hex(random_bytes(16));
         $data['verification_token'] = $verificationToken;
-        // 'email_verified_at' remains NULL until user verifies
+        // 'email_verified_at' remains NULL until the user verifies
     } else {
-        // email verification is disabled => mark verified
+        // If email verification is disabled, mark as verified
         $data['verification_token'] = '0';
         $data['email_verified_at']  = date('Y-m-d H:i:s');
     }
 
-    // Insert into admins table
+    // Insert the new admin into the 'admins' table
     $response = $dbFunctions->setData('admins', $data);
 
-    // Logging
+    // Logging the registration attempt
     $logMsg = sprintf(
         "New Admin Registration: username=%s, email=%s, role=%s, time=%s\n",
-        $username, 
-        $email, 
-        $role, 
+        $username,
+        $email,
+        $role,
         date('Y-m-d H:i:s')
     );
-    error_log($logMsg, 3, __DIR__ . '/registration.log'); // logs to "admins/ajax/registration.log"
+    error_log($logMsg, 3, __DIR__ . '/registration.log'); // Logs to "admins/ajax/registration.log"
 
     if ($response['success']) {
-        // If email verification is enabled => send verification email
+        // If email verification is enabled, send the verification email
         if ($emailVerification === 'enabled') {
-            $verificationLink = $urlval . "verify_email.php?token=" . $data['verification_token'] . "&email=$email&role=admin";
-            $mailSubject = 'Email Verification';
-            $mailBody    = "Please click the link below to verify your email address:\n$verificationLink";
-            
-            $mailResponse = smtp_mailer($email, $mailSubject, $mailBody);
+            $verificationLink = $urlval . "verify_email.php?token=" . $data['verification_token'] . "&email=" . urlencode($email) . "&role=admin";
+
+            // Use the registration_verification template as requested
+            $templateData = $fun->getTemplate('registration_verification');
+
+            if (!$templateData) {
+                // Fallback default if the template is not found
+                $subject = 'Email Verification';
+                $body    = "<p>Hello {$username},</p>
+                            <p>Please verify your email by clicking the link below:</p>
+                            <p><a href='{$verificationLink}'>Verify Email</a></p>
+                            <p>Thank you!</p>";
+            } else {
+                // Use the template from the DB. Assume it returns an array with keys 'subject' and 'body'.
+                $subject = $templateData['subject'];
+                $body    = $templateData['body'];
+
+                // Replace the placeholders with dynamic content.
+                $subject = str_replace(['{{username}}', '{{verification_link}}'], [$username, $verificationLink], $subject);
+                $body    = str_replace(['{{username}}', '{{verification_link}}'], [$username, $verificationLink], $body);
+            }
+
+            // Send the verification email using smtp_mailer()
+            $mailResponse = smtp_mailer($email, $subject, $body);
             if ($mailResponse === 'sent') {
                 echo json_encode([
                     'status'  => 'success',
                     'message' => 'Registration successful! Verification email sent.'
                 ]);
             } else {
-                // If $mailResponse is not 'sent', assume it’s an error string
                 echo json_encode([
                     'status'  => 'error',
                     'message' => 'Registration successful, but failed to send verification email: ' . $mailResponse
                 ]);
             }
         } else {
-            // email verification is disabled => no email
+            // If email verification is disabled, no email is sent
             echo json_encode([
                 'status'  => 'success',
                 'message' => 'Registration successful! No email verification needed.'
@@ -137,3 +154,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => 'error', 'message' => $response['message']]);
     }
 }
+?>

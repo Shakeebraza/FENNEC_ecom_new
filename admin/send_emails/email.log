@@ -1,0 +1,9 @@
+[2025-02-08 10:30:15] Preparing to send email to recipient: emma9021@hotmail.com,learningapp646@gmail.com,bilal.shehroz420@gmail.com
+[2025-02-08 10:30:15] Attempting to send email with subject: dsadsad
+[2025-02-08 10:30:15] Mailer Error: You must provide at least one recipient email address.
+[2025-02-08 10:32:02] Preparing to send email to multiple recipients: emma9021@hotmail.com, learningapp646@gmail.com, bilal.shehroz420@gmail.com
+[2025-02-08 10:32:02] Attempting to send email with subject: Welcome to Our Website!
+[2025-02-08 10:32:05] Email successfully sent with subject: Welcome to Our Website! to: emma9021@hotmail.com, learningapp646@gmail.com, bilal.shehroz420@gmail.com
+[2025-02-08 10:32:44] Preparing to send email to recipient: bilal.shehroz420@gmail.com
+[2025-02-08 10:32:44] Attempting to send email with subject: Welcome to Our Website!
+[2025-02-08 10:32:47] Email successfully sent with subject: Welcome to Our Website! to: bilal.shehroz420@gmail.com

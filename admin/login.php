@@ -20,6 +20,14 @@ if ($setSession == true) {
     exit();
 }
 
+$seoTitle             = $fun->getData('site_settings', 'value', 11);
+$seoTitleEnabled      = $fun->getData('approval_parameters', 'seo_param_title', 1);
+
+$seoDescription       = $fun->getData('site_settings', 'value', 12);
+$seoDescriptionEnabled= $fun->getData('approval_parameters', 'seo_param_description', 1);
+
+$seoKeywords          = $fun->getData('site_settings', 'value', 13);
+$seoKeywordsEnabled   = $fun->getData('approval_parameters', 'seo_param_keyword', 1);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +39,22 @@ if ($setSession == true) {
     <meta name="author" content="Hau Nguyen">
     <meta name="keywords" content="au theme template">
 
-    <title>Login</title>
+    <!-- <title>Login</title> -->
+    <!-- SEO Meta Tags -->
+    <?php if (strtolower($seoTitleEnabled) === 'enabled'): ?>
+        <title><?= htmlspecialchars($seoTitle . ' Login') ?></title>
+
+    <?php else: ?>
+        <title>Fennec</title>
+    <?php endif; ?>
+
+    <?php if (strtolower($seoDescriptionEnabled) === 'enabled'): ?>
+        <meta name="description" content="<?= htmlspecialchars($seoDescription) ?>">
+    <?php endif; ?>
+
+    <?php if (strtolower($seoKeywordsEnabled) === 'enabled'): ?>
+        <meta name="keywords" content="<?= htmlspecialchars($seoKeywords) ?>">
+    <?php endif; ?>
 
     <link href="<?php echo $urlval?>admin/asset/css/font-face.css" rel="stylesheet" media="all">
     <link href="<?php echo $urlval?>admin/asset/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">

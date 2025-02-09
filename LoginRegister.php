@@ -65,7 +65,7 @@ if ($setSession == true) {
                   </div>
                 </div>
                 <div class="d-grid">
-                  <button type="submit" class="btn btn-success"><?= $lan['login']?></button>
+                  <button type="submit" id="loginButton" class="btn btn-success"><?= $lan['login']?></button>
                 </div>
                 <p class="text-muted text-center mt-3 small">
                   <?= $lan['login_privacy_policy']?>
@@ -142,7 +142,7 @@ if ($setSession == true) {
                     We will send you emails regarding our services, offers, competitions, and carefully selected partners. You can unsubscribe at any time.
                   </label>
                 </div>
-                <button type="submit" class="btn btn-success w-100 mb-3">Register</button>
+                <button type="submit" id="registerButton" class="btn btn-success w-100 mb-3">Register</button>
                 <p class="small text-muted">
                   By selecting Register you agree you've read and accepted our Terms of Use. Please see our Privacy Notice for information regarding the processing of your data.
                 </p>
@@ -187,12 +187,15 @@ include_once 'footer.php';
   // Handle registration form submission via AJAX
   $(document).on('submit', '#registerForm', function(e) {
     e.preventDefault();
+    const registerButton = $('#registerButton');
+    registerButton.prop('disabled', true).text('Registering...');
     $.ajax({
       url: $(this).attr('action'),
       type: 'POST',
       data: $(this).serialize(),
       dataType: 'json',
       success: function(response) {
+        registerButton.prop('disabled', false).text('Register');
         if (response.status === 'success') {
           $('#alert-message2')
             .removeClass('d-none alert-danger')
@@ -209,6 +212,7 @@ include_once 'footer.php';
         }
       },
       error: function() {
+        registerButton.prop('disabled', false).text('Register');
         $('#alert-message2')
           .removeClass('d-none alert-success')
           .addClass('alert-danger')
@@ -221,6 +225,8 @@ include_once 'footer.php';
   $(document).ready(function() {
     $('#loginForm').on('submit', function(event) {
       event.preventDefault();
+      const loginButton = $('#loginButton');
+      loginButton.prop('disabled', true).text('Logging in...');
       let url = $(this).data('url');
       $.ajax({
         url: url,
@@ -228,6 +234,7 @@ include_once 'footer.php';
         data: $(this).serialize(),
         dataType: 'json',
         success: function(response) {
+          loginButton.prop('disabled', false).text('<?= $lan['login'] ?>');
           $('#alert-message').removeClass('d-none fade alert-danger alert-success');
           if (response.status === 'success') {
             $('#alert-message').addClass('alert-success show');
@@ -246,6 +253,7 @@ include_once 'footer.php';
           }
         },
         error: function() {
+          loginButton.prop('disabled', false).text('<?= $lan['login'] ?>');
           $('#alert-message').removeClass('d-none fade').addClass('alert-danger show');
           $('#message-content').text('An unexpected error occurred.');
         }

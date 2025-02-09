@@ -12,6 +12,17 @@ if (!in_array($role, [1, 3])) {
 $csrfError = '';
 $message = '';
 
+// A reusable function to send email to one or more recipients.
+// If $recipients is an array, we join it into a comma-separated string.
+function sendMail($recipients, $subject, $body, $headers) {
+    if (is_array($recipients)) {
+        $to = implode(',', $recipients);
+    } else {
+        $to = $recipients;
+    }
+    return smtp_mailer($to, $subject, $body);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate CSRF token
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
@@ -28,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $csrfError = "Subject and body are required.";
         } else {
             $headers = "From: admin@example.com\r\n";
-            // If sending HTML, you may include content-type header:
+            // If sending HTML, include a content-type header:
             $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
             
             if ($sendType === 'single') {
@@ -36,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
                     $csrfError = "Invalid email address.";
                 } else {
-                    if (mail($recipient, $subject, $body, $headers)) {
+                    if (sendMail($recipient, $subject, $body, $headers)) {
                         $message = "Email sent successfully to $recipient.";
                     } else {
                         $csrfError = "Failed to send email to $recipient.";
@@ -48,18 +59,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute();
                 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 
-                $failedCount = 0;
-                $sentCount = 0;
-                foreach ($users as $user) {
-                    $userEmail = $user['email'];
-                    // For each email, you may choose to replace placeholders if needed
-                    if (mail($userEmail, $subject, $body, $headers)) {
-                        $sentCount++;
+                // Build an array of recipient email addresses.
+                $recipientEmails = array_column($users, 'email');
+                
+                if (!empty($recipientEmails)) {
+                    // Send the email to all recipients in one go.
+                    if (sendMail($recipientEmails, $subject, $body, $headers)) {
+                        $message = "Email sent to " . count($recipientEmails) . " verified user(s).";
                     } else {
-                        $failedCount++;
+                        $csrfError = "Failed to send email to verified users.";
                     }
+                } else {
+                    $csrfError = "No verified users found.";
                 }
-                $message = "Email sent to {$sentCount} verified user(s)." . ($failedCount ? " Failed to send to {$failedCount} user(s)." : "");
             }
         }
     }
@@ -124,25 +136,21 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 </div>
 
 <script>
-// Show or hide recipient field based on send_type selection
+// Show or hide the recipient field based on the send_type selection.
 document.addEventListener("DOMContentLoaded", function() {
     const sendTypeRadios = document.querySelectorAll('input[name="send_type"]');
     const recipientDiv = document.getElementById('recipientDiv');
     
     function toggleRecipient() {
         const selected = document.querySelector('input[name="send_type"]:checked').value;
-        if (selected === 'single') {
-            recipientDiv.style.display = 'block';
-        } else {
-            recipientDiv.style.display = 'none';
-        }
+        recipientDiv.style.display = (selected === 'single') ? 'block' : 'none';
     }
     
     sendTypeRadios.forEach(radio => {
         radio.addEventListener('change', toggleRecipient);
     });
     
-    toggleRecipient(); // Initialize on load
+    toggleRecipient(); // Initialize on load.
 
     // Auto-hide alert messages after 5 seconds.
     const alertMessage = document.getElementById('alert-message');

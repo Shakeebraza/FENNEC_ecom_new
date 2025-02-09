@@ -1890,91 +1890,6 @@ Class Productfun{
         }
     }
     
-    function displayProducts($products, $lan) {
-        $currentDate = new DateTime();
-        if (!empty($products)) {
-            foreach ($products as $product) {
-                $description = $product['description'];
-                $words = explode(" ", $description);
-                $description = count($words) > 5 ? implode(" ", array_slice($words, 0, 5)) . '...' : $description;
-    
-                $createdDate = new DateTime($product['created_at']);
-                // Determine expiration date based on the extension value
-                $expiryDays = ($product['extension'] == 1) ? 30 : 20;
-                $expiryDate = $createdDate->modify("+$expiryDays days");
-                $dateDiff = $currentDate->diff($expiryDate);
-                $isExpired = ($dateDiff->days > 0 && $currentDate > $expiryDate) ? true : false;
-                $Approval = $product['is_enable'] ?? 0;
-                
-                
-                // Add the expired status to the product array
-                $statusLabel = $isExpired ? 'Expired' : 'Active';
-                $labelClass = $isExpired ? 'label-danger' : 'label-success';
-    
-                $detailUrl = $this->urlval.'detail.php?slug=' . $product['slug'];
-    
-                echo '
-                    <div class="col-md-4 mb-4">
-                        <div class="card product-card">
-                            <div class="product-image-container" style="position: relative;">
-                                <a href="' . $detailUrl . '">
-                                    <img
-                                        src="' . htmlspecialchars($product['image']) . '"
-                                        class="card-img-top"
-                                        alt="' . htmlspecialchars($product['name']) . '"
-                                        style="width: 100%; height: 300px; object-fit: cover;"
-                                    />
-                                </a>
-                                <span class="label ' . $labelClass . '" style="position: absolute; top: 10px; left: 10px; padding: 5px 10px; border-radius: 3px; color: white; font-size: 14px;">
-                                    ' . $statusLabel . '
-                                </span>
-                                <span class="label ' . $labelClass . '" style="position: absolute; top: 10px; left: 10px; padding: 5px 10px; border-radius: 3px; color: white; font-size: 14px;">
-                                    ' . $statusLabel . '
-                                </span>
-                            </div>
-                            <div class="card-body">
-                                <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
-                                    <h5 class="card-title">' . htmlspecialchars($product['name']) . '</h5>
-                                </a>
-                                <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
-                                    <p class="card-text">' . htmlspecialchars($description) . '</p>
-                                </a>
-                                <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
-                                    <p class="card-text"><strong>' . $lan['price'] . ':</strong> $' . number_format($product['price'], 2) . '</p>
-                                </a>
-                                <p class="card-text">
-                                    <small class="text-muted">' . $lan['listed'] . ' ' . $this->dbfun->time_ago($product['created_at']) . '</small>
-                                </p>
-                                <div class="d-flex justify-content-between">
-                                    ' . (!$isExpired ? '<a class="btn btn-button btn-sm" href="' . $this->urlval . 'productedit.php?slug=' . $product['slug'] . '" style="display: inline-block; margin-right: 5px;">' . $lan['edit'] . '</a>' : '') . '
-                                    <div class="btn-delete-upload">
-                                        ' . ($product['extension'] != 1 && $isExpired ? '<form action="' . $this->urlval . 'productextend.php" method="POST" style="display:inline;">
-                                            <input type="hidden" name="productid" value="' . base64_encode($product['id']) . '" />
-                                            <input type="hidden" name="plan_name" value="' . htmlspecialchars($product['name']) . '" />
-                                            <button type="submit" class="btn btn-button btn-sm btn-extend" style="display: inline-block; margin-right: 5px;">Extend</button>
-                                        </form>' : '') . '
-                                        ' . ($product['product_type'] == 'standard' ? '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'productboost.php?productid=' . base64_encode($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['boost'] . '</a>' : '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'uploadgalvideo.php?productid=' . base64_encode($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['upload_gallery_video'] . '</a>') . '
-                                        <button class="btn btn-button btn-sm btn-delete" data-product-id="' . $this->security->encrypt($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['delete'] . '</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ';
-            }
-        } else {
-            echo '
-            <div class="col-md-4 mb-4">
-                <div class="card product-card">
-                    <div class="col-12 text-center">
-                        <h5>No products found</h5>
-                        <p>Upload your first product!</p>
-                    </div>
-                </div>
-            </div>
-            ';
-        }
-    }
     // function displayProducts($products, $lan) {
     //     $currentDate = new DateTime();
     //     if (!empty($products)) {
@@ -1989,14 +1904,12 @@ Class Productfun{
     //             $expiryDate = $createdDate->modify("+$expiryDays days");
     //             $dateDiff = $currentDate->diff($expiryDate);
     //             $isExpired = ($dateDiff->days > 0 && $currentDate > $expiryDate) ? true : false;
-    
-    //             // Status label for expiry
+    //             $Approval = $product['is_enable'] ?? 0;
+                
+                
+    //             // Add the expired status to the product array
     //             $statusLabel = $isExpired ? 'Expired' : 'Active';
     //             $labelClass = $isExpired ? 'label-danger' : 'label-success';
-    
-    //             // Status label for admin approval
-    //             $approvalLabel = ($product['is_enable'] == 1) ? 'Approved' : (($product['is_enable'] == 2) ? 'Pending' : 'Unapproved');
-    //             $approvalClass = ($product['is_enable'] == 1) ? 'label-success' : (($product['is_enable'] == 2) ? 'label-warning' : 'label-danger');
     
     //             $detailUrl = $this->urlval.'detail.php?slug=' . $product['slug'];
     
@@ -2015,8 +1928,8 @@ Class Productfun{
     //                             <span class="label ' . $labelClass . '" style="position: absolute; top: 10px; left: 10px; padding: 5px 10px; border-radius: 3px; color: white; font-size: 14px;">
     //                                 ' . $statusLabel . '
     //                             </span>
-    //                             <span class="label ' . $approvalClass . '" style="position: absolute; top: 10px; right: 10px; padding: 5px 10px; border-radius: 3px; color: white; font-size: 14px;">
-    //                                 ' . $approvalLabel . '
+    //                             <span class="label ' . $labelClass . '" style="position: absolute; top: 10px; left: 10px; padding: 5px 10px; border-radius: 3px; color: white; font-size: 14px;">
+    //                                 ' . $statusLabel . '
     //                             </span>
     //                         </div>
     //                         <div class="card-body">
@@ -2062,6 +1975,93 @@ Class Productfun{
     //         ';
     //     }
     // }
+    function displayProducts($products, $lan) {
+        $currentDate = new DateTime();
+        if (!empty($products)) {
+            foreach ($products as $product) {
+                $description = $product['description'];
+                $words = explode(" ", $description);
+                $description = count($words) > 5 ? implode(" ", array_slice($words, 0, 5)) . '...' : $description;
+    
+                $createdDate = new DateTime($product['created_at']);
+                // Determine expiration date based on the extension value
+                $expiryDays = ($product['extension'] == 1) ? 30 : 20;
+                $expiryDate = $createdDate->modify("+$expiryDays days");
+                $dateDiff = $currentDate->diff($expiryDate);
+                $isExpired = ($dateDiff->days > 0 && $currentDate > $expiryDate) ? true : false;
+    
+                // Status label for expiry
+                $statusLabel = $isExpired ? 'Expired' : 'Active';
+                $labelClass = $isExpired ? 'label-danger' : 'label-success';
+    
+                // Status label for admin approval
+                $approvalLabel = ($product['is_enable'] == 1) ? 'Approved' : (($product['is_enable'] == 2) ? 'Pending' : 'Unapproved');
+                $approvalClass = ($product['is_enable'] == 1) ? 'label-success' : (($product['is_enable'] == 2) ? 'label-warning' : 'label-danger');
+    
+                $detailUrl = $this->urlval.'detail.php?slug=' . $product['slug'];
+    
+                echo '
+                    <div class="col-md-4 mb-4">
+                        <div class="card product-card">
+                            <div class="product-image-container" style="position: relative;">
+                                <a href="' . $detailUrl . '">
+                                    <img
+                                        src="' . htmlspecialchars($product['image']) . '"
+                                        class="card-img-top"
+                                        alt="' . htmlspecialchars($product['name']) . '"
+                                        style="width: 100%; height: 300px; object-fit: cover;"
+                                    />
+                                </a>
+                                <span class="label ' . $labelClass . '" style="position: absolute; top: 10px; left: 10px; padding: 5px 10px; border-radius: 3px; color: white; font-size: 14px;">
+                                    ' . $statusLabel . '
+                                </span>
+                                <span class="label ' . $approvalClass . '" style="position: absolute; top: 10px; right: 10px; padding: 5px 10px; border-radius: 3px; color: white; font-size: 14px;">
+                                    ' . $approvalLabel . '
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
+                                    <h5 class="card-title">' . htmlspecialchars($product['name']) . '</h5>
+                                </a>
+                                <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
+                                    <p class="card-text">' . htmlspecialchars($description) . '</p>
+                                </a>
+                                <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
+                                    <p class="card-text"><strong>' . $lan['price'] . ':</strong> $' . number_format($product['price'], 2) . '</p>
+                                </a>
+                                <p class="card-text">
+                                    <small class="text-muted">' . $lan['listed'] . ' ' . $this->dbfun->time_ago($product['created_at']) . '</small>
+                                </p>
+                                <div class="d-flex justify-content-between">
+                                    ' . (!$isExpired ? '<a class="btn btn-button btn-sm" href="' . $this->urlval . 'productedit.php?slug=' . $product['slug'] . '" style="display: inline-block; margin-right: 5px;">' . $lan['edit'] . '</a>' : '') . '
+                                    <div class="btn-delete-upload">
+                                        ' . ($product['extension'] != 1 && $isExpired ? '<form action="' . $this->urlval . 'productextend.php" method="POST" style="display:inline;">
+                                            <input type="hidden" name="productid" value="' . base64_encode($product['id']) . '" />
+                                            <input type="hidden" name="plan_name" value="' . htmlspecialchars($product['name']) . '" />
+                                            <button type="submit" class="btn btn-button btn-sm btn-extend" style="display: inline-block; margin-right: 5px;">Extend</button>
+                                        </form>' : '') . '
+                                        ' . ($product['product_type'] == 'standard' ? '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'productboost.php?productid=' . base64_encode($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['boost'] . '</a>' : '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'uploadgalvideo.php?productid=' . base64_encode($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['upload_gallery_video'] . '</a>') . '
+                                        <button class="btn btn-button btn-sm btn-delete" data-product-id="' . $this->security->encrypt($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['delete'] . '</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ';
+            }
+        } else {
+            echo '
+            <div class="col-md-4 mb-4">
+                <div class="card product-card">
+                    <div class="col-12 text-center">
+                        <h5>No products found</h5>
+                        <p>Upload your first product!</p>
+                    </div>
+                </div>
+            </div>
+            ';
+        }
+    }
     
     
     

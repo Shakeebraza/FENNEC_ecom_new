@@ -96,9 +96,11 @@ try {
                 if ($galleryImages['error'][$key] !== UPLOAD_ERR_OK) {
                     continue;
                 }
-                $galleryImageName = basename($galleryImages['name'][$key]);
-                $galleryImagePath = '../upload/productgallery/' . $galleryImageName;
-                $galleryImagePathSave = 'upload/productgallery/' . $galleryImageName;
+                // Generate a unique file name for each gallery image
+                $originalGalleryName = basename($galleryImages['name'][$key]);
+                $uniqueGalleryName = uniqid() . '_' . $originalGalleryName;
+                $galleryImagePath = '../upload/productgallery/' . $uniqueGalleryName;
+                $galleryImagePathSave = 'upload/productgallery/' . $uniqueGalleryName;
 
                 if (move_uploaded_file($tmpName, $galleryImagePath)) {
                     $uploadedGalleryPaths[] = $galleryImagePathSave;
@@ -112,8 +114,10 @@ try {
 
         // 2) Fallback to SINGLE "image" upload if needed
         if (empty($productImagePath) && !empty($_FILES['image']['tmp_name'])) {
-            $imagePath = '../upload/product/' . basename($_FILES['image']['name']);
-            $imagePathSave = 'upload/product/' . basename($_FILES['image']['name']);
+            $originalImageName = basename($_FILES['image']['name']);
+            $uniqueImageName = uniqid() . '_' . $originalImageName;
+            $imagePath = '../upload/product/' . $uniqueImageName;
+            $imagePathSave = 'upload/product/' . $uniqueImageName;
 
             if (!move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
                 throw new Exception('Failed to upload the main product image.');
@@ -140,7 +144,7 @@ try {
         'city_id'                       => $_POST['city'],
         'aera_id'                       => $_POST['aera'] ?? 0,
         'user_id'                       => base64_decode($_SESSION['userid']),
-        'is_enable'                     => 2, // e.g. "pending"
+        'is_enable'                     => 1, // e.g. "pending"
 
         // Boost/fetures fields
         'bold_enabled'                  => $bold_enabled,
@@ -197,7 +201,38 @@ try {
             $sortOrder++;
         }
     }
+    // ***** EMAIL NOTIFICATION *****
+    $userId = base64_decode($_SESSION['userid']);
+    $userData = $dbFunctions->getData('users', "id = '$userId'");
+    if (empty($userData)) {
+        throw new Exception('User not found.');
+    }
 
+    $user = $userData[0];
+    $username = $security->decrypt($user['username']);
+    $email = $security->decrypt($user['email']);
+
+    // Fetch the email template
+    $templateData = $fun->getTemplate('product_posted_notification');
+    if (!$templateData) {
+        throw new Exception('Email template not found.');
+    }
+
+    // Replace placeholders in the template
+    $subject = str_replace('{{username}}', $username, $templateData['subject']);
+    $body = str_replace(
+        ['{{username}}', '{{product_name}}', '{{product_id}}'],
+        [$username, $_POST['productName'], $productId],
+        $templateData['body']
+    );
+
+    // Send the email
+    $mailResponse = smtp_mailer($email, $subject, $body);
+    if ($mailResponse !== 'sent') {
+        file_put_contents("./email_error.log", "Failed to send email to $email. Response: $mailResponse\n", FILE_APPEND);
+    }
+
+    // Return success
     // Success
     echo json_encode([
         'success' => true, 

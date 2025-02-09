@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         } else {
                             $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
                         }
-                        if (mail($recipient, $subject, $body, $headers)) {
+                        if (smtp_mailer($recipient, $subject, $body, $headers)) {
                             $message = "Test email sent successfully to $recipient.";
                         } else {
                             $csrfError = "Failed to send test email.";

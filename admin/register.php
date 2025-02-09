@@ -13,13 +13,36 @@ if ($setSession == true) {
     echo '<script>window.location.href = "' . $redirectUrl . '";</script>';
     exit();
 }
+
+$seoTitle             = $fun->getData('site_settings', 'value', 11);
+$seoTitleEnabled      = $fun->getData('approval_parameters', 'seo_param_title', 1);
+
+$seoDescription       = $fun->getData('site_settings', 'value', 12);
+$seoDescriptionEnabled= $fun->getData('approval_parameters', 'seo_param_description', 1);
+
+$seoKeywords          = $fun->getData('site_settings', 'value', 13);
+$seoKeywordsEnabled   = $fun->getData('approval_parameters', 'seo_param_keyword', 1);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Register</title>
+    <!-- <title>Register</title> -->
+    <!-- SEO Meta Tags -->
+    <?php if (strtolower($seoTitleEnabled) === 'enabled'): ?>
+        <title><?= htmlspecialchars($seoTitle . ' Register') ?></title>
+    <?php else: ?>
+        <title>Fennec</title>
+    <?php endif; ?>
+
+    <?php if (strtolower($seoDescriptionEnabled) === 'enabled'): ?>
+        <meta name="description" content="<?= htmlspecialchars($seoDescription) ?>">
+    <?php endif; ?>
+
+    <?php if (strtolower($seoKeywordsEnabled) === 'enabled'): ?>
+        <meta name="keywords" content="<?= htmlspecialchars($seoKeywords) ?>">
+    <?php endif; ?>
     <!-- CSS includes -->
     <link href="<?php echo $urlval?>admin/asset/css/font-face.css" rel="stylesheet" media="all">
     <link href="<?php echo $urlval?>admin/asset/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">

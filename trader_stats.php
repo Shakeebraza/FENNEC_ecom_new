@@ -67,13 +67,36 @@ $accountBalance = $fun->getUserBalance($userId);
 
 // Format currency using your site's currency symbol
 $currencySymbol = $fun->getFieldData('site_currency') ?: '$';
+
+$seoTitle             = $fun->getData('site_settings', 'value', 11);
+$seoTitleEnabled      = $fun->getData('approval_parameters', 'seo_param_title', 1);
+
+$seoDescription       = $fun->getData('site_settings', 'value', 12);
+$seoDescriptionEnabled= $fun->getData('approval_parameters', 'seo_param_description', 1);
+
+$seoKeywords          = $fun->getData('site_settings', 'value', 13);
+$seoKeywordsEnabled   = $fun->getData('approval_parameters', 'seo_param_keyword', 1);
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo htmlspecialchars($lang); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <title><?php echo htmlspecialchars($lan['Trader_Stats'] ?? 'Trader Statistics'); ?></title> -->
+
+    <!-- SEO Meta Tags -->
+    <?php if (strtolower($seoTitleEnabled) === 'enabled'): ?>
+        <title><?= htmlspecialchars($seoTitle . ' Trader Statistics') ?></title>
+    <?php else: ?>
+        <title>Fennec</title>
+    <?php endif; ?>
+
+    <?php if (strtolower($seoDescriptionEnabled) === 'enabled'): ?>
+        <meta name="description" content="<?= htmlspecialchars($seoDescription) ?>">
+    <?php endif; ?>
+
+    <?php if (strtolower($seoKeywordsEnabled) === 'enabled'): ?>
+        <meta name="keywords" content="<?= htmlspecialchars($seoKeywords) ?>">
+    <?php endif; ?>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome (optional) -->

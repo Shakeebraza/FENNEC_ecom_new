@@ -13,6 +13,15 @@ class Fun {
         $this->urlval = $urlval;
     }
 
+    public function getTemplate($template_key) {
+        // Use $this->pdo to access the PDO object
+        $stmt = $this->pdo->prepare("SELECT subject, body FROM email_templates WHERE template_key = :template_key AND enabled = 1 LIMIT 1");
+        $stmt->bindParam(':template_key', $template_key, PDO::PARAM_STR);
+        $stmt->execute();
+        
+        $template = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $template ? $template : false;
+    }
 
     public function getBox($tablename = null) {
         try {

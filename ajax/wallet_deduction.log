@@ -5,3 +5,22 @@
 2025-02-08 04:26:04 Wallet deduction successful. Rows affected: 1
 2025-02-08 04:41:29 Attempting wallet deduction: fee = 6, userId = 89
 2025-02-08 04:41:29 Wallet deduction successful. Rows affected: 1
+2025-02-08 04:52:48 Attempting wallet deduction: fee = 12.99, userId = 89
+2025-02-08 04:52:48 Wallet deduction successful. Rows affected: 1
+2025-02-08 05:10:35 Attempting wallet deduction: fee = 2, userId = 89
+2025-02-08 05:10:35 Wallet deduction successful. Rows affected: 1
+2025-02-08 05:23:47 Attempting wallet deduction: fee = 0, userId = 89
+2025-02-08 05:26:13 Attempting wallet deduction: fee = 18.99, userId = 89
+2025-02-08 05:26:13 Wallet deduction successful. Rows affected: 1
+2025-02-08 05:28:42 Attempting wallet deduction: fee = 24.99, userId = 89
+2025-02-08 05:28:42 Wallet deduction successful. Rows affected: 1
+2025-02-08 05:36:03 Attempting wallet deduction: fee = 14.99, userId = 89
+2025-02-08 05:36:03 Wallet deduction successful. Rows affected: 1
+2025-02-08 05:42:17 Attempting wallet deduction: fee = 0, userId = 89
+2025-02-08 05:43:33 Attempting wallet deduction: fee = 0, userId = 89
+2025-02-08 12:22:24 Attempting wallet deduction: fee = 6, userId = 98
+2025-02-08 12:22:24 Wallet deduction successful. Rows affected: 1
+2025-02-08 16:52:17 Attempting wallet deduction: fee = 0, userId = 98
+2025-02-08 16:55:09 Attempting wallet deduction: fee = 0, userId = 98
+2025-02-08 16:55:49 Attempting wallet deduction: fee = 0, userId = 98
+2025-02-08 16:57:19 Attempting wallet deduction: fee = 0, userId = 98

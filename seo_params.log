@@ -1,0 +1,12 @@
+[2025-02-08 06:32:07] Retrieving SEO Title from site_settings (key id: 11)
+[2025-02-08 06:32:07] SEO Title: FENNEc
+[2025-02-08 06:32:07] Retrieving SEO Title enabled flag from approval_parameters (key: seo_param_title)
+[2025-02-08 06:32:07] SEO Title Enabled: Enabled
+[2025-02-08 06:32:07] Retrieving SEO Description from site_settings (key id: 12)
+[2025-02-08 06:32:07] SEO Description: A brief description of your website for SEO.
+[2025-02-08 06:32:07] Retrieving SEO Description enabled flag from approval_parameters (key: seo_param_description)
+[2025-02-08 06:32:07] SEO Description Enabled: Enabled
+[2025-02-08 06:32:07] Retrieving SEO Keywords from site_settings (key id: 13)
+[2025-02-08 06:32:07] SEO Keywords: keyword1, keyword2, keyword3
+[2025-02-08 06:32:07] Retrieving SEO Keywords enabled flag from approval_parameters (key: seo_param_keyword)
+[2025-02-08 06:32:07] SEO Keywords Enabled: Enabled

@@ -37,6 +37,16 @@ if (!empty($_SESSION['aprofile']) && file_exists($_SESSION['aprofile'])) {
 } else {
     $profile = $defaultProfile;
 }
+
+
+$seoTitle             = $fun->getData('site_settings', 'value', 11);
+$seoTitleEnabled      = $fun->getData('approval_parameters', 'seo_param_title', 1);
+
+$seoDescription       = $fun->getData('site_settings', 'value', 12);
+$seoDescriptionEnabled= $fun->getData('approval_parameters', 'seo_param_description', 1);
+
+$seoKeywords          = $fun->getData('site_settings', 'value', 13);
+$seoKeywordsEnabled   = $fun->getData('approval_parameters', 'seo_param_keyword', 1);
 ?>
 
 <!DOCTYPE html>
@@ -51,7 +61,21 @@ if (!empty($_SESSION['aprofile']) && file_exists($_SESSION['aprofile'])) {
     <meta name="keywords" content="au theme template">
 
 
-    <title>Dashboard</title>
+    <!-- <title>Dashboard</title> -->
+    <!-- SEO Meta Tags -->
+    <?php if (strtolower($seoTitleEnabled) === 'enabled'): ?>
+        <title><?= htmlspecialchars($seoTitle . ' Dashboard') ?></title>
+    <?php else: ?>
+        <title>Fennec</title>
+    <?php endif; ?>
+
+    <?php if (strtolower($seoDescriptionEnabled) === 'enabled'): ?>
+        <meta name="description" content="<?= htmlspecialchars($seoDescription) ?>">
+    <?php endif; ?>
+
+    <?php if (strtolower($seoKeywordsEnabled) === 'enabled'): ?>
+        <meta name="keywords" content="<?= htmlspecialchars($seoKeywords) ?>">
+    <?php endif; ?>
 
 
     <link href="<?php echo $urlval?>admin/asset/css/font-face.css" rel="stylesheet" media="all">
