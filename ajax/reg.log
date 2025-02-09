@@ -1,0 +1,39 @@
+[2025-02-09 10:13:32] Registration attempt initiated. Username: 'bilal.shehroz420@gmail.com', Email: 'bilal.shehroz420@gmail.com'.
+[2025-02-09 10:13:32] Registration success: User 'bilal.shehroz420@gmail.com' inserted into database.
+[2025-02-09 10:13:32] encryptedUserId: 'VFZSRk5RPT0='.
+[2025-02-09 10:13:32] decryptedUserId: '119'.
+[2025-02-09 10:13:32] Registration info: Approval token generated for user 'bilal.shehroz420@gmail.com' (ID: 119).
+[2025-02-09 10:13:35] Registration success: Admin approval email sent for user 'bilal.shehroz420@gmail.com' (ID: 119).
+[2025-02-09 10:15:57] Registration attempt initiated. Username: 'bilal.shehroz420@gmail.com', Email: 'bilal.shehroz420@gmail.com'.
+[2025-02-09 10:15:57] Registration error: Username 'bilal.shehroz420@gmail.com' is already taken.
+[2025-02-09 10:16:05] Registration attempt initiated. Username: 'bilal.shehroz420@gmail.com', Email: 'bilal.shehroz420@gmail.com'.
+[2025-02-09 10:16:05] Registration success: User 'bilal.shehroz420@gmail.com' inserted into database.
+[2025-02-09 10:16:05] encryptedUserId: 'VFZSSmR3PT0='.
+[2025-02-09 10:16:05] decryptedUserId: '120'.
+[2025-02-09 10:16:05] Registration info: Approval token generated for user 'bilal.shehroz420@gmail.com' (ID: 120).
+[2025-02-09 10:16:08] Registration success: Admin approval email sent for user 'bilal.shehroz420@gmail.com' (ID: 120).
+[2025-02-09 10:16:08] Registration success: User 'bilal.shehroz420@gmail.com' registered successfully without email verification.
+[2025-02-09 10:17:39] Registration attempt initiated. Username: 'bilal.shehroz420@gmail.com', Email: 'bilal.shehroz420@gmail.com'.
+[2025-02-09 10:17:39] Registration success: User 'bilal.shehroz420@gmail.com' inserted into database.
+[2025-02-09 10:17:39] encryptedUserId: 'VFZSSmVBPT0='.
+[2025-02-09 10:17:39] decryptedUserId: '121'.
+[2025-02-09 10:17:39] Registration info: Approval token generated for user 'bilal.shehroz420@gmail.com' (ID: 121).
+[2025-02-09 10:17:42] Registration success: Admin approval email sent for user 'bilal.shehroz420@gmail.com' (ID: 121).
+[2025-02-09 10:17:42] Registration success: User 'bilal.shehroz420@gmail.com' registered successfully without email verification.
+[2025-02-09 10:20:00] Registration attempt initiated. Username: 'bilal.shehroz420@gmail.com', Email: 'furqanimta@gmail.com'.
+[2025-02-09 10:20:00] Registration error: Username 'bilal.shehroz420@gmail.com' is already taken.
+[2025-02-09 10:20:06] Registration attempt initiated. Username: 'dfd', Email: 'furqanimta@gmail.com'.
+[2025-02-09 10:20:06] Registration success: User 'dfd' inserted into database.
+[2025-02-09 10:20:06] encryptedUserId: 'VFZSSmVRPT0='.
+[2025-02-09 10:20:06] decryptedUserId: '122'.
+[2025-02-09 10:20:06] Registration info: Approval token generated for user 'dfd' (ID: 122).
+[2025-02-09 10:20:09] Registration success: Admin approval email sent for user 'dfd' (ID: 122).
+[2025-02-09 10:20:09] Registration success: User 'dfd' registered successfully without email verification.
+[2025-02-09 10:22:10] Registration attempt initiated. Username: 'dfd', Email: 'bilal.shehroz420@gmail.com'.
+[2025-02-09 10:22:10] Registration success: User 'dfd' inserted into database.
+[2025-02-09 10:22:13] Registration success: Verification email sent to 'bilal.shehroz420@gmail.com' for user 'dfd'.
+[2025-02-09 10:22:13] Registration success: User 'dfd' registered successfully without email verification.
+[2025-02-09 10:27:49] Registration attempt initiated. Username: 'dsa', Email: 'furqanimta@gmail.com'.
+[2025-02-09 10:27:49] Registration success: User 'dsa' inserted into database.
+[2025-02-09 10:27:49] encryptedUserId: 'VFZSSk1BPT0='.
+[2025-02-09 10:27:49] decryptedUserId: '124'.

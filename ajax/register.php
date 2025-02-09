@@ -1,6 +1,13 @@
 <?php
 require_once("../global.php");
 
+// Logging function: writes messages to reg.log in the current directory.
+function writeLogs($message) {
+    $logFile = __DIR__ . '/reg.log';
+    $date = date('Y-m-d H:i:s');
+    file_put_contents($logFile, "[$date] $message" . PHP_EOL, FILE_APPEND);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve approval parameters from the DB
     $memberApproval    = strtolower($fun->getData('approval_parameters', 'member_approval', 1));
@@ -13,6 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve role from POST; default to 0 if not provided
     $role     = isset($_POST['role']) && $_POST['role'] !== '' ? (int)$_POST['role'] : 0;
 
+    // Log the registration attempt (without sensitive data)
+    writeLogs("Registration attempt initiated. Username: '$username', Email: '$email'.");
+
     // Configuration for username and password length
     $minUsernameLength = $fun->getFieldData('username_length');
     $maxUsernameLength = 50;
@@ -21,17 +31,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // --- Username Validation ---
     if (empty($username)) {
+        writeLogs("Registration error: Username is required.");
         echo json_encode(['status' => 'error', 'errors' => 'Username is required.']);
         exit();
     } elseif (strlen($username) < $minUsernameLength) {
+        writeLogs("Registration error: Username '$username' is shorter than minimum length $minUsernameLength.");
         echo json_encode(['status' => 'error', 'errors' => "Username must be at least $minUsernameLength characters long."]);
         exit();
     } elseif (strlen($username) > $maxUsernameLength) {
+        writeLogs("Registration error: Username '$username' is longer than maximum length $maxUsernameLength.");
         echo json_encode(['status' => 'error', 'errors' => "Username must be no longer than $maxUsernameLength characters."]);
         exit();
     } else {
         $usernameCount = $dbFunctions->getCount('users', 'username', "username = '$username'");
         if ($usernameCount > 0) {
+            writeLogs("Registration error: Username '$username' is already taken.");
             echo json_encode(['status' => 'error', 'errors' => 'Username is already taken']);
             exit();
         }
@@ -39,18 +53,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // --- Email Validation ---
     if (empty($email)) {
+        writeLogs("Registration error: Email is required.");
         echo json_encode(['status' => 'error', 'errors' => 'Email is required.']);
         exit();
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        writeLogs("Registration error: Email '$email' is invalid.");
         echo json_encode(['status' => 'error', 'errors' => 'Invalid email format.']);
         exit();
     } else {
         $emailCount = $dbFunctions->getCount('users', 'email', "email = '$email'");
         if ($emailCount === false) {
+            writeLogs("Registration error: Database error checking email count for email '$email'.");
             echo json_encode(['status' => 'error', 'errors' => 'Error checking email count. Database query failed.']);
             exit();
         }
         if ($emailCount > 0) {
+            writeLogs("Registration error: Email '$email' is already registered.");
             echo json_encode(['status' => 'error', 'errors' => 'Email is already registered']);
             exit();
         }
@@ -58,12 +76,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // --- Password Validation ---
     if (empty($password)) {
+        writeLogs("Registration error: Password is required for username '$username'.");
         echo json_encode(['status' => 'error', 'errors' => 'Password is required.']);
         exit();
     } elseif (strlen($password) < $minPasswordLength) {
+        writeLogs("Registration error: Password for username '$username' is shorter than minimum length $minPasswordLength.");
         echo json_encode(['status' => 'error', 'errors' => "Password must be at least $minPasswordLength characters long."]);
         exit();
     } elseif (strlen($password) > $maxPasswordLength) {
+        writeLogs("Registration error: Password for username '$username' is longer than maximum length $maxPasswordLength.");
         echo json_encode(['status' => 'error', 'errors' => "Password must be no longer than $maxPasswordLength characters."]);
         exit();
     }
@@ -99,9 +120,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // --- Insert the User ---
     $response = $dbFunctions->setData('users', $userData);
     if (!$response['success']) {
+        writeLogs("Registration error: Failed to insert user '$username' into database. Error: " . $response['message']);
         echo json_encode(['status' => 'error', 'errors' => $response['message']]);
         exit();
     }
+    writeLogs("Registration success: User '$username' inserted into database.");
 
     // --- Sending Verification Email (if enabled) ---
     if ($emailVerification === 'enabled') {
@@ -109,7 +132,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $verificationLink = $urlval . "verify_email.php?token=" . $userData['verification_token'] . "&email=" . urlencode($email) . "&role=none";
 
         // Retrieve the dynamic email template from the database using the template key.
-        // You should have a function (e.g., $fun->getTemplate($template_key)) that queries the email_templates table.
         $templateData = $fun->getTemplate('registration_verification');
 
         if (!$templateData) {
@@ -133,38 +155,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mailResponse = smtp_mailer($email, $subject, $body);
 
         if ($mailResponse == 'sent') {
-            echo json_encode(['status' => 'success', 'message' => 'Registration successful! Verification email sent.']);
+            writeLogs("Registration success: Verification email sent to '$email' for user '$username'.");
+            // echo json_encode(['status' => 'success', 'message' => 'Registration successful! Verification email sent.']);
         } else {
-            echo json_encode(['status' => 'error', 'errors' => 'Registration successful, but failed to send verification email.']);
+            writeLogs("Registration error: Verification email failed to send to '$email' for user '$username'.");
+            // echo json_encode(['status' => 'error', 'errors' => 'Registration successful, but failed to send verification email.']);
         }
     } 
+
+    // if ($memberApproval === 'admin') {
+    //     // Fetch the inserted user's record based on their email
+    //     $user = $dbFunctions->getData('users', "email = '$email'");
+    //     if (!$user || empty($user)) {
+    //         writeLogs("Registration error: User not found in DB after insertion for email '$email'.");
+    //         echo json_encode(['status' => 'error', 'errors' => 'User ID not found for approval.']);
+    //         exit();
+    //     }
+        
+    //     // Retrieve the encrypted user ID and decrypt it using the Security class
+    //     $encryptedUserId = $user[0]['id'];
+    //     writeLogs("encryptedUserId: '$encryptedUserId'.");
+    //     // $security = new Security('your-secret-key'); // Replace with your actual secret key
+    //     $decryptedUserId = $security->decrypt($encryptedUserId);
+    //     writeLogs("decryptedUserId: '$decryptedUserId'.");
     
-    if ($memberApproval === 'admin') {
-        $approvalToken = bin2hex(random_bytes(16));
-        $dbFunctions->updateData('users', ['approval_token' => $approvalToken], $userId);
-
-        $approvalLink = $urlval . "approve_user.php?token=$approvalToken&user_id=$userId";
-
-        $templateData = $fun->getTemplate('signup_awaiting_approval');
-
-        if (!$templateData) {
-            $subject = 'New User Signup: Approval Needed';
-            $body = "<p>A new user has signed up and requires your approval:</p>
-                    <p>Username: {$username}</p>
-                    <p>Email: {$email}</p>
-                    <p><a href='{$approvalLink}'>Approve User</a></p>";
-        } else {
-            $subject = str_replace(['{{username}}', '{{email}}'], [$username, $email], $templateData['subject']);
-            $body = str_replace(
-                ['{{username}}', '{{email}}', '{{approval_link}}'],
-                [$username, $email, $approvalLink],
-                $templateData['body']
-            );
-        }
-
-        $adminEmail = $fun->getData('site_settings', 'value', 4); // Assuming the admin email is stored in settings
-        smtp_mailer($adminEmail, $subject, $body);
-    }
+    //     // Generate the approval token
+    //     $approvalToken = bin2hex(random_bytes(16));
+    
+    //     // Update the user's record with the approval token using the decrypted user ID
+    //     $dbFunctions->updateData('users', ['approval_token' => $approvalToken], $decryptedUserId);
+    //     writeLogs("Registration info: Approval token generated for user '$username' (ID: $decryptedUserId).");
+    
+    //     // Generate the approval link using the decrypted user ID
+    //     $approvalLink = $urlval . "approve_user.php?token=$approvalToken&user_id=$decryptedUserId";
+    
+    //     // Fetch the email template for admin approval
+    //     $templateData = $fun->getTemplate('signup_awaiting_approval');
+    
+    //     if (!$templateData) {
+    //         // Fallback template if the email template is not found
+    //         $subject = 'New User Signup: Approval Needed';
+    //         $body = "<p>A new user has signed up and requires your approval:</p>
+    //                  <p>Username: {$username}</p>
+    //                  <p>Email: {$email}</p>
+    //                  <p><a href='{$approvalLink}'>Approve User</a></p>";
+    //     } else {
+    //         // Replace placeholders with actual data in the template
+    //         $subject = str_replace(['{{username}}', '{{email}}'], [$username, $email], $templateData['subject']);
+    //         $body = str_replace(
+    //             ['{{username}}', '{{email}}', '{{approval_link}}'],
+    //             [$username, $email, $approvalLink],
+    //             $templateData['body']
+    //         );
+    //     }
+    
+    //     // Send the email to the admin
+    //     $adminEmail = $fun->getData('site_settings', 'value', 4); // Assuming the admin email is stored in settings
+    //     $mailResponse = smtp_mailer($adminEmail, $subject, $body);
+    
+    //     if ($mailResponse == 'sent') {
+    //         writeLogs("Registration success: Admin approval email sent for user '$username' (ID: $decryptedUserId).");
+    //         // echo json_encode(['status' => 'success', 'message' => 'Registration successful! Awaiting admin approval.']);
+    //     } else {
+    //         writeLogs("Registration error: Admin approval email failed to send for user '$username' (ID: $decryptedUserId).");
+    //         // echo json_encode(['status' => 'error', 'errors' => 'Registration successful, but failed to send admin approval email.']);
+    //     }
+    // }
+    
+    
+    writeLogs("Registration success: User '$username' registered successfully without email verification.");
     echo json_encode(['status' => 'success', 'message' => 'Registration successful! No email verification needed.']);
     exit();
 }
