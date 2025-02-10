@@ -1850,9 +1850,9 @@ Class Productfun{
     function getProductsForUserexp($userId, $lan, $filter) {
         if ($userId) {
             $query = "
-                SELECT id, name, slug, description, extension, image, price, created_at, product_type
+                SELECT id, name, slug, description, extension, image, price, created_at, product_type, is_enable
                 FROM products
-                WHERE user_id = :user_id AND is_enable = 1 AND status = 'active'
+                WHERE user_id = :user_id AND status = 'active'
                 ORDER BY FIELD(product_type, 'premium', 'gold', 'standard'), created_at DESC
             ";
     
@@ -1861,7 +1861,6 @@ Class Productfun{
             $stmt->execute();
     
             $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
     
             if (!empty($products)) {
                 $filteredProducts = array_filter($products, function ($product) use ($filter) {
@@ -1889,6 +1888,7 @@ Class Productfun{
             echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
         }
     }
+    
     
     // function displayProducts($products, $lan) {
     //     $currentDate = new DateTime();
