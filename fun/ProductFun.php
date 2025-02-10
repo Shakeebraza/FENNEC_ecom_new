@@ -2099,7 +2099,7 @@ Class Productfun{
                 // "New" badge: if product created within last 3 days
                 $diffFromCreated = $currentDate->diff($createdDate);
                 $newThresholdDays = 3;
-                $recentLabel = ($diffFromCreated->days < $newThresholdDays && $currentDate >= $createdDate) ? 'New' : '';
+                $recentLabel = ($diffFromCreated->days < $newThresholdDays && $currentDate >= $createdDate) ? 'Recently Added' : '';
     
                 // "Nearly Expired" badge: if product is not expired and will expire within 5 days
                 $diffToExpiry = $currentDate->diff($expiryDate);
