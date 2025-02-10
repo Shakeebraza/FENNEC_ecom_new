@@ -9,6 +9,9 @@ class Security {
     }
 
     public function encrypt($data) {
+        if ($data === null) {
+            $data = '';
+        }
         return base64_encode(base64_encode(base64_encode($data)));
     }
 
