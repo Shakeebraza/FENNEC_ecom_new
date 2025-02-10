@@ -163,6 +163,41 @@ $userData = $dbFunctions->getDatanotenc('user_detail', "userid = '$userid'");
 .message-container:hover .mail-icon {
     display: block;
 }
+
+/* Container for all badges on the product image */
+.product-badges.unique-badges {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Space between rows */
+    pointer-events: none; /* So clicks pass through if needed */
+}
+
+/* Each row of badges */
+.badge-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Base badge styling */
+.badge {
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 14px;
+    color: #fff;
+    white-space: nowrap;
+    pointer-events: auto; /* Allow interaction if needed */
+}
+
+/* Color classes for badges */
+.badge-danger   { background-color: #dc3545; } /* For expired / error */
+.badge-success  { background-color: #28a745; } /* For active / approved */
+.badge-warning  { background-color: #ffc107; } /* For pending / nearly expired */
+.badge-info     { background-color: #17a2b8; } /* For new items */
+
 </style>
 
 <div class="container mt-4 pb-5">

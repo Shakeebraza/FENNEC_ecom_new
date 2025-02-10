@@ -1880,10 +1880,10 @@ Class Productfun{
                 if (!empty($filteredProducts)) {
                     return $filteredProducts;
                 } else {
-                    // echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
+                    echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
                 }
             } else {
-                // echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
+                echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
             }
         } else {
             echo '<div class="col-md-12 text-center">' . ($lan['No_products_found_for_user'] ?? 'No products found.') . '</div>';
@@ -2064,81 +2064,117 @@ Class Productfun{
     // }
     function displayProducts($products, $lan) {
         $currentDate = new DateTime();
+    
         if (!empty($products)) {
             foreach ($products as $product) {
+                // Shorten description to a maximum of 5 words
                 $description = $product['description'];
                 $words = explode(" ", $description);
-                $description = count($words) > 5 ? implode(" ", array_slice($words, 0, 5)) . '...' : $description;
+                $description = (count($words) > 5) ? implode(" ", array_slice($words, 0, 5)) . '...' : $description;
     
+                // Calculate creation and expiration dates
                 $createdDate = new DateTime($product['created_at']);
-                // Determine expiration date based on the extension value
                 $expiryDays = ($product['extension'] == 1) ? 30 : 20;
-                $expiryDate = $createdDate->modify("+$expiryDays days");
-                $dateDiff = $currentDate->diff($expiryDate);
-              $isExpired = ($currentDate > $expiryDate);
-
-
-             $isExpired = ($dateDiff->days > 0 && $currentDate > $expiryDate) ? true : false;
-                $Approval = $product['is_enable'] ?? 0;
-                
-                
-                // Add the expired status to the product array
-                $statusLabel = $isExpired ? 'Expired' : 'Active';
-                $labelClass = $isExpired ? 'label-danger' : 'label-success';
+                // Use clone to avoid modifying the original creation date
+                $expiryDate = (clone $createdDate)->modify("+$expiryDays days");
     
-                $detailUrl = $this->urlval.'detail.php?slug=' . $product['slug'];
-                
-                  $ApprovalEW =  $Approval ? 'Approved' : 'Pending';
-                
+                // Determine expired status
+                $isExpired = ($currentDate > $expiryDate);
+                $statusLabel = $isExpired ? 'Expired' : 'Active';
+                $badgeStatusClass = $isExpired ? 'badge-danger' : 'badge-success';
+    
+                // Approval status (three states: 2 => Pending, 1 => Approved, 0 => Unapproved)
+                $Approval = $product['is_enable'] ?? 0;
+                if ($Approval == 1) {
+                    $ApprovalEW = 'Approved';
+                    $badgeApprovalClass = 'badge-success';
+                } elseif ($Approval == 2) {
+                    $ApprovalEW = 'Pending';
+                    $badgeApprovalClass = 'badge-warning';
+                } else {
+                    $ApprovalEW = 'Unapproved';
+                    $badgeApprovalClass = 'badge-danger';
+                }
+    
+                // "New" badge: if product created within last 3 days
+                $diffFromCreated = $currentDate->diff($createdDate);
+                $newThresholdDays = 3;
+                $recentLabel = ($diffFromCreated->days < $newThresholdDays && $currentDate >= $createdDate) ? 'New' : '';
+    
+                // "Nearly Expired" badge: if product is not expired and will expire within 5 days
+                $diffToExpiry = $currentDate->diff($expiryDate);
+                $nearlyExpiredThresholdDays = 5;
+                $nearlyExpiredLabel = (!$isExpired && $diffToExpiry->days < $nearlyExpiredThresholdDays) ? 'Nearly Expired' : '';
+    
+                // Detail page URL
+                $detailUrl = $this->urlval . 'detail.php?slug=' . $product['slug'];
     
                 echo '
-                    <div class="col-md-4 mb-4">
-                        <div class="card product-card">
-                            <div class="product-image-container" style="position: relative;">
-                                <a href="' . $detailUrl . '">
-                                    <img
-                                        src="' . htmlspecialchars($product['image']) . '"
-                                        class="card-img-top"
-                                        alt="' . htmlspecialchars($product['name']) . '"
-                                        style="width: 100%; height: 300px; object-fit: cover;"
-                                    />
-                                </a>
-                                <span class="label ' . $labelClass . '" style="position: absolute; top: 10px; left: 10px; padding: 5px 10px; border-radius: 3px; color: white; font-size: 14px;">
-                                    ' . $statusLabel . '
-                                </span>
-                                <span class=" ' . $labelClass . '" style="position: absolute; top: 10px; right: 10px !important; padding: 5px 10px; border-radius: 3px; color: white; font-size: 14px;">
-                                    ' . $ApprovalEW . '
-                                </span>
-                            </div>
-                            <div class="card-body">
-                                <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
-                                    <h5 class="card-title">' . htmlspecialchars($product['name']) . '</h5>
-                                </a>
-                                <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
-                                    <p class="card-text">' . htmlspecialchars($description) . '</p>
-                                </a>
-                                <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
-                                    <p class="card-text"><strong>' . $lan['price'] . ':</strong> $' . number_format($product['price'], 2) . '</p>
-                                </a>
-                                <p class="card-text">
-                                    <small class="text-muted">' . $lan['listed'] . ' ' . $this->dbfun->time_ago($product['created_at']) . '</small>
-                                </p>
-                                <div class="d-flex justify-content-between">
-                                    ' . (!$isExpired ? '<a class="btn btn-button btn-sm" href="' . $this->urlval . 'productedit.php?slug=' . $product['slug'] . '" style="display: inline-block; margin-right: 5px;">' . $lan['edit'] . '</a>' : '') . '
-                                    <div class="btn-delete-upload">
-                                        ' . ($product['extension'] != 1 && $isExpired ? '<form action="' . $this->urlval . 'productextend.php" method="POST" style="display:inline;">
-                                            <input type="hidden" name="productid" value="' . base64_encode($product['id']) . '" />
-                                            <input type="hidden" name="plan_name" value="' . htmlspecialchars($product['name']) . '" />
-                                            <button type="submit" class="btn btn-button btn-sm btn-extend" style="display: inline-block; margin-right: 5px;">Extend</button>
-                                        </form>' : '') . '
-                                        ' . ($product['product_type'] == 'standard' ? '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'productboost.php?productid=' . base64_encode($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['boost'] . '</a>' : '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'uploadgalvideo.php?productid=' . base64_encode($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['upload_gallery_video'] . '</a>') . '
-                                        <button class="btn btn-button btn-sm btn-delete" data-product-id="' . $this->security->encrypt($product['id']) . '" style="display: inline-block; margin-right: 5px;">' . $lan['delete'] . '</button>
-                                    </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card product-card">
+                        <div class="product-image-container" style="position: relative;">
+                            <a href="' . $detailUrl . '">
+                                <img
+                                    src="' . htmlspecialchars($product['image']) . '"
+                                    class="card-img-top"
+                                    alt="' . htmlspecialchars($product['name']) . '"
+                                    style="width: 100%; height: 300px; object-fit: cover;"
+                                />
+                            </a>
+                            <!-- Badges Container with Unique Classes -->
+                            <div class="product-badges unique-badges">
+                                <!-- Top Row: Status and Approval -->
+                                <div class="badge-row top-badges">
+                                    <div class="badge badge-status ' . $badgeStatusClass . '">' . $statusLabel . '</div>
+                                    <div class="badge badge-approval ' . $badgeApprovalClass . '">' . $ApprovalEW . '</div>
                                 </div>
+                                <!-- Bottom Row: New and Nearly Expired (if applicable) -->
+                                <div class="badge-row bottom-badges">';
+                if (!empty($recentLabel)) {
+                    echo '<div class="badge badge-new badge-info">' . $recentLabel . '</div>';
+                }
+                if (!empty($nearlyExpiredLabel)) {
+                    echo '<div class="badge badge-near-expired badge-warning">' . $nearlyExpiredLabel . '</div>';
+                }
+                echo '              </div>
                             </div>
                         </div>
+                        <div class="card-body">
+                            <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
+                                <h5 class="card-title">' . htmlspecialchars($product['name']) . '</h5>
+                            </a>
+                            <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
+                                <p class="card-text">' . htmlspecialchars($description) . '</p>
+                            </a>
+                            <a href="' . $detailUrl . '" style="text-decoration: none; color: inherit;">
+                                <p class="card-text"><strong>' . $lan['price'] . ':</strong> $' . number_format($product['price'], 2) . '</p>
+                            </a>
+                            <p class="card-text">
+                                <small class="text-muted">' . $lan['listed'] . ' ' . $this->dbfun->time_ago($product['created_at']) . '</small>
+                            </p>
+                            <div class="d-flex justify-content-between">';
+                if (!$isExpired) {
+                    echo '<a class="btn btn-button btn-sm" href="' . $this->urlval . 'productedit.php?slug=' . $product['slug'] . '" style="margin-right: 5px;">' . $lan['edit'] . '</a>';
+                }
+                echo '<div class="btn-delete-upload">';
+                if ($product['extension'] != 1 && $isExpired) {
+                    echo '<form action="' . $this->urlval . 'productextend.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="productid" value="' . base64_encode($product['id']) . '" />
+                            <input type="hidden" name="plan_name" value="' . htmlspecialchars($product['name']) . '" />
+                            <button type="submit" class="btn btn-button btn-sm btn-extend" style="margin-right: 5px;">Extend</button>
+                          </form>';
+                }
+                if ($product['product_type'] == 'standard') {
+                    echo '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'productboost.php?productid=' . base64_encode($product['id']) . '" style="margin-right: 5px;">' . $lan['boost'] . '</a>';
+                } else {
+                    echo '<a class="btn btn-button btn-sm btn-boost" href="' . $this->urlval . 'uploadgalvideo.php?productid=' . base64_encode($product['id']) . '" style="margin-right: 5px;">' . $lan['upload_gallery_video'] . '</a>';
+                }
+                echo '<button class="btn btn-button btn-sm btn-delete" data-product-id="' . $this->security->encrypt($product['id']) . '" style="margin-right: 5px;">' . $lan['delete'] . '</button>
+                        </div>
+                        </div>
+                        </div>
                     </div>
-                ';
+                </div>';
             }
         } else {
             echo '
@@ -2149,10 +2185,10 @@ Class Productfun{
                         <p>Upload your first product!</p>
                     </div>
                 </div>
-            </div>
-            ';
+            </div>';
         }
     }
+    
     
     
     
