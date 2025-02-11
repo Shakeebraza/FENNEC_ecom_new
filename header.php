@@ -494,6 +494,19 @@ $seoKeywordsEnabled   = $fun->getData('approval_parameters', 'seo_param_keyword'
             <div class="nav-sub-menu-inn1">
                 <div class="nav-men-sub-ct-inn">
                     <ul>
+
+                      <!-- Additional Menu Items -->
+        <li class="expiring-soon">
+            <a href="<?php echo $urlval; ?>expiring.php">
+                <i class="fa fa-clock-o" style="margin-right: 8px;"></i> <?php echo $lan['expiring_soon'] ?? 'Expiring Soon'; ?>
+            </a>
+        </li>
+        <li class="latest">
+            <a href="<?php echo $urlval; ?>latest.php">
+                <i class="fa fa-bolt" style="margin-right: 8px;"></i> <?php echo $lan['latest'] ?? 'Latest'; ?>
+            </a>
+        </li>
+        <br>
                         <?php
                         $browse_by = $lan['browse_by'] ?? 'Browse by';
                         $findCate  = $categoryManager->getAllCategoriesHeaderMenu();
@@ -543,7 +556,9 @@ $seoKeywordsEnabled   = $fun->getData('approval_parameters', 'seo_param_keyword'
                         }
                         ?>
                     </ul>
+                    
                 </div>
+                
             </div>
         </div>
     </div>
