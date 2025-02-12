@@ -79,6 +79,7 @@ try {
                                         <th>Amount</th>
                                         <th>Description</th>
                                         <th>Transaction Date</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -97,8 +98,9 @@ try {
 
 <!-- DataTables Script Initialization -->
 <script>
+var table; // Declare table variable in global scope
 $(document).ready(function() {
-    var table = $('#transactionTable').DataTable({
+    table = $('#transactionTable').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -117,7 +119,17 @@ $(document).ready(function() {
             { data: 'username' },
             { data: 'amount' },
             { data: 'description' },
-            { data: 'transaction_date' }
+            { data: 'transaction_date' },
+            { 
+              data: 'transaction_id',
+              orderable: false,
+              render: function(data, type, row, meta) {
+                  // Build the HTML for Edit and Delete buttons.
+                  // Adjust URLs as needed.
+                  return '<a href="<?php echo $urlval; ?>admin/edittransaction.php?id=' + data + '" class="btn btn-sm btn-primary">Edit</a> ' +
+                         '<a href="javascript:void(0);" onclick="deleteTransaction(' + data + ')" class="btn btn-sm btn-danger">Delete</a>';
+              }
+            }
         ],
         "order": [
             [5, "desc"]
@@ -129,4 +141,30 @@ $(document).ready(function() {
         table.draw();
     });
 });
+
+// Delete function accessible globally
+function deleteTransaction(transactionId) {
+    if (confirm("Are you sure you want to delete this transaction?")) {
+        fetch("<?php echo $urlval; ?>admin/ajax/deletetransaction.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id: transactionId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Transaction deleted successfully.");
+                table.draw();
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Error deleting transaction:", error);
+            alert("An error occurred. Please try again.");
+        });
+    }
+}
 </script>
