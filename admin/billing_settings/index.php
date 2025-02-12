@@ -181,7 +181,7 @@ if (!$settings) {
                         </div>
                     </div>
                     <!-- 2Checkout Payments -->
-                    <div class="col-md-6">
+                    <!-- <div class="col-md-6">
                         <div class="card mb-3">
                             <div class="card-header"><strong>2Checkout Payments</strong></div>
                             <div class="card-body">
@@ -196,12 +196,12 @@ if (!$settings) {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="row">
                     <!-- Authorize.net Payments -->
-                    <div class="col-md-6">
+                    <!-- <div class="col-md-6">
                         <div class="card mb-3">
                             <div class="card-header"><strong>Authorize.net Payments</strong></div>
                             <div class="card-body">
@@ -220,9 +220,9 @@ if (!$settings) {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- E-gold Payments -->
-                    <div class="col-md-6">
+                    <!-- <div class="col-md-6">
                         <div class="card mb-3">
                             <div class="card-header"><strong>E-gold Payments</strong></div>
                             <div class="card-body">
@@ -252,7 +252,7 @@ if (!$settings) {
                                     <label for="egold_payment_units" class="form-label">Payment Units</label>
                                     <select name="egold_payment_units" id="egold_payment_units" class="form-control">
                                         <option value="US Dollar (USD)" <?= ($settings['egold_payment_units'] === 'US Dollar (USD)') ? 'selected' : '' ?>>US Dollar (USD)</option>
-                                        <!-- Add other currency options as needed -->
+                                        
                                     </select>
                                 </div>
                                 <div class="mb-3">
@@ -262,12 +262,12 @@ if (!$settings) {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="row">
                     <!-- Stripe Payments -->
-                    <div class="col-md-6">
+                    <!-- <div class="col-md-6">
                         <div class="card mb-3">
                             <div class="card-header"><strong>Stripe Payments</strong></div>
                             <div class="card-body">
@@ -285,7 +285,7 @@ if (!$settings) {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- Offline Payments -->
                     <div class="col-md-6">
                         <div class="card mb-3">
