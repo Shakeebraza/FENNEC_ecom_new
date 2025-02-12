@@ -115,13 +115,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 .star.selected {
     color: gold;
 }
-.star:hover,
-.star:hover~.star {
-    color: gold;
-}
 </style>
 
 <div class="container py-4" style="max-width: 80%; margin: auto; font-family: Arial, sans-serif;">
+    <!-- User Info and Selling History (unchanged) -->
     <div class="d-flex align-items-left justify-content-between mb-4" style="border-bottom: 1px solid #ccc; padding-bottom: 15px;">
         <div class="d-flex align-items-center gap-3">
             <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm"
@@ -156,8 +153,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <i class="fas fa-check-circle"></i>
                 <small><?= $emailVerified ? 'Email address verified' : 'Email not verified' ?></small>
             </div>
-            
-            <!-- If user is Trader (role=2), show company info -->
             <?php if ($user['role'] == 2) : ?>
                 <?php if (!empty($companyName)) : ?>
                     <div class="d-flex align-items-center gap-2 mb-2" style="font-size: 0.9rem; color: #555;">
@@ -172,7 +167,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 <?php endif; ?>
             <?php endif; ?>
-
         </div>
     </div>
 
@@ -297,12 +291,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                         <div class="mb-3">
                             <label for="rating" class="form-label" style="font-weight: 600; color: #333;">Your Rating</label>
+                            <!-- Stars are now ordered from 1 to 5 -->
                             <div class="star-rating" id="rating" style="display: flex; gap: 5px;">
-                                <span class="star" data-value="5">&#9733;</span>
-                                <span class="star" data-value="4">&#9733;</span>
-                                <span class="star" data-value="3">&#9733;</span>
-                                <span class="star" data-value="2">&#9733;</span>
                                 <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
                             </div>
                             <input type="hidden" id="rating-value" name="rating" required>
                         </div>
@@ -348,52 +343,68 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php include_once 'footer.php'; ?>
 
 <script>
-document.querySelectorAll('.icon_heart').forEach(favoriteButton => {
-    favoriteButton.addEventListener('click', function(event) {
-        event.preventDefault();
-        const productId = this.getAttribute('data-productid');
+document.addEventListener("DOMContentLoaded", function() {
+    // Favorite button functionality
+    document.querySelectorAll('.icon_heart').forEach(favoriteButton => {
+        favoriteButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            const productId = this.getAttribute('data-productid');
 
-        fetch('<?= $urlval ?>ajax/favorite.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: productId }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                this.innerHTML = data.isFavorited
-                    ? '<i class="fas fa-heart" style="color: red;"></i>'
-                    : '<i class="far fa-heart" style="color: red;"></i>';
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+            fetch('<?= $urlval ?>ajax/favorite.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: productId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    this.innerHTML = data.isFavorited
+                        ? '<i class="fas fa-heart" style="color: red;"></i>'
+                        : '<i class="far fa-heart" style="color: red;"></i>';
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
     });
-});
 
-const stars = document.querySelectorAll('.star');
-const ratingInput = document.getElementById('rating-value');
+    // Star rating functionality
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('rating-value');
 
-stars.forEach(star => {
-    star.addEventListener('click', function() {
-        const value = this.getAttribute('data-value');
-        ratingInput.value = value;
-        updateStars(value);
-    });
-});
-
-function updateStars(value) {
+    // Click event to set the rating
     stars.forEach(star => {
-        if (star.getAttribute('data-value') <= value) {
-            star.classList.add('selected');
-        } else {
-            star.classList.remove('selected');
-        }
+        star.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            ratingInput.value = value;
+            updateStars(value);
+        });
     });
-}
+
+    // Hover events to update the star colors dynamically
+    stars.forEach(star => {
+        star.addEventListener('mouseover', function() {
+            const value = this.getAttribute('data-value');
+            updateStars(value);
+        });
+        star.addEventListener('mouseout', function() {
+            updateStars(ratingInput.value);
+        });
+    });
+
+    function updateStars(value) {
+        stars.forEach(star => {
+            if (parseInt(star.getAttribute('data-value')) <= value) {
+                star.classList.add('selected');
+            } else {
+                star.classList.remove('selected');
+            }
+        });
+    }
+});
 </script>
 </body>
 </html>

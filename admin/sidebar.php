@@ -53,13 +53,13 @@ $isAdmin = in_array($role, [1,3]);
                     </li>
 
                     <!-- TRANSACTIONS -->
-                    <?php if ($isAdmin): ?>
+                    <!-- <?php if ($isAdmin): ?>
                     <li class="<?= isActive('/fennec/admin/addtransaction.php'); ?>">
                         <a href="<?php echo $urlval ?>admin/addtransaction.php">
                             <i class="fas fa-money-bill-wave"></i> Add Transaction
                         </a>
                     </li>
-                    <?php endif; ?>
+                    <?php endif; ?> -->
 
                     <!-- BANNERS -->
                     <li class="nav-item has-sub <?= isActive('/fennec/admin/banner/index.php'); ?> <?= isActive('/fennec/admin/banner/addbanner.php'); ?>">
@@ -176,6 +176,22 @@ $isAdmin = in_array($role, [1,3]);
                         </a>
                     </li>
 
+                    <!-- TRANSACTIONS (Mobile) -->
+<?php if ($isAdmin): ?>
+<li class="<?= isActive('/fennec/admin/addtransaction.php'); ?>">
+    <a href="<?php echo $urlval ?>admin/addtransaction.php">
+        <i class="fas fa-money-bill-wave"></i> Add Transaction
+    </a>
+</li>
+<!-- New Transaction Details Link -->
+<li class="<?= isActive('/fennec/admin/transactions.php'); ?>">
+    <a href="<?php echo $urlval ?>admin/transactions.php">
+        <i class="fas fa-list-alt"></i> Transaction Details
+    </a>
+</li>
+<?php endif; ?>
+
+
                     <!-- CONTACT -->
                     <li class="<?= isActive('/fennec/admin/contact/index.php'); ?>">
                         <a class="nav-link" href="<?php echo $urlval ?>admin/contact/index.php">
@@ -278,13 +294,13 @@ $isAdmin = in_array($role, [1,3]);
                 </li>
 
                 <!-- TRANSACTIONS -->
-                <?php if ($isAdmin): ?>
+                <!-- <?php if ($isAdmin): ?>
                 <li class="<?= isActive('/fennec/admin/addtransaction.php'); ?>">
                     <a href="<?php echo $urlval ?>admin/addtransaction.php">
                         <i class="fas fa-money-bill-wave"></i> Add Transaction
                     </a>
                 </li>
-                <?php endif; ?>
+                <?php endif; ?> -->
 
                 <!-- BANNERS -->
                 <li class="has-sub <?= isActive('/fennec/admin/banner/index.php'); ?> <?= isActive('/fennec/admin/banner/addbanner.php'); ?>">
@@ -400,6 +416,22 @@ $isAdmin = in_array($role, [1,3]);
                         <i class="fa-solid fa-location-dot"></i> Location
                     </a>
                 </li>
+
+                <!-- TRANSACTIONS (Desktop) -->
+<?php if ($isAdmin): ?>
+<li class="<?= isActive('/fennec/admin/addtransaction.php'); ?>">
+    <a href="<?php echo $urlval ?>admin/addtransaction.php">
+        <i class="fas fa-money-bill-wave"></i> Add Transaction
+    </a>
+</li>
+<!-- New Transaction Details Link -->
+<li class="<?= isActive('/fennec/admin/transactions.php'); ?>">
+    <a href="<?php echo $urlval ?>admin/transactions.php">
+        <i class="fas fa-list-alt"></i> Transaction Details
+    </a>
+</li>
+<?php endif; ?>
+
 
                 <!-- CONTACT -->
                 <li class="<?= isActive('/fennec/admin/contact/index.php'); ?>">
